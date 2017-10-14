@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+Copyright (c) 2005-2012 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<!DOCTYPE sqlMap PUBLIC
+  "-//iBATIS.com//DTD SQL Map 2.0//EN"
+  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Transaction">
+
+   <typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
+   <typeAlias alias="dateRange" type="org.infinitypfm.core.data.ParamDateRange"/>
+   <typeAlias alias="dateRangeAccount" type="org.infinitypfm.core.data.ParamDateRangeAccount"/>
+   <typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
+   
+   
+     <select id="getTransactionsForRange" parameterClass="dateRange"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranDate >= #startDate#
+         AND TranDate <=#endDate#
+        Order By TranDate, ActName;
+        ]]>
+   </select>
+   
+   <select id="getTransactionsForRangeAndAccount" parameterClass="dateRangeAccount"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE ActId = #actId# 
+         AND TranDate >= #startDate#
+         AND TranDate < #endDate# + INTERVAL '1' DAY
+        Order By TranDate, ActName;
+        ]]>
+   </select>
+   
+   <select id="getTransactionsForAccount" parameterClass="java.lang.String"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE ActName = #value#
+        Order By TranDate, ActName;
+        ]]>
+   </select>
+   
+   <select id="getTransactionsByKey" parameterClass="java.lang.String"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranKey = #value#
+        Order By TranDate, ActName;
+        ]]>
+   </select>
+   
+   <select id="getLastTransactionByAccount" parameterClass="java.lang.Integer"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranId = (select max(tranid) as lastTransaction from transactions where actid = #actId#);
+        
+        ]]>
+   </select>
+   
+   <insert id="insertTransaction" parameterClass="tran">
+	    INSERT INTO Transactions
+	     (
+	      ActId,
+	      TranDate,
+	      TranMemo,
+	      TranAmount,
+	      TranKey
+	     )
+    	VALUES 
+    	 (
+    	  #actId#,
+    	  #tranDate#,
+    	  #tranMemo#,
+     	  #tranAmount#,
+     	  #transactionKey#
+    	 )
+   </insert>
+   
+   <insert id="insertTrade" parameterClass="trade">
+	    INSERT INTO Trades
+	     (
+	      TranID,
+		  CurrencyID,
+		  TranDate,
+		  Amount
+	     )
+    	VALUES 
+    	 (
+    	  #tranId#,
+    	  #currencyID#,
+    	  #tranDate#,
+    	  #amount#
+    	 )
+   </insert>
+   
+   <insert id="shutdown" parameterClass="java.lang.String">
+     SHUTDOWN;
+   </insert>
+   
+   <select id="getRecurringTransactions" resultClass="org.infinitypfm.core.data.RecurHeader">
+   	SELECT 
+   		rh.RecurId,
+   		rh.FrequencyId,
+		rh.Memo,
+		rh.ActID,
+		a.ActName,
+		rh.OffsetID,
+		a1.ActName AS OffsetName,
+		rh.NextRunDate,
+		rh.Amount
+	 FROM RecurHeader rh
+	 	INNER JOIN Accounts a
+	 		ON rh.ActId = a.ActId
+	 	INNER JOIN Accounts a1
+	 		ON rh.OffsetId = a1.ActId
+	 ORDER BY RecurId;
+   
+   </select>
+   
+   <select id="getPastDueRecurringTransactions" 
+   			resultClass="org.infinitypfm.core.data.RecurHeader"
+   			parameterClass="java.util.Date">
+		<![CDATA[
+	   	SELECT 
+	   		rh.RecurId,
+	   		rh.FrequencyId,
+			rh.Memo,
+			rh.ActID,
+			a.ActName,
+			rh.OffsetID,
+			a1.ActName AS OffsetName,
+			rh.NextRunDate,
+			rh.Amount
+		 FROM RecurHeader rh
+		 	INNER JOIN Accounts a
+		 		ON rh.ActId = a.ActId
+		 	INNER JOIN Accounts a1
+		 		ON rh.OffsetId = a1.ActId
+		 WHERE rh.NextRunDate <= #value#
+		 ORDER BY RecurId;
+		  ]]>
+   </select>
+   
+   <select id="getPendingTransactions" resultClass="org.infinitypfm.core.data.Transaction">
+   	SELECT rd.RecurTranId,
+   		rh.ActID as ActId,
+   		a.ActName,
+   		rh.OffsetID as ActOffset,
+   		aOff.ActName as ActOffsetName,
+   		az.ActTypeName,
+   		rd.TranDate,
+   		rh.Memo as TranMemo,
+   		rh.Amount as TranAmount
+    FROM RecurHeader rh
+    	INNER JOIN RecurDetail rd
+    		ON rh.RecurId = rd.RecurId
+    	INNER JOIN Accounts a
+		 	ON rh.ActId = a.ActId
+		INNER JOIN Accounts aOff
+			ON rh.OffsetId = aOff.ActId
+		INNER JOIN AccountTypes az
+			ON a.ActTypeId = az.ActTypeId 
+   </select>
+   
+   <insert id="insertRecurringTransaction" parameterClass="org.infinitypfm.core.data.RecurHeader">
+   		INSERT INTO RecurHeader
+   			(
+   				FrequencyId,
+   				Memo,
+   				ActID,
+	  			OffsetID,
+	  			NextRunDate,
+	  			Amount
+   			)
+   		VALUES
+   			(
+   				#frequencyId#,
+   				#memo#,
+   				#actId#,
+   				#offsetId#,
+   				#nextRunDate#,
+   				#amount#
+   			);
+   </insert>
+  
+  <delete id="deleteRecurringTransaction" parameterClass="java.lang.Integer">
+  	DELETE FROM RecurHeader WHERE RecurID = #value#
+  </delete>
+  
+  <delete id="deletePendingTransactionsByRecurId" parameterClass="java.lang.Integer">
+  	DELETE FROM RecurDetail WHERE RecurID = #value#
+  </delete>
+  
+   <insert id="insertPendingTransaction" parameterClass="org.infinitypfm.core.data.RecurDetail">
+   		INSERT INTO RecurDetail
+   			(
+   				RecurId,
+   				TranDate
+   			)
+   		VALUES
+   			(
+   				#recurId#,
+   				#tranDate#
+   			);
+   </insert>
+   
+   <delete id="deletePendingTransaction" parameterClass="java.lang.Long">
+   	DELETE FROM RecurDetail WHERE RecurTranId=#value#;
+   </delete>
+   
+   <update id="setNextRunDate" parameterClass="org.infinitypfm.core.data.RecurHeader">
+     UPDATE RecurHeader SET NextRunDate = #nextRunDate# WHERE RecurId = #recurId#;
+   </update>
+   
+</sqlMap>

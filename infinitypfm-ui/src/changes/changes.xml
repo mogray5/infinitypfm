@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>Release Details</title>
+    <author email="mogray@users.sourceforge.net">Wayne Gray</author>
+  </properties>
+  <body>
+  <release version="0.3.5" date="2010-08-12">
+  	<action dev="mogray" type="add">
+  		Web interface released.   
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Over/Under budget value error fixed
+  	</action>
+  	<action dev="mogray" type="add">
+  		Debits and credits broken out into separate columns.  
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Startup script modified for Mac OSX distribution to address SWT startup issue.   
+  	</action>
+  </release>
+  <release version="0.3.0" date="2010-03-20">
+  	<action dev="mogray" type="add">
+  		Recurring transactions feature added.  
+  	</action>
+  	<action dev="mogray" type="add">
+  		Reports can be saved, including table data and charts, to a self contained html file.
+  	</action>
+  	<action dev="mogray" type="add">
+  		Accounts can be added/removed from budgets.
+  	</action>
+  	<action dev="mogray" type="add">
+  		Binary distribution available for Mac.
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Fixed bug in import.  Accounts with account id = zero were being skipped.
+  	</action>
+  	<action dev="mogray" type="update">
+  		SWT updated to version 3.5.2
+  	</action>
+  </release>
+  <release version="0.2.1" date="2010-02-18">
+  	<action dev="mogray" type="add">
+  		New Account History Report with bar chart.
+  	</action>
+  	<action dev="mogray" type="add">
+  		Weekly Budget and Weekly Avg columns added to budget view.
+  	</action>
+  	<action dev="mogray" type="update">
+  		SWT updated to version 3.5.1
+  	</action>
+  </release>
+  <release version="0.2.0" date="2009-09-15">
+  	<action dev="mogray" type="update">
+  		Database is embedded now.
+  	</action>
+  	<action dev="mogray" type="add">
+  		When setting up accounts you can now select from a list of defaults.
+  	</action>
+  	<action dev="mogray" type="add">
+  		Account offset selections remembered between transaction imports.
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Right click menu on tree works for all nodes now.
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Toolbar button clean up unused buttons put to use or removed.
+  	</action>
+  	<action dev="mogray" type="update">
+  		Reports redesigned with added charts.
+  	</action>
+  	<action dev="mogray" type="fix">
+  		Incorrect monthly over/under on budget view fixed.
+  	</action>
+  	<action dev="mogray" type="add">
+  		Icons added to tree.  Budget category moved to top.
+  	</action>
+  	<action dev="mogray" type="update">
+  		Date entry boxes now have a drop down date control.
+  	</action>
+  </release>
+  <release version="0.1.1" date="2006-03-11">
+  	<action dev="mogray" type="add">
+        New report showing account balances for the prior month.
+    </action>
+    <action dev="mogray" type="add">
+        Button added to the budget view to allow you to save a budget to all months.
+    </action>
+    <action dev="mogray" type="update">
+       On Linux you do not have to execute two scripts anymore to load the application and the database now closes also when you exit.
+    </action>
+  </release>
+  <release version="0.1.0" date="2005-11-27">
+      <action dev="mogray" type="add">
+        This release adds colored reports using the BIRT (www.eclipse.org/birt/)
+      </action>
+   </release>
+  <release version="0.0.2" date="2005-10-07">
+      <action dev="mogray" type="add">
+        Added a liability account type.
+      </action>
+      <action dev="mogray" type="add">
+        Added total income, total liabilities, and total expenses to the budget view.
+      </action>
+      <action dev="mogray" type="update">
+        All amounts in app are formatted using  #,###.##:(#,###.##) format.
+      </action>
+      <action dev="mogray" type="add">
+        Added upgrade procedures to automatically apply upgrades to database when a new version of Infinity PFM is loaded.
+      </action>
+     </release>
+    <release version="0.0.1" date="2005-09-17">
+      <action dev="mogray" type="add">
+        First release of Infinity PFM.
+      </action>
+     </release>
+    
+  </body>
+</document>

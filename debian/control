@@ -1,0 +1,43 @@
+Source: infinitypfm-ui
+Priority: extra
+Maintainer: Wayne Gray <wgray@infinitypfm.org>
+Build-Depends: debhelper (>> 7.0.50~), javahelper (>= 0.25) , ant
+Build-Depends-Indep: default-jdk,
+ libswt-gtk-3.5-java | libswt-gtk-3.6-java | libswt-gtk-3-java,
+ libibatis-java,
+ libcommons-io-java,
+ libcommons-compress-java,
+ libcommons-codec-java,
+ libcommons-configuration-java,
+ libhsqldb-java,
+ libgettext-commons-java,
+ libcommons-httpclient-java,
+ libjson-java
+Standards-Version: 3.9.8
+Homepage: http://infinitypfm.org/
+Section: gnome
+
+Package: infinitypfm-common
+Architecture: all
+Depends: ${java:Depends},
+	${misc:Depends}
+Description: Infinity PFM Common Library
+ Common tools and functions for Infinity PFM.
+ 
+Package: infinitypfm-btc
+Architecture: all
+Depends: ${java:Depends},
+	${misc:Depends}
+Description: Infinity PFM BTC Client Library
+ Client tools for connecting Infinity PFM to bitcoin.
+
+Package: infinitypfm-ui
+Architecture: all
+Depends: ${java:Depends},
+	${misc:Depends},
+	libswt-mozilla-gtk-3.5-jni | libswt-webkit-gtk-3-jni | libswt-webkit-gtk-3.6-jni,
+	libswt-cairo-gtk-3-jni | libswt-cairo-gtk-3.5-jni,
+	infinitypfm-common,
+	infinitypfm-btc
+Description: Desktop client for Infinity PFM
+ Infinity PFM is personal finance manager with support for budgets, OFX/QIF/QFX import, color reports and charts.

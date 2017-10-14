@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+Copyright (c) 2005-2011 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+
+<!DOCTYPE sqlMap PUBLIC
+  "-//iBATIS.com//DTD SQL Map 2.0//EN"
+  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Reports">
+
+  <typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
+  <typeAlias alias="dateParams" type="org.infinitypfm.core.data.ParamDateRange"/>
+  <typeAlias alias="budgetBalance" type="org.infinitypfm.core.data.BudgetBalance"/>
+  <typeAlias alias="balanceByType" type="org.infinitypfm.core.data.MonthlyBalanceByType"/>
+  
+   <select id="getReportMonthlyBalances" resultClass="monthBalance" parameterClass="dateParams">
+      <![CDATA[
+       SELECT az.ACTTYPENAME,
+   	a.ACTNAME,
+   	mb.YR,
+   	mb.MTH,
+   	mb.ACTBALANCE,
+   	c.ISOCODE 
+	FROM MONTHLYBALANCE mb
+  		INNER JOIN ACCOUNTS a
+   			ON mb.ACTID = a.ACTID
+   		INNER JOIN ACCOUNTTYPES az
+     		ON a.ACTTYPEID = az.ACTTYPEID
+     	INNER JOIN CURRENCIES c
+     		ON a.CURRENCYID = c.CURRENCYID
+	WHERE mb.YR = #yr# AND mb.MTH = #mth#
+	ORDER BY az.ACTTYPEID, a.ACTNAME;
+       ]]>
+  </select>
+  <select id="getReportAccountHistory" resultClass="monthBalance" parameterClass="monthBalance">
+      <![CDATA[
+	  SELECT a.ACTNAME, 
+	  		mb.YR, 
+	  		mb.MTH, 
+	  		mb.ACTBALANCE,
+	  		c.ISOCODE
+		FROM MONTHLYBALANCE mb
+	  		INNER JOIN ACCOUNTS a
+	    		ON mb.ACTID = a.ACTID
+	    	INNER JOIN CURRENCIES c
+     			ON a.CURRENCYID = c.CURRENCYID
+		WHERE ((mb.YR>#yr#) 
+	    OR (mb.YR=#yr# AND mb.MTH >= #mth#))
+	   AND a.ACTNAME = #actName#
+	 ORDER BY mb.YR, mb.MTH;
+       ]]>
+  </select>
+  <select id="getBudgetVsExpenseByMonth" resultClass="budgetBalance" parameterClass="budgetBalance">
+     <![CDATA[
+    
+      SELECT *
+		FROM (	
+		SELECT
+		mb.YR,
+		mb.MTH,
+		sum(mb.ACTBALANCE) AS ExpenseBalance 
+		FROM MONTHLYBALANCE mb
+			INNER JOIN ACCOUNTS a
+			ON mb.ACTID = a.ACTID
+		INNER JOIN ACCOUNTTYPES az
+			ON a.ACTTYPEID = az.ACTTYPEID
+		INNER JOIN BUDGETDETAIL bd
+			ON mb.ACTID = bd.ACTID
+			AND mb.MTH = bd.MTH
+		INNER JOIN BUDGET b
+			ON bd.BUDGETID = b.BUDGETID
+		WHERE mb.YR =#yr#
+			AND b.BUDGETNAME = #budgetName#
+		GROUP BY mb.YR, mb.MTH) exp
+		INNER JOIN
+		(
+		  SELECT b.BUDGETID,
+		  		b.BUDGETNAME,  
+				bd.mth as bdgmth,
+				SUM(bd.amount) as BudgetBalance
+			FROM BUDGET b
+		    	INNER JOIN BUDGETDETAIL bd
+				ON b.budgetid = bd.budgetid
+		    WHERE b.budgetname = #budgetName#
+			GROUP BY b.BUDGETID, b.budgetname, bd.mth) bud
+		ON exp.mth = bud.bdgmth
+		ORDER BY exp.YR, exp.MTH;
+	 ]]>
+  </select>
+  <select id="getBudgetVsExpenseByMonthAndAccount" resultClass="budgetBalance" parameterClass="budgetBalance">
+     <![CDATA[
+    
+      SELECT *
+		FROM (	
+		SELECT
+		mb.YR,
+		mb.MTH,
+		sum(mb.ACTBALANCE) AS ExpenseBalance 
+		FROM MONTHLYBALANCE mb
+			INNER JOIN ACCOUNTS a
+			ON mb.ACTID = a.ACTID
+		INNER JOIN ACCOUNTTYPES az
+			ON a.ACTTYPEID = az.ACTTYPEID
+		INNER JOIN BUDGETDETAIL bd
+			ON mb.ACTID = bd.ACTID
+			AND mb.MTH = bd.MTH
+		INNER JOIN BUDGET b
+			ON bd.BUDGETID = b.BUDGETID
+		WHERE mb.YR =#yr#
+			AND b.BUDGETNAME = #budgetName#
+			AND a.ACTNAME = #actName#
+		GROUP BY mb.YR, mb.MTH) exp
+		INNER JOIN
+		(
+		  SELECT b.BUDGETID,
+		  		b.BUDGETNAME,  
+				bd.mth as bdgmth,
+				SUM(bd.amount) as BudgetBalance
+			FROM BUDGET b
+		    	INNER JOIN BUDGETDETAIL bd
+				ON b.budgetid = bd.budgetid
+				INNER JOIN ACCOUNTS a
+					ON bd.ACTID = a.ACTID
+		    WHERE b.budgetname = #budgetName#
+		    	AND a.ACTNAME = #actName#
+			GROUP BY b.BUDGETID, b.budgetname, bd.mth) bud
+		ON exp.mth = bud.bdgmth
+		ORDER BY exp.YR, exp.MTH;
+	 ]]>
+  </select>
+    <select id="getIncomeVsExpense" resultClass="balanceByType" parameterClass="dateParams">
+      <![CDATA[
+       SELECT 
+   			mb.YR,
+   			mb.MTH,
+   			SUM(CASE WHEN az.ACTTYPENAME = 'Expense' THEN  mb.ACTBALANCE ELSE 0 END) AS ExpenseBalance,
+   			SUM(CASE WHEN az.ACTTYPENAME = 'Liability' THEN  mb.ACTBALANCE ELSE 0 END) AS LiabilityBalance,
+   			SUM(CASE WHEN az.ACTTYPENAME = 'Income' THEN  mb.ACTBALANCE ELSE 0 END) AS IncomeBalance
+			FROM MONTHLYBALANCE mb
+		  		INNER JOIN ACCOUNTS a
+		   			ON mb.ACTID = a.ACTID
+		   		INNER JOIN ACCOUNTTYPES az
+		     		ON a.ACTTYPEID = az.ACTTYPEID
+		     	INNER JOIN CURRENCIES c
+		     		ON a.CURRENCYID = c.CURRENCYID
+			WHERE mb.YR >= #yr#-1
+			GROUP BY mb.YR, mb.MTH
+			ORDER BY mb.YR, mb.MTH;
+       ]]>
+  </select>
+  
+</sqlMap>

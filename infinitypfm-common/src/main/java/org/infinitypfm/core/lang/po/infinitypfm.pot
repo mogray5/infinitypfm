@@ -1,0 +1,996 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-28 11:24-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: org/infinitypfm/core/conf/LangLoader.java:44
+#: org/infinitypfm/core/conf/LangLoader.java:185
+msgid "Name"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:45
+msgid "Balance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:46
+msgid "Log Setup"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:47
+msgid "Cancel"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:48
+msgid "OK"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:49
+msgid "Remove"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:50
+msgid "New Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:51
+msgid "Bank Accounts"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:52
+msgid "Expense Accounts"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:53
+msgid "Income Accounts"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:54
+msgid "Import"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:55
+msgid "Yes"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:56
+msgid "No"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:57
+msgid "Commit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:58
+msgid "Import Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:59
+msgid "Connection Error"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:60
+msgid "Log"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:61
+msgid "Import Transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:62
+msgid "File"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:63
+msgid "Location"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:64
+msgid "File format not supported"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:65
+msgid "Liabilities"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:66
+msgid "Logs"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:67
+msgid "Date"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:68
+msgid "No such source file:"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:69
+msgid "FileCopy: source file"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:70
+msgid "is unreadable"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:71
+msgid "FileCopy: destination"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:72
+msgid "file is unwritable"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:73
+msgid "already exists.  Overwrite? (Y/N)"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:74
+msgid "FileCopy: copy cancelled."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:75
+msgid "is not a file"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:76
+msgid "directory does not exist"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:77
+msgid "directory is unwritable"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:78
+msgid "does not exist!"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:79
+msgid "Error reading/writing files"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:80
+msgid "Error applying updates.  Error is:"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:81
+msgid "Save"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:82
+msgid "Invalid account name"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:83
+msgid "Invalid account type"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:84
+msgid "Memo"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:85
+msgid "Offset Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:86
+msgid "Refresh All"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:87
+msgid "Select All"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:88
+msgid "Add"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:89
+msgid "Credit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:90
+msgid "Refresh"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:91
+msgid "Debit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:92
+msgid "Delete failed, account has a balance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:93
+msgid "Connection"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:94
+msgid "Delete Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:95
+msgid "Liability Accounts"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:96
+msgid "Close"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:97
+msgid "Amount"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:98
+msgid "Type"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:99
+msgid "deleted"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:100
+msgid "Exit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:101
+msgid "Edit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:102
+msgid "Contents"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:103
+msgid "About"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:104
+msgid "Help"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:105
+msgid "Personal Finance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:106
+msgid "No bank accounts exist"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:107
+msgid "Console"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:108
+msgid "Clear"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:109
+msgid "Options"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:110
+msgid "Setup"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:111
+msgid "Language File"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:112
+msgid "You must restart for changes to take affect."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:113
+msgid "Version"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:114
+msgid "Visit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:115
+msgid "This product contains software from the following:"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:116
+msgid "The Apache Software Foundation (http://www.apache.org)"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:117
+msgid "HSQL Database Engine (http://www.hsqldb.org/)"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:118
+msgid "Are you sure you want to delete account?"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:119
+msgid "Error stopping server"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:120
+msgid "Updates found for InfinityPFM.  They will now be applied."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:121
+msgid "Transaction Entry"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:122
+msgid "User Name"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:123
+msgid "Password"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:124
+msgid "New Account Dialog"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:125
+msgid "Checking for updates"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:126
+msgid "Starting Balance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:127
+msgid "is not connected to"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:128
+msgid "View"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:129
+msgid "Ready"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:130
+msgid "Close Console"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:131
+msgid "Saving transactions..."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:132
+msgid "Do you want to commit these transactions?"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:133
+msgid "Current Year"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:134
+msgid "added"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:135
+msgid "Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:136
+msgid "Expenses"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:137
+msgid "Over/Under Month"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:138
+msgid "Updates applied!"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:139
+msgid "Budgets"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:140
+msgid "New Budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:141
+msgid "Month"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:142
+msgid "Budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:143
+msgid "Configure"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:144
+msgid ""
+"An error occurred loading Infinity PFM help files.  Infinity PFM requires "
+"version 1.5 or higher of Mozilla if running on Linux.  If this does not "
+"solve your problem then please submit a bug report to http://sourceforge.net/"
+"tracker/?group_id=114604"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:145
+msgid "Error"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:146
+msgid "Enter budget name."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:147
+msgid "Budget name invalid"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:148
+msgid "January"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:149
+msgid "February"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:150
+msgid "March"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:151
+msgid "April"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:152
+msgid "May"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:153
+msgid "June"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:154
+msgid "July"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:155
+msgid "August"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:156
+msgid "September"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:157
+msgid "October"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:158
+msgid "November"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:159
+msgid "December"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:160
+#: org/infinitypfm/core/conf/LangLoader.java:233
+msgid "Income"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:161
+msgid "Profit/Loss"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:162
+msgid "Add to budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:163
+msgid "Account already in budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:164
+msgid "Reports"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:165
+msgid "Monthly Balances"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:166
+msgid "Eclipse.org (http://www.eclipse.org/)"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:167
+msgid "Actual"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:168
+msgid "Prior Month"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:169
+msgid "Save budget values to all months"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:170
+msgid "Budget values have been applied to all months."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:171
+msgid "Over/Under Year"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:172
+msgid "Budget Remaining"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:173
+msgid "Reset estimated budget remaining"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:174
+msgid "Add Accounts From List"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:175
+msgid "Default Accounts"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:176
+msgid "Are you sure you want to add these accounts?"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:177
+msgid "Leaving the offset account blank will skip the row."
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:178
+msgid "Account History"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:179
+msgid "Avg Weekly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:180
+msgid "Budget Weekly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:181
+msgid "Select Account"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:182
+msgid "Remove From Budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:183
+msgid "Report save successful"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:184
+msgid "Add Recurring Transaction"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:186
+msgid "Frequency"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:187
+msgid "Next Run Date"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:188
+msgid "Monthly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:189
+msgid "Weekly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:190
+msgid "Yearly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:191
+msgid "Bi-Weekly"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:192
+msgid "Pending Transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:193
+msgid "Delete"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:194
+msgid "Saved Recurring Transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:195
+msgid "Are you sure you want to delete this recurring transaction?"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:196
+msgid "Processing recurring transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:197
+msgid "Manage Recurring Transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:198
+msgid "Term(Mths)"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:199
+msgid "APR"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:200
+msgid "Backup"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:201
+msgid "Restore"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:202
+msgid "Database"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:203
+msgid "Select a directory"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:204
+msgid "Database backed up to: "
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:205
+msgid "Select Date"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:206
+msgid "Budget Performance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:207
+msgid "Select Budget"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:208
+msgid "Year"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:210
+msgid "Electric"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:211
+msgid "Telephone"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:212
+msgid "Groceries"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:213
+msgid "Eat Out"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:214
+msgid "Bank Fees"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:215
+msgid "Auto Insurance"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:216
+msgid "Auto Repairs"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:217
+msgid "Hobbies"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:218
+msgid "Clothing"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:219
+msgid "HBA"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:220
+msgid "Donations"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:221
+msgid "Property Taxes"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:222
+msgid "Income Taxes"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:223
+msgid "Recreation"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:224
+msgid "Home Improvement"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:225
+msgid "Medical"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:226
+msgid "Childcare"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:227
+msgid "ATM Withdrawal"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:228
+msgid "Fuel"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:229
+msgid "Grooming"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:230
+msgid "Cable/Internet"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:231
+msgid "Sanitation"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:232
+msgid "Water Utility"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:234
+msgid "Income Spouse"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:235
+msgid "Income Interest"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:236
+msgid "Income Other"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:237
+msgid "Bank"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:238
+msgid "Primary Checking"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:239
+msgid "Primary Savings"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:240
+msgid "Liability"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:241
+msgid "Credit Card"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:242
+msgid "First Mortgage"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:243
+msgid "Second Mortgage"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:244
+msgid "Car Loan"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:245
+msgid "Home Equity Loan"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:246
+msgid "Personal Loan"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:247
+msgid "Line Of Credit"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:248
+msgid "School Loan"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:249
+msgid "Expense"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:250
+msgid "Default Currency"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:251
+msgid "New Currency"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:252
+msgid "Currency Name"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:253
+msgid "Currency Code"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:254
+msgid "Exchange Rate"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:255
+msgid "US Dollar"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:256
+msgid "USD"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:257
+msgid "Update Currencies"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:258
+msgid "Last Update"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:259
+msgid "Update Method"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:260
+msgid "Bitcoin"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:261
+msgid "BTC"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:262
+msgid "New"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:263
+msgid "Recurring Transactions"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:264
+msgid "Income vs Expenses"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:265
+msgid "Start Date"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:266
+msgid "End Date"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:267
+msgid "Currencies"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:268
+msgid "Currency Precision"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:269
+msgid "Method Name"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:270
+msgid "Service URL"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:271
+msgid "Search Path"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:272
+msgid "Define New Update Methods"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:273
+msgid "Delete Update Method"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:274
+msgid "Select Update Method"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:275
+msgid "Are you sure you want to delete this update method?"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:276
+msgid "Split Transaction"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:277
+msgid "Invalid offset account or amount"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:278
+msgid "Split"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:279
+msgid "Delete Row"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:280
+msgid "Check"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:281
+msgid "Post All"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:282
+msgid "pending transactions posted"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:283
+msgid "Import Rules"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:284
+msgid "Assign To"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:285
+msgid "New Rule"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:286
+msgid "Contains"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:287
+msgid "Starts With"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:288
+msgid "Ends With"
+msgstr ""
+
+#: org/infinitypfm/core/conf/LangLoader.java:289
+msgid "Import rule contains an invalid account!"
+msgstr ""

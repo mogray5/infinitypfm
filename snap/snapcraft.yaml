@@ -1,0 +1,28 @@
+name: infinitypfm
+version: 0.7.1
+summary: Desktop client for Infinity PFM
+description: "Infinity PFM is personal finance manager with support for budgets, OFX/QIF/QFX import, color reports and charts."
+confinement: strict
+
+apps:
+ infinitypfm:
+   command: bin/infinitypfm
+
+parts:
+    infinitypfm:
+        plugin: ant
+        source: .
+        stage-packages:
+            - libcommons-io-java 
+            - libswt-gtk-3-java 
+            - libibatis-java 
+            - libcommons-compress-java 
+            - libhsqldb-java 
+            - libgettext-commons-java 
+            - libcommons-httpclient-java 
+            - libjson-java
+            - libswt-webkit-gtk-3-jni
+            - libswt-cairo-gtk-3-jni
+    wrapper:
+        plugin: make
+        source: .

@@ -1,0 +1,261 @@
+/*
+ * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * 
+ * This file is part of Infinity PFM.
+ * 
+ * Infinity PFM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Infinity PFM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.infinitypfm.core.data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.logging.Logger;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.net.URLCodec;
+import org.infinitypfm.core.conf.PfmSettings;
+import org.infinitypfm.core.lang.LangLoader;
+
+/**
+ * @author Wayne Gray
+ * 
+ */
+public class DataFormatUtil implements Serializable {
+	
+	protected static final Logger LOG = Logger.getLogger(DataFormatUtil.class.getName());
+
+	private static final long serialVersionUID = 6215132601470795925L;
+	public static final String DefaultDateFormat = "M-dd-yyyy";
+
+	String[] monthName = { "January", "February", "March", "April", "May",
+			"June", "July", "August", "September", "October", "November",
+			"December" };
+
+	private Date date = null;
+	private GregorianCalendar calendar = null;
+	private DateFormat dateFmt = new SimpleDateFormat(DataFormatUtil.DefaultDateFormat);
+	private DecimalFormat formatter = new DecimalFormat(NumberFormat.getDefault());
+	private GregorianCalendar today = null;
+	private URLCodec _codec = null;
+	private int _precision;
+	
+	public DataFormatUtil() {
+		today = new GregorianCalendar();
+		calendar = new GregorianCalendar();
+		_codec = new URLCodec();
+	}
+	
+	public DataFormatUtil(int precision) {
+		today = new GregorianCalendar();
+		calendar = new GregorianCalendar();
+		_codec = new URLCodec();
+		_precision = precision;
+	}
+
+	public void setDate(Date dt) {
+		date = dt;
+		calendar.setTime(date);
+
+	}
+
+	public void setDate(int yr, int month) {
+		calendar = new GregorianCalendar(yr, month - 1, 1);
+		date = calendar.getTime();
+	}
+
+	public void setDate(String sDate) {
+
+		try {
+			date = dateFmt.parse(sDate);
+		} catch (ParseException e) {
+			LOG.fine(e.getMessage());
+		}
+
+		calendar = new GregorianCalendar();
+		if (date != null) {
+			calendar.setTime(date);
+		}
+
+	}
+
+	public Date getDate() {
+		return calendar.getTime();
+	}
+
+	public int getMonth() {
+		return calendar.get(Calendar.MONTH) + 1;
+
+	}
+
+	public String getMonthName(int offset) {
+		return monthName[calendar.get(Calendar.MONTH) + offset];
+	}
+
+	public int getYear() {
+		return calendar.get(Calendar.YEAR);
+	}
+
+	public int getPrecision() {
+		return _precision;
+	}
+
+	public void setPrecision(int _precision) {
+		this._precision = _precision;
+	}
+	
+	public String getFormat(String format) {
+		dateFmt = new SimpleDateFormat(format);
+		if (date != null)
+			return dateFmt.format(date);
+		else
+			return dateFmt.format(this.getToday());
+	}
+
+	public String getAmountFormatted(long amount) {
+		formatter.applyPattern(NumberFormat.getDefault());
+
+		BigDecimal amtD = strictDivide(Long.toString(amount), "100000000",
+				_precision);
+
+		return formatter.format(amtD);
+
+	}
+
+	public String getAmountFormatted(long amount, String format) {
+
+		formatter.applyPattern(format);
+
+		BigDecimal amtD = strictDivide(Long.toString(amount), "100000000",
+				_precision);
+
+		return formatter.format(amtD);
+	}
+
+	public double roundDouble(double val, String format) {
+		DecimalFormat twoDForm = new DecimalFormat(format);
+		return Double.valueOf(twoDForm.format(val));
+	}
+
+	public Date setNext(String frequency) {
+
+		LangLoader lang = LangLoader.getInstance();
+		
+		if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_BIWEEKLY))) {
+			calendar.add(Calendar.WEEK_OF_YEAR, 2);
+		} else if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_MONTHLY))) {
+			calendar.add(Calendar.MONTH, 1);
+		} else if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_WEEKLY))) {
+			calendar.add(Calendar.WEEK_OF_YEAR, 1);
+		} else if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_YEARLY))) {
+			calendar.add(Calendar.YEAR, 1);
+		}
+
+		return calendar.getTime();
+	}
+
+	public Date getToday() {
+		return today.getTime();
+	}
+
+	public static long moneyToLong(String val) {
+
+		if (val.startsWith("(")) {
+
+			val = val.replaceAll("\\(", "\\-").replaceAll("\\)", "");
+		}
+
+		BigDecimal newVal = new BigDecimal(val);
+
+		return moneyToLong(newVal);
+
+	}
+
+	public static long moneyToLong(BigDecimal val) {
+
+		return val.multiply(new BigDecimal("100000000")).longValue();
+
+	}
+
+	public BigDecimal strictDivide(String numerator, String denominator,
+			int scale) {
+
+		BigDecimal num = new BigDecimal(numerator);
+		BigDecimal den = new BigDecimal(denominator);
+		BigDecimal result = num.divide(den, scale, RoundingMode.HALF_UP);
+
+		return result;
+
+	}
+
+	public BigDecimal strictMultiply(String x, String y) {
+
+		BigDecimal valX = new BigDecimal(x);
+		BigDecimal valY = new BigDecimal(y);
+		BigDecimal result = valX.multiply(valY);
+
+		return result;
+
+	}
+	
+	/**
+	 * Format string to be a valid URL
+	 * @param orig 
+	 * @return
+	 * @throws EncoderException 
+	 */
+	public String urlEncode(String orig) throws EncoderException{
+		
+		String result = "";
+		
+		if (orig!=null && orig.length()>0) result = _codec.encode(orig);	
+		return result;
+	}
+	
+	public String urlEncode(Date dt) {
+		
+		if (dt == null) return "";
+		
+		this.setDate(dt);
+		return this.getFormat(DataFormatUtil.DefaultDateFormat);
+	}
+	
+	/**
+	 * Decode url encoded string
+	 * 
+	 * @param orig
+	 * @return
+	 * @throws DecoderException
+	 */
+	public String urlDecode(String orig) {
+		
+		String result = orig;
+		
+		if (orig!=null && orig.length()>0) {
+			try {
+				result = _codec.decode(orig);
+			} catch (DecoderException e) {}	
+		}
+		return result;
+		
+	}
+}

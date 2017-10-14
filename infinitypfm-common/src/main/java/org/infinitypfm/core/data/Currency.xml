@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+ Copyright (c) 2005-2012 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+
+<!DOCTYPE sqlMap PUBLIC
+  "-//iBATIS.com//DTD SQL Map 2.0//EN"
+  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Currency">
+   
+	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
+	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
+	
+	
+	  <select id="getCurrencies" resultClass="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CASE WHEN DefaultCurrencyId IS NOT NULL THEN TRUE
+           ELSE FALSE END AS IsDefault
+         FROM Currencies
+			LEFT OUTER JOIN
+			AppSettings
+			ON Currencies.CurrencyId = AppSettings.DefaultCurrencyId
+		         	ORDER BY IsoCode
+         
+   
+   </select>
+   
+   <select id="getCurrencyByIsoCode" parameterClass="java.lang.String" 
+   						resultClass="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate
+         FROM Currencies
+         	WHERE IsoCode = #value#
+         	
+   
+   </select>
+
+   <select id="getCurrencyById" parameterClass="java.lang.Long" 
+   						resultClass="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate
+         FROM Currencies
+         	WHERE CurrencyID = #value#
+         	
+   
+   </select>
+
+   <select id="getCurrencyByName" parameterClass="java.lang.String" 
+   						resultClass="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate
+         FROM Currencies
+         	WHERE Name = #value#
+         	
+   
+   </select>
+      
+   <select id="getCurrencyMethods" parameterClass="currency" 
+   						resultClass="currencyMethod">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods
+         	WHERE CurrencyID = #currencyID#
+         	
+   
+   </select>
+   
+   <select id="getAllCurrencyMethods" resultClass="currencyMethod">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods;         	
+   
+   </select>
+   
+    <select id="getCurrencyMethod" parameterClass="currencyMethod" 
+   						resultClass="currencyMethod">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods
+         	WHERE CurrencyID = #currencyID#
+         		and MethodName = #methodName#
+         	
+   
+    </select>
+   
+   <insert id="insertCurrencyMethod" parameterClass="currencyMethod">
+	    INSERT INTO CurrencyMethods
+	     (
+	      CurrencyID,
+	      MethodName,
+	      MethodUrl,
+	      MethodPath
+	     )
+    	VALUES 
+    	 (
+    	  #currencyID#,
+    	  #methodName#,
+    	  #methodUrl#,
+    	  #methodPath#
+    	 )
+   </insert>
+   
+   <update id="updateExchangeRate" parameterClass="currency">
+   
+   		UPDATE Currencies 
+   		SET EXCHRATE = #exchangeRate#,
+   			LASTUPDATE = #lastUpdate# 
+   		WHERE CurrencyID = #currencyID#
+   
+   </update>
+   
+    <delete id="deleteUpdateMethod" parameterClass="currencyMethod">
+   		DELETE FROM CURRENCYMETHODS WHERE MethodName = #methodName#
+   			AND CurrencyID = #currencyID#; 
+   </delete>
+   
+</sqlMap>
+ 

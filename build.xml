@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="build-infinitypfm" default="compile" basedir=".">
+
+<target name="clean">
+    <ant antfile="infinitypfm-common/build.xml" target="clean" />
+    <ant antfile="infinitypfm-btc/build.xml" target="clean" />
+    <ant antfile="infinitypfm/build.xml" target="clean" />
+    <delete dir="repo" />
+    <delete dir="infinitypfm.AppDir" />
+    <delete>
+	<fileset  dir=".">
+	 <include name="infinitypfm-*.AppImage" />
+	</fileset>
+    </delete>
+    <delete dir="infinitypfm-flatpak" />
+</target>
+
+<target name="compile" depends="compileUI" />
+
+<target name="compileCommon">
+    <ant antfile="infinitypfm-common/build.xml" target="compile" />
+</target>
+<target name="compileBTC" depends="compileCommon">
+    <ant antfile="infinitypfm-btc/build.xml" target="compile" />
+</target>
+<target name="compileUI" depends="compileBTC">
+    <ant antfile="infinitypfm/build.xml" target="compile" />
+</target>
+
+</project>

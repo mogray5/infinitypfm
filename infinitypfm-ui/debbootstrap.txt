@@ -1,0 +1,45 @@
+UBUNTU
+
+debuild -us -uc #unsigned
+debuild -S -sa #source pkg signed
+dput ppa:mogray5/ppa-infinitypfm <source.changes> #upload to ppa
+sign files:  gpg -r wgray@infinitypfm.org --armor --sign --detach-sig <filename>
+
+
+sudo apt-get install gettext
+
+xgettext -ktrc:1c,2 -ktrnc:1c,2,3 -ktr -kmarktr -ktrn:1,2 -o org/infinitypfm/core/po/infinitypfm.pot org/infinitypfm/core/conf/LangLoader.java
+msgmerge -U org/infinitypfm/core/po/de.po org/infinitypfm/core/po/infinitypfm.pot
+msgfmt --java2 -d . -r app.i18n.Messages -l de org/infinitypfm/core/po/de.po
+
+
+DEBIAN
+
+aptitude install build-essential cdbs debhelper wdiff \
+    debian-el devscripts devscripts-el dh-make dpatch dpkg-awk \
+    dpkg-dev dpkg-dev-el equivs fakeroot lintian quilt sbuild javahelper ant
+
+apt-get install build-essential devscripts javahelper ant equivs
+
+#Install dependencies from control file
+mk-build-deps --install debian/control
+
+pbuilder-dist lucid build infinitypfm-ui_0.7.0-2ppa2.dsc
+pbuilder-dist trusty build infinitypfm-ui_0.7.0-3ppa1.dsc
+
+java -cp /usr/share/java/hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
+
+...or...
+
+hsqldb-databasemanagerswing
+
+url:  jdbc:hsqldb:file:/home/user/.infinitypfm/data/infinitypfm
+
+ppa1: precise
+ppa2: lucid and squeeze
+ppa3: wheezy
+ppa4: trusty
+
+# Start db in server mode
+# Need host file entry INFINITYPFM_DB 
+java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server -database.0 file:ile:/home/user/.infinitypfm/data -dbname.0 infinitypfm

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<project name="infinitypfm-ui" default="compile" basedir=".">
+	<property name="build.sourceDirectory" value="src/main/java" />
+	<property name="build.directory" value="build" />
+	<property name="build.outputDirectory" value="${build.directory}/classes" />
+	<property name="classpath" value="../install/usr/share/java" />
+    <property name="jar.dir" value="target" />
+	<property name="jar" value="${ant.project.name}.jar" />
+    
+	<target name="clean">
+		<delete dir="${build.directory}" />
+		<delete file="${jar}" />
+	</target>
+
+	<target name="compile" depends="dir.check" if="dir.exists">
+    
+		<mkdir dir="${build.outputDirectory}" />
+        
+        <path id="master-classpath">
+            <fileset dir="${classpath}">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+        
+		<javac srcdir="${build.sourceDirectory}" destdir="${build.outputDirectory}" nowarn="true" debug="on">
+            <classpath refid="master-classpath" />
+		</javac>
+		<copy todir="${build.outputDirectory}/org/infinitypfm/graphics">
+			<fileset dir="${build.sourceDirectory}/org/infinitypfm/graphics">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.jpg" />
+			</fileset>
+		</copy>
+		<copy todir="${build.outputDirectory}">
+			<fileset dir="${build.sourceDirectory}">
+				<include name="*.js" />
+			</fileset>
+		</copy>
+		<copy todir="${build.outputDirectory}/org/infinitypfm/core/data">
+			<fileset dir="${build.sourceDirectory}/org/infinitypfm/core/data">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${build.outputDirectory}/org/infinitypfm/core/conf">
+			<fileset dir="${build.sourceDirectory}/org/infinitypfm/core/conf">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<antcall target="getres">
+			<param name="local" value="de"/>
+		</antcall>
+		<antcall target="getres">
+			<param name="local" value="tr"/>
+		</antcall>
+		<antcall target="getres">
+			<param name="local" value="es"/>
+		</antcall>
+        
+        <mkdir dir="${jar.dir}" />
+		<jar jarfile="${jar.dir}/${jar}" basedir="${build.outputDirectory}" />
+	</target>
+	<target name="getres">
+		<mkdir dir="${build.outputDirectory}/app/i18n" />
+		<exec dir="." executable="msgfmt" newenvironment="false">
+			<arg value="--verbose" />
+			<arg value="--java2" />
+			<arg value="-d" />
+			<arg value="${build.outputDirectory}" />
+			<arg value="-r" />
+			<arg value="app.i18n.Messages" />
+			<arg value="-l" />
+			<arg value="${local}" />
+			<arg value="${build.sourceDirectory}/org/infinitypfm/core/po/${local}.po" />
+		</exec>
+	</target>
+	<target name="makeself" depends="compile">
+		<exec executable="/bin/bash">
+			<arg line="${user.dir}/makebin.sh"/>
+			<arg line="${classpath}"/>
+		</exec>
+	</target>
+    
+   <target name="dir.check">
+    <echo>${user.dir}</echo>
+    <condition property="dir.exists">
+      <available file="${classpath}" type="dir"/>
+    </condition>
+  </target>
+    
+</project>
+

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Infinity PFM
+GenericName=Finance Manager
+Comment=Manage your finances
+Exec=infinitypfm
+Icon=infinitypfm
+Terminal=false
+Type=Application
+Categories=GNOME;Application;Office;

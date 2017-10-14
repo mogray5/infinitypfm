@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project name="pkg-java" default="compile" basedir=".">
+	<property name="build.sourceDirectory" value="infinitypfm-common/src/main/java" />
+	<property name="build.directory" value="build" />
+	<property name="build.outputDirectory" value="${build.directory}/classes" />
+	<property name="classpath" value="/usr/share/java/commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/jackson-core-lgpl.jar" />
+	<property name="jar" value="infinitypfm-common.jar" />
+	<target name="clean">
+		<delete dir="${build.directory}" />
+		<delete file="${jar}" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="${build.outputDirectory}" />
+		<copy todir="${build.outputDirectory}/org/infinitypfm/core/data">
+					<fileset dir="${build.sourceDirectory}/org/infinitypfm/core/data">
+						<include name="*.xml" />
+					</fileset>
+		</copy>
+		<copy todir="${build.outputDirectory}/org/infinitypfm/core/conf">
+			<fileset dir="${build.sourceDirectory}/org/infinitypfm/core/conf">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<antcall target="getres">
+			<param name="local" value="de"/>
+		</antcall>
+		<antcall target="getres">
+			<param name="local" value="tr"/>
+		</antcall>
+		<antcall target="getres">
+			<param name="local" value="es"/>
+		</antcall>
+		<javac srcdir="${build.sourceDirectory}" destdir="${build.outputDirectory}" nowarn="true" debug="on">
+			<classpath path="${classpath}" />
+		</javac>
+		<jar jarfile="${jar}" basedir="${build.outputDirectory}" />
+	</target>
+	<target name="getres">
+		<mkdir dir="${build.outputDirectory}/app/i18n" />
+		<exec dir="." executable="msgfmt" newenvironment="false">
+			<arg value="--verbose" />
+			<arg value="--java2" />
+			<arg value="-d" />
+			<arg value="${build.outputDirectory}" />
+			<arg value="-r" />
+			<arg value="app.i18n.Messages" />
+			<arg value="-l" />
+			<arg value="${local}" />
+			<arg value="${build.sourceDirectory}/org/infinitypfm/core/lang/po/${local}.po" />
+		</exec>
+	</target>
+</project>

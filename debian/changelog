@@ -1,0 +1,89 @@
+infinitypfm-ui (0.7.5-1) xenial; urgency=low
+
+  * Fix for lp:1397052 Edit account broken
+  * Fix for lp:1397341 Invalid currency method
+  * Flexible db configuration
+  * Show console on start option
+  * Open reports in browser option
+  * New Icon set
+  * BTC update methods added
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Sat, 06 Sep 2014 15:37:00 -0000
+
+infinitypfm-ui (0.7.1-3ppa4) trusty; urgency=low
+
+  * Fix for lp:1362721 Application startup throws errors during database creation
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Sat, 06 Sep 2014 15:37:00 -0000
+
+infinitypfm-ui (0.7.0-3ppa1) trusty; urgency=low
+
+  * Fix for lp:1360836 Crash when running reports on Ubuntu 14.04 LTS
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Sun, 24 Aug 2014 11:39:00 -0000
+
+infinitypfm-ui (0.7.0-1ppa1) precise; urgency=low
+
+  * Fix for lp:1121332 Bitcoin import not working with version 0.7.2
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Mon, 11 Feb 2013 19:57:00 -0000
+
+infinitypfm-ui (0.6.0-5ppa1) precise; urgency=low
+
+  * Split transaction support
+  * Added Spanish translation to build
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Mon, 05 Dec 2012 20:33:00 -0000
+
+infinitypfm-ui (0.6.0-4ppa2) precise; urgency=low
+
+  * Create build for precise using correct SWT version.
+ 
+ -- Wayne Gray <wgray@infinitypfm.org>  Sun, 08 Sep 2012 10:29:00 -0000
+
+infinitypfm-ui (0.6.0-4ppa1) lucid; urgency=low
+
+  * Can change default currency for application.
+  * Can change currency precision up to eight decimal places.
+  * Currency view updated to allow user defined currency rates (blueprint: add-user-defined-currency-rates)
+  * lp:015356 view currencies from main menu takes you to recurring transactions
+ 
+ -- Wayne Gray <wgray@infinitypfm.orgm>  Sun, 26 Aug 2012 19:03:00 -0000
+
+infinitypfm-ui (0.6.0-3ppa1) lucid; urgency=low
+
+  * New Logo
+  * Register is date restricted now
+  * New Budget Performance chart on single category
+  * lp:692106 - Running budget performance report when no saved budgets are available will cause a crash
+
+ -- Wayne Gray <wgray@infinitypfm.org>  Sat, 18 Mar 2012 23:02:00 -0000
+
+infinitypfm-ui (0.5.0-3ppa1) lucid; urgency=low
+
+  * Income VS Expense Report
+  * Work on German Translation
+  * Work on Turkish Translation
+  * lp:693692 - Budget performance leaving off liabilities included in budget.
+  * lp:941581 - Installer does not work in Ubuntu Oneiric.
+  * lp:941729 - Translations not working
+  * lp:636047 - Liability total missing from monthly balance report
+  * lp:825138 - Rate grab from Mt. Gox no longer working.
+  * lp:941531 - Total for Account History report not properly formatted
+  * Multi-Currency Support (focus on BTC and USD)
+  * Integration with Bitcoin json-rpc api (www.bitcoin.org)
+  * Language support added via GNU gettext
+  * lp:691943 - X-Axis sort on budget performance chart is wrong.
+  * lp:692106 - Crash on budget performance report.
+  * lp:693690 - Creating new budget prompts twice for budget name.
+  * lp:703333 - ver/under month budget value is wrong.
+
+ -- Wayne Gray <wgray@infinitypfm.org>  Sat, 02 Mar 2012 22:51:00 -0000
+
+infinitypfm-ui (0.4.0-2ppa3) maverick; urgency=low
+
+  * Single package required to run app, core package
+  * Remove nebula cdatetime, fix 635798, other cleanup items
+  * Added .destop to deb install
+
+ -- Wayne Gray <wgray@infinitypfm.org>  Mon, 28 Nov 2010 00:22:00 -0400
