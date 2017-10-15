@@ -4,7 +4,7 @@
 <target name="clean">
     <ant antfile="infinitypfm-common/build.xml" target="clean" />
     <ant antfile="infinitypfm-btc/build.xml" target="clean" />
-    <ant antfile="infinitypfm/build.xml" target="clean" />
+    <ant antfile="infinitypfm-ui/build.xml" target="clean" />
     <delete dir="repo" />
     <delete dir="infinitypfm.AppDir" />
     <delete>
@@ -24,7 +24,7 @@
     <ant antfile="infinitypfm-btc/build.xml" target="compile" />
 </target>
 <target name="compileUI" depends="compileBTC">
-    <ant antfile="infinitypfm/build.xml" target="compile" />
+    <ant antfile="infinitypfm-ui/build.xml" target="compile" />
 </target>
 
 </project>

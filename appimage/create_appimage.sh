@@ -16,8 +16,8 @@ ant
 
 cp appimage/AppRun infinitypfm.AppDir/;
 chmod a+x infinitypfm.AppDir/AppRun;
-cp infinitypfm/infinitypfm.desktop infinitypfm.AppDir/;
-cp infinitypfm/infinitypfm.xpm infinitypfm.AppDir/;
+cp infinitypfm-ui/infinitypfm.desktop infinitypfm.AppDir/;
+cp infinitypfm-ui/infinitypfm.xpm infinitypfm.AppDir/;
 cp *.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/swt.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/ibatis.jar infinitypfm.AppDir/usr/lib/;
