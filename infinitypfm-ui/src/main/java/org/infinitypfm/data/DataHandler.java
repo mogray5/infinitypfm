@@ -195,9 +195,11 @@ public class DataHandler {
 			
 			MM.sqlMap.commitTransaction();
 			MM.sqlMap.endTransaction();
-			MM.sqlMap.startTransaction();
+			
 			
 			if (isExchange){
+				
+				MM.sqlMap.startTransaction();
 				
 				Account account = (Account)MM.sqlMap.queryForObject("getAccountById", tran);
 				Account offsetAccount = (Account)MM.sqlMap.queryForObject("getAccountForOffset", tran);
@@ -217,9 +219,11 @@ public class DataHandler {
 				
 				MM.sqlMap.insert("insertTrade", trade);
 				
+				MM.sqlMap.commitTransaction();
+				
 			}
 
-			MM.sqlMap.commitTransaction();
+			
 
 		} finally {
 			try {

@@ -242,5 +242,20 @@ public class InfinityUpdates {
 		MM.sqlMap.update("bumpVersion", "0.7.5");
 		
 	}
+	
+	private void ApplyVersion085() throws SQLException {
+		
+		MM.sqlMap.update("v0_7_0_a");
+		MM.sqlMap.update("v0_7_0_b");
+		MM.sqlMap.update("v0_7_0_c");
+		MM.sqlMap.update("v0_7_0_d");
+		MM.sqlMap.update("v0_7_0_e");
+		MM.sqlMap.update("v0_7_0_f");
+		MM.sqlMap.update("v0_7_0_g");
+		MM.sqlMap.update("akTransactions");
+		MM.sqlMap.update("bumpVersion", "0.8.0");
+		
+		
+	}
 
 }

@@ -256,7 +256,7 @@ public class NewAccountDialog extends BaseDialog {
 			MainAction action = new MainAction();
 			boolean doDispose = true;
 			
-			if (account.getActId() > 0){
+			if (account != null && account.getActId() > 0){
 				
 				// Edit
 				
@@ -266,6 +266,7 @@ public class NewAccountDialog extends BaseDialog {
 			} else {
 				
 				// Add
+				account = new Account();
 				account.setActBalance(DataFormatUtil.moneyToLong(txtBeginBalance
 						.getText()));
 				account.setActName(txtActName.getText());

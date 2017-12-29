@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.widgets.Display;
@@ -51,7 +50,6 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.util.FileHandler;
 
 import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
 public class InfinityPfm {
@@ -182,7 +180,7 @@ public class InfinityPfm {
 		
 		boolean canContinue = true;
 		
-		//Check if folders set up in 		 
+		//Check if folder is set up
 		 if (!homeDirectory.exists()){
 			 canContinue = homeDirectory.mkdir();
 		 }

@@ -309,5 +309,8 @@
 		TABLE_NAME = #value#
 	</select>
 
+	<statement id="akTransactions">
+	 CREATE UNIQUE INDEX ak_transactions ON transactions (ACTID,TRANDATE,TRANMEMO,TRANAMOUNT)
+	</statement>
 </sqlMap>
  
