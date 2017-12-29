@@ -33,7 +33,7 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.7.5"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.7.6"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
 	public static final String APPCOPYRIGHT = "(c) 2005-2017 by Wayne Gray";

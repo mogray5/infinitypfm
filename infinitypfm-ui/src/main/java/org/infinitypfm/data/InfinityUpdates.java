@@ -59,6 +59,7 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.0.2")) {
 			ApplyVersion010();
 			ApplyVersion030();
@@ -68,6 +69,7 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.1.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -76,6 +78,7 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.2.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -84,6 +87,7 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.2.1")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -92,6 +96,7 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.3.0")) {
 			ApplyVersion035();
 			ApplyVersion040();
@@ -99,26 +104,34 @@ public class InfinityUpdates {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.3.5")) {
 			ApplyVersion040();
 			ApplyVersion050();
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.4.0")) {
 			ApplyVersion050();
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equals("0.5.0")) {
 			ApplyVersion060();
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equalsIgnoreCase("0.6.0")){
 			ApplyVersion070();
 			ApplyVersion075();
+			ApplyVersion076();
 		} else if (sVersion.equalsIgnoreCase("0.7.0")){
 			ApplyVersion075();
+			ApplyVersion076();
+		} else if (sVersion.equalsIgnoreCase("0.7.5")) {
+			ApplyVersion076();
 		}
 
 	}
@@ -243,7 +256,7 @@ public class InfinityUpdates {
 		
 	}
 	
-	private void ApplyVersion085() throws SQLException {
+	private void ApplyVersion076() throws SQLException {
 		
 		MM.sqlMap.update("v0_7_0_a");
 		MM.sqlMap.update("v0_7_0_b");
@@ -253,7 +266,7 @@ public class InfinityUpdates {
 		MM.sqlMap.update("v0_7_0_f");
 		MM.sqlMap.update("v0_7_0_g");
 		MM.sqlMap.update("akTransactions");
-		MM.sqlMap.update("bumpVersion", "0.8.0");
+		MM.sqlMap.update("bumpVersion", "0.7.6");
 		
 		
 	}
