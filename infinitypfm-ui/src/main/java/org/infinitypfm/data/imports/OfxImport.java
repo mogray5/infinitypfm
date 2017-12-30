@@ -103,13 +103,16 @@ public class OfxImport extends BaseImport {
 			
 			tran.setTranAmount(DataFormatUtil.moneyToLong(val));
 			
-		} else if (element.equalsIgnoreCase(FLD_MEMO) || element.equalsIgnoreCase(FLD_NAME)){
+		} else if (element.equalsIgnoreCase(FLD_MEMO) || 
+				element.equalsIgnoreCase(FLD_NAME) ||
+				element.equalsIgnoreCase(FLD_FITID)){
 			
-			tran.setTranMemo(val);
+			if (!tran.getTranMemo().trim().contains(val))
+				tran.setTranMemo(val);
 			
 		} else if (element.equalsIgnoreCase(FLD_DTPOSTED)){
 			
-			DateFormat dateFmt = new SimpleDateFormat("yyyymmddhhmmss");
+			DateFormat dateFmt = new SimpleDateFormat("yyyyMMddhhmmss");
 			
 				Date dt = dateFmt.parse(val);
 				tran.setTranDate(dt);

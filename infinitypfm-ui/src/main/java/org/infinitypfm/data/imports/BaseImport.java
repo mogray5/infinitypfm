@@ -35,6 +35,7 @@ public abstract class BaseImport {
 
 	public static final String FLD_CHECKNUM = "CHECKNUM";
 	public static final String FLD_DTPOSTED = "DTPOSTED";
+	public static final String FLD_FITID = "FITID";
 	public static final String FLD_NAME = "NAME";
 	public static final String FLD_MEMO = "MEMO";
 	public static final String FLD_STMTTRN = "STMTTRN";
