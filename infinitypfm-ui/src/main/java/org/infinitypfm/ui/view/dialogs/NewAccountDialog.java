@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -28,6 +28,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -147,6 +148,9 @@ public class NewAccountDialog extends BaseDialog {
 			cmbActType.setEnabled(false);
 			cmbCurrency.setEnabled(false);
 		}
+		
+		// Set tab order
+		sh.setTabList(new Control[] {txtActName, txtActId, cmbActType, txtBeginBalance, cmbCurrency, cmdSave, cmdCancel});
 
 	}
 

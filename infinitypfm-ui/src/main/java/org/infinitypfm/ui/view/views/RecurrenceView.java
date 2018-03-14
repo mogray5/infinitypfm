@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -177,6 +178,10 @@ public class RecurrenceView extends BaseView {
 		} catch (SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
+		// Set tab order
+		this.setTabList(new Control[]{cmpHeader, cmdPostAllPending});
+		cmpHeader.setTabList(new Control[]{txtName, cmbFrequency, txtStartDate, 
+				cmbAccount, cmbOffset, txtAmount, cmdAdd});
 	}
 
 	@Override

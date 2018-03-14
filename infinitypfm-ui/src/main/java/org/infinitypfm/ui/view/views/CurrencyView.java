@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -84,12 +85,6 @@ public class CurrencyView extends BaseView {
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 		tbMain = new CurrencyToolbar(this);
 		tblCurrencies = new Table(this, SWT.BORDER);
-		//
-		// tblCurrencies.addListener(SWT.MeasureItem, new Listener() {
-		// public void handleEvent(Event event) {
-		// event.height = 30;
-		// }
-		// });
 
 		LoadColumns();
 
@@ -124,6 +119,10 @@ public class CurrencyView extends BaseView {
 
 		LoadData();
 
+		// Set tabs
+		this.setTabList(new Control[]{cmpHeader, tblCurrencies});
+		cmpHeader.setTabList(new Control[]{cmdLoadMethod, txtMethod, cmbCurrencies, 
+				txtUrl, txtPath, cmdAddMethod, cmdRemoveMethod, cmdRefresh});
 	}
 
 	protected void LoadLayout() {
