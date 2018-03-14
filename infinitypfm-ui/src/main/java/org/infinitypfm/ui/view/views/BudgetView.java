@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -28,6 +28,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -102,11 +103,7 @@ public class BudgetView extends BaseView {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.mogray.infinitypfm.ui.view.views.BaseView#LoadUI()
-	 */
+
 	protected void LoadUI() {
 
 		this.setLayout(new FormLayout());
@@ -371,6 +368,8 @@ public class BudgetView extends BaseView {
 
 				currentMonth = now.get(Calendar.MONTH) + 1;
 
+				Color cRed = display.getSystemColor(SWT.COLOR_RED);
+				
 				for (int i = 0; i < detailList.size(); i++) {
 
 					detail = (BudgetDetail) detailList.get(i);
@@ -384,6 +383,7 @@ public class BudgetView extends BaseView {
 						// doesn't exist, add it
 						ti = new TableItem(tblTrans, SWT.NONE);
 					}
+
 
 					ti.setText(0, detail.getActName());
 					ti.setText(1, format.getAmountFormatted(detail.getAmount()));
@@ -431,6 +431,9 @@ public class BudgetView extends BaseView {
 								format.getAmountFormatted(detail.getAmount()
 										- monthlyBalance.getActBalance()));
 
+						if (detail.getAmount() < monthlyBalance.getActBalance())
+							ti.setForeground(cRed);
+						
 						detail.setActBalance(monthlyBalance.getActBalance());
 
 					} else {
@@ -635,7 +638,7 @@ public class BudgetView extends BaseView {
 			Text newEditor = new Text(tblTrans, SWT.BORDER);
 			newEditor.setText(item.getText(1));
 			newEditor.setSelection(0, 10);
-
+			
 			newEditor.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent event) {
 
@@ -657,6 +660,13 @@ public class BudgetView extends BaseView {
 						detail.setAmount(DataFormatUtil.moneyToLong(sAmt
 								.replaceAll(",", "")));
 
+						TableItem ti =  editor.getItem();
+						
+						if (ti.getText(5).startsWith("("))
+							ti.setForeground(ti.getDisplay().getSystemColor(SWT.COLOR_RED));
+						else 
+							ti.setForeground(null);
+						
 						// Update the budget and also recalculate the estimator
 
 						try {
