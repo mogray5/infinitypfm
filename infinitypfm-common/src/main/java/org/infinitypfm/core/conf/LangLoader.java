@@ -292,6 +292,7 @@ public class LangLoader {
 		hmPhrases.put("249",  i18n.tr("Open reports externally in web browser."));
 		hmPhrases.put("250",  i18n.tr("General"));
 		hmPhrases.put("251",  i18n.tr("Open console on start."));
+		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
 	}
 	
 

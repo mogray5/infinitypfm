@@ -132,6 +132,7 @@ public class MM {
 	public static final int MENU_FILE_IMPORT_RULES = 36;
 	public static final int MENU_FILE_BACKUP = 37;
 	public static final int MENU_FILE_RESTORE = 38;
+	public static final int MENU_FILE_IMPORT_CSV = 39;
 	
 	public static final int MENU_REPORT_EXECUTE = 40;
 	public static final int MENU_REPORT_SAVE = 41;
@@ -206,6 +207,8 @@ public class MM {
 	
 	public static String bitcoinUser = null;
 	public static String bitcoinPwd = null;
+	public static String importFile = null;
+	public static String csvConfig = null;
 	
 	public static Options options = null;
 	

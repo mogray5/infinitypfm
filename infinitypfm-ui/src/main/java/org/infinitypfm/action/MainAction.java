@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -44,10 +44,14 @@ import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
 import org.infinitypfm.data.imports.BaseImport;
 import org.infinitypfm.data.imports.BitcoinImport;
+import org.infinitypfm.data.imports.BitcoinImportConfig;
+import org.infinitypfm.data.imports.FileImportConfig;
+import org.infinitypfm.data.imports.ImportConfig;
 import org.infinitypfm.data.imports.OfxImport;
 import org.infinitypfm.data.imports.QfxImport;
 import org.infinitypfm.data.imports.QifImport;
 import org.infinitypfm.exception.AccountException;
+import org.infinitypfm.exception.ConfigurationException;
 import org.infinitypfm.reporting.BaseReport;
 import org.infinitypfm.reporting.ReportFactory;
 import org.infinitypfm.ui.view.dialogs.AboutDialog;
@@ -62,7 +66,6 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
-import org.infinitypfm.ui.view.dialogs.PasswordDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
 import org.infinitypfm.ui.view.views.ReportView;
@@ -71,7 +74,6 @@ import org.infinitypfm.util.FileHandler;
 /**
  * This class contains handlers for the majority of menu item actions.
  * 
- * @author Wayne Gray
  */
 public class MainAction {
 
@@ -96,13 +98,11 @@ public class MainAction {
 		case MM.MENU_FILE_IMPORT_QFX:
 		case MM.MENU_FILE_IMPORT_OFX:
 		case MM.MENU_FILE_IMPORT_QIF:
+		case MM.MENU_FILE_IMPORT_BTC:
 			this.LoadImportDialog(item, selectedAccount);
 			break;
 		case MM.MENU_FILE_IMPORT_RULES:
 			this.LoadImportRulesDialog();
-			break;
-		case MM.MENU_FILE_IMPORT_BTC:
-			this.BitcoinImport(selectedAccount);
 			break;
 		case MM.MENU_EDIT_ADD_ACCOUNT:
 			this.LoadNewAccountDialog();
@@ -355,22 +355,24 @@ public class MainAction {
 
 	public void LoadImportDialog(int importType, int showAccount) {
 
-		FileDialog dlg = new FileDialog(InfinityPfm.shMain);
-		dlg.setText(MM.PHRASES.getPhrase("18"));
-		String sFile = dlg.open();
-
-		if (sFile == null) {
-			return;
-		}
-
-		BaseImport fileImport = null;
+		BaseImport importer = null;
+		ImportConfig config = null;
 
 		if (importType == MM.MENU_FILE_IMPORT_QFX) {
-			fileImport = new QfxImport();
+			config = new FileImportConfig();
+			importer = new QfxImport();
 		} else if (importType == MM.MENU_FILE_IMPORT_OFX) {
-			fileImport = new OfxImport();
+			config = new FileImportConfig();
+			importer = new OfxImport();
 		} else if (importType == MM.MENU_FILE_IMPORT_QIF) {
-			fileImport = new QifImport();
+			config = new FileImportConfig();
+			importer = new QifImport();
+		} else if (importType == MM.MENU_FILE_IMPORT_BTC) {
+			config = new BitcoinImportConfig();
+			importer = new BitcoinImport();
+		} else if (importType == MM.MENU_FILE_IMPORT_CSV) {
+			
+			
 		} else {
 			MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
 					MM.PHRASES.getPhrase("21"));
@@ -380,7 +382,7 @@ public class MainAction {
 
 		try {
 			
-			List<Transaction> trans = fileImport.ImportFile(sFile);
+			List<Transaction> trans = importer.ImportFile(config);
 			ShowImportDialog(trans, showAccount);
 			
 		} catch (FileNotFoundException e) {
@@ -388,6 +390,8 @@ public class MainAction {
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage(), true);
 		} catch (ParseException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		} catch (ConfigurationException e) {
 			InfinityPfm.LogMessage(e.getMessage(), true);
 		}
 
@@ -397,65 +401,7 @@ public class MainAction {
 		ImportRulesDialog rulesDialog = new ImportRulesDialog();
 		rulesDialog.Open();
 	}
-	
-	public void BitcoinImport(int showAccount){
 		
-		
-		if (MM.bitcoinUser == null){
-
-			//Check if bitcoin.conf exists
-			FileHandler fileHandler = new FileHandler();
-			
-			try {
-				fileHandler.FileOpenRead(System.getProperty("user.home") + "/.bitcoin/bitcoin.conf");
-				String temp = fileHandler.LineInput();
-				while (temp!=null){
-					
-					if (MM.bitcoinUser!=null && MM.bitcoinPwd != null) break;
-					
-					if (temp.startsWith("rpcuser")){
-						MM.bitcoinUser = temp.split("=")[1].trim();
-					} else if (temp.startsWith("rpcpassword")){
-						MM.bitcoinPwd = temp.split("=")[1].trim();
-					}
-					
-					temp = fileHandler.LineInput();
-				}
-
-				fileHandler.FileClose();
-				
-			} catch (FileNotFoundException e) {
-				InfinityPfm.LogMessage(e.getMessage(), true);
-			} catch (IOException e) {
-				InfinityPfm.LogMessage(e.getMessage(), true);
-			}
-			
-			//Show a dialog if bitcoin.conf was not used
-			if (MM.bitcoinUser==null || MM.bitcoinPwd==null){
-			
-				PasswordDialog pwdDlg = new PasswordDialog();
-				
-				String[] creds = pwdDlg.getCredentials();
-				
-				if (creds.length==2){
-				
-					MM.bitcoinUser = creds[0];
-					MM.bitcoinPwd = creds[1];
-				}
-			}
-		
-			if (MM.bitcoinUser==null || MM.bitcoinUser.length()==0){
-				return;
-			}
-			
-		}
-		
-		BitcoinImport importTest = new BitcoinImport();
-		List<Transaction> trans = importTest.ImportFile("blah");
-		ShowImportDialog(trans, showAccount);
-		
-	}
-	
 	private void ShowImportDialog(List<Transaction> trans, int showAccount){
 		
 		ImportDialog importDialog = new ImportDialog(trans, showAccount);

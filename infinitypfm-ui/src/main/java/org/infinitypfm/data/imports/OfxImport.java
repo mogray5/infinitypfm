@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -34,17 +34,15 @@ import org.apache.commons.io.IOUtils;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.exception.ConfigurationException;
 
-/**
- * @author wayne
- */
 public class OfxImport extends BaseImport {
 	
 	public OfxImport() {
 		super();
 	}
 
-	public List<Transaction> ImportFile(String sFile) throws IOException, ParseException 
+	public List<Transaction> ImportFile(ImportConfig config) throws IOException, ParseException, ConfigurationException
 	{
 			
 			boolean startElement = false;
@@ -54,46 +52,48 @@ public class OfxImport extends BaseImport {
 			String val = "";
 			Transaction tran = null;
 			ArrayList<Transaction> tranList = new ArrayList<Transaction>();
-				
-				if (sFile==null){return null;}
-				
-				InputStream in = new BufferedInputStream(
-			            new FileInputStream(sFile));
-				
-				String body = IOUtils.toString(in);
-				char letters[] = body.toCharArray();
-				char l;
-				for (int i=0; i<letters.length; i++){
-					l = letters[i];
-					if (l=='<'){
-						startElement = true;
-						inTag=false;
-						if (tran != null){
-							SaveElement(element, val, tran);
-						}
-						
-						val = "";
-						element = "";
-						
-					} else if (l!='>' && startElement){
-						element += String.valueOf(l);
-					} else if (l=='>' && startElement){
-					  startElement = false;
-					  inTag = true;
-					  if (element.equalsIgnoreCase(FLD_STMTTRN)){
-					  	tran = new Transaction();
-					  	tranList.add(tran);
-					  }
-					  
-					} else if (!startElement && inTag){
-						if (l != '\n' && l != '\r'){
-							val += String.valueOf(l);	
-						}
-						
+		
+			config.config();
+			
+			if (MM.importFile==null){return null;}
+			
+			InputStream in = new BufferedInputStream(
+		            new FileInputStream(MM.importFile));
+			
+			String body = IOUtils.toString(in);
+			char letters[] = body.toCharArray();
+			char l;
+			for (int i=0; i<letters.length; i++){
+				l = letters[i];
+				if (l=='<'){
+					startElement = true;
+					inTag=false;
+					if (tran != null){
+						SaveElement(element, val, tran);
 					}
+					
+					val = "";
+					element = "";
+					
+				} else if (l!='>' && startElement){
+					element += String.valueOf(l);
+				} else if (l=='>' && startElement){
+				  startElement = false;
+				  inTag = true;
+				  if (element.equalsIgnoreCase(FLD_STMTTRN)){
+				  	tran = new Transaction();
+				  	tranList.add(tran);
+				  }
+				  
+				} else if (!startElement && inTag){
+					if (l != '\n' && l != '\r'){
+						val += String.valueOf(l);	
+					}
+					
 				}
-				
-				return tranList;
+			}
+			
+			return tranList;
 
 		}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -34,12 +34,14 @@ public class BitcoinImport extends BaseImport {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Transaction> ImportFile(String sFile) {
+	public List<Transaction> ImportFile(ImportConfig config) {
 
 		List<Transaction> result = null;
 
 		try {
 
+			if (config != null) config.config();
+			
 			BitcoinClient client = new BitcoinClient("localhost",
 					MM.bitcoinUser, MM.bitcoinPwd);
 			AccountInfo accountInfo = null;
