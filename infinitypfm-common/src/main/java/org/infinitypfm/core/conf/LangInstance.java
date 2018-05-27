@@ -16,9 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.infinitypfm.data.imports;
+package org.infinitypfm.core.conf;
 
-public class CsvImportConfig extends FileImportConfig {
+public class LangInstance {
 
-
+	private static LangInstance instance = null;
+	private final LangLoader lang;
+	
+	protected LangInstance() {
+		lang = new LangLoader();
+	}
+	
+	 public static LangInstance getInstance() {
+	
+		 if (instance == null) {
+			 instance = new LangInstance();
+			 
+		 }
+		 
+		 return instance;
+		 
+	 }
+	 
+	 public String getPhrase(String index) {
+		 
+		 return this.lang.getPhrase(index);
+	 }
+	
 }

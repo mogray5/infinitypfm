@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -33,8 +33,8 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.conf.PfmSettings;
-import org.infinitypfm.core.lang.LangLoader;
 
 /**
  * @author Wayne Gray
@@ -158,7 +158,7 @@ public class DataFormatUtil implements Serializable {
 
 	public Date setNext(String frequency) {
 
-		LangLoader lang = LangLoader.getInstance();
+		LangInstance lang = LangInstance.getInstance();
 		
 		if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_BIWEEKLY))) {
 			calendar.add(Calendar.WEEK_OF_YEAR, 2);

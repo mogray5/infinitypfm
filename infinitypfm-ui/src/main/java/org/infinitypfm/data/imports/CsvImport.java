@@ -19,17 +19,68 @@
 package org.infinitypfm.data.imports;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.infinitypfm.client.InfinityPfm;
+import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.ImportDef;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.exception.ConfigurationException;
+import org.infinitypfm.ui.view.dialogs.ImportDefSelector;
 
 public class CsvImport extends BaseImport {
 
 	@Override
 	public List<Transaction> ImportFile(ImportConfig config) throws FileNotFoundException, IOException, ParseException {
-		return null;
+		
+		List<Transaction> resultList = new ArrayList<Transaction>();
+		
+		try {
+			
+			// Get the file path
+			config.config();
+			// Get the import def
+			ImportDefSelector defSelect = new ImportDefSelector();
+			ImportDef param = new ImportDef();
+			param.setImportID(defSelect.Open());
+			
+			ImportDef def = (ImportDef) MM.sqlMap.queryForObject("getImportDef", param);
+			DataFormatUtil dataUtils = new DataFormatUtil();
+			
+			Reader in = new FileReader(MM.importFile);
+		
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			
+			for (CSVRecord record : records) {
+			    String memo = record.get(def.getMemoField());
+			    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
+			    dataUtils.setDate(def.getDateField());
+			    Date dt = dataUtils.getDate();
+			    
+			    Transaction t = new Transaction();
+			    t.setTranAmount(amount);
+			    t.setTranMemo(memo);
+			    t.setTranDate(dt);
+			    
+			    resultList.add(t);
+			}
+			
+		
+		} catch (ConfigurationException | SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		} 
+		
+		return resultList;
 	}
 
 	

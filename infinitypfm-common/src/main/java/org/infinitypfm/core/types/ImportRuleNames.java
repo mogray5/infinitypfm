@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -19,12 +19,12 @@
 
 package org.infinitypfm.core.types;
 
-import org.infinitypfm.core.lang.LangLoader;
+import org.infinitypfm.core.conf.LangInstance;
 
 public class ImportRuleNames {
 
-	public static final String CONTAINS = LangLoader.getInstance().getPhrase("243");
-	public static final String STARTSWITH = LangLoader.getInstance().getPhrase("244");
-	public static final String ENDSWITH = LangLoader.getInstance().getPhrase("245");
+	public static final String CONTAINS = LangInstance.getInstance().getPhrase("243");
+	public static final String STARTSWITH = LangInstance.getInstance().getPhrase("244");
+	public static final String ENDSWITH = LangInstance.getInstance().getPhrase("245");
 	
 }

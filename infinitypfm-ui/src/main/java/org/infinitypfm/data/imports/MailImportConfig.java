@@ -18,7 +18,14 @@
  */
 package org.infinitypfm.data.imports;
 
-public class CsvImportConfig extends FileImportConfig {
+import org.infinitypfm.exception.ConfigurationException;
 
+public class MailImportConfig implements ImportConfig {
+
+	@Override
+	public void config() throws ConfigurationException {
+		// TODO Auto-generated method stub
+
+	}
 
 }

@@ -18,7 +18,21 @@
  */
 package org.infinitypfm.data.imports;
 
-public class CsvImportConfig extends FileImportConfig {
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
+import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.exception.ConfigurationException;
+
+public class MailImport extends BaseImport {
+
+	@Override
+	public List<Transaction> ImportFile(ImportConfig config)
+			throws FileNotFoundException, IOException, ParseException, ConfigurationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -45,8 +45,12 @@ import org.infinitypfm.data.ReportData;
 import org.infinitypfm.data.imports.BaseImport;
 import org.infinitypfm.data.imports.BitcoinImport;
 import org.infinitypfm.data.imports.BitcoinImportConfig;
+import org.infinitypfm.data.imports.CsvImport;
+import org.infinitypfm.data.imports.CsvImportConfig;
 import org.infinitypfm.data.imports.FileImportConfig;
 import org.infinitypfm.data.imports.ImportConfig;
+import org.infinitypfm.data.imports.MailImport;
+import org.infinitypfm.data.imports.MailImportConfig;
 import org.infinitypfm.data.imports.OfxImport;
 import org.infinitypfm.data.imports.QfxImport;
 import org.infinitypfm.data.imports.QifImport;
@@ -99,6 +103,8 @@ public class MainAction {
 		case MM.MENU_FILE_IMPORT_OFX:
 		case MM.MENU_FILE_IMPORT_QIF:
 		case MM.MENU_FILE_IMPORT_BTC:
+		case MM.MENU_FILE_IMPORT_MAIL:
+		case MM.MENU_FILE_IMPORT_CSV:
 			this.LoadImportDialog(item, selectedAccount);
 			break;
 		case MM.MENU_FILE_IMPORT_RULES:
@@ -371,8 +377,11 @@ public class MainAction {
 			config = new BitcoinImportConfig();
 			importer = new BitcoinImport();
 		} else if (importType == MM.MENU_FILE_IMPORT_CSV) {
-			
-			
+			config = new CsvImportConfig();
+			importer = new CsvImport();
+		} else if (importType == MM.MENU_FILE_IMPORT_MAIL) {
+			config = new MailImportConfig();
+			importer = new MailImport();
 		} else {
 			MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
 					MM.PHRASES.getPhrase("21"));

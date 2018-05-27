@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -21,8 +21,7 @@ package org.infinitypfm.core.data;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.infinitypfm.core.data.DataFormatUtil;
-import org.infinitypfm.core.lang.LangLoader;
+import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.types.DefaultDateFormat;
 
 
@@ -50,7 +49,7 @@ public class RecurHeader implements Serializable {
 		this.recurId = recurId;
 	}
 	public String getFrequency() {
-		return LangLoader.getInstance().getPhrase(new Integer(frequencyId).toString());
+		return LangInstance.getInstance().getPhrase(new Integer(frequencyId).toString());
 	}
 	public String getMemo() {
 		return memo;

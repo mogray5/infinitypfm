@@ -293,6 +293,8 @@ public class LangLoader {
 		hmPhrases.put("250",  i18n.tr("General"));
 		hmPhrases.put("251",  i18n.tr("Open console on start."));
 		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
+		hmPhrases.put("252",  i18n.tr("Mail"));
+		hmPhrases.put("253",  i18n.tr("CSV"));
 	}
 	
 

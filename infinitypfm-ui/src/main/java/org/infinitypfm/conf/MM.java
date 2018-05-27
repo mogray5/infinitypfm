@@ -133,13 +133,14 @@ public class MM {
 	public static final int MENU_FILE_BACKUP = 37;
 	public static final int MENU_FILE_RESTORE = 38;
 	public static final int MENU_FILE_IMPORT_CSV = 39;
+	public static final int MENU_FILE_IMPORT_MAIL = 40;
 	
-	public static final int MENU_REPORT_EXECUTE = 40;
-	public static final int MENU_REPORT_SAVE = 41;
+	public static final int MENU_REPORT_EXECUTE = 41;
+	public static final int MENU_REPORT_SAVE = 42;
 	
-	public static final int MENU_EDIT_ADD_ACCOUNT = 42;
-	public static final int MENU_EDIT_ADD_BUDGET = 43;
-	public static final int MENU_EDIT_ADD_CURRENCY = 44;
+	public static final int MENU_EDIT_ADD_ACCOUNT = 43;
+	public static final int MENU_EDIT_ADD_BUDGET = 44;
+	public static final int MENU_EDIT_ADD_CURRENCY = 45;
 	
 	public static final int MENU_CONSOLE_CLEAR = 50;
 	public static final int MENU_CONSOLE_CLOSE = 51;
