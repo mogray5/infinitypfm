@@ -62,6 +62,7 @@ public class CsvImport extends BaseImport {
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 			
 			for (CSVRecord record : records) {
+				
 			    String memo = record.get(def.getMemoField());
 			    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
 			    dataUtils.setDate(def.getDateField());

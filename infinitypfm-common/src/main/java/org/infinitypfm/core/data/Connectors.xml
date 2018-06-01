@@ -42,7 +42,7 @@
     </select>
 
 	<select id="getImportDefs" resultClass="connector">
-	  SELECT connectorid,
+	  SELECT importid,
 		importname as importName,
 		ImportType as importType,
 		DateField as dateField,
@@ -53,14 +53,14 @@
     </select>
   
   	<select id="getImportDef" parameterClass="importDef" resultClass="connector">
-	  SELECT connectorid,
+	  SELECT importid,
 		importname as importName,
 		ImportType as importType,
 		DateField as dateField,
 		MemoField as memoField,
 		AmountField as amountField
 		FROM importdef
-		ORDER BY importname
+		WHERE importid = #importID#
     </select>
   
    <insert id="insertImportDef" parameterClass="importDef">
