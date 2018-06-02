@@ -295,7 +295,14 @@ public class LangLoader {
 		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
 		hmPhrases.put("252",  i18n.tr("Mail"));
 		hmPhrases.put("253",  i18n.tr("CSV"));
+		hmPhrases.put("254",  i18n.tr("Import Name"));
+		hmPhrases.put("255",  i18n.tr("Import Type"));
+		hmPhrases.put("256",  i18n.tr("Date Field"));
+		hmPhrases.put("257",  i18n.tr("Memo Field"));
+		hmPhrases.put("258",  i18n.tr("Amount Field"));
+		hmPhrases.put("259",  i18n.tr("None"));
 	}
+	
 	
 
 	public String getPhrase(String id){
