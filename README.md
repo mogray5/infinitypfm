@@ -1,7 +1,7 @@
 # Infinity PFM
 Desktop personal finance manager
 
-[Project Page](http://infinitypfm.org)
+[Project Page](http://www.infinitypfm.org)
 
 This project was formally hosted on Launchpad at:
 
