@@ -98,6 +98,11 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	public void setDate(String sDate, String format) {
+		dateFmt = new SimpleDateFormat(format);
+		setDate(sDate);
+	}
+	
 	public Date getDate() {
 		return calendar.getTime();
 	}

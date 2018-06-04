@@ -41,22 +41,24 @@
 		ORDER BY connectorname
     </select>
 
-	<select id="getImportDefs" resultClass="connector">
+	<select id="getImportDefs" resultClass="importDef">
 	  SELECT importid,
 		importname as importName,
 		ImportType as importType,
 		DateField as dateField,
+		DateFormat as dateFormat,
 		MemoField as memoField,
 		AmountField as amountField
 		FROM importdef
 		ORDER BY importname
     </select>
   
-  	<select id="getImportDef" parameterClass="importDef" resultClass="connector">
+  	<select id="getImportDef" parameterClass="importDef" resultClass="importDef">
 	  SELECT importid,
 		importname as importName,
 		ImportType as importType,
 		DateField as dateField,
+		DateFormat as dateFormat,
 		MemoField as memoField,
 		AmountField as amountField
 		FROM importdef
@@ -70,6 +72,7 @@
    			ImportName,
    			ImportType,
    			DateField,
+   			DateFormat,
    			MemoField,
    			AmountField
    		)
@@ -78,6 +81,7 @@
    			#importName#,
    			#importType#,
    			#dateField#,
+   			#dateFormat#,
    			#memoField#,
    			#amountField#
    		)
@@ -87,7 +91,8 @@
    <update id="updateImportDef" parameterClass="importDef">
    		UPDATE ImportDef 
    		SET ImportType = #importType#,
-   			 DateField = #dateField#,,
+   			 DateField = #dateField#,
+   			 DateFormat = #dateFormat#,
    			 MemoField = #memoField#,
    			 AmountField  = #amountField#
    		WHERE ImportID = #importID#

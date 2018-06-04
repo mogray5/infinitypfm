@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
@@ -55,28 +56,39 @@ public class CsvImport extends BaseImport {
 			param.setImportID(defSelect.Open());
 			
 			ImportDef def = (ImportDef) MM.sqlMap.queryForObject("getImportDef", param);
+			
+			if (def == null) return null;
+			
 			DataFormatUtil dataUtils = new DataFormatUtil();
 			
 			Reader in = new FileReader(MM.importFile);
 		
-			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			final CSVParser parser = new CSVParser(in, CSVFormat.EXCEL.withHeader());
 			
-			for (CSVRecord record : records) {
-				
-			    String memo = record.get(def.getMemoField());
-			    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
-			    dataUtils.setDate(def.getDateField());
-			    Date dt = dataUtils.getDate();
-			    
-			    Transaction t = new Transaction();
-			    t.setTranAmount(amount);
-			    t.setTranMemo(memo);
-			    t.setTranDate(dt);
-			    
-			    resultList.add(t);
+			//Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			
+			try {
+			    for (final CSVRecord record : parser) {
+			        
+				    String memo = record.get(def.getMemoField());
+				    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
+				    
+				    dataUtils.setDate(record.get(def.getDateField()), def.getDateFormat());
+				    Date dt = dataUtils.getDate();
+				    
+				    Transaction t = new Transaction();
+				    t.setTranAmount(amount);
+				    t.setTranMemo(memo);
+				    t.setTranDate(dt);
+				    
+				    resultList.add(t);
+			    }
+			} finally {
+			    parser.close();
+			    in.close();
 			}
 			
-		
+					
 		} catch (ConfigurationException | SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage(), true);
 		} 

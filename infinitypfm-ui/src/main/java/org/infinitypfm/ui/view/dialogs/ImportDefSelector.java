@@ -18,6 +18,9 @@
  */
 package org.infinitypfm.ui.view.dialogs;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,8 +35,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.ImportDef;
 
 public class ImportDefSelector extends BaseDialog {
 
@@ -46,18 +52,22 @@ public class ImportDefSelector extends BaseDialog {
 	private Label lblImportName = null;
 	private Label lblImportType = null;
 	private Label lblDateField = null;
+	private Label lblDateFormat = null;
 	private Label lblMemoField = null;
 	private Label lblAmountField = null;
 	
 	private Text txtImportName = null;
 	private Combo cmbImportType = null;
 	private Text txtDateField = null;
+	private Text txtDateFormat = null;
 	private Text txtMemoField = null;
 	private Text txtAmountField = null;
 	
 	private Table tblImportDefs = null;
 	
 	private Label lblSelectedName = null;
+	
+	private ImportDef selectedDef = null;
 	
 	@Override
 	protected void LoadUI(Shell sh) {
@@ -70,8 +80,16 @@ public class ImportDefSelector extends BaseDialog {
 		
 		LoadColumns();
 		
+		tblImportDefs.addSelectionListener(tblImportDefs_OnSelect);
+		
 		lblSelectedName = new Label(cmpSelectedDef, SWT.NONE);
 		lblSelectedName.setText(MM.PHRASES.getPhrase("259"));
+		
+		try {
+			ReloadImportDefList();
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		}
 		
 	}
 
@@ -109,8 +127,12 @@ public class ImportDefSelector extends BaseDialog {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
-		return 1;
+		
+		if (selectedDef != null) {
+			return (int) selectedDef.getImportID();
+		} else {
+			return -1;
+		}
 	}
 	
 	private void LoadCompositeUI(Shell sh) {
@@ -166,6 +188,8 @@ public class ImportDefSelector extends BaseDialog {
 		lblImportType.setText(MM.PHRASES.getPhrase("255") + ":");
 		lblDateField = new Label(cmpAddEditDef, SWT.NONE);
 		lblDateField.setText(MM.PHRASES.getPhrase("256") + ":");
+		lblDateFormat = new Label(cmpAddEditDef, SWT.NONE);
+		lblDateFormat.setText(MM.PHRASES.getPhrase("260") + ":");
 		lblMemoField = new Label(cmpAddEditDef, SWT.NONE);
 		
 		lblMemoField.setText(MM.PHRASES.getPhrase("257") + ":");
@@ -178,6 +202,8 @@ public class ImportDefSelector extends BaseDialog {
 				MM.PHRASES.getPhrase("253") });
 		cmbImportType.select(0);
 		txtDateField = new Text(cmpAddEditDef, SWT.BORDER);
+		txtDateFormat = new Text(cmpAddEditDef, SWT.BORDER);
+		txtDateFormat.setText("yyyy-M-dd");
 		txtMemoField = new Text(cmpAddEditDef, SWT.BORDER);
 		txtAmountField = new Text(cmpAddEditDef, SWT.BORDER);
 		
@@ -212,6 +238,18 @@ public class ImportDefSelector extends BaseDialog {
 		cmbimporttypedata.left = new FormAttachment(lblImportType, 20);
 		cmbimporttypedata.right = new FormAttachment(lblImportType, 250);
 		cmbImportType.setLayoutData(cmbimporttypedata);
+
+		FormData lbldateformatdata = new FormData();
+		lbldateformatdata.top = new FormAttachment(0, 10);
+		lbldateformatdata.left = new FormAttachment(lblImportName, 435);
+		//lbldateformatdata.right = new FormAttachment(lblImportType, 320);
+		lblDateFormat.setLayoutData(lbldateformatdata);
+		
+		FormData txtdateformatdata = new FormData();
+		txtdateformatdata.top = new FormAttachment(0, 5);
+		txtdateformatdata.left = new FormAttachment(lblDateFormat, 15);
+		txtdateformatdata.right = new FormAttachment(lblDateFormat, 270);
+		txtDateFormat.setLayoutData(txtdateformatdata);
 		
 		FormData lbldatefielddata = new FormData();
 		lbldatefielddata.top = new FormAttachment(0, 42);
@@ -268,8 +306,9 @@ public class ImportDefSelector extends BaseDialog {
 		tc1.setText(MM.PHRASES.getPhrase("254"));
 		tc2.setText(MM.PHRASES.getPhrase("255"));
 		tc3.setText(MM.PHRASES.getPhrase("256"));
-		tc4.setText(MM.PHRASES.getPhrase("257"));
-		tc5.setText(MM.PHRASES.getPhrase("258"));
+		tc4.setText(MM.PHRASES.getPhrase("260"));
+		tc5.setText(MM.PHRASES.getPhrase("257"));
+		tc6.setText(MM.PHRASES.getPhrase("258"));
 
 		tc1.setWidth(150);
 		tc2.setWidth(150);
@@ -281,10 +320,38 @@ public class ImportDefSelector extends BaseDialog {
 		tblImportDefs.setHeaderVisible(true);
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void ReloadImportDefList() throws SQLException {
+		
+		
+		tblImportDefs.removeAll();
+		
+		List<ImportDef> defList = MM.sqlMap.queryForList("getImportDefs");
+		
+		if (defList != null && defList.size() > 0) {
+			
+			for (ImportDef def : defList) {
+				
+				TableItem ti = new TableItem(tblImportDefs, SWT.NONE);
+				
+				ti.setText(0, def.getImportName());
+				ti.setText(1, def.getImportType());
+				ti.setText(2, def.getDateField());
+				ti.setText(3, def.getDateFormat());
+				ti.setText(4, def.getMemoField());
+				ti.setText(5, def.getAmountField());
+				ti.setData(def);
+			}
+			
+		}
+		
+	}
 
 	/*
 	 * Listeners
 	 */
+	
 	SelectionAdapter cmdClose_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			shell.dispose();
@@ -294,7 +361,59 @@ public class ImportDefSelector extends BaseDialog {
 	SelectionAdapter cmdAdd_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			
+			boolean noErrors = true;
+			
+			if (txtImportName.getText().length() > 0
+				&& txtDateField.getText().length() > 0
+				&& txtMemoField.getText().length() > 0
+				&& txtAmountField.getText().length() >0
+				&& txtDateFormat.getText().length() > 0) {
+				
+				ImportDef def = new ImportDef();
+				def.setImportName(txtImportName.getText());
+				def.setImportType(cmbImportType.getText());
+				def.setDateField(txtDateField.getText());
+				def.setDateFormat(txtDateFormat.getText());
+				def.setMemoField(txtMemoField.getText());
+				def.setAmountField(txtAmountField.getText());
+				
+				// Check if name not already in use
+				try {
+					ImportDef txt = (ImportDef) MM.sqlMap.queryForObject("getImportDef", def);
+				} catch (SQLException e1) {
+					noErrors = false;
+					InfinityPfm.LogMessage(e1.getMessage(), true);
+				}
+				
+				if (noErrors) {
+					
+					try {
+						MM.sqlMap.insert("insertImportDef", def);
+						//MM.sqlMap.commitTransaction();
+						ReloadImportDefList();
+					} catch (SQLException e1) {
+						noErrors = false;
+						InfinityPfm.LogMessage(e1.getMessage(), true);
+					}
+				}
+			}
 		}
 	};
 
+	SelectionAdapter tblImportDefs_OnSelect = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			
+			TableItem[] rows = tblImportDefs.getSelection();
+			
+			if (rows != null && rows.length > 0) {
+				
+				ImportDef def = (ImportDef) rows[0].getData();
+				
+				lblSelectedName.setText(def.getImportName());
+				selectedDef = def;
+			}
+			
+		}
+	};
+	
 }

@@ -24,6 +24,7 @@ public class ImportDef {
 	private String importName;
 	private String importType;
 	private String dateField;
+	private String dateFormat;
 	private String memoField;
 	private String amountField;
 	
@@ -50,6 +51,12 @@ public class ImportDef {
 	}
 	public void setDateField(String dateField) {
 		this.dateField = dateField;
+	}
+	public String getDateFormat() {
+		return dateFormat;
+	}
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 	public String getMemoField() {
 		return memoField;
