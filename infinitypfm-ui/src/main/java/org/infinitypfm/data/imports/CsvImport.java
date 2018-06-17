@@ -70,7 +70,21 @@ public class CsvImport extends BaseImport {
 			try {
 			    for (final CSVRecord record : parser) {
 			        
-				    String memo = record.get(def.getMemoField());
+			    	String memo = "";
+			    	
+			    	if (def.getMemoField() != null && def.getMemoField().contains("+")) {
+			    		String[] memos = def.getMemoField().split("\\+");
+			    		
+			    		for (String m : memos) {
+			    			memo += " " + record.get(m);
+			    		}
+			    		
+			    		memo = memo.trim();
+			    		
+			    	} else {
+			    		memo = record.get(def.getMemoField());
+			    	}
+			    	
 				    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
 				    
 				    dataUtils.setDate(record.get(def.getDateField()), def.getDateFormat());

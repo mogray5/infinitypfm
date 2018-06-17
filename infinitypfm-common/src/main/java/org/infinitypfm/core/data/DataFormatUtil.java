@@ -54,7 +54,7 @@ public class DataFormatUtil implements Serializable {
 	private Date date = null;
 	private GregorianCalendar calendar = null;
 	private DateFormat dateFmt = new SimpleDateFormat(DataFormatUtil.DefaultDateFormat);
-	private DecimalFormat formatter = new DecimalFormat(NumberFormat.getDefault());
+	private DecimalFormat formatter = null;
 	private GregorianCalendar today = null;
 	private URLCodec _codec = null;
 	private int _precision;
@@ -63,6 +63,7 @@ public class DataFormatUtil implements Serializable {
 		today = new GregorianCalendar();
 		calendar = new GregorianCalendar();
 		_codec = new URLCodec();
+		formatter = new DecimalFormat(NumberFormat.getDefault());
 	}
 	
 	public DataFormatUtil(int precision) {
@@ -70,6 +71,7 @@ public class DataFormatUtil implements Serializable {
 		calendar = new GregorianCalendar();
 		_codec = new URLCodec();
 		_precision = precision;
+		formatter = new DecimalFormat(NumberFormat.getDefault(_precision));
 	}
 
 	public void setDate(Date dt) {
@@ -137,7 +139,7 @@ public class DataFormatUtil implements Serializable {
 	}
 
 	public String getAmountFormatted(long amount) {
-		formatter.applyPattern(NumberFormat.getDefault());
+		formatter.applyPattern(NumberFormat.getDefault(_precision));
 
 		BigDecimal amtD = strictDivide(Long.toString(amount), "100000000",
 				_precision);

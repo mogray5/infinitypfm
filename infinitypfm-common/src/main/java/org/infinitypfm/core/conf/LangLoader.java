@@ -302,6 +302,7 @@ public class LangLoader {
 		hmPhrases.put("258",  i18n.tr("Amount Field"));
 		hmPhrases.put("259",  i18n.tr("None"));
 		hmPhrases.put("260",  i18n.tr("Date Format"));
+		hmPhrases.put("261",  i18n.tr("Continue"));
 	}
 	
 	

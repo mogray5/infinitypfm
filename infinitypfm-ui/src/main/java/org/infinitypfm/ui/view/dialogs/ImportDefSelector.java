@@ -48,6 +48,7 @@ public class ImportDefSelector extends BaseDialog {
 	private Composite cmpSelectedDef = null;
 	private Button cmdClose = null;
 	private Button cmdAdd = null;
+	private Button cmdDelete = null;
 	
 	private Label lblImportName = null;
 	private Label lblImportType = null;
@@ -144,7 +145,7 @@ public class ImportDefSelector extends BaseDialog {
 		cmpSelectedDef = new Composite(sh, SWT.BORDER);
 		cmpSelectedDef.setLayout(new FormLayout());
 		cmdClose = new Button(sh, SWT.PUSH);
-		cmdClose.setText(MM.PHRASES.getPhrase("54"));
+		cmdClose.setText(MM.PHRASES.getPhrase("261"));
 		cmdClose.addSelectionListener(cmdClose_OnClick);
 	}
 	
@@ -210,6 +211,10 @@ public class ImportDefSelector extends BaseDialog {
 		cmdAdd = new Button(cmpAddEditDef, SWT.PUSH);
 		cmdAdd.setText(MM.PHRASES.getPhrase("45"));
 		cmdAdd.addSelectionListener(cmdAdd_OnClick);
+		
+		cmdDelete = new Button(cmpAddEditDef, SWT.PUSH);
+		cmdDelete.setText(MM.PHRASES.getPhrase("151"));
+		cmdDelete.addSelectionListener(cmdDelete_OnClick);
 		
 	}
 	
@@ -289,9 +294,16 @@ public class ImportDefSelector extends BaseDialog {
 		
 		FormData cmdadddata = new FormData();
 		cmdadddata.top = new FormAttachment(lblAmountField, 15);
-		cmdadddata.left = new FormAttachment(45, 0);
-		cmdadddata.right = new FormAttachment(45, 70);
+		cmdadddata.left = new FormAttachment(35, 0);
+		cmdadddata.right = new FormAttachment(35, 70);
 		cmdAdd.setLayoutData(cmdadddata);
+		
+		FormData cmddeletedata = new FormData();
+		cmddeletedata.top = new FormAttachment(lblAmountField, 15);
+		cmddeletedata.left = new FormAttachment(45, 0);
+		cmddeletedata.right = new FormAttachment(45, 70);
+		cmdDelete.setLayoutData(cmddeletedata);
+		
 	}
 	
 	private void LoadColumns() {
@@ -400,6 +412,25 @@ public class ImportDefSelector extends BaseDialog {
 		}
 	};
 
+	SelectionAdapter cmdDelete_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			
+			TableItem[] rows = tblImportDefs.getSelection();
+			
+			if (rows != null && rows.length > 0) {
+				
+				ImportDef def = (ImportDef) rows[0].getData();
+				
+				try {
+					MM.sqlMap.delete("deleteImportDef", def);
+					ReloadImportDefList();
+				} catch (SQLException e1) {
+					InfinityPfm.LogMessage(e1.getMessage(), true);
+				}
+		}
+		}
+	};
+	
 	SelectionAdapter tblImportDefs_OnSelect = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			

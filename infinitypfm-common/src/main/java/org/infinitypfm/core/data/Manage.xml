@@ -217,7 +217,7 @@
 		ImportName VARCHAR(100),
 		ImportType VARCHAR(100),
 		DateField VARCHAR(100),
-		DateFormat VARCHAR(20),
+		DateFormat VARCHAR(50),
 		MemoField VARCHAR(100),
 		AmountField VARCHAR(100),
 		UNIQUE (ImportName)
