@@ -16,15 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.infinitypfm.core.conf;
 
-package org.infinitypfm.core.types;
+public class LangInstance {
 
-import org.infinitypfm.core.conf.LangInstance;
-
-public class ImportRuleNames {
-
-	public static final String CONTAINS = LangInstance.getInstance().getPhrase("243");
-	public static final String STARTSWITH = LangInstance.getInstance().getPhrase("244");
-	public static final String ENDSWITH = LangInstance.getInstance().getPhrase("245");
+	private static LangInstance instance = null;
+	private final LangLoader lang;
+	
+	protected LangInstance() {
+		lang = new LangLoader();
+	}
+	
+	 public static LangInstance getInstance() {
+	
+		 if (instance == null) {
+			 instance = new LangInstance();
+			 
+		 }
+		 
+		 return instance;
+		 
+	 }
+	 
+	 public String getPhrase(String index) {
+		 
+		 return this.lang.getPhrase(index);
+	 }
 	
 }

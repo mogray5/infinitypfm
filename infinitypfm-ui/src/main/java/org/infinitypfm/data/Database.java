@@ -52,7 +52,9 @@ public class Database {
 				"createFKCurrencyMethods", "createTableTrades", 
 				"createFKTrades1", "createFKTrades2",
 				"createFKImportRules",
-				"akTransactions"
+				"akTransactions",
+				"createTableConnectors",
+				"createTableImportDef"
 				};
 
 		

@@ -15,16 +15,27 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+package org.infinitypfm.data.imports;
 
-package org.infinitypfm.core.types;
+import org.eclipse.swt.widgets.FileDialog;
+import org.infinitypfm.client.InfinityPfm;
+import org.infinitypfm.conf.MM;
+import org.infinitypfm.exception.ConfigurationException;
 
-import org.infinitypfm.core.conf.LangInstance;
+public class FileImportConfig implements ImportConfig {
 
-public class ImportRuleNames {
+	@Override
+	public void config() throws ConfigurationException {
 
-	public static final String CONTAINS = LangInstance.getInstance().getPhrase("243");
-	public static final String STARTSWITH = LangInstance.getInstance().getPhrase("244");
-	public static final String ENDSWITH = LangInstance.getInstance().getPhrase("245");
-	
+		FileDialog dlg = new FileDialog(InfinityPfm.shMain);
+		dlg.setText(MM.PHRASES.getPhrase("18"));
+		MM.importFile = dlg.open();
+
+		if (MM.importFile == null) {
+			throw new ConfigurationException(MM.PHRASES.getPhrase("36"));
+		}
+		
+	}
+
 }

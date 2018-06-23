@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -32,36 +32,22 @@ import java.util.List;
 
 
 import org.apache.commons.io.IOUtils;
+import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.exception.ConfigurationException;
 
-/**
- * @author wayne
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 public class QifImport extends BaseImport {
 
 	
-	
-	/**
-	 * 
-	 */
 	public QifImport() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mogray.mymoney.data.imports.BaseImport#ImportFile(java.lang.String)
-	 */
-	public List<Transaction> ImportFile(String sFile) throws IOException, ParseException {
+
+	public List<Transaction> ImportFile(ImportConfig config) throws IOException, ParseException, ConfigurationException {
 		
-		//boolean startTran = false;
-		//boolean endTran = false;
 		boolean startElement = false;
-		//boolean endElement = false;
 		boolean inTag =  false;
 		
 		String element = "";
@@ -69,56 +55,51 @@ public class QifImport extends BaseImport {
 		Transaction tran = null;
 		ArrayList<Transaction> tranList = new ArrayList<Transaction>();
 		
-//		try {
-			
-			if (sFile==null){return null;}
-			
-			InputStream in = new BufferedInputStream(
-		            new FileInputStream(sFile));
-			
-			String body = IOUtils.toString(in);
-			char letters[] = body.toCharArray();
-			char l;
-			for (int i=0; i<letters.length; i++){
-				l = letters[i];
-				if (l=='\n'){
-					startElement = true;
-					inTag=false;
-					if (tran != null){
-						SaveElement(element, val, tran);
-					}
-					
-					val = "";
-					element = "";
-					
-				} else if ((l=='D' || l=='T' || l=='N' || l=='P') && startElement){
-				  startElement = false;
-				  element = String.valueOf(l);				  
-				  inTag = true;
-				  
-				  if (tran==null){
-					  tran = new Transaction();
-					  tranList.add(tran);
-				  }
-				  				  
-				} else if (!startElement && inTag){
-					if (l != '\n' && l != '\r'){
-						val += String.valueOf(l);	
-					}
-					
-				} else if (l=='^'){
-				  	tran = null;					
+		config.config();
+		
+		if (MM.importFile==null){return null;}
+		
+		InputStream in = new BufferedInputStream(
+	            new FileInputStream(MM.importFile));
+		
+		String body = IOUtils.toString(in);
+		char letters[] = body.toCharArray();
+		char l;
+		for (int i=0; i<letters.length; i++){
+			l = letters[i];
+			if (l=='\n'){
+				startElement = true;
+				inTag=false;
+				if (tran != null){
+					SaveElement(element, val, tran);
 				}
 				
+				val = "";
+				element = "";
+				
+			} else if ((l=='D' || l=='T' || l=='N' || l=='P') && startElement){
+			  startElement = false;
+			  element = String.valueOf(l);				  
+			  inTag = true;
+			  
+			  if (tran==null){
+				  tran = new Transaction();
+				  tranList.add(tran);
+			  }
+			  				  
+			} else if (!startElement && inTag){
+				if (l != '\n' && l != '\r'){
+					val += String.valueOf(l);	
+				}
+				
+			} else if (l=='^'){
+			  	tran = null;					
 			}
 			
-			//this.OpenImportDialog(tranList);
-			return tranList;
+		}
+		
+		return tranList;
 			
-//		} catch (IOException ioe){
-//			MM.LogMessage(ioe.getMessage());
-//		}
-
 	}
 	
 	private void SaveElement(String element, String val, Transaction tran) throws ParseException{
@@ -133,13 +114,9 @@ public class QifImport extends BaseImport {
 		} else if (element.equalsIgnoreCase("D")){
 			DateFormat dateFmt = new SimpleDateFormat("M/dd/yyyy");
 			
-//			try {
-				Date dt = dateFmt.parse(val);
-				tran.setTranDate(dt);
+		Date dt = dateFmt.parse(val);
+		tran.setTranDate(dt);
 			
-//			} catch (ParseException pe) {
-//				MM.LogMessage(pe.getMessage());
-//			}
 		}
 	}
 

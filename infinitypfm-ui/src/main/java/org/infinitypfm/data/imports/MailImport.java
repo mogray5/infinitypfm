@@ -15,8 +15,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package org.infinitypfm.data.imports;
 
 import java.io.FileNotFoundException;
@@ -27,39 +26,13 @@ import java.util.List;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.exception.ConfigurationException;
 
+public class MailImport extends BaseImport {
 
-
-/**
- * @author Wayne Gray
- */
-public abstract class BaseImport {
-
-	public static final String FLD_CHECKNUM = "CHECKNUM";
-	public static final String FLD_DTPOSTED = "DTPOSTED";
-	public static final String FLD_FITID = "FITID";
-	public static final String FLD_NAME = "NAME";
-	public static final String FLD_MEMO = "MEMO";
-	public static final String FLD_STMTTRN = "STMTTRN";
-	public static final String FLD_TRNAMT = "TRNAMT";
-	
-	public BaseImport() {
-		super();
+	@Override
+	public List<Transaction> ImportFile(ImportConfig config)
+			throws FileNotFoundException, IOException, ParseException, ConfigurationException {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	/**
-	 * Perform the import from the passed file path.  What to do with the data is handled
-	 * in sub classes.
-	 * 
-	 * @param sFile
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public abstract List<Transaction> ImportFile(ImportConfig config) throws FileNotFoundException, IOException, ParseException, ConfigurationException;
-	
-   }
-    
-    
 
-	
+}

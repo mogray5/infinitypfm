@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -33,8 +33,8 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.conf.PfmSettings;
-import org.infinitypfm.core.lang.LangLoader;
 
 /**
  * @author Wayne Gray
@@ -54,7 +54,7 @@ public class DataFormatUtil implements Serializable {
 	private Date date = null;
 	private GregorianCalendar calendar = null;
 	private DateFormat dateFmt = new SimpleDateFormat(DataFormatUtil.DefaultDateFormat);
-	private DecimalFormat formatter = new DecimalFormat(NumberFormat.getDefault());
+	private DecimalFormat formatter = null;
 	private GregorianCalendar today = null;
 	private URLCodec _codec = null;
 	private int _precision;
@@ -63,6 +63,7 @@ public class DataFormatUtil implements Serializable {
 		today = new GregorianCalendar();
 		calendar = new GregorianCalendar();
 		_codec = new URLCodec();
+		formatter = new DecimalFormat(NumberFormat.getDefault());
 	}
 	
 	public DataFormatUtil(int precision) {
@@ -70,6 +71,7 @@ public class DataFormatUtil implements Serializable {
 		calendar = new GregorianCalendar();
 		_codec = new URLCodec();
 		_precision = precision;
+		formatter = new DecimalFormat(NumberFormat.getDefault(_precision));
 	}
 
 	public void setDate(Date dt) {
@@ -98,6 +100,11 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	public void setDate(String sDate, String format) {
+		dateFmt = new SimpleDateFormat(format);
+		setDate(sDate);
+	}
+	
 	public Date getDate() {
 		return calendar.getTime();
 	}
@@ -132,7 +139,7 @@ public class DataFormatUtil implements Serializable {
 	}
 
 	public String getAmountFormatted(long amount) {
-		formatter.applyPattern(NumberFormat.getDefault());
+		formatter.applyPattern(NumberFormat.getDefault(_precision));
 
 		BigDecimal amtD = strictDivide(Long.toString(amount), "100000000",
 				_precision);
@@ -158,7 +165,7 @@ public class DataFormatUtil implements Serializable {
 
 	public Date setNext(String frequency) {
 
-		LangLoader lang = LangLoader.getInstance();
+		LangInstance lang = LangInstance.getInstance();
 		
 		if (frequency.equals(lang.getPhrase(PfmSettings.RECUR_BIWEEKLY))) {
 			calendar.add(Calendar.WEEK_OF_YEAR, 2);

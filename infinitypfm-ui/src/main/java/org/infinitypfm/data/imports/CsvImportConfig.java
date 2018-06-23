@@ -16,15 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.infinitypfm.data.imports;
 
-package org.infinitypfm.core.types;
+public class CsvImportConfig extends FileImportConfig {
 
-import org.infinitypfm.core.conf.LangInstance;
 
-public class ImportRuleNames {
-
-	public static final String CONTAINS = LangInstance.getInstance().getPhrase("243");
-	public static final String STARTSWITH = LangInstance.getInstance().getPhrase("244");
-	public static final String ENDSWITH = LangInstance.getInstance().getPhrase("245");
-	
 }

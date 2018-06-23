@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2013 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -16,15 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.infinitypfm.data.imports;
 
-package org.infinitypfm.core.types;
+import org.infinitypfm.exception.ConfigurationException;
 
-import org.infinitypfm.core.conf.LangInstance;
-
-public class ImportRuleNames {
-
-	public static final String CONTAINS = LangInstance.getInstance().getPhrase("243");
-	public static final String STARTSWITH = LangInstance.getInstance().getPhrase("244");
-	public static final String ENDSWITH = LangInstance.getInstance().getPhrase("245");
+public interface ImportConfig {
 	
+	/**
+	 * Use this interface for import types that require extra set-up to get the 
+	 * list of incoming transctions.
+	 * 
+	 * Will be called by the base importer before trying to process the import file.
+	 * 
+	 * @throws ConfigurationException
+	 */
+	public void config() throws ConfigurationException;
+
 }
