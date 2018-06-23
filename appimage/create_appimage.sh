@@ -5,7 +5,7 @@ echo -e "\n
 Enter release version to use when naming the app image: \n"
 read response
 
-sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java
+sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
 sudo apt-get install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni
 sudo apt-get install bzr ant default-jdk
 
@@ -40,6 +40,8 @@ cp -L /usr/lib/jni/libswt-awt-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-pi-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-webkit-gtk-3836.so infinitypfm.AppDir/usr/lib/;
+cp -L /usr/shre/java/mailapi.jar infinitypfm.AppDir/usr/lib/;
+cp -L /usr/share/java/commons-csv.jar infinitypfm.AppDir/usr/lib/;
 cp -L -R /usr/lib/jvm/java-1.8.0-openjdk-amd64 infinitypfm.AppDir/usr/lib/;
 
 #cp infinitypfm.run infinitypfm.AppDir/usr/bin/infinitypfm

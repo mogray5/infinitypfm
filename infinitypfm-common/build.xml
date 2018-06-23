@@ -3,7 +3,7 @@
 	<property name="build.sourceDirectory" value="infinitypfm-common/src/main/java" />
 	<property name="build.directory" value="build" />
 	<property name="build.outputDirectory" value="${build.directory}/classes" />
-	<property name="classpath" value="/usr/share/java/commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/jackson-core-lgpl.jar" />
+	<property name="classpath" value="/usr/share/java/commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/jackson-core-lgpl.jar:/usr/share/java/mailapi.jar" />
 	<property name="jar" value="infinitypfm-common.jar" />
 	<target name="clean">
 		<delete dir="${build.directory}" />
