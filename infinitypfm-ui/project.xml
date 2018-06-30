@@ -35,6 +35,7 @@
         <pathelement location="/usr/share/java/commons-collections3.jar"/>
         <pathelement location="/usr/share/java/hsqldb.jar"/>
         <pathelement location="/usr/share/java/commons-configuration.jar"/>
+    	<pathelement location="/usr/share/java/commons-csv.jar"/>   	
     </path>
     <target name="init">
         <mkdir dir="bin"/>
