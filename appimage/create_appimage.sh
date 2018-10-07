@@ -34,6 +34,7 @@ cp -L /usr/share/java/commons-lang.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/ezmorph.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/commons-collections3.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/hsqldb.jar infinitypfm.AppDir/usr/lib/;
+cp -L /usrshare/java/junit.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-cairo-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-atk-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-awt-gtk-3836.so infinitypfm.AppDir/usr/lib/;

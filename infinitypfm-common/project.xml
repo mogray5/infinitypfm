@@ -12,6 +12,7 @@
         <pathelement location="/usr/share/java/commons-lang.jar"/>
         <pathelement location="/usr/share/java/gettext-commons.jar"/>
         <pathelement location="/usr/share/java/jackson-core-lgpl.jar"/>
+    	<pathelement location="/usr/share/java/junit.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
