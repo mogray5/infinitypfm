@@ -18,6 +18,12 @@
  */
 package org.infinitypfm.core.conf;
 
+/**
+ * Singleton for loading translations.
+ *
+ *	TODO:  This should replace MM.phrases
+ *
+ */
 public class LangInstance {
 
 	private static LangInstance instance = null;
@@ -31,15 +37,12 @@ public class LangInstance {
 	
 		 if (instance == null) {
 			 instance = new LangInstance();
-			 
 		 }
 		 
 		 return instance;
-		 
 	 }
 	 
 	 public String getPhrase(String index) {
-		 
 		 return this.lang.getPhrase(index);
 	 }
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,11 +20,20 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
+/**
+ * POJO for defining a CurrencyMethod.
+ * 
+ * Currency Method are a mechanism for looking
+ * up the exchange rate for a currency.
+ * 
+ * The lookup requires a HTTP address and
+ * the results need to be JSON.
+ * 
+ * They are user defined.
+ *
+ */
 public class CurrencyMethod   implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private long currencyID;
@@ -56,7 +65,5 @@ public class CurrencyMethod   implements Serializable{
 	public void setMethodPath(String methodPath) {
 		this.methodPath = methodPath;
 	}
-	
-
 	
 }

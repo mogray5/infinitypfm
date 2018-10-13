@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -24,7 +24,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.infinitypfm.core.data.IReportable;
 
 /**
- * @author wayne
+ * POJO for storing budget totals.
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -106,9 +106,6 @@ public class BudgetBalance implements Serializable, IReportable {
 		this.actName = actName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.infinitypfm.core.data.IReportable#getHeaderRow()
-	 */
 	@Override
 	public String getHeaderRow() {
 	StringBuilder sb = new StringBuilder();
@@ -120,9 +117,6 @@ public class BudgetBalance implements Serializable, IReportable {
 		return sb.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.infinitypfm.core.data.IReportable#toReportRow()
-	 */
 	@Override
 	public String toReportRow() {
 
