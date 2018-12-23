@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,9 +20,6 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.infinitypfm.core.data.IReportable;
-
 
 /**
  * @author wayne
@@ -30,7 +27,7 @@ import org.infinitypfm.core.data.IReportable;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class MonthlyBalance implements Serializable, IReportable {
 	
 	/**

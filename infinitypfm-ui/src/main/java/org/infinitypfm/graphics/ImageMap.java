@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -78,7 +78,6 @@ public class ImageMap {
 		for (int i = 0; i < aFiles.size(); i++) {
 			item = (ImageData) hm.get(aFiles.get(i));
 			if (item != null) {
-				// item.dispose();
 			}
 		}
 	}

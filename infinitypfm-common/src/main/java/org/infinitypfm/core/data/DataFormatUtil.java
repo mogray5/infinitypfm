@@ -266,6 +266,9 @@ public class DataFormatUtil implements Serializable {
 			val = val.replaceAll("\\(", "\\-").replaceAll("\\)", "");
 		}
 
+		// Strip off commas
+		val = val.replaceAll("\\,", "");
+		
 		BigDecimal newVal = new BigDecimal(val);
 
 		return moneyToLong(newVal);

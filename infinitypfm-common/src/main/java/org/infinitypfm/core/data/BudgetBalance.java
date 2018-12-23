@@ -20,14 +20,11 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.infinitypfm.core.data.IReportable;
-
 /**
  * POJO for storing budget totals.
  *
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class BudgetBalance implements Serializable, IReportable {
 
 	
