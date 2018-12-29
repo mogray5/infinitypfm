@@ -49,7 +49,7 @@ public class InfinityUpdates {
 			}
 		}
 
-		if (sVersion.equals("0.0.1")) {
+		if (sVersion.equals("0.0.1") || sVersion == null) {
 			ApplyVersion002();
 			ApplyVersion010();
 			ApplyVersion030();

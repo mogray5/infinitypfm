@@ -7,7 +7,7 @@ read response
 
 sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
 sudo apt-get install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni
-sudo apt-get install bzr ant default-jdk
+sudo apt-get install ant default-jdk
 
 mkdir -p infinitypfm.AppDir/usr/bin
 mkdir -p infinitypfm.AppDir/usr/lib

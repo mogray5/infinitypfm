@@ -104,7 +104,7 @@ public class InfinityPfm {
 		try {
 			updates.ProcessUpdates();
 		} catch (SQLException e) {
-			InfinityPfm.LogMessage(e.getMessage(), true);
+			e.printStackTrace();
 		}
 		
 		//Load app options
