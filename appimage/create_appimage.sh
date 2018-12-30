@@ -5,9 +5,16 @@ echo -e "\n
 Enter release version to use when naming the app image: \n"
 read response
 
-sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
-sudo apt-get install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni
-sudo apt-get install ant default-jdk
+echo -e "\n
+Install required libraries? (y|n): \n"
+read doinstall
+
+if [[ "${doinstall}" == *"y"* ]]
+then
+	sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
+	sudo apt-get install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni	
+	sudo apt-get install ant default-jdk
+fi
 
 mkdir -p infinitypfm.AppDir/usr/bin
 mkdir -p infinitypfm.AppDir/usr/lib
