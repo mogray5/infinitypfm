@@ -61,7 +61,7 @@
 	</target>
 	<target name="junit" depends="compile">
 
-		  <junit printsummary="yes" haltonfailure="yes">
+		  <junit printsummary="yes" haltonfailure="no">
 
 			<!--
 				<classpath location="lib/junit-4.11.jar" />
