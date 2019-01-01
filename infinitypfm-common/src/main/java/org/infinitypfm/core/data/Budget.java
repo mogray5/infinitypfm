@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -24,31 +24,20 @@ import org.infinitypfm.core.data.BudgetDetail;
 
 
 /**
- * @author wayne
+ * POJO for Budgets.
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Budget implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	int budgetId = -1;
 	String budgetName = null;
 	BudgetDetail[] budgetDetail = null;
 	
-	/**
-	 * 
-	 */
 	public Budget() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
-	
-
 	/**
 	 * @return Returns the budgetId.
 	 */
@@ -73,7 +62,6 @@ public class Budget implements Serializable {
 	public void setBudgetName(String budgetName) {
 		this.budgetName = budgetName;
 	}
-	
 	
 	/**
 	 * @return Returns the budgetDetail.

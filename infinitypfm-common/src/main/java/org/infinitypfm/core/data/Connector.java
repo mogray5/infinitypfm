@@ -19,6 +19,7 @@
 
 package org.infinitypfm.core.data;
 
+@Deprecated
 public class Connector {
 
 	private long connectorId;

@@ -404,7 +404,8 @@ private void LoadColumns() {
 		try {
 		
 			if (txtOffset.getText().length()>0) {
-				float amount = new Float(txtOffset.getText());
+				
+				float amount = new Float(txtOffset.getText().replaceAll("\\,",  ""));
 				if (amount != 0){
 					if (cmbOffset.getText().length() > 0) {
 						amount = new Float(txtExRate.getText());
@@ -543,6 +544,8 @@ private void LoadColumns() {
 				cmbOffset.clearSelection();
 				txtOffset.setText("0");
 				txtExRate.setText("1");
+			} else {
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("234"), true);
 			}
 		}
 	};

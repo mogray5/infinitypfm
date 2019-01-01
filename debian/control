@@ -12,7 +12,8 @@ Build-Depends-Indep: default-jdk,
  libhsqldb-java,
  libgettext-commons-java,
  libcommons-httpclient-java,
- libjson-java
+ libjson-java,
+ junit
 Standards-Version: 3.9.8
 Homepage: http://infinitypfm.org/
 Section: gnome

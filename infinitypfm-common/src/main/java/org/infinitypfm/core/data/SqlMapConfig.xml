@@ -51,7 +51,7 @@
      <property name="Pool.MaximumCheckoutTime" value="120000"/>
      <property name="Pool.TimeToWait" value="500"/>
      <property name="Pool.PingQuery" value="select 1 from ACCOUNTS;"/>
-     <property name="Pool.PingEnabled" value="true"/>
+     <property name="Pool.PingEnabled" value="false"/>
      <property name="Pool.PingConnectionsOlderThan" value="1"/>
      <property name="Pool.PingConnectionsNotUsedFor" value="1"/>
    </dataSource>

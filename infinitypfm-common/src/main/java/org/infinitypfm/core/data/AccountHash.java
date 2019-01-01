@@ -21,10 +21,9 @@ package org.infinitypfm.core.data;
 import java.util.*;
 
 /**
- * @author wayne
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Helper class to create a HashMap of a list
+ * of accounts and allow searching for accounts
+ * by name.
  */
 public class AccountHash {
 	
@@ -32,14 +31,10 @@ public class AccountHash {
 	@SuppressWarnings("rawtypes")
 	private List actList = null;
 
-	/**
-	 * 
-	 */
 	public AccountHash(@SuppressWarnings("rawtypes") List list) {
 		super();
 		actList = list;
 		HashAccounts();
-
 	}
 
 	private void HashAccounts(){

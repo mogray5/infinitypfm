@@ -37,7 +37,8 @@ import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.conf.PfmSettings;
 
 /**
- * @author Wayne Gray
+ * Helper methods for working with dates, number formats,
+ * and rounding.
  * 
  */
 public class DataFormatUtil implements Serializable {
@@ -66,6 +67,12 @@ public class DataFormatUtil implements Serializable {
 		formatter = new DecimalFormat(NumberFormat.getDefault());
 	}
 	
+	/**
+	 * 
+	 * @param precision set precision level of numbers.
+	 * Bitcoin and related currencies can be up to eight
+	 * decimal places.
+	 */
 	public DataFormatUtil(int precision) {
 		today = new GregorianCalendar();
 		calendar = new GregorianCalendar();
@@ -74,17 +81,35 @@ public class DataFormatUtil implements Serializable {
 		formatter = new DecimalFormat(NumberFormat.getDefault(_precision));
 	}
 
+	/**
+	 * Use a date created external to this class.
+	 * 
+	 * @param dt Date to format
+	 */
 	public void setDate(Date dt) {
 		date = dt;
 		calendar.setTime(date);
 
 	}
 
+	/**
+	 * Use a date with passed year and month.
+	 * 
+	 * @param yr Year
+	 * @param month Month 1-12
+	 */
 	public void setDate(int yr, int month) {
 		calendar = new GregorianCalendar(yr, month - 1, 1);
 		date = calendar.getTime();
 	}
 
+	
+	/**
+	 * Convert the passed string to a date
+	 * using the current format setting.
+	 * 
+	 * @param sDate String to parse into a date
+	 */
 	public void setDate(String sDate) {
 
 		try {
@@ -100,6 +125,13 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	/**
+	 * Convert the passed string to a date
+	 * using the passed format setting.
+	 * 
+	 * @param sDate String to parse into a date
+	 * @param format Format tu use for parsing the date
+	 */
 	public void setDate(String sDate, String format) {
 		dateFmt = new SimpleDateFormat(format);
 		setDate(sDate);
@@ -114,6 +146,13 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	/**
+	 * Return the full name for month of the current
+	 * date setting.  January, February etc.
+	 * 
+	 * @param offset Java offsetted month to return 0-11 
+	 * @return
+	 */
 	public String getMonthName(int offset) {
 		return monthName[calendar.get(Calendar.MONTH) + offset];
 	}
@@ -138,6 +177,13 @@ public class DataFormatUtil implements Serializable {
 			return dateFmt.format(this.getToday());
 	}
 
+	/**
+	 * Format a number using default format with passed
+	 * precision.
+	 * 
+	 * @param amount in long format
+	 * @return Formatted amount as string
+	 */
 	public String getAmountFormatted(long amount) {
 		formatter.applyPattern(NumberFormat.getDefault(_precision));
 
@@ -148,6 +194,14 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	/**
+	 * Format a number using passed format with passed
+	 * precision.
+	 * 
+	 * @param amount in long format
+	 * @param format format to use
+	 * @return Formatted amount as a string
+	 */
 	public String getAmountFormatted(long amount, String format) {
 
 		formatter.applyPattern(format);
@@ -158,11 +212,25 @@ public class DataFormatUtil implements Serializable {
 		return formatter.format(amtD);
 	}
 
+	/**
+	 * Round passed double using the passed format.
+	 * 
+	 * @param val number to be rounded
+	 * @param format format to use
+	 * @return rounded double
+	 */
 	public double roundDouble(double val, String format) {
 		DecimalFormat twoDForm = new DecimalFormat(format);
 		return Double.valueOf(twoDForm.format(val));
 	}
 
+	/**
+	 * Move a date forward to a future date.  Used in recurring
+	 * transactions 
+	 * 
+	 * @param frequency as string "Monthly, Daily, etc"
+	 * @return Future date
+	 */
 	public Date setNext(String frequency) {
 
 		LangInstance lang = LangInstance.getInstance();
@@ -184,6 +252,13 @@ public class DataFormatUtil implements Serializable {
 		return today.getTime();
 	}
 
+	/**
+	 * Convert a money value formatted as a string back into 
+	 * long format which is what's stored in the DB.
+	 *  
+	 * @param val money value as a String
+	 * @return money value converted long format
+	 */
 	public static long moneyToLong(String val) {
 
 		if (val.startsWith("(")) {
@@ -191,18 +266,36 @@ public class DataFormatUtil implements Serializable {
 			val = val.replaceAll("\\(", "\\-").replaceAll("\\)", "");
 		}
 
+		// Strip off commas
+		val = val.replaceAll("\\,", "");
+		
 		BigDecimal newVal = new BigDecimal(val);
 
 		return moneyToLong(newVal);
 
 	}
 
+	/**
+	 * Convert a money value formatted as a BigDecimal back into 
+	 * long format which is what's stored in the DB.
+	 * 
+	 * @param val money value as BigDecimal
+	 * @return money value converted long format
+	 */
 	public static long moneyToLong(BigDecimal val) {
 
 		return val.multiply(new BigDecimal("100000000")).longValue();
 
 	}
 
+	/**
+	 * Divide two money values without losing precision.
+	 * 
+	 * @param numerator BigDecimal
+	 * @param denominator BigDecimal
+	 * @param scale Desired decimal precision of the output
+	 * @return BigDecimal of divided result
+	 */
 	public BigDecimal strictDivide(String numerator, String denominator,
 			int scale) {
 
@@ -214,6 +307,14 @@ public class DataFormatUtil implements Serializable {
 
 	}
 
+	/**
+	 * Multiply two money values passed as strings without losing
+	 * precision.
+	 * 
+	 * @param x money value as string
+	 * @param y value as string
+	 * @return BigDecimal of multiplied result
+	 */
 	public BigDecimal strictMultiply(String x, String y) {
 
 		BigDecimal valX = new BigDecimal(x);
@@ -238,6 +339,12 @@ public class DataFormatUtil implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * URL Encode a date value
+	 * 
+	 * @param dt Date
+	 * @return String result
+	 */
 	public String urlEncode(Date dt) {
 		
 		if (dt == null) return "";

@@ -1,10 +1,18 @@
 <?xml version="1.0"?>
-<project name="pkg-java" default="compile" basedir=".">
+<project name="pkg-java" default="junit" basedir=".">
 	<property name="build.sourceDirectory" value="infinitypfm-common/src/main/java" />
+	<property name="build.testDir" value="infinitypfm-common/src/test/java" />
 	<property name="build.directory" value="build" />
 	<property name="build.outputDirectory" value="${build.directory}/classes" />
-	<property name="classpath" value="/usr/share/java/commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/jackson-core-lgpl.jar:/usr/share/java/mailapi.jar" />
+	<property name="classpath" value="/usr/share/java/commons-codec.jar:/usr/share/java/commons-lang.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/jackson-core-lgpl.jar:/usr/share/java/mailapi.jar:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core-1.3.jar" />
 	<property name="jar" value="infinitypfm-common.jar" />
+	
+	<path id="src.path">
+	  <pathelement location="${build.sourceDirectory}" />
+	  <pathelement location="${build.testDir}" />
+	</path>
+	
+	
 	<target name="clean">
 		<delete dir="${build.directory}" />
 		<delete file="${jar}" />
@@ -31,7 +39,8 @@
 		<antcall target="getres">
 			<param name="local" value="es"/>
 		</antcall>
-		<javac srcdir="${build.sourceDirectory}" destdir="${build.outputDirectory}" nowarn="true" debug="on">
+		<javac destdir="${build.outputDirectory}" nowarn="true" debug="on">
+			<src refid="src.path" />
 			<classpath path="${classpath}" />
 		</javac>
 		<jar jarfile="${jar}" basedir="${build.outputDirectory}" />
@@ -49,5 +58,29 @@
 			<arg value="${local}" />
 			<arg value="${build.sourceDirectory}/org/infinitypfm/core/lang/po/${local}.po" />
 		</exec>
+	</target>
+	<target name="junit" depends="compile">
+
+		  <junit printsummary="yes" haltonfailure="no">
+
+			<!--
+				<classpath location="lib/junit-4.11.jar" />
+				<classpath location="lib/hamcrest-core-1.3.jar" />
+				<classpath refid="test.path" /
+			-->
+
+			<classpath location="${classpath}" />
+			<classpath refid="src.path" />
+		  	
+			<formatter type="xml" />
+			<formatter type="plain" />
+				
+			<batchtest fork="yes" todir=".">
+				<fileset dir="${build.testDir}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+				
+		  </junit>
 	</target>
 </project>

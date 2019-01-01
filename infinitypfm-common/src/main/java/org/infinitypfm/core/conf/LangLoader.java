@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -26,6 +26,9 @@ import org.xnap.commons.i18n.I18nFactory;
 
 
 /**
+ * This class loads a HashMap of words and phrases in the user's local language and is
+ * referenced throughout the application.  
+ * 
  * @author Wayne Gray
  */
 public class LangLoader {
