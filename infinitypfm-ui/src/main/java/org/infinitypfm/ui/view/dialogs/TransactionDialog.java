@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2018 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -243,29 +243,29 @@ public class TransactionDialog extends BaseDialog {
 		lblAccount.setLayoutData(lblaccountdata);
 		
 		FormData lblmemotdata = new FormData();
-		lblmemotdata.top = new FormAttachment(lblAccount, 15);
+		lblmemotdata.top = new FormAttachment(lblAccount, 20);
 		lblmemotdata.left = new FormAttachment(0, 30);
 		lblMemo.setLayoutData(lblmemotdata);
 		
 		FormData txtmemotdata = new FormData();
-		txtmemotdata.top = new FormAttachment(lblAccount, 15);
+		txtmemotdata.top = new FormAttachment(lblAccount, 10);
 		txtmemotdata.left = new FormAttachment(lblMemo, 90);
 		txtmemotdata.right = new FormAttachment(100, -20);
 		txtMemo.setLayoutData(txtmemotdata);
 		
 		FormData lblamountdata = new FormData();
-		lblamountdata.top = new FormAttachment(lblMemo, 15);
+		lblamountdata.top = new FormAttachment(lblMemo, 25);
 		lblamountdata.left = new FormAttachment(0, 30);
 		lblAmount.setLayoutData(lblamountdata);
 		
 		FormData txtamountdata = new FormData();
-		txtamountdata.top = new FormAttachment(lblMemo, 15);
+		txtamountdata.top = new FormAttachment(lblMemo, 16);
 		txtamountdata.left = new FormAttachment(lblMemo, 90);
 		txtamountdata.right = new FormAttachment(100, -150);
 		txtAmount.setLayoutData(txtamountdata);
 
 		FormData lbldatedata = new FormData();
-		lbldatedata.top = new FormAttachment(lblAmount, 15);
+		lbldatedata.top = new FormAttachment(lblAmount, 25);
 		lbldatedata.left = new FormAttachment(0, 30);
 		lblDate.setLayoutData(lbldatedata);
 		
@@ -276,13 +276,13 @@ public class TransactionDialog extends BaseDialog {
 		txtDate.setLayoutData(cmbdatedata);
 		
 		FormData cmddatepickerdata = new FormData();
-		cmddatepickerdata.top = new FormAttachment(lblAmount, 13);
+		cmddatepickerdata.top = new FormAttachment(lblAmount, 20);
 		cmddatepickerdata.left = new FormAttachment(txtDate, 0);
 		//cmddatepickerdata.right = new FormAttachment(100, -100);
 		cmdDatePicker.setLayoutData(cmddatepickerdata);
 		
 		FormData cmpoffsetdata = new FormData();
-		cmpoffsetdata.top = new FormAttachment(lblDate, 15);
+		cmpoffsetdata.top = new FormAttachment(lblDate, 25);
 		cmpoffsetdata.left = new FormAttachment(0, 30);
 		cmpoffsetdata.right = new FormAttachment(100, -20);
 		cmpoffsetdata.bottom = new FormAttachment(100, -60);
@@ -294,13 +294,13 @@ public class TransactionDialog extends BaseDialog {
 		lblOffset.setLayoutData(lbloffsetdata);
 	
 		FormData cmboffsetdata = new FormData();
-		cmboffsetdata.top = new FormAttachment(0, 10);
+		cmboffsetdata.top = new FormAttachment(0, 5);
 		cmboffsetdata.left = new FormAttachment(lblOffset, 10);
 		cmboffsetdata.right = new FormAttachment(100, -100);
 		cmbOffset.setLayoutData(cmboffsetdata);
 		
 		FormData lbloffsetamountdata = new FormData();
-		lbloffsetamountdata.top = new FormAttachment(lblOffset, 10);
+		lbloffsetamountdata.top = new FormAttachment(lblOffset, 20);
 		lbloffsetamountdata.left = new FormAttachment(0, 10);
 		lblOffsetAmount.setLayoutData(lbloffsetamountdata);
 		
@@ -311,28 +311,28 @@ public class TransactionDialog extends BaseDialog {
 		txtOffset.setLayoutData(txtoffsetdata);
 		
 		FormData lblexratedata = new FormData();
-		lblexratedata.top = new FormAttachment(lblOffsetAmount, 10);
+		lblexratedata.top = new FormAttachment(lblOffsetAmount, 30);
 		lblexratedata.left = new FormAttachment(0, 10);
 		lblExRate.setLayoutData(lblexratedata);
 		
 		FormData txtexratedata = new FormData();
-		txtexratedata.top = new FormAttachment(lblOffsetAmount, 10);
+		txtexratedata.top = new FormAttachment(lblOffsetAmount, 18);
 		txtexratedata.left = new FormAttachment(lblOffset, 10);
 		txtexratedata.right = new FormAttachment(100, -300);
 		txtExRate.setLayoutData(txtexratedata);
 
 		FormData cmdaddoffsetdata = new FormData();
-		cmdaddoffsetdata.top = new FormAttachment(lblOffsetAmount, 10);
+		cmdaddoffsetdata.top = new FormAttachment(lblOffsetAmount, 25);
 		cmdaddoffsetdata.left = new FormAttachment(txtExRate, 5);
 		cmdAddOffset.setLayoutData(cmdaddoffsetdata);
 		
 		FormData cmdclearoffsetdata = new FormData();
-		cmdclearoffsetdata.top = new FormAttachment(lblOffsetAmount, 10);
+		cmdclearoffsetdata.top = new FormAttachment(lblOffsetAmount, 25);
 		cmdclearoffsetdata.left = new FormAttachment(cmdAddOffset, 5);
 		cmdClearOffset.setLayoutData(cmdclearoffsetdata);
 		
 		FormData cmddeleteoffsetlinedata = new FormData();
-		cmddeleteoffsetlinedata.top = new FormAttachment(lblOffsetAmount, 10);
+		cmddeleteoffsetlinedata.top = new FormAttachment(lblOffsetAmount, 25);
 		cmddeleteoffsetlinedata.left = new FormAttachment(cmdClearOffset, 5);
 		cmdDeleteOffsetLine.setLayoutData(cmddeleteoffsetlinedata);
 		
@@ -344,12 +344,12 @@ public class TransactionDialog extends BaseDialog {
 		tblOffsets.setLayoutData(tbloffsetsdata);
 				
 		FormData cmdcommitdata = new FormData();
-		cmdcommitdata.bottom = new FormAttachment(100, -10);
-		cmdcommitdata.left = new FormAttachment(40, 0);
+		cmdcommitdata.bottom = new FormAttachment(100, -15);
+		cmdcommitdata.left = new FormAttachment(43, 0);
 		cmdCommit.setLayoutData(cmdcommitdata);
 		
 		FormData cmdclosedata = new FormData();
-		cmdclosedata.bottom = new FormAttachment(100, -10);
+		cmdclosedata.bottom = new FormAttachment(100, -15);
 		cmdclosedata.left = new FormAttachment(cmdCommit, 10);
 		cmdClose.setLayoutData(cmdclosedata);
 		
@@ -377,7 +377,7 @@ private void LoadColumns() {
 		 shell.setText(MM.PHRASES.getPhrase("79") + " " +
 				MM.APPTITLE);
 	 
-		shell.setSize(650, 435);
+		shell.setSize(750, 535);
 		this.CenterWindow();
 
 		shell.open();

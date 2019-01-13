@@ -251,7 +251,7 @@ public class RecurrenceView extends BaseView {
 
 		FormData cmbaccountdata = new FormData();
 		cmbaccountdata.top = new FormAttachment(30, 0);
-		cmbaccountdata.left = new FormAttachment(lblAccount, 50);
+		cmbaccountdata.left = new FormAttachment(lblAccount, 100);
 		cmbaccountdata.right = new FormAttachment(lblAccount, 300);
 		cmbAccount.setLayoutData(cmbaccountdata);
 

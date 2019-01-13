@@ -132,17 +132,17 @@ public class CurrencyView extends BaseView {
 		tbMain.setLayoutDat(tbmaindata);
 
 		FormData cmdaddmethoddata = new FormData();
-		cmdaddmethoddata.top = new FormAttachment(100, -50);
+		cmdaddmethoddata.top = new FormAttachment(100, -40);
 		cmdaddmethoddata.left = new FormAttachment(5, 0);
 		cmdAddMethod.setLayoutData(cmdaddmethoddata);
 
 		FormData cmdremovemethoddata = new FormData();
-		cmdremovemethoddata.top = new FormAttachment(100, -50);
+		cmdremovemethoddata.top = new FormAttachment(100, -40);
 		cmdremovemethoddata.left = new FormAttachment(cmdAddMethod, 10);
 		cmdRemoveMethod.setLayoutData(cmdremovemethoddata);
 
 		FormData cmdrefreshdata = new FormData();
-		cmdrefreshdata.top = new FormAttachment(100, -50);
+		cmdrefreshdata.top = new FormAttachment(100, -40);
 		cmdrefreshdata.left = new FormAttachment(cmdRemoveMethod, 10);
 		cmdRefresh.setLayoutData(cmdrefreshdata);
 
@@ -150,66 +150,66 @@ public class CurrencyView extends BaseView {
 		cmpheaderdata.top = new FormAttachment(0, 10);
 		cmpheaderdata.left = new FormAttachment(0, 10);
 		cmpheaderdata.right = new FormAttachment(100, -10);
-		cmpheaderdata.bottom = new FormAttachment(0, 200);
+		cmpheaderdata.bottom = new FormAttachment(0, 250);
 		cmpHeader.setLayoutData(cmpheaderdata);
 
 		FormData lblmethodheaderdata = new FormData();
-		lblmethodheaderdata.top = new FormAttachment(5, 0);
+		lblmethodheaderdata.top = new FormAttachment(5, 5);
 		lblmethodheaderdata.left = new FormAttachment(5, 0);
 		lblMethodHeader.setLayoutData(lblmethodheaderdata);
 
 		FormData lblmethoddata = new FormData();
-		lblmethoddata.top = new FormAttachment(lblMethodHeader, 5);
+		lblmethoddata.top = new FormAttachment(lblMethodHeader, 20);
 		lblmethoddata.left = new FormAttachment(5, 0);
 		lblMethod.setLayoutData(lblmethoddata);
 
 		FormData txtmethoddata = new FormData();
-		txtmethoddata.top = new FormAttachment(lblMethodHeader, 5);
+		txtmethoddata.top = new FormAttachment(lblMethodHeader, 20);
 		txtmethoddata.left = new FormAttachment(lblMethod, 20);
 		txtmethoddata.right = new FormAttachment(lblMethod, 400);
 		txtMethod.setLayoutData(txtmethoddata);
 
 		FormData lblcurrenciesdata = new FormData();
-		lblcurrenciesdata.top = new FormAttachment(lblMethodHeader, 5);
+		lblcurrenciesdata.top = new FormAttachment(lblMethodHeader, 25);
 		lblcurrenciesdata.left = new FormAttachment(txtMethod, 5);
 		lblCurrencies.setLayoutData(lblcurrenciesdata);
 
 		FormData cmbcurrenciesdata = new FormData();
-		cmbcurrenciesdata.top = new FormAttachment(lblMethodHeader, 5);
+		cmbcurrenciesdata.top = new FormAttachment(lblMethodHeader, 25);
 		cmbcurrenciesdata.left = new FormAttachment(lblCurrencies, 5);
 		cmbCurrencies.setLayoutData(cmbcurrenciesdata);
 
 		FormData lblurldata = new FormData();
-		lblurldata.top = new FormAttachment(cmbCurrencies, 5);
+		lblurldata.top = new FormAttachment(cmbCurrencies, 17);
 		lblurldata.left = new FormAttachment(5, 0);
 		lblUrl.setLayoutData(lblurldata);
 
 		FormData txturldata = new FormData();
-		txturldata.top = new FormAttachment(cmbCurrencies, 5);
+		txturldata.top = new FormAttachment(cmbCurrencies, 17);
 		txturldata.left = new FormAttachment(lblMethod, 20);
 		txturldata.right = new FormAttachment(lblMethod, 700);
 		txtUrl.setLayoutData(txturldata);
 
 		FormData lblpathdata = new FormData();
-		lblpathdata.top = new FormAttachment(txtUrl, 5);
+		lblpathdata.top = new FormAttachment(txtUrl, 10);
 		lblpathdata.left = new FormAttachment(5, 0);
 		lblPath.setLayoutData(lblpathdata);
 
 		FormData txtpathdata = new FormData();
-		txtpathdata.top = new FormAttachment(txtUrl, 5);
+		txtpathdata.top = new FormAttachment(txtUrl, 7);
 		txtpathdata.left = new FormAttachment(lblMethod, 20);
 		txtpathdata.right = new FormAttachment(lblMethod, 700);
 		txtPath.setLayoutData(txtpathdata);
 
 		FormData tblcurrenciesdata = new FormData();
-		tblcurrenciesdata.top = new FormAttachment(cmpHeader, 10);
+		tblcurrenciesdata.top = new FormAttachment(cmpHeader, 7);
 		tblcurrenciesdata.right = new FormAttachment(100, -20);
 		tblcurrenciesdata.left = new FormAttachment(0, 20);
 		tblcurrenciesdata.bottom = new FormAttachment(100, -20);
 		tblCurrencies.setLayoutData(tblcurrenciesdata);
 
 		FormData cmdloadmethoddata = new FormData();
-		cmdloadmethoddata.top = new FormAttachment(3, 0);
+		cmdloadmethoddata.top = new FormAttachment(3, 7);
 		cmdloadmethoddata.left = new FormAttachment(lblMethodHeader, 20);
 		cmdLoadMethod.setLayoutData(cmdloadmethoddata);
 

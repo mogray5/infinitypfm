@@ -167,12 +167,12 @@ public class NewAccountDialog extends BaseDialog {
 		txtActName.setLayoutData(txtactnamedata);
 
 		FormData lblactiddata = new FormData();
-		lblactiddata.top = new FormAttachment(lblActName, 10);
+		lblactiddata.top = new FormAttachment(lblActName, 25);
 		lblactiddata.left = new FormAttachment(0, 40);
 		lblActId.setLayoutData(lblactiddata);
 
 		FormData txtactiddata = new FormData();
-		txtactiddata.top = new FormAttachment(lblActName, 10);
+		txtactiddata.top = new FormAttachment(lblActName, 25);
 		txtactiddata.left = new FormAttachment(lblActName, 80);
 		txtactiddata.right = new FormAttachment(100, -120);
 		txtActId.setLayoutData(txtactiddata);
@@ -183,7 +183,7 @@ public class NewAccountDialog extends BaseDialog {
 		lblActType.setLayoutData(lblacttypedata);
 
 		FormData txtacttypedata = new FormData();
-		txtacttypedata.top = new FormAttachment(lblActId, 30);
+		txtacttypedata.top = new FormAttachment(lblActId, 25);
 		txtacttypedata.left = new FormAttachment(lblActName, 80);
 		cmbActType.setLayoutData(txtacttypedata);
 
@@ -199,25 +199,25 @@ public class NewAccountDialog extends BaseDialog {
 		txtBeginBalance.setLayoutData(txtbeginbalancedata);
 
 		FormData lblcurrencydata = new FormData();
-		lblcurrencydata.top = new FormAttachment(lblBeginBalance, 20);
+		lblcurrencydata.top = new FormAttachment(lblBeginBalance, 30);
 		lblcurrencydata.left = new FormAttachment(0, 40);
 		// lblcurrencydata.right = new FormAttachment(100, -200);
 		lblCurrency.setLayoutData(lblcurrencydata);
 
 		FormData cmbcurrencydata = new FormData();
-		cmbcurrencydata.top = new FormAttachment(lblBeginBalance, 20);
+		cmbcurrencydata.top = new FormAttachment(lblBeginBalance, 25);
 		cmbcurrencydata.left = new FormAttachment(lblActName, 80);
 		cmbcurrencydata.right = new FormAttachment(100, -260);
 		cmbCurrency.setLayoutData(cmbcurrencydata);
 
 		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(cmbCurrency, 30);
+		cmdsavedata.top = new FormAttachment(cmbCurrency, 10);
 		cmdsavedata.left = new FormAttachment(0, 95);
 		cmdsavedata.right = new FormAttachment(100, -255);
 		cmdSave.setLayoutData(cmdsavedata);
 				
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(cmbCurrency, 30);
+		cmdcanceldata.top = new FormAttachment(cmbCurrency, 10);
 		cmdcanceldata.left = new FormAttachment(cmdSave, 5);
 		cmdcanceldata.right = new FormAttachment(100, -115);
 		cmdCancel.setLayoutData(cmdcanceldata);
