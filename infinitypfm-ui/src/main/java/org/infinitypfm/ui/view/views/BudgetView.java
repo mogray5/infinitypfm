@@ -203,18 +203,19 @@ public class BudgetView extends BaseView {
 		cmbMonth.setLayoutData(cmbmonthdata);
 
 		FormData lblestimatedata = new FormData();
-		lblestimatedata.top = new FormAttachment(lblBudget, 10);
+		lblestimatedata.top = new FormAttachment(lblBudget, 0);
 		lblestimatedata.left = new FormAttachment(cmbMonth, 25);
 		lblEstimate.setLayoutData(lblestimatedata);
 
 		FormData txtestimatedata = new FormData();
-		txtestimatedata.top = new FormAttachment(lblBudget, 30);
+		txtestimatedata.top = new FormAttachment(lblBudget, 25);
+		txtestimatedata.bottom = new FormAttachment(lblBudget, 70);
 		txtestimatedata.left = new FormAttachment(cmbMonth, 25);
 		txtEstimate.setLayoutData(txtestimatedata);
 
 		FormData cmdestimatedata = new FormData();
-		cmdestimatedata.top = new FormAttachment(lblBudget, 28);
-		// cmdestimatedata.bottom = new FormAttachment(txtEstimate, 65);
+		cmdestimatedata.top = new FormAttachment(lblBudget, 25);
+		cmdestimatedata.bottom = new FormAttachment(lblBudget, 70);
 		cmdestimatedata.left = new FormAttachment(txtEstimate, 0);
 		cmdEstimate.setLayoutData(cmdestimatedata);
 

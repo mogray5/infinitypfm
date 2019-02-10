@@ -27,6 +27,8 @@ import org.infinitypfm.core.data.Options;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+import freemarker.template.Configuration;
+
 public class MM {
 
 	/*
@@ -74,7 +76,7 @@ public class MM {
 	public static final String IMG_QUE = "circle.gif";
 	public static final String IMG_QUEZEN_BANNER = "infinitylogo2.jpg";
 	public static final String IMG_QUEZEN_BANNER_SMALL = "infinitylogo1_small.jpg";
-	public static final String IMG_QUEZEN_ICON = "eye.gif";
+	public static final String IMG_LOGO_ICON = "infinityLogo_128x128.png";
 	public static final String IMG_REFRESH = "reload.png";
 	public static final String IMG_REMOVEQUEUE = "remove.png";
 	public static final String IMG_SAVE = "document-save.png";
@@ -210,6 +212,19 @@ public class MM {
 	public static String bitcoinPwd = null;
 	public static String importFile = null;
 	public static String csvConfig = null;
+	
+	// Report Settings
+	public static Configuration templateConfig = null;
+	public static final String PIE_CHART_BASE = "piechartBase.js";
+	public static final String PIE_CHART_1 ="piechart1.js";
+	public static final String PIE_CHART_2 ="piechart2.js";
+	public static final String BAR_CHART_BASE = "barChartBase.js";
+	public static final String BAR_CHART_1 = "barchart1.js";
+	public static final String LINE_CHART_1 = "linechart1.js";
+	public static final String LINE_CHART_BASE = "linechartBase.js";
+	public static final String JS_LIB = "jquery.js";
+	public static final String GRAPH_LIB = "raphael-min.js";
+	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
 	
 	public static Options options = null;
 	

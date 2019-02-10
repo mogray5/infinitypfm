@@ -119,7 +119,7 @@ public class InfoDialog extends BaseDialog {
 		cmdTwo.setLayoutData(cmdtwodata);
 
 		FormData txtinfodata = new FormData();
-		txtinfodata.top = new FormAttachment(lblInfo, 30);
+		txtinfodata.top = new FormAttachment(lblInfo, 15);
 		txtinfodata.left = new FormAttachment(10, 0);
 		txtinfodata.right = new FormAttachment(80, 0);
 		txtInfo.setLayoutData(txtinfodata);

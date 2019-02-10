@@ -201,42 +201,44 @@ public class RecurrenceView extends BaseView {
 		cmpHeader.setLayoutData(cmpheaderdata);
 
 		FormData cmdadddata = new FormData();
-		cmdadddata.top = new FormAttachment(50, 0);
-		cmdadddata.left = new FormAttachment(10, 0);
-		cmdadddata.right = new FormAttachment(10, 50);
+		cmdadddata.top = new FormAttachment(45, 0);
+		cmdadddata.left = new FormAttachment(3, 0);
+		cmdadddata.right = new FormAttachment(10, 30);
 		cmdAdd.setLayoutData(cmdadddata);
 
 		FormData lblnamedata = new FormData();
-		lblnamedata.top = new FormAttachment(30, 0);
-		lblnamedata.left = new FormAttachment(20, 0);
+		lblnamedata.top = new FormAttachment(25, 0);
+		lblnamedata.left = new FormAttachment(15, 0);
 		lblName.setLayoutData(lblnamedata);
 
 		FormData txtnamedata = new FormData();
-		txtnamedata.top = new FormAttachment(30, 0);
-		txtnamedata.left = new FormAttachment(lblName, 60);
-		txtnamedata.right = new FormAttachment(lblName, 200);
+		txtnamedata.top = new FormAttachment(25, 0);
+		txtnamedata.bottom = new FormAttachment(40, 0);
+		txtnamedata.left = new FormAttachment(lblName, 55);
+		txtnamedata.right = new FormAttachment(lblName, 300);
 		txtName.setLayoutData(txtnamedata);
 
 		FormData lblfrequencydata = new FormData();
 		lblfrequencydata.top = new FormAttachment(lblName, 20);
-		lblfrequencydata.left = new FormAttachment(20, 0);
+		lblfrequencydata.left = new FormAttachment(15, 0);
 		lblFrequency.setLayoutData(lblfrequencydata);
 
 		FormData cmbfrequencydata = new FormData();
-		cmbfrequencydata.top = new FormAttachment(lblName, 20);
-		cmbfrequencydata.left = new FormAttachment(lblName, 60);
+		cmbfrequencydata.top = new FormAttachment(lblName, 15);
+		cmbfrequencydata.left = new FormAttachment(lblName, 55);
 		cmbfrequencydata.right = new FormAttachment(lblName, 200);
 		cmbFrequency.setLayoutData(cmbfrequencydata);
 
 		FormData lblstartdatedata = new FormData();
-		lblstartdatedata.top = new FormAttachment(lblFrequency, 20);
-		lblstartdatedata.left = new FormAttachment(20, 0);
+		lblstartdatedata.top = new FormAttachment(lblFrequency, 25);
+		lblstartdatedata.left = new FormAttachment(15, 0);
 		lblStartDate.setLayoutData(lblstartdatedata);
 
 		FormData txtstartdatedata = new FormData();
 		txtstartdatedata.top = new FormAttachment(lblFrequency, 20);
-		txtstartdatedata.left = new FormAttachment(lblName, 60);
-		txtstartdatedata.right = new FormAttachment(lblName, 200);
+		txtstartdatedata.bottom = new FormAttachment(lblFrequency, 70);
+		txtstartdatedata.left = new FormAttachment(lblName, 55);
+		txtstartdatedata.right = new FormAttachment(lblName, 250);
 		txtStartDate.setLayoutData(txtstartdatedata);
 
 		FormData cmdstartdatepickerdata = new FormData();
@@ -245,14 +247,14 @@ public class RecurrenceView extends BaseView {
 		cmdStartDatePicker.setLayoutData(cmdstartdatepickerdata);
 
 		FormData lblaccountdata = new FormData();
-		lblaccountdata.top = new FormAttachment(30, 0);
+		lblaccountdata.top = new FormAttachment(25, 0);
 		lblaccountdata.left = new FormAttachment(55, 0);
 		lblAccount.setLayoutData(lblaccountdata);
 
 		FormData cmbaccountdata = new FormData();
-		cmbaccountdata.top = new FormAttachment(30, 0);
-		cmbaccountdata.left = new FormAttachment(lblAccount, 100);
-		cmbaccountdata.right = new FormAttachment(lblAccount, 300);
+		cmbaccountdata.top = new FormAttachment(25, 0);
+		cmbaccountdata.left = new FormAttachment(lblAccount, 50);
+		//cmbaccountdata.right = new FormAttachment(lblAccount, 300);
 		cmbAccount.setLayoutData(cmbaccountdata);
 
 		FormData lbloffsetdata = new FormData();
@@ -263,7 +265,7 @@ public class RecurrenceView extends BaseView {
 		FormData cmboffsetdata = new FormData();
 		cmboffsetdata.top = new FormAttachment(lblAccount, 20);
 		cmboffsetdata.left = new FormAttachment(lblAccount, 50);
-		cmboffsetdata.right = new FormAttachment(lblAccount, 300);
+		//cmboffsetdata.right = new FormAttachment(lblAccount, 300);
 		cmbOffset.setLayoutData(cmboffsetdata);
 
 		FormData lblamountdata = new FormData();
@@ -273,7 +275,9 @@ public class RecurrenceView extends BaseView {
 
 		FormData txtamountdata = new FormData();
 		txtamountdata.top = new FormAttachment(lblOffset, 20);
+		txtamountdata.bottom = new FormAttachment(lblOffset, 65);
 		txtamountdata.left = new FormAttachment(lblAccount, 50);
+		txtamountdata.right = new FormAttachment(lblAccount, 300);
 		txtAmount.setLayoutData(txtamountdata);
 
 		FormData lblsaveddata = new FormData();
