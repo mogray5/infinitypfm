@@ -306,6 +306,14 @@ public class LangLoader {
 		hmPhrases.put("259",  i18n.tr("None"));
 		hmPhrases.put("260",  i18n.tr("Date Format"));
 		hmPhrases.put("261",  i18n.tr("Continue"));
+		hmPhrases.put("262",  i18n.tr("Wallet"));
+		hmPhrases.put("263",  i18n.tr("Send"));
+		hmPhrases.put("264",  i18n.tr("Receive"));
+		hmPhrases.put("265",  i18n.tr("To"));
+		hmPhrases.put("266",  i18n.tr("Amount Local"));
+		hmPhrases.put("267",  i18n.tr("Amount BSV"));
+		hmPhrases.put("268",  i18n.tr("From"));
+		
 	}
 	
 	

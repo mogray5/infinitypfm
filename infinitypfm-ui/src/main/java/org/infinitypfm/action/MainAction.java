@@ -237,7 +237,9 @@ public class MainAction {
 			break;
 		case MM.MENU_FILE_RESTORE:
 			break;
-
+		case MM.VIEW_WALLET:
+			this.LoadView(MM.VIEW_WALLET);
+			break;
 		}
 	}
 

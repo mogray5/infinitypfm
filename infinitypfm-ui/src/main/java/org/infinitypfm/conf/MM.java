@@ -48,11 +48,13 @@ public class MM {
 	public static final String IMG_ADD = "list-add.png";
 	public static final String IMG_ARROW_DOWN = "go-down.png";
 	public static final String IMG_ARROW_UP = "go-up.png";
+	public static final String IMG_ARROW_RIGHT = "arrowr_32x32.png";
 	public static final String IMG_CALCULATOR = "accessories-calculator.png";
 	public static final String IMG_CALENDAR = "x-office-calendar.png";
 	public static final String IMG_CANCEL = "edit-undo.png";
 	public static final String IMG_CHART = "chart2_32x32.png";
 	public static final String IMG_CLEAR = "edit-clear.png";
+	public static final String IMG_CLIPBOARD = "clipboard_32x32.png";
 	public static final String IMG_CLOCK = "appointment-soon.png";
 	public static final String IMG_CLOSE_SMALL = "fileclose.png";
 	public static final String IMG_CLOSE = "window-close.png";
@@ -85,6 +87,8 @@ public class MM {
 	public static final String IMG_TESTMSG = "mail_forward.png";
 	public static final String IMG_TREELEAF = "tree_leaf_32x32.png";
 	public static final String IMG_DOLLAR = "coins_32x32.png";
+	public static final String IMG_BSV_LOGO = "bai-icon-small.png";
+	public static final String IMG_TEST_QR = "qrTstImg.png";
 	
 	public static final String ACT_TYPE_EXPENSE = "Expense";
 	public static final String ACT_TYPE_LIABILITY = "Liability";
@@ -182,6 +186,7 @@ public class MM {
 	public static final int VIEW_REPORT=406;
 	public static final int VIEW_RECURRENCE=407;
 	public static final int VIEW_CURRENCY=408;
+	public static final int VIEW_WALLET=409;
 	
 	public static final int QS_REFRESH_QUEUE = 0;
 	public static final int QS_REFRESH_TOPIC = 1;
