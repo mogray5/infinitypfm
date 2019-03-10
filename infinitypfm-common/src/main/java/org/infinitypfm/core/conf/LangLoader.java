@@ -295,7 +295,7 @@ public class LangLoader {
 		hmPhrases.put("249",  i18n.tr("Open reports externally in web browser."));
 		hmPhrases.put("250",  i18n.tr("General"));
 		hmPhrases.put("251",  i18n.tr("Open console on start."));
-		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
+		//hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
 		hmPhrases.put("252",  i18n.tr("Mail"));
 		hmPhrases.put("253",  i18n.tr("CSV"));
 		hmPhrases.put("254",  i18n.tr("Import Name"));
@@ -313,7 +313,10 @@ public class LangLoader {
 		hmPhrases.put("266",  i18n.tr("Amount Local"));
 		hmPhrases.put("267",  i18n.tr("Amount BSV"));
 		hmPhrases.put("268",  i18n.tr("From"));
-		
+		hmPhrases.put("269",  i18n.tr("Enable Bitcoin SV Wallet"));
+		hmPhrases.put("270",  i18n.tr("Spending Password"));
+		hmPhrases.put("271",  i18n.tr("Problem Saving Options"));
+		hmPhrases.put("272",  i18n.tr("Are you sure you do not want to set a spending password?"));
 	}
 	
 	

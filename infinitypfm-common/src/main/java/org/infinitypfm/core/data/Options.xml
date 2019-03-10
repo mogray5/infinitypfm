@@ -31,7 +31,9 @@
        DefaultCurrencyID,
        CurrencyPrecision,
        ReportsInBrowswer,
-       ConsoleDefaultOpen
+       ConsoleDefaultOpen,
+       WalletEnabled as EnableWallet,
+       SpendPassword
     FROM AppSettings;
     ]]>
 	</select>
@@ -43,7 +45,9 @@
 		DefaultCurrencyID = #defaultCurrencyID#,
 		CurrencyPrecision = #currencyPrecision#,
 		ReportsInBrowswer = #reportsInBrowswer#,
-		ConsoleDefaultOpen = #consoleDefaultOpen#
+		ConsoleDefaultOpen = #consoleDefaultOpen#,
+		WalletEnabled = #enableWallet#,
+		SpendPassword = #spendPassword#
 	</update>
 
 </sqlMap>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -29,6 +29,8 @@ public class Options implements Serializable {
 	private int currencyPrecision = 2;
 	private boolean reportsInBrowswer = false;
 	private boolean consoleDefaultOpen = false;
+	private boolean enableWallet = false;
+	private String spendPassword = null;
 	
 	public String getAppVersion() {
 		return appVersion;
@@ -60,6 +62,17 @@ public class Options implements Serializable {
 	public void setConsoleDefaultOpen(boolean consoleDefaultOpen) {
 		this.consoleDefaultOpen = consoleDefaultOpen;
 	}
+	public boolean isEnableWallet() {
+		return enableWallet;
+	}
+	public void setEnableWallet(boolean enableWallet) {
+		this.enableWallet = enableWallet;
+	}
+	public String getSpendPassword() {
+		return spendPassword;
+	}
+	public void setSpendPassword(String spendPassword) {
+		this.spendPassword = spendPassword;
+	}
 	
-
 }

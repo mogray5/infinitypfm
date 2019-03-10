@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -35,7 +35,7 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.8.0"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.9.0"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
 	public static final String APPCOPYRIGHT = "(c) 2005-2017 by Wayne Gray";
@@ -89,6 +89,7 @@ public class MM {
 	public static final String IMG_DOLLAR = "coins_32x32.png";
 	public static final String IMG_BSV_LOGO = "bai-icon-small.png";
 	public static final String IMG_TEST_QR = "qrTstImg.png";
+	public static final String IMG_WALLET = "accessories-dictionary.png";
 	
 	public static final String ACT_TYPE_EXPENSE = "Expense";
 	public static final String ACT_TYPE_LIABILITY = "Liability";

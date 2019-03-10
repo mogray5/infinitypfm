@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -42,9 +44,12 @@ import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.Options;
-
+import org.infinitypfm.core.data.Password;
+import org.infinitypfm.core.util.EncryptUtil;
+ 
 /**
- * @author wggray
+ * Configure application options.  Changes are persisted to
+ * the database.
  */
 public class OptionsDialog extends BaseDialog {
 
@@ -53,17 +58,24 @@ public class OptionsDialog extends BaseDialog {
 	 */
 	private Label lblPrecision = null;
 	private Label lblBaseCurrency = null;
+	private Label lblSpendingPassword = null;
 	private Text txtPrecision = null;
+	private Text txtSpendingPassword = null;
 	private Combo cmbBaseCurrency = null;
 	private Button cmdOk = null;
 	private Button cmdCancel = null;
 	private Button chkReportsInBrowswer;
 	private Button chkDefaultOpenConsole;
+	private Button chkEnableWallet;
 	private Scale scale = null;
 	private TabFolder tabFolder = null;
+	
+	private EncryptUtil _encryptUtil = null; 
+	private Password _walletPassword = null;
 
 	public OptionsDialog() {
 		super();
+		_encryptUtil = new EncryptUtil();
 	}
 
 	protected void LoadUI(Shell sh) {
@@ -147,6 +159,31 @@ public class OptionsDialog extends BaseDialog {
 		chkDefaultOpenConsole.setText(MM.PHRASES.getPhrase("251"));
 		chkDefaultOpenConsole.setSelection(options.isConsoleDefaultOpen());
 		
+		chkEnableWallet = new Button(reportGroup, SWT.CHECK);
+		chkEnableWallet.setText(MM.PHRASES.getPhrase("269"));
+		chkEnableWallet.setSelection(options.isEnableWallet());
+		chkEnableWallet.addSelectionListener(chkEnableWallet_OnClick);
+		
+		lblSpendingPassword = new Label(reportGroup, SWT.NONE);
+		lblSpendingPassword.setText(MM.PHRASES.getPhrase("270") + ":");
+
+		txtSpendingPassword = new Text(reportGroup, SWT.BORDER);
+		txtSpendingPassword.setEnabled(options.isEnableWallet());
+		txtSpendingPassword.setEchoChar('*');
+		
+		if (options.isEnableWallet()) {
+			_walletPassword = new Password(null, options.getSpendPassword(), _encryptUtil);
+		
+			// Need to set password to something initially so the box visually shows as populated
+			if (_walletPassword.getHashedPassword() != null && _walletPassword.getHashedPassword().length()>0)
+				txtSpendingPassword.setText(_walletPassword.getHashedPassword());
+			
+			InfinityPfm.LogMessage("Password starting hash is = " + _walletPassword.getHashedPassword());
+			
+		}
+		
+		txtSpendingPassword.addFocusListener(txtSpendingPassword_OnLostFocus);
+
 		currencyItem.setControl(currencyGroup);
 		reportItem.setControl(reportGroup);
 
@@ -176,7 +213,6 @@ public class OptionsDialog extends BaseDialog {
 		FormData scaledata = new FormData();
 		scaledata.top = new FormAttachment(0, 20);
 		scaledata.left = new FormAttachment(lblPrecision, 10);
-		// scaledata.right = new FormAttachment(80, 0);
 		scale.setLayoutData(scaledata);
 
 		FormData txtprecisiond = new FormData();
@@ -204,6 +240,22 @@ public class OptionsDialog extends BaseDialog {
 		chkdefaultopenconsoledata.top = new FormAttachment(chkReportsInBrowswer, 10);
 		chkdefaultopenconsoledata.left = new FormAttachment(0, 20);
 		chkDefaultOpenConsole.setLayoutData(chkdefaultopenconsoledata);
+		
+		FormData chkenablewalletdata = new FormData();
+		chkenablewalletdata.top = new FormAttachment(chkDefaultOpenConsole, 10);
+		chkenablewalletdata.left = new FormAttachment(0, 20);
+		chkEnableWallet.setLayoutData(chkenablewalletdata);
+		
+		FormData lblspendingpassworddata = new FormData();
+		lblspendingpassworddata.top = new FormAttachment(chkEnableWallet, 20);
+		lblspendingpassworddata.left = new FormAttachment(0, 60);
+		lblSpendingPassword.setLayoutData(lblspendingpassworddata);
+		
+		FormData txtspendingpassworddata = new FormData();
+		txtspendingpassworddata.top = new FormAttachment(chkEnableWallet, 8);
+		txtspendingpassworddata.left = new FormAttachment(lblSpendingPassword, 10);
+		txtspendingpassworddata.right = new FormAttachment(lblSpendingPassword, 300);
+		txtSpendingPassword.setLayoutData(txtspendingpassworddata);
 		
 		FormData cmdokdata = new FormData();
 		cmdokdata.top = new FormAttachment(tabFolder, 5);
@@ -235,6 +287,15 @@ public class OptionsDialog extends BaseDialog {
 
 		return 1;
 	}
+	
+	private boolean ConfirmNoPassword() {
+		
+		MessageDialog dialog = new MessageDialog(MM.DIALOG_QUESTION, 
+				MM.PHRASES.getPhrase("270"),
+				MM.PHRASES.getPhrase("272"));
+	
+		return dialog.Open()==0;
+	}
 
 	/*
 	 * Listeners
@@ -249,6 +310,16 @@ public class OptionsDialog extends BaseDialog {
 		}
 	};
 
+	SelectionAdapter chkEnableWallet_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			txtSpendingPassword.setEnabled(chkEnableWallet.getSelection());
+			
+			if (_walletPassword == null) {
+				_walletPassword = new Password(null, null, _encryptUtil);
+			}
+		}
+	};
+	
 	SelectionAdapter cmdOk_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 
@@ -265,14 +336,31 @@ public class OptionsDialog extends BaseDialog {
 						"getCurrencyByName", cmbBaseCurrency.getText());
 
 				if (currency == null) {
-					InfinityPfm.LogMessage("Problem saving options");
+					InfinityPfm.LogMessage(MM.PHRASES.getPhrase("271"));
 					return;
 				} else {
 					options.setDefaultCurrencyID((int) currency.getCurrencyID());
 				}
-
+				
+				options.setEnableWallet(chkEnableWallet.getSelection());
+				
+				if (options.isEnableWallet()) {
+					
+					// If the wallet is enabled without a password, ask for confirmation
+					if ((_walletPassword.getHashedPassword() == null || _walletPassword.getHashedPassword().length()==0) 
+							&& !ConfirmNoPassword())
+						return;
+		
+					InfinityPfm.LogMessage("Password changed = " + _walletPassword.passwordChanged());
+					InfinityPfm.LogMessage("Password hash is = " + _walletPassword.getHashedPassword());
+					
+					options.setSpendPassword(_walletPassword.getHashedPassword());
+				
+				}
+					
 				options.setReportsInBrowswer(chkReportsInBrowswer.getSelection());
 				options.setConsoleDefaultOpen(chkDefaultOpenConsole.getSelection());
+
 				
 				MM.sqlMap.update("updateOptions", options);
 
@@ -290,6 +378,16 @@ public class OptionsDialog extends BaseDialog {
 	SelectionAdapter cmdCancel_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			shell.dispose();
+		}
+	};
+	
+	FocusAdapter txtSpendingPassword_OnLostFocus = new FocusAdapter() {
+
+		@Override
+		public void focusLost(FocusEvent arg0) {
+			
+			if (_walletPassword != null)
+				_walletPassword.setPlainPassword(txtSpendingPassword.getText());
 		}
 	};
 }

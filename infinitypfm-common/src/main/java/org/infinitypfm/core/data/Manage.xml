@@ -104,7 +104,9 @@
 		DefaultCurrencyID INT DEFAULT 0,
 		CurrencyPrecision INT DEFAULT 2,
 		ReportsInBrowswer INT DEFAULT 0,
-		ConsoleDefaultOpen INT DEFAULT 0
+		ConsoleDefaultOpen INT DEFAULT 0,
+		WalletEnabled INT DEFAUULT 0,
+		SpendPassword VARCHAR(100)
 		) 
 	</statement>
 
