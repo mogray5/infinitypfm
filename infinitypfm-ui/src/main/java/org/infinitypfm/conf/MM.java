@@ -22,6 +22,7 @@ package org.infinitypfm.conf;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
 
@@ -233,5 +234,6 @@ public class MM {
 	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
 	
 	public static Options options = null;
+	public static BsvWallet wallet = null;
 	
 }

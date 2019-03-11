@@ -36,11 +36,20 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.infinitypfm.bitcoin.wallet.BsvKit;
+import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
+import org.infinitypfm.core.data.Password;
+import org.infinitypfm.core.util.EncryptUtil;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.InfinityUpdates;
@@ -60,6 +69,8 @@ public class InfinityPfm {
 
 	private static final String CONFIG_ERROR_ENG = "Error setting up home directory for: ";
 	private static File homeDirectory = new File(System.getProperty("user.home") + File.separator + ".infinitypfm");
+	final static Logger LOG = Logger.getLogger(InfinityPfm.class);
+
 	
 	public static void main(String[] args) {
 		Display display = new Display();
@@ -75,6 +86,9 @@ public class InfinityPfm {
 			e1.printStackTrace();
 			return;
 		}
+		
+		//configure logging
+		configureLogging();
 		
 		//load language
 		getLanguage();
@@ -123,6 +137,17 @@ public class InfinityPfm {
 			MM.options = (Options) MM.sqlMap.queryForObject("getOptions");
 		} catch (SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		//Load BsvWallet in background if enabled
+		if (MM.options.isEnableWallet()) {
+			try {
+				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath());
+				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
+				MM.wallet = new BsvWallet(kit.get(), spendPassword); 
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
 		}
 		
 		//Load main form		
@@ -344,12 +369,9 @@ public class InfinityPfm {
 	}
 	
 	public static void LogMessage(String sMsg){
-		if (qzMain.getMsgMain()==null){
-			return;
-		}
-
+		LOG.info(sMsg);
+		if (qzMain.getMsgMain()==null) return;
 		qzMain.getMsgMain().AppendMsg(sMsg);
-		
 	}
 	
 	public static void LogMessage(String sMsg, boolean promptUser){
@@ -361,6 +383,41 @@ public class InfinityPfm {
 				MM.APPTITLE, 
 				sMsg);
 			show.Open();
+		}
+	}
+	
+	private static void configureLogging() {
+		
+		String logFile = null;
+		try {
+			logFile = homeDirectory.getCanonicalPath() + File.separator + "infinitypfm.log";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		File logFileObj = new File(logFile);
+		
+		if (logFileObj.exists())
+			logFileObj.delete();
+		
+		if (logFile != null) {
+			ConsoleAppender console = new ConsoleAppender(); //create appender
+			//configure the appender
+			String PATTERN = "%d [%p|%c|%C{1}] %m%n";
+			console.setLayout(new PatternLayout(PATTERN)); 
+			console.setThreshold(Level.FATAL);
+			console.activateOptions();
+			Logger.getRootLogger().addAppender(console);
+	
+			FileAppender fa = new FileAppender();
+			fa.setName("FileLogger");
+			fa.setFile(logFile);
+			fa.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
+			fa.setThreshold(Level.INFO);
+			fa.setAppend(true);
+			fa.activateOptions();
+	
+			Logger.getRootLogger().addAppender(fa);
 		}
 	}
 	
