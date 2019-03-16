@@ -18,6 +18,10 @@
  */
 package org.infinitypfm.ui.view.views;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -33,6 +37,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -43,6 +48,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.Account;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
 
 public class WalletView extends BaseView {
@@ -64,6 +70,12 @@ public class WalletView extends BaseView {
 	private Label lblRcvAddress =  null;
 	private Canvas qrCanvas = null;
 	private Button cmdClipBoard = null;
+	
+	private Label lblOffset = null;
+	private Combo cmbOffset = null;
+	
+	private Label lblMemo = null;
+	private Text txtMemo = null;
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -124,6 +136,15 @@ public class WalletView extends BaseView {
 		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_ARROW_RIGHT));
 		//cmdSend.addSelectionListener(cmdStartDatePicker_OnClick);
 		
+		lblOffset = new Label(sendGroup, SWT.NONE);
+		lblOffset.setText(MM.PHRASES.getPhrase("273") + ":");
+		cmbOffset = new Combo(sendGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		LoadAccountCombos();
+		
+		lblMemo = new Label(sendGroup, SWT.NONE);
+		lblMemo.setText(MM.PHRASES.getPhrase("41") + ":");
+		
+		txtMemo = new Text(sendGroup, SWT.BORDER);
 		
 		lblRcvAddress = new Label(receiveGroup, SWT.NONE);
 		FontData[] fD3 = lblRcvAddress.getFont().getFontData();
@@ -133,7 +154,7 @@ public class WalletView extends BaseView {
 		
 		cmdClipBoard = new Button(receiveGroup, SWT.PUSH);
 		cmdClipBoard.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
-		cmdClipBoard.addSelectionListener(cmdClibBoard_OnClick);
+		cmdClipBoard.addSelectionListener(cmdClipBoard_OnClick);
 		
 		//Get qr code
 		//https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=%2012kQMUkB9QJu9X5JP9H9M2qMUmrGtDakkV
@@ -187,25 +208,47 @@ public class WalletView extends BaseView {
 		tblHistory.setLayoutData(tblhistorydata);
 		
 		FormData lblsentodata = new FormData();
-		lblsentodata.top = new FormAttachment(0, 60);
+		lblsentodata.top = new FormAttachment(0, 50);
 		lblsentodata.left = new FormAttachment(0, 40);
 		//lblsentodata.right = new FormAttachment(100, -10);
 		//lblsentodata.bottom = new FormAttachment(100, -20);
 		lblSendTo.setLayoutData(lblsentodata);
 
 		FormData txtsendtodata = new FormData();
-		txtsendtodata.top = new FormAttachment(0, 75);
+		txtsendtodata.top = new FormAttachment(0, 65);
 		txtsendtodata.left = new FormAttachment(lblSendTo, 20);
 		txtsendtodata.right = new FormAttachment(lblSendTo, 550);
 		//txtsendtodata.bottom = new FormAttachment(100, -20);
 		txtSendTo.setLayoutData(txtsendtodata);
 		
 		FormData cmdsenddata = new FormData();
-		cmdsenddata.top = new FormAttachment(0, 72);
+		cmdsenddata.top = new FormAttachment(0, 62);
 		cmdsenddata.left = new FormAttachment(txtSendTo, 10);
 		//cmdsenddata.right = new FormAttachment(lblSendTo, 150);
 		//cmdsenddata.bottom = new FormAttachment(100, -20);
 		cmdSend.setLayoutData(cmdsenddata);
+	
+		FormData lblmemotdata = new FormData();
+		lblmemotdata.top = new FormAttachment(lblSendTo, 5);
+		lblmemotdata.left = new FormAttachment(0, 80);
+		lblMemo.setLayoutData(lblmemotdata);
+		
+		FormData txtmemotdata = new FormData();
+		txtmemotdata.top = new FormAttachment(lblSendTo, 0);
+		txtmemotdata.left = new FormAttachment(lblMemo, 5);
+		txtmemotdata.right = new FormAttachment(65, 0);
+		txtMemo.setLayoutData(txtmemotdata);
+		
+		FormData lbloffsetdata = new FormData();
+		lbloffsetdata.top = new FormAttachment(lblMemo, 25);
+		lbloffsetdata.left = new FormAttachment(0, 80);
+		lblOffset.setLayoutData(lbloffsetdata);
+
+		FormData cmboffsetdata = new FormData();
+		cmboffsetdata.top = new FormAttachment(lblMemo, 20);
+		cmboffsetdata.left = new FormAttachment(lblOffset, 5);
+		//cmboffsetdata.right = new FormAttachment(lblAccount, 300);
+		cmbOffset.setLayoutData(cmboffsetdata);
 		
 		FormData qrcanvasdata = new FormData();
 		qrcanvasdata.top = new FormAttachment(0, 0);
@@ -240,21 +283,41 @@ public class WalletView extends BaseView {
 		TableColumn tc6 = new TableColumn(tblHistory, SWT.CENTER);
 
 		tc1.setText(MM.PHRASES.getPhrase("24"));
-		tc2.setText(MM.PHRASES.getPhrase("265") +
-				"/" + MM.PHRASES.getPhrase("268"));
-		tc3.setText(MM.PHRASES.getPhrase("266"));
-		tc4.setText(MM.PHRASES.getPhrase("267"));
-		tc5.setText(MM.PHRASES.getPhrase("42"));
-		tc6.setText(MM.PHRASES.getPhrase("2"));
+		tc2.setText(MM.PHRASES.getPhrase("41"));
+		tc3.setText(MM.PHRASES.getPhrase("48"));
+		tc4.setText(MM.PHRASES.getPhrase("46"));
+		tc5.setText(MM.PHRASES.getPhrase("2"));
+		tc6.setText(MM.PHRASES.getPhrase("86"));
 
 		tc1.setWidth(150);
-		tc2.setWidth(150);
+		tc2.setWidth(250);
 		tc3.setWidth(150);
 		tc4.setWidth(150);
 		tc5.setWidth(150);
-		tc6.setWidth(90);
+		tc6.setWidth(80);
 
 		tblHistory.setHeaderVisible(true);
+	}
+	
+	private void LoadAccountCombos() {
+
+		try {
+			Account act = null;
+			@SuppressWarnings("rawtypes")
+			java.util.List list = MM.sqlMap.queryForList(
+					"getAllAccountsByType", null);
+
+			cmbOffset.removeAll();
+
+			for (int i = 0; i < list.size(); i++) {
+				act = (Account) list.get(i);
+				cmbOffset.add(act.getActName());
+				cmbOffset.setData(act.getActName(), act);
+			}
+
+		} catch (SQLException se) {
+			InfinityPfm.LogMessage(se.getMessage());
+		}
 	}
 	
 	/*
@@ -272,12 +335,15 @@ public class WalletView extends BaseView {
         }
     };
     
-	SelectionAdapter cmdClibBoard_OnClick = new SelectionAdapter() {
+	SelectionAdapter cmdClipBoard_OnClick = new SelectionAdapter() {
 
 		public void widgetSelected(SelectionEvent event) {
 			
-			InfinityPfm.LogMessage("clicked");
-			
+			String str = lblRcvAddress.getText();
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Clipboard clipboard = toolkit.getSystemClipboard();
+			StringSelection strSel = new StringSelection(str);
+			clipboard.setContents(strSel, null);
 		}
 	};
 }

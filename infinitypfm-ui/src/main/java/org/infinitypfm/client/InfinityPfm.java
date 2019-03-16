@@ -173,7 +173,6 @@ public class InfinityPfm {
 		
 		qzMain.getTrMain().Reload();
 			
-		//while (!sleak.shell.isDisposed())
 		while (!shMain.isDisposed())
 		{
 		  if (!display.readAndDispatch())
@@ -181,11 +180,8 @@ public class InfinityPfm {
 		}
 		
 		//clean up		
-		/*
-		try {
-			MM.sqlMap.insert("shutdown", null);
-		} catch (SQLException se){}
-		*/
+
+		MM.wallet.stop();
 		qzMain.QZDispose();
 		
 		display.dispose();
