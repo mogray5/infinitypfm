@@ -140,11 +140,11 @@ public class InfinityPfm {
 		}
 		
 		//Load BsvWallet in background if enabled
-		if (MM.options.isEnableWallet()) {
+		if (false && MM.options.isEnableWallet()) {
 			try {
 				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath());
 				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
-				MM.wallet = new BsvWallet(kit.get(), spendPassword); 
+				MM.wallet = new BsvWallet(kit, spendPassword); 
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage());
 			}
@@ -182,6 +182,10 @@ public class InfinityPfm {
 		//clean up		
 
 		MM.wallet.stop();
+		while (MM.wallet.isRunning()) {
+			try {Thread.sleep(1000);} catch (InterruptedException e) {}
+		}
+		
 		qzMain.QZDispose();
 		
 		display.dispose();

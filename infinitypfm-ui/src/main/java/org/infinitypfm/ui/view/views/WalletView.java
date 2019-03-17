@@ -21,8 +21,12 @@ package org.infinitypfm.ui.view.views;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Transaction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -39,6 +43,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
@@ -46,12 +51,13 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.infinitypfm.bitcoin.wallet.WalletEvents;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
 
-public class WalletView extends BaseView {
+public class WalletView extends BaseView implements WalletEvents {
 
 	private WalletToolbar tbMain = null;
 	private Composite cmpHeader = null;
@@ -77,8 +83,12 @@ public class WalletView extends BaseView {
 	private Label lblMemo = null;
 	private Text txtMemo = null;
 	
+	private String _receiveAddress;
+	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
+		MM.wallet.registerForEvents(this);
+		_receiveAddress = MM.wallet.getCurrentReceivingAddress();
 		LoadUI();
 		LoadLayout();
 		LoadColumns();
@@ -98,7 +108,7 @@ public class WalletView extends BaseView {
 		bcCanvas.addPaintListener(logo_OnPaint);
 		
 		lblAmount = new Label(cmpHeader, SWT.NONE);
-		lblAmount.setText("$0.00");
+		lblAmount.setText("$" + MM.wallet.getFiatBalance());
 		FontData[] fD = lblAmount.getFont().getFontData();
 		fD[0].setHeight(70);
 		lblAmount.setFont( new Font(InfinityPfm.shMain.getDisplay(),fD[0]));
@@ -150,7 +160,7 @@ public class WalletView extends BaseView {
 		FontData[] fD3 = lblRcvAddress.getFont().getFontData();
 		fD3[0].setHeight(15);
 		lblRcvAddress.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD3[0]));
-		lblRcvAddress.setText("12kQMUkB9QJu9X5JP9H9M2qMUmrGtDakkV");
+		lblRcvAddress.setText(_receiveAddress);
 		
 		cmdClipBoard = new Button(receiveGroup, SWT.PUSH);
 		cmdClipBoard.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
@@ -159,11 +169,17 @@ public class WalletView extends BaseView {
 		//Get qr code
 		//https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=%2012kQMUkB9QJu9X5JP9H9M2qMUmrGtDakkV
 		
-		imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(MM.IMG_TEST_QR);
-		qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
-		qrCanvas.setBackground(color);
-		qrCanvas.addPaintListener(logo_OnPaintQr);
-		
+		try {
+			File qrImage = MM.wallet.getQrCode(_receiveAddress);
+			if (qrImage.exists()) {
+				imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(qrImage);
+				qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
+				qrCanvas.setBackground(color);
+				qrCanvas.addPaintListener(logo_OnPaintQr);
+			}
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
 	}
 	
 	protected void LoadLayout() {
@@ -346,4 +362,25 @@ public class WalletView extends BaseView {
 			clipboard.setContents(strSel, null);
 		}
 	};
+	
+	/*****************/
+	/* Wallet Events */
+	/*****************/
+
+	@Override
+	public void coinsReceived(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
+		
+		Display.getDefault().syncExec(new Runnable(){
+			public void run(){
+				
+			}
+		});
+		
+	}
+
+	@Override
+	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
+		// TODO Auto-generated method stub
+		
+	}
 }

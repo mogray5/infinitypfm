@@ -18,33 +18,43 @@
  */
 package org.infinitypfm.bitcoin.wallet;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import javax.naming.AuthenticationException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Utils;
+import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.MonetaryFormat;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
+import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.util.EncryptUtil;
 
 public class BsvWallet implements Runnable {
 
 	private final static Logger LOG = Logger.getLogger(BsvWallet.class);
+	private BsvKit _bsvKit;
 	private WalletAppKit _kit;
 	private final Password _spendingPassword;
 	private boolean _running = true;
 	private WalletEvents _walletEvents;
 	private final EncryptUtil _encryptUtil;
 	
-	public BsvWallet(WalletAppKit kit, Password spendPwd) {
-		_kit = kit;
+	public BsvWallet(BsvKit kit, Password spendPwd) {
+		_bsvKit = kit;
+		_kit = _bsvKit.get();
 		_spendingPassword = spendPwd;
 		_encryptUtil = new EncryptUtil();
 	}
@@ -55,6 +65,9 @@ public class BsvWallet implements Runnable {
 		LOG.info("Starting BSV Wallet");
 		BriefLogFormatter.init();
         
+		_kit.wallet().addCoinsReceivedEventListener(onCoinsReceived);;
+        _kit.wallet().addCoinsSentEventListener(onCoinsSent);
+		
 		while (_running) {
 			try {
 				Thread.sleep(15000);
@@ -68,12 +81,17 @@ public class BsvWallet implements Runnable {
 	/* Public API */
 	/**************/
 	
+	public boolean isRunning() {
+		return _running;
+	}
+	
 	/**
 	 * Shut down the wallet
 	 */
 	public void stop() {
+		_kit.stopAsync();
+        _kit.awaitTerminated();
 		_running = false;
-		//TODO:  More action needed to gracefully shutdown wallet?
 	}
 	
 	/**
@@ -142,6 +160,33 @@ public class BsvWallet implements Runnable {
 		
 	}
 	
+	/**
+	 * Restore a wallet from a mnuemonic seed.
+	 * The previous wallet file is first backed up to <prefix>.wallet.bak
+	 * @param seedCode BIP 39 passphrase: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
+	 * @param password InfinityPfm passphrase
+	 * @param passphrase seed passphrase
+	 * @throws AuthenticationException thrown for password mismatch
+	 * @throws UnreadableWalletException thrown if wallet seed can not be used
+	 */
+	public void restoreFromSeed(String seedCode, String password, String passphrase) throws AuthenticationException, UnreadableWalletException{
+		if (authorized(password)) {
+			_bsvKit.restoreFromSeed(seedCode, passphrase);
+			_kit = _bsvKit.get();
+		}
+	}
+	
+	public File getQrCode(String address) throws IOException {
+		
+		URL url = new URL("http://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=" + address);
+		File newFile = File.createTempFile("ipfmqr", "png", new File(System.getProperty("java.io.tmpdir")));
+		if (newFile.exists()) newFile.delete();
+		FileUtils.copyURLToFile(url, newFile);
+		
+		return newFile;
+		
+	}
+	
 	/*******************/
 	/* Private Methods */
 	/*******************/
@@ -171,4 +216,25 @@ public class BsvWallet implements Runnable {
             	_walletEvents.coinsReceived(tx, value, prevBalance, newBalance);
 		}
 	};
+	
+	WalletCoinsSentEventListener onCoinsSent = new WalletCoinsSentEventListener() {
+
+		@Override
+		public void onCoinsSent(Wallet w, Transaction tx, Coin prevBalance, Coin newBalance) {
+			
+			LOG.info("Coins sent");
+            Coin value = tx.getValueSentToMe(w);
+            
+            if (_walletEvents != null) 
+            	_walletEvents.coinsSent(tx, value, prevBalance, newBalance);
+		}
+		
+	};
+	
+	 DownloadProgressTracker onDownloadProgress = new DownloadProgressTracker() {
+         @Override
+         public void doneDownload() {
+             System.out.println("blockchain downloaded");
+         }
+     };
 }

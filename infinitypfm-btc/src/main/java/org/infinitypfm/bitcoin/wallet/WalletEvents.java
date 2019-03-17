@@ -15,4 +15,13 @@ public interface WalletEvents {
 	 */
 	public void coinsReceived(Transaction tx, Coin value, Coin prevBalance, Coin newBalance);
 	
+	/**
+	 * Event callback for sent coins
+	 * 
+	 * @param tx
+	 * @param value
+	 * @param prevBalance
+	 * @param newBalance
+	 */
+	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance);
 }
