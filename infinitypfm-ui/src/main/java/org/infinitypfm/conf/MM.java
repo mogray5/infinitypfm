@@ -92,6 +92,7 @@ public class MM {
 	public static final String IMG_TEST_QR = "qrTstImg.png";
 	public static final String IMG_WALLET = "accessories-dictionary.png";
 	
+	public static final String ACT_TYPE_BANK = "Bank";
 	public static final String ACT_TYPE_EXPENSE = "Expense";
 	public static final String ACT_TYPE_LIABILITY = "Liability";
 	public static final String ACT_TYPE_INCOME = "Income";
@@ -115,6 +116,8 @@ public class MM {
 	public static final int NODETYPE_EXPENSE_ACCOUNT = 3;
 	public static final int NODETYPE_INCOME_ACCOUNT = 4;
 	public static final int NODETYPE_ROOT = 5;
+	
+	public static final int MAX_PRECISION = 8;
 	
 	public static final int MENU_DEFAULT = -1;
 	
@@ -235,5 +238,6 @@ public class MM {
 	
 	public static Options options = null;
 	public static BsvWallet wallet = null;
+	public static final String BSV_WALLET_ACCOUNT = "Bitcion SV Wallet";
 	
 }

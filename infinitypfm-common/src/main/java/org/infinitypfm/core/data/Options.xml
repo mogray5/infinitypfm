@@ -33,7 +33,9 @@
        ReportsInBrowswer,
        ConsoleDefaultOpen,
        WalletEnabled as EnableWallet,
-       SpendPassword
+       SpendPassword,
+       DefaultBsvCurrencyMethod,
+       DefaultBsvCurrencyID
     FROM AppSettings;
     ]]>
 	</select>
@@ -47,7 +49,9 @@
 		ReportsInBrowswer = #reportsInBrowswer#,
 		ConsoleDefaultOpen = #consoleDefaultOpen#,
 		WalletEnabled = #enableWallet#,
-		SpendPassword = #spendPassword#
+		SpendPassword = #spendPassword#,
+		DefaultBsvCurrencyMethod = #defaultBsvCurrencyMethod#,
+		DefaultBsvCurrencyID = #defaultBsvCurrencyID#
 	</update>
 
 </sqlMap>

@@ -28,6 +28,10 @@
 	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
 	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
 	
+	<insert id="addCurrency" parameterClass="org.infinitypfm.core.data.Currency">
+		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate)
+		VALUES (#currencyName#, #isoName#, #exchangeRate#, CURTIME ());
+ 	</insert>
 	
 	  <select id="getCurrencies" resultClass="currency">
    		

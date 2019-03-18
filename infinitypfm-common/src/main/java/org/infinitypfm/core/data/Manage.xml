@@ -106,7 +106,9 @@
 		ReportsInBrowswer INT DEFAULT 0,
 		ConsoleDefaultOpen INT DEFAULT 0,
 		WalletEnabled INT DEFAUULT 0,
-		SpendPassword VARCHAR(100)
+		SpendPassword VARCHAR(100),
+		DefaultBsvCurrencyMethod VARCHAR(5),
+		DefaultBsvCurrencyID INT DEFAULT 0
 		) 
 	</statement>
 
@@ -327,11 +329,6 @@
 		AccountTemplates(ActName, ActTypeID) SELECT #actName# AS ActName,
 		AccountTYpes.ACTTYPEID FROM AccountTypes WHERE ACTTYPENAME =
 		#actTypeName#
- 	</insert>
-
-	<insert id="addCurrency" parameterClass="org.infinitypfm.core.data.Currency">
-		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate)
-		VALUES (#currencyName#, #isoName#, #exchangeRate#, CURTIME ());
  	</insert>
 
 	<select id="tableExists" parameterClass="java.lang.String"

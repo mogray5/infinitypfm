@@ -27,14 +27,18 @@ import javax.naming.AuthenticationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Utils;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.MonetaryFormat;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
@@ -184,6 +188,25 @@ public class BsvWallet implements Runnable {
 		FileUtils.copyURLToFile(url, newFile);
 		
 		return newFile;
+		
+	}
+	
+	/**
+	 * Send BSV to passed address
+	 * 
+	 * @param toAddress  Address to send to
+	 * @param amount amount, in Bitcoin, to send
+	 * @throws AddressFormatException
+	 * @throws InsufficientMoneyException
+	 */
+	public void sendCoins(String toAddress, Coin amount) throws AddressFormatException, InsufficientMoneyException {
+		
+		Transaction tx = _kit.wallet().createSend(Address.fromBase58(_kit.params(), toAddress), amount);
+		SendRequest request = SendRequest.forTx(tx);
+		request.ensureMinRequiredFee = true;
+		_kit.wallet().completeTx(request);
+		TransactionBroadcast broadCast = _kit.peerGroup().broadcastTransaction(request.tx);
+		broadCast.broadcast();
 		
 	}
 	

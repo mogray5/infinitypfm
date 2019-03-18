@@ -318,6 +318,9 @@ public class LangLoader {
 		hmPhrases.put("271",  i18n.tr("Problem Saving Options"));
 		hmPhrases.put("272",  i18n.tr("Are you sure you do not want to set a spending password?"));
 		hmPhrases.put("273",  i18n.tr("Offset"));
+		hmPhrases.put("274",  i18n.tr("Send address and send amount required."));
+		hmPhrases.put("275",  i18n.tr("address"));
+		hmPhrases.put("276",  i18n.tr("Confirm"));
 	}
 	
 	

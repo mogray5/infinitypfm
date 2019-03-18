@@ -40,9 +40,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.infinitypfm.action.MainAction;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
+import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.Options;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.util.EncryptUtil;
@@ -72,7 +75,9 @@ public class OptionsDialog extends BaseDialog {
 	
 	private EncryptUtil _encryptUtil = null; 
 	private Password _walletPassword = null;
-
+	private Label lblBsvRefresh = null;
+	private Combo cmbBsvRefresh = null;
+	
 	public OptionsDialog() {
 		super();
 		_encryptUtil = new EncryptUtil();
@@ -171,6 +176,10 @@ public class OptionsDialog extends BaseDialog {
 		txtSpendingPassword.setEnabled(options.isEnableWallet());
 		txtSpendingPassword.setEchoChar('*');
 		
+		lblBsvRefresh = new Label(reportGroup, SWT.NONE);
+		lblBsvRefresh.setText(MM.PHRASES.getPhrase("216") + ":");
+		cmbBsvRefresh = new Combo(reportGroup, SWT.BORDER | SWT.READ_ONLY);
+		
 		if (options.isEnableWallet()) {
 			_walletPassword = new Password(null, options.getSpendPassword(), _encryptUtil);
 		
@@ -179,6 +188,8 @@ public class OptionsDialog extends BaseDialog {
 				txtSpendingPassword.setText(_walletPassword.getHashedPassword());
 			
 			InfinityPfm.LogMessage("Password starting hash is = " + _walletPassword.getHashedPassword());
+			
+			loadBsvMethods();
 			
 		}
 		
@@ -257,6 +268,17 @@ public class OptionsDialog extends BaseDialog {
 		txtspendingpassworddata.right = new FormAttachment(lblSpendingPassword, 300);
 		txtSpendingPassword.setLayoutData(txtspendingpassworddata);
 		
+		FormData lblbsvrefreshdata = new FormData();
+		lblbsvrefreshdata.top = new FormAttachment(txtSpendingPassword, 10);
+		lblbsvrefreshdata.left = new FormAttachment(0, 60);
+		lblBsvRefresh.setLayoutData(lblbsvrefreshdata);
+		
+		FormData cmbbsvrefreshdata = new FormData();
+		cmbbsvrefreshdata.top = new FormAttachment(txtSpendingPassword, 8);
+		cmbbsvrefreshdata.left = new FormAttachment(lblBsvRefresh, 38);
+		cmbbsvrefreshdata.right = new FormAttachment(lblBsvRefresh, 300);
+		cmbBsvRefresh.setLayoutData(cmbbsvrefreshdata);
+		
 		FormData cmdokdata = new FormData();
 		cmdokdata.top = new FormAttachment(tabFolder, 5);
 		cmdokdata.left = new FormAttachment(30, 0);
@@ -288,6 +310,99 @@ public class OptionsDialog extends BaseDialog {
 		return 1;
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void loadBsvMethods() {
+		
+		Currency c = new Currency();
+		c.setIsoName("BSV");
+		
+		try {
+		
+			Currency bsv = (Currency) MM.sqlMap.queryForObject("getCurrencyByIsoCode", c.getIsoName()); 
+			
+			if (bsv == null) {
+				// Need to add BSV
+				c.setCurrencyName("Bitcoin SV");
+				c.setExchangeRate("69");
+				MM.sqlMap.insert("addCurrency", c);
+				// Refetch the currency to get the ID
+				c = (Currency) MM.sqlMap.queryForObject("getCurrencyByIsoCode", c.getIsoName());
+				
+				//Refresh BSV currency to get the ID
+				bsv = (Currency) MM.sqlMap.queryForObject("getCurrencyByIsoCode", c.getIsoName());
+			}
+			
+			List<CurrencyMethod> methods = MM.sqlMap.queryForList("getCurrencyMethods", bsv);
+			
+			if (methods == null || methods.size()==0) {
+				/**************************************************************************/
+				/* Need to add a default refresh method.  This is going to be hit or miss */
+				/* unfortunately as the ticker API's tend to come and go or quickly       */
+				/* become incompatible.                                                   */
+				
+				// Need information for the default currence to construct the api url
+				Currency defaultCurrency = (Currency) MM.sqlMap.queryForObject("getCurrencyById", 
+						Long.valueOf(MM.options.getDefaultCurrencyID()));
+				
+				
+				//https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=usd
+				//https://api.cryptonator.com/api/ticker/bsv-usd
+				
+				String tickerUrl = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=" + defaultCurrency.getIsoName().toLowerCase();
+				
+				CurrencyMethod newMethod = new CurrencyMethod();
+				newMethod.setCurrencyID(bsv.getCurrencyID());
+				newMethod.setMethodName("coingecko_sv");
+				newMethod.setMethodPath("$.bitcoin-cash-sv.usd");
+				newMethod.setMethodUrl(tickerUrl);
+				
+				MM.sqlMap.insert("insertCurrencyMethod", newMethod);
+				
+				
+				methods = MM.sqlMap.queryForList("getCurrencyMethods", bsv);
+				
+				/**************************************************************************/
+
+			}
+			
+			for (int i = 0; i < methods.size(); i++) {
+	
+				CurrencyMethod method = (CurrencyMethod) methods.get(i);
+				cmbBsvRefresh.add(method.getMethodName());
+				cmbBsvRefresh.setData(method.getMethodName(), method.getCurrencyID());
+				
+				if (method.getMethodName().equals(MM.options.getDefaultBsvCurrencyMethod()))
+					cmbBsvRefresh.select(i);
+			}
+		
+		} catch (SQLException se) {
+			InfinityPfm.LogMessage(se.getMessage(), true);
+		}
+		
+	}
+	
+	private void addBsvWalletAccount() {
+		
+		Account account=null;
+		try {
+			account = (Account) MM.sqlMap.queryForObject("getAccountForName", MM.BSV_WALLET_ACCOUNT);
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		if (account == null) {
+		
+			MainAction action = new MainAction();
+			account = new Account();
+			account.setActBalance(0);
+			account.setActTypeName(MM.ACT_TYPE_BANK);
+			account.setActName(MM.BSV_WALLET_ACCOUNT);
+			account.setCurrencyID(MM.options.getDefaultBsvCurrencyID());
+			action.AddAccount(account);
+		
+		}
+	}
+	
 	private boolean ConfirmNoPassword() {
 		
 		MessageDialog dialog = new MessageDialog(MM.DIALOG_QUESTION, 
@@ -312,10 +427,18 @@ public class OptionsDialog extends BaseDialog {
 
 	SelectionAdapter chkEnableWallet_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			txtSpendingPassword.setEnabled(chkEnableWallet.getSelection());
 			
-			if (_walletPassword == null) {
-				_walletPassword = new Password(null, null, _encryptUtil);
+			boolean walletEnabled = chkEnableWallet.getSelection();
+			
+			txtSpendingPassword.setEnabled(walletEnabled);
+			cmbBsvRefresh.setEnabled(walletEnabled);
+			
+			if (walletEnabled) {
+				
+				if (_walletPassword == null) 
+					_walletPassword = new Password(null, null, _encryptUtil);
+				
+				loadBsvMethods();
 			}
 		}
 	};
@@ -326,7 +449,7 @@ public class OptionsDialog extends BaseDialog {
 			Options options = null;
 
 			try {
-
+				
 				options = (Options) MM.sqlMap
 						.queryForObject("getOptions", null);
 				options.setCurrencyPrecision(Integer.parseInt(txtPrecision
@@ -355,6 +478,10 @@ public class OptionsDialog extends BaseDialog {
 					InfinityPfm.LogMessage("Password hash is = " + _walletPassword.getHashedPassword());
 					
 					options.setSpendPassword(_walletPassword.getHashedPassword());
+					options.setDefaultBsvCurrencyMethod(cmbBsvRefresh.getText());
+					Object id = cmbBsvRefresh.getData(cmbBsvRefresh.getText());
+					if (id != null)
+						options.setDefaultBsvCurrencyID(((Long)id).longValue());
 				
 				}
 					
@@ -364,6 +491,9 @@ public class OptionsDialog extends BaseDialog {
 				
 				MM.sqlMap.update("updateOptions", options);
 
+				// Make sure wallet account exists
+				addBsvWalletAccount();
+				
 				MM.options = (Options) MM.sqlMap.queryForObject("getOptions",
 						null);
 

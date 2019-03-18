@@ -315,7 +315,6 @@ public class CurrencyView extends BaseView {
 
 	@Override
 	public void Refresh() {
-		// TODO Auto-generated method stub
 		super.Refresh();
 	}
 
@@ -555,9 +554,7 @@ public class CurrencyView extends BaseView {
 				} catch (SQLException e) {
 					InfinityPfm.LogMessage(e.toString());
 				}
-
 			}
-
 		}
 	};
 

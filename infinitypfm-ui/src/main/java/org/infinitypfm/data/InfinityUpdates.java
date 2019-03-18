@@ -326,6 +326,8 @@ public class InfinityUpdates {
 		MM.sqlMap.update("v0_9_0_a");
 		MM.sqlMap.update("v0_9_0_b");
 		MM.sqlMap.update("v0_9_0_c");
+		MM.sqlMap.update("v0_9_0_d");
+		MM.sqlMap.update("v0_9_0_e");
 		MM.sqlMap.update("bumpVersion", "0.9.0");
 	}
 

@@ -31,6 +31,8 @@ public class Options implements Serializable {
 	private boolean consoleDefaultOpen = false;
 	private boolean enableWallet = false;
 	private String spendPassword = null;
+	private String defaultBsvCurrencyMethod = null;
+	private long defaultBsvCurrencyID = 0;
 	
 	public String getAppVersion() {
 		return appVersion;
@@ -73,6 +75,18 @@ public class Options implements Serializable {
 	}
 	public void setSpendPassword(String spendPassword) {
 		this.spendPassword = spendPassword;
+	}
+	public String getDefaultBsvCurrencyMethod() {
+		return defaultBsvCurrencyMethod;
+	}
+	public void setDefaultBsvCurrencyMethod(String defaultBsvCurrencyMethod) {
+		this.defaultBsvCurrencyMethod = defaultBsvCurrencyMethod;
+	}
+	public long getDefaultBsvCurrencyID() {
+		return defaultBsvCurrencyID;
+	}
+	public void setDefaultBsvCurrencyID(long defaultBsvCurrencyID) {
+		this.defaultBsvCurrencyID = defaultBsvCurrencyID;
 	}
 	
 }

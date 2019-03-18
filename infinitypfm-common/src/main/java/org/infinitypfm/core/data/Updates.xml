@@ -233,7 +233,13 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
     <update id="v0_9_0_b">
    		UPDATE AppSettings SET WalletEnabled=0;
    </update>
-      <update id="v0_9_0_c">
+   <update id="v0_9_0_c">
    		ALTER TABLE AppSettings ADD COLUMN SpendPassword VARCHAR(100);
+   </update>
+   <update id="v0_9_0_d">
+   		ALTER TABLE AppSettings ADD COLUMN DefaultBsvCurrencyMethod VARCHAR(50);
+   </update>
+   <update id="v0_9_0_e">
+ 	ALTER TABLE AppSettings ADD COLUMN DefaultBsvCurrencyID INT DEFAULT 0;
    </update>
 </sqlMap>

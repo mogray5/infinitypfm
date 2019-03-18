@@ -23,9 +23,14 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -55,6 +60,11 @@ import org.infinitypfm.bitcoin.wallet.WalletEvents;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
+import org.infinitypfm.core.data.Currency;
+import org.infinitypfm.core.data.CurrencyMethod;
+import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.currency.RateParser;
+import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
 
 public class WalletView extends BaseView implements WalletEvents {
@@ -65,6 +75,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Image bcLogo = null;
 	private Color color = null;
 	private Label lblAmount = null;
+	private Label lblAmountBsv = null;
 	private TabFolder tabFolder = null;
 	private Table tblHistory = null;
 	
@@ -83,12 +94,23 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Label lblMemo = null;
 	private Text txtMemo = null;
 	
+	private Label lblSendAmount = null;
+	private Text txtSendAmount = null;
+	private Combo cmbSendAmountIso = null;
+	
 	private String _receiveAddress;
+	private Currency _bsvCurrency;
+	private DataFormatUtil _format;
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
-		MM.wallet.registerForEvents(this);
-		_receiveAddress = MM.wallet.getCurrentReceivingAddress();
+	
+		if (MM.wallet != null) {
+			MM.wallet.registerForEvents(this);
+			_receiveAddress = MM.wallet.getCurrentReceivingAddress();
+		}
+		_format = new DataFormatUtil();
+		refreshExchangeRate();
 		LoadUI();
 		LoadLayout();
 		LoadColumns();
@@ -108,10 +130,16 @@ public class WalletView extends BaseView implements WalletEvents {
 		bcCanvas.addPaintListener(logo_OnPaint);
 		
 		lblAmount = new Label(cmpHeader, SWT.NONE);
-		lblAmount.setText("$" + MM.wallet.getFiatBalance());
+		lblAmountBsv = new Label(this, SWT.NONE);
+		this.setFiatAndBsvBalance();
+		
 		FontData[] fD = lblAmount.getFont().getFontData();
 		fD[0].setHeight(70);
 		lblAmount.setFont( new Font(InfinityPfm.shMain.getDisplay(),fD[0]));
+		
+		FontData[] fe = lblAmountBsv.getFont().getFontData();
+		fe[0].setHeight(8);
+		lblAmountBsv.setFont( new Font(InfinityPfm.shMain.getDisplay(),fe[0]));
 		
 		tabFolder = new TabFolder(this, SWT.BORDER);
 		TabItem sendItem = new TabItem(tabFolder, SWT.NONE);
@@ -129,10 +157,8 @@ public class WalletView extends BaseView implements WalletEvents {
 		sendItem.setControl(sendGroup);
 		receiveItem.setControl(receiveGroup);
 
-		
 		tblHistory = new Table(this, SWT.MULTI | SWT.HIDE_SELECTION);
 		tblHistory.setLinesVisible(true);
-		
 		
 		lblSendTo = new Label(sendGroup, SWT.NONE);
 		FontData[] fD2 = lblSendTo.getFont().getFontData();
@@ -144,7 +170,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 		cmdSend = new Button(sendGroup, SWT.PUSH);
 		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_ARROW_RIGHT));
-		//cmdSend.addSelectionListener(cmdStartDatePicker_OnClick);
+		cmdSend.addSelectionListener(cmdSend_OnClick);
 		
 		lblOffset = new Label(sendGroup, SWT.NONE);
 		lblOffset.setText(MM.PHRASES.getPhrase("273") + ":");
@@ -160,22 +186,29 @@ public class WalletView extends BaseView implements WalletEvents {
 		FontData[] fD3 = lblRcvAddress.getFont().getFontData();
 		fD3[0].setHeight(15);
 		lblRcvAddress.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD3[0]));
-		lblRcvAddress.setText(_receiveAddress);
+		
+		if (_receiveAddress != null)
+			lblRcvAddress.setText(_receiveAddress);
+		
+		lblSendAmount = new Label(sendGroup, SWT.NONE);
+		lblSendAmount.setText(MM.PHRASES.getPhrase("55") + ":");
+		txtSendAmount = new Text(sendGroup, SWT.BORDER);
+		cmbSendAmountIso = new Combo(sendGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		this.loadSendIsoCombo();
 		
 		cmdClipBoard = new Button(receiveGroup, SWT.PUSH);
 		cmdClipBoard.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
 		cmdClipBoard.addSelectionListener(cmdClipBoard_OnClick);
 		
-		//Get qr code
-		//https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=%2012kQMUkB9QJu9X5JP9H9M2qMUmrGtDakkV
-		
 		try {
-			File qrImage = MM.wallet.getQrCode(_receiveAddress);
-			if (qrImage.exists()) {
-				imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(qrImage);
-				qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
-				qrCanvas.setBackground(color);
-				qrCanvas.addPaintListener(logo_OnPaintQr);
+			if (_receiveAddress != null) {
+				File qrImage = MM.wallet.getQrCode(_receiveAddress);
+				if (qrImage.exists()) {
+					imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(qrImage);
+					qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
+					qrCanvas.setBackground(color);
+					qrCanvas.addPaintListener(logo_OnPaintQr);
+				}
 			}
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
@@ -208,6 +241,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		lblamountdata.right = new FormAttachment(60, 0);
 		lblamountdata.bottom = new FormAttachment(100, 0);
 		lblAmount.setLayoutData(lblamountdata);
+		
+		FormData lblamountbsvdata = new FormData();
+		lblamountbsvdata.top = new FormAttachment(cmpHeader, 5);
+		lblamountbsvdata.left = new FormAttachment(100, -137);
+		//lblamountbsvdata.right = new FormAttachment(60, 0);
+		//lblamountbsvdata.bottom = new FormAttachment(100, 0);
+		lblAmountBsv.setLayoutData(lblamountbsvdata);
 		
 		FormData tabfolderdata = new FormData();
 		tabfolderdata.top = new FormAttachment(cmpHeader, 10);
@@ -244,25 +284,42 @@ public class WalletView extends BaseView implements WalletEvents {
 		//cmdsenddata.bottom = new FormAttachment(100, -20);
 		cmdSend.setLayoutData(cmdsenddata);
 	
+		FormData lblsendamountdata = new FormData();
+		lblsendamountdata.top = new FormAttachment(lblSendTo, 5);
+		lblsendamountdata.left = new FormAttachment(0, 70);
+		lblSendAmount.setLayoutData(lblsendamountdata);
+		
+		FormData txtsendamountdata = new FormData();
+		txtsendamountdata.top = new FormAttachment(lblSendTo, 0);
+		txtsendamountdata.left = new FormAttachment(lblSendAmount, 5);
+		txtsendamountdata.right = new FormAttachment(55, 0);
+		txtSendAmount.setLayoutData(txtsendamountdata);
+		
+		FormData cmbsendamountisodata = new FormData();
+		cmbsendamountisodata.top = new FormAttachment(lblSendTo, 0);
+		cmbsendamountisodata.left = new FormAttachment(txtSendAmount, 5);
+		cmbsendamountisodata.right = new FormAttachment(65, 0);
+		cmbSendAmountIso.setLayoutData(cmbsendamountisodata);
+		
 		FormData lblmemotdata = new FormData();
-		lblmemotdata.top = new FormAttachment(lblSendTo, 5);
-		lblmemotdata.left = new FormAttachment(0, 80);
+		lblmemotdata.top = new FormAttachment(lblSendAmount, 20);
+		lblmemotdata.left = new FormAttachment(0, 70);
 		lblMemo.setLayoutData(lblmemotdata);
 		
 		FormData txtmemotdata = new FormData();
-		txtmemotdata.top = new FormAttachment(lblSendTo, 0);
-		txtmemotdata.left = new FormAttachment(lblMemo, 5);
+		txtmemotdata.top = new FormAttachment(lblSendAmount, 18);
+		txtmemotdata.left = new FormAttachment(lblSendAmount, 5);
 		txtmemotdata.right = new FormAttachment(65, 0);
 		txtMemo.setLayoutData(txtmemotdata);
 		
 		FormData lbloffsetdata = new FormData();
 		lbloffsetdata.top = new FormAttachment(lblMemo, 25);
-		lbloffsetdata.left = new FormAttachment(0, 80);
+		lbloffsetdata.left = new FormAttachment(0, 70);
 		lblOffset.setLayoutData(lbloffsetdata);
 
 		FormData cmboffsetdata = new FormData();
 		cmboffsetdata.top = new FormAttachment(lblMemo, 20);
-		cmboffsetdata.left = new FormAttachment(lblOffset, 5);
+		cmboffsetdata.left = new FormAttachment(lblSendAmount, 5);
 		//cmboffsetdata.right = new FormAttachment(lblAccount, 300);
 		cmbOffset.setLayoutData(cmboffsetdata);
 		
@@ -271,7 +328,9 @@ public class WalletView extends BaseView implements WalletEvents {
 		qrcanvasdata.left = new FormAttachment(0, 0);
 		qrcanvasdata.right = new FormAttachment(100, 0);
 		qrcanvasdata.bottom = new FormAttachment(100, 0);
-		qrCanvas.setLayoutData(qrcanvasdata);
+		
+		if (qrcanvasdata != null)
+			qrCanvas.setLayoutData(qrcanvasdata);
 		
 		FormData lblrcvaddressdata = new FormData();
 		lblrcvaddressdata.top = new FormAttachment(0, 85);
@@ -322,7 +381,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			@SuppressWarnings("rawtypes")
 			java.util.List list = MM.sqlMap.queryForList(
 					"getAllAccountsByType", null);
-
+ 
 			cmbOffset.removeAll();
 
 			for (int i = 0; i < list.size(); i++) {
@@ -334,6 +393,76 @@ public class WalletView extends BaseView implements WalletEvents {
 		} catch (SQLException se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
+	}
+	
+	private void refreshExchangeRate() {
+		
+		CurrencyMethod method = new CurrencyMethod();
+		method.setCurrencyID(MM.options.getDefaultBsvCurrencyID());
+		method.setMethodName(MM.options.getDefaultBsvCurrencyMethod());
+
+		try {
+			method = (CurrencyMethod) MM.sqlMap.queryForObject(
+					"getCurrencyMethod", method);
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		String newRate = RateParser.getRate(method);
+		
+		if (newRate != null) {
+			
+			try {
+			
+				Currency currency = (Currency) MM.sqlMap.queryForObject("getCurrencyById", MM.options.getDefaultBsvCurrencyID());
+				currency.setExchangeRate(newRate);
+				currency.setLastUpdate(new Date());
+				
+				MM.sqlMap.update("updateExchangeRate", currency);
+				_bsvCurrency = currency;
+				
+			} catch (SQLException e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
+		}
+	}
+	
+	private void setFiatAndBsvBalance() {
+		
+		if (MM.wallet != null) {
+			
+			String balance = MM.wallet.getBsvBalance();
+			lblAmountBsv.setText(balance + " BSV");
+			if (balance != null) {
+				BigDecimal amount = _format.strictMultiply(balance, _bsvCurrency.getExchangeRate());
+				long lAmount = DataFormatUtil.moneyToLong(amount);
+				_format.setPrecision(MM.options.getCurrencyPrecision());
+				balance = _format.getAmountFormatted(lAmount);
+				if (amount != null)
+					lblAmount.setText("$" + balance);
+			}
+		}
+	}
+	
+	private void loadSendIsoCombo() {
+		
+		try {
+			Currency c = (Currency) MM.sqlMap.queryForObject("getCurrencyById", Long.valueOf(MM.options.getDefaultCurrencyID()).longValue() );
+			
+			if (c != null) {
+				cmbSendAmountIso.add(c.getIsoName());
+				cmbSendAmountIso.setData(c.getIsoName(), c.getCurrencyID());
+			}
+			
+			cmbSendAmountIso.add("BSV");
+			cmbSendAmountIso.setData("BSV", MM.options.getDefaultBsvCurrencyID());
+			
+			cmbSendAmountIso.select(0);
+		
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getLocalizedMessage());
+		}
+		
 	}
 	
 	/*
@@ -363,6 +492,76 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 	};
 	
+	SelectionAdapter cmdSend_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			
+			String sendTo = txtSendTo.getText();
+			String memo = txtMemo.getText();
+			String sAmount = txtSendAmount.getText();
+			
+			boolean canSend = true;
+			
+			if (sAmount == null || sAmount.length() ==0) canSend = false;
+			if (sendTo == null || sAmount.length() ==0) canSend = false;
+			
+			if (!canSend) {
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("274"), true);
+				return;
+			}
+			
+			long selectedCurrency = (long) cmbSendAmountIso.getData(cmbSendAmountIso.getText());
+			
+			Coin amount = null;
+			
+			if (selectedCurrency == MM.options.getDefaultBsvCurrencyID()) 
+				amount = Coin.parseCoin(txtSendAmount.getText());
+			else {
+				// Convert from Fiat to BSV before sending
+				refreshExchangeRate();
+				BigDecimal amountToSend = _format.strictDivide(sAmount, _bsvCurrency.getExchangeRate(), MM.MAX_PRECISION);
+				amount = Coin.parseCoin(amountToSend.toString());
+			}
+			
+			if (confirmSend(sAmount, cmbSendAmountIso.getText(), sendTo)) {
+				
+				// Send it!!
+				try {
+					MM.wallet.sendCoins(sendTo, amount);
+				} catch (AddressFormatException e1) {
+					InfinityPfm.LogMessage(e1.getMessage(), true);
+				} catch (InsufficientMoneyException e1) {
+					InfinityPfm.LogMessage(e1.getMessage(), true);
+				}
+			}
+			
+		}
+	};
+
+	private boolean confirmSend(String amount, String iso, String address) {
+		
+		String confirmQuestion = StringUtils.join(new String[] {
+				MM.PHRASES.getPhrase("276"),
+				" ",
+				MM.PHRASES.getPhrase("263"),
+				" ",
+				amount, 
+				" ",
+				iso,
+				" ",
+				MM.PHRASES.getPhrase("265"),
+				" ",
+				address,
+				"?"});
+		
+		MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+				confirmQuestion);
+		dlg.setDimensions(400, 150);
+		int iResult = dlg.Open();
+
+		return iResult == MM.YES;
+		
+	}
+	
 	/*****************/
 	/* Wallet Events */
 	/*****************/
@@ -372,7 +571,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
-				
+				setFiatAndBsvBalance();
 			}
 		});
 		
@@ -380,7 +579,11 @@ public class WalletView extends BaseView implements WalletEvents {
 
 	@Override
 	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
-		// TODO Auto-generated method stub
+		Display.getDefault().syncExec(new Runnable(){
+			public void run(){
+				setFiatAndBsvBalance();
+			}
+		});
 		
 	}
 }
