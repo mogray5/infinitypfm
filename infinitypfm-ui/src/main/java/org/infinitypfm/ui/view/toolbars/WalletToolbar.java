@@ -37,6 +37,18 @@ public class WalletToolbar extends BaseToolbar {
 	@Override
 	protected void LoadButtons() {
 
+		addButton(MM.IMG_REFRESH2, MM.PHRASES.getPhrase("47"),
+				MM.MENU_WALLET_REFRESH, true);
+		
+		addButton(MM.IMG_REFRESH, MM.PHRASES.getPhrase("159"),
+				MM.MENU_WALLET_RESTORE, true);
+		
+		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("277"),
+				MM.MENU_WALLET_SHOW_MNEMONIC, true);
+	
+		addButton(MM.IMG_FOLDER_DOWNLOAD, MM.PHRASES.getPhrase("158"),
+				MM.MENU_WALLET_BACKUP, true);
+		
 		addButton(MM.IMG_CLOSE_SMALL, MM.PHRASES.getPhrase("54"),
 				MM.MENU_TREE_CLOSEVIEW, true);
 		

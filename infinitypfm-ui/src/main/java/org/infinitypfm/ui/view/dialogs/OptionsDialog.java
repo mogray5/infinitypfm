@@ -412,6 +412,17 @@ public class OptionsDialog extends BaseDialog {
 		return dialog.Open()==0;
 	}
 
+	private void restartRequiredNotice() {
+		
+		MessageDialog dialog = new MessageDialog(MM.DIALOG_INFO, 
+				MM.PHRASES.getPhrase("67"),
+				MM.PHRASES.getPhrase("70"));
+		
+		dialog.Open();
+	
+	}
+	
+	
 	/*
 	 * Listeners
 	 */
@@ -482,6 +493,8 @@ public class OptionsDialog extends BaseDialog {
 					Object id = cmbBsvRefresh.getData(cmbBsvRefresh.getText());
 					if (id != null)
 						options.setDefaultBsvCurrencyID(((Long)id).longValue());
+					
+					restartRequiredNotice();
 				
 				}
 					

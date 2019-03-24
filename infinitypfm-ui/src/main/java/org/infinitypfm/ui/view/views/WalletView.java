@@ -64,6 +64,7 @@ import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.currency.RateParser;
+import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
 
@@ -167,7 +168,10 @@ public class WalletView extends BaseView implements WalletEvents {
 		lblSendTo.setText(MM.PHRASES.getPhrase("265") + ":");
 		
 		txtSendTo = new Text(sendGroup, SWT.BORDER);
-		
+		FontData[] fD3 = txtSendTo.getFont().getFontData();
+		fD3[0].setHeight(15);
+		txtSendTo.setFont(new Font(InfinityPfm.shMain.getDisplay(), fD3[0]));
+
 		cmdSend = new Button(sendGroup, SWT.PUSH);
 		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_ARROW_RIGHT));
 		cmdSend.addSelectionListener(cmdSend_OnClick);
@@ -183,9 +187,9 @@ public class WalletView extends BaseView implements WalletEvents {
 		txtMemo = new Text(sendGroup, SWT.BORDER);
 		
 		lblRcvAddress = new Label(receiveGroup, SWT.NONE);
-		FontData[] fD3 = lblRcvAddress.getFont().getFontData();
-		fD3[0].setHeight(15);
-		lblRcvAddress.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD3[0]));
+		FontData[] fD4 = lblRcvAddress.getFont().getFontData();
+		fD4[0].setHeight(15);
+		lblRcvAddress.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD4[0]));
 		
 		if (_receiveAddress != null)
 			lblRcvAddress.setText(_receiveAddress);
@@ -222,7 +226,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		tbMain.setLayoutDat(tbmaindata);
 		
 		FormData cmpheaderdata = new FormData();
-		cmpheaderdata.top = new FormAttachment(0, 10);
+		cmpheaderdata.top = new FormAttachment(0, 27);
 		cmpheaderdata.left = new FormAttachment(0, 10);
 		cmpheaderdata.right = new FormAttachment(100, -15);
 		cmpheaderdata.bottom = new FormAttachment(0, 160);
@@ -244,7 +248,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 		FormData lblamountbsvdata = new FormData();
 		lblamountbsvdata.top = new FormAttachment(cmpHeader, 5);
-		lblamountbsvdata.left = new FormAttachment(100, -137);
+		lblamountbsvdata.left = new FormAttachment(100, -127);
 		//lblamountbsvdata.right = new FormAttachment(60, 0);
 		//lblamountbsvdata.bottom = new FormAttachment(100, 0);
 		lblAmountBsv.setLayoutData(lblamountbsvdata);
@@ -264,22 +268,22 @@ public class WalletView extends BaseView implements WalletEvents {
 		tblHistory.setLayoutData(tblhistorydata);
 		
 		FormData lblsentodata = new FormData();
-		lblsentodata.top = new FormAttachment(0, 50);
+		lblsentodata.top = new FormAttachment(0, 35);
 		lblsentodata.left = new FormAttachment(0, 40);
 		//lblsentodata.right = new FormAttachment(100, -10);
 		//lblsentodata.bottom = new FormAttachment(100, -20);
 		lblSendTo.setLayoutData(lblsentodata);
 
 		FormData txtsendtodata = new FormData();
-		txtsendtodata.top = new FormAttachment(0, 65);
+		txtsendtodata.top = new FormAttachment(0, 50);
 		txtsendtodata.left = new FormAttachment(lblSendTo, 20);
 		txtsendtodata.right = new FormAttachment(lblSendTo, 550);
 		//txtsendtodata.bottom = new FormAttachment(100, -20);
 		txtSendTo.setLayoutData(txtsendtodata);
 		
 		FormData cmdsenddata = new FormData();
-		cmdsenddata.top = new FormAttachment(0, 62);
-		cmdsenddata.left = new FormAttachment(txtSendTo, 10);
+		cmdsenddata.top = new FormAttachment(0, 48);
+		cmdsenddata.left = new FormAttachment(txtSendTo, 5);
 		//cmdsenddata.right = new FormAttachment(lblSendTo, 150);
 		//cmdsenddata.bottom = new FormAttachment(100, -20);
 		cmdSend.setLayoutData(cmdsenddata);
@@ -292,13 +296,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		FormData txtsendamountdata = new FormData();
 		txtsendamountdata.top = new FormAttachment(lblSendTo, 0);
 		txtsendamountdata.left = new FormAttachment(lblSendAmount, 5);
-		txtsendamountdata.right = new FormAttachment(55, 0);
+		txtsendamountdata.right = new FormAttachment(lblSendAmount, 300);
 		txtSendAmount.setLayoutData(txtsendamountdata);
 		
 		FormData cmbsendamountisodata = new FormData();
 		cmbsendamountisodata.top = new FormAttachment(lblSendTo, 0);
 		cmbsendamountisodata.left = new FormAttachment(txtSendAmount, 5);
-		cmbsendamountisodata.right = new FormAttachment(65, 0);
+		//cmbsendamountisodata.right = new FormAttachment(65, 0);
 		cmbSendAmountIso.setLayoutData(cmbsendamountisodata);
 		
 		FormData lblmemotdata = new FormData();
@@ -329,7 +333,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		qrcanvasdata.right = new FormAttachment(100, 0);
 		qrcanvasdata.bottom = new FormAttachment(100, 0);
 		
-		if (qrcanvasdata != null)
+		if (qrCanvas != null)
 			qrCanvas.setLayoutData(qrcanvasdata);
 		
 		FormData lblrcvaddressdata = new FormData();
@@ -427,21 +431,30 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 	}
 	
-	private void setFiatAndBsvBalance() {
-		
-		if (MM.wallet != null) {
+	/**
+	 * Set both BSV balance and fiat balance using exchange rate stored
+	 * in _bsvCurrency
+	 * @param bsvBalance Wallet balance in BSV
+	 */
+	private void setFiatAndBsvBalance(String bsvBalance) {
 			
-			String balance = MM.wallet.getBsvBalance();
-			lblAmountBsv.setText(balance + " BSV");
-			if (balance != null) {
-				BigDecimal amount = _format.strictMultiply(balance, _bsvCurrency.getExchangeRate());
-				long lAmount = DataFormatUtil.moneyToLong(amount);
-				_format.setPrecision(MM.options.getCurrencyPrecision());
-				balance = _format.getAmountFormatted(lAmount);
-				if (amount != null)
-					lblAmount.setText("$" + balance);
-			}
+		lblAmountBsv.setText(bsvBalance + " BSV");
+		if (bsvBalance != null) {
+			BigDecimal amount = _format.strictMultiply(bsvBalance, _bsvCurrency.getExchangeRate());
+			long lAmount = DataFormatUtil.moneyToLong(amount);
+			_format.setPrecision(MM.options.getCurrencyPrecision());
+			String fiatBalance = _format.getAmountFormatted(lAmount);
+			lblAmount.setText("$" + fiatBalance);
 		}
+	}
+	
+	/**
+	 * Ask the wallet kit for the BSV balance and 
+	 * pass it to overload for formatting.
+	 */
+	private void setFiatAndBsvBalance() {
+		if (MM.wallet != null) 
+			setFiatAndBsvBalance( MM.wallet.getBsvBalance());
 	}
 	
 	private void loadSendIsoCombo() {
@@ -464,6 +477,32 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 		
 	}
+	
+	private boolean confirmSend(String amount, String iso, String address) {
+		
+		String confirmQuestion = StringUtils.join(new String[] {
+				MM.PHRASES.getPhrase("276"),
+				" ",
+				MM.PHRASES.getPhrase("263"),
+				" ",
+				amount, 
+				" ",
+				iso,
+				" ",
+				MM.PHRASES.getPhrase("265"),
+				" ",
+				address,
+				"?"});
+		
+		MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+				confirmQuestion);
+		dlg.setDimensions(400, 150);
+		int iResult = dlg.Open();
+
+		return iResult == MM.YES;
+		
+	}
+	
 	
 	/*
 	 * Listeners
@@ -536,31 +575,6 @@ public class WalletView extends BaseView implements WalletEvents {
 			
 		}
 	};
-
-	private boolean confirmSend(String amount, String iso, String address) {
-		
-		String confirmQuestion = StringUtils.join(new String[] {
-				MM.PHRASES.getPhrase("276"),
-				" ",
-				MM.PHRASES.getPhrase("263"),
-				" ",
-				amount, 
-				" ",
-				iso,
-				" ",
-				MM.PHRASES.getPhrase("265"),
-				" ",
-				address,
-				"?"});
-		
-		MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
-				confirmQuestion);
-		dlg.setDimensions(400, 150);
-		int iResult = dlg.Open();
-
-		return iResult == MM.YES;
-		
-	}
 	
 	/*****************/
 	/* Wallet Events */
@@ -569,9 +583,22 @@ public class WalletView extends BaseView implements WalletEvents {
 	@Override
 	public void coinsReceived(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
 		
+		org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
+		t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+		t.setActId(62);
+		t.setActOffset(25);
+		t.setExchangeRate(_bsvCurrency.getExchangeRate());
+		
+		DataHandler handler = new DataHandler();
+		try {
+			handler.AddTransaction(t, false);
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		} 
+		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
-				setFiatAndBsvBalance();
+				setFiatAndBsvBalance(newBalance.toPlainString());
 			}
 		});
 		
@@ -579,11 +606,26 @@ public class WalletView extends BaseView implements WalletEvents {
 
 	@Override
 	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
+		org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
+		t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+		t.setActId(62);
+		Account act = (Account) cmbOffset.getData(cmbOffset.getText());
+		t.setActOffset(act.getActId());
+		t.setExchangeRate(_bsvCurrency.getExchangeRate());
+		t.setTranMemo(txtMemo.getText());
+		t.setTransactionKey(tx.getHashAsString());
+		
+		DataHandler handler = new DataHandler();
+		try {
+			handler.AddTransaction(t, false);
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		} 
+		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
-				setFiatAndBsvBalance();
+				setFiatAndBsvBalance(newBalance.toPlainString());
 			}
 		});
-		
 	}
 }

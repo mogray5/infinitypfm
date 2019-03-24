@@ -81,6 +81,7 @@ public class MM {
 	public static final String IMG_QUEZEN_BANNER_SMALL = "infinitylogo1_small.jpg";
 	public static final String IMG_LOGO_ICON = "infinityLogo_128x128.png";
 	public static final String IMG_REFRESH = "reload.png";
+	public static final String IMG_REFRESH2 = "refresh.png";
 	public static final String IMG_REMOVEQUEUE = "remove.png";
 	public static final String IMG_SAVE = "document-save.png";
 	public static final String IMG_SELECTALL = "ok.png";
@@ -91,6 +92,8 @@ public class MM {
 	public static final String IMG_BSV_LOGO = "bai-icon-small.png";
 	public static final String IMG_TEST_QR = "qrTstImg.png";
 	public static final String IMG_WALLET = "accessories-dictionary.png";
+	public static final String IMG_KEY = "dialog-password.png";
+	public static final String IMG_FOLDER_DOWNLOAD = "folder-download.png";
 	
 	public static final String ACT_TYPE_BANK = "Bank";
 	public static final String ACT_TYPE_EXPENSE = "Expense";
@@ -177,6 +180,11 @@ public class MM {
 	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 105;
 	
 	public static final int MENU_BUDGET_SAVE = 120;
+	
+	public static final int MENU_WALLET_SHOW_MNEMONIC = 150;
+	public static final int MENU_WALLET_BACKUP = 151;
+	public static final int MENU_WALLET_RESTORE = 152;
+	public static final int MENU_WALLET_REFRESH = 153;
 	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;

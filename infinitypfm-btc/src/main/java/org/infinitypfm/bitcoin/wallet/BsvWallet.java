@@ -20,11 +20,9 @@ package org.infinitypfm.bitcoin.wallet;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.naming.AuthenticationException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -45,6 +43,8 @@ import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.util.EncryptUtil;
+
+import net.glxn.qrgen.javase.QRCode;
 
 public class BsvWallet implements Runnable {
 
@@ -182,10 +182,13 @@ public class BsvWallet implements Runnable {
 	
 	public File getQrCode(String address) throws IOException {
 		
-		URL url = new URL("http://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=" + address);
-		File newFile = File.createTempFile("ipfmqr", "png", new File(System.getProperty("java.io.tmpdir")));
-		if (newFile.exists()) newFile.delete();
-		FileUtils.copyURLToFile(url, newFile);
+		File newFile = QRCode.from(address)
+		.withSize(250, 250).file();
+		
+		//URL url = new URL("http://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=" + address);
+		//File newFile = File.createTempFile("ipfmqr", "png", new File(System.getProperty("java.io.tmpdir")));
+		//if (newFile.exists()) newFile.delete();
+		//FileUtils.copyURLToFile(url, newFile);
 		
 		return newFile;
 		

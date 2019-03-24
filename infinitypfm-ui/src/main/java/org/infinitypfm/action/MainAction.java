@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -28,6 +28,8 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+
+import javax.naming.AuthenticationException;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.swt.SWT;
@@ -70,6 +72,7 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
+import org.infinitypfm.ui.view.dialogs.PasswordDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
 import org.infinitypfm.ui.view.views.ReportView;
@@ -81,6 +84,8 @@ import org.infinitypfm.util.FileHandler;
  */
 public class MainAction {
 
+	private String _walletPassword = null;
+	
 	public MainAction() {
 		super();
 	}
@@ -240,9 +245,29 @@ public class MainAction {
 		case MM.VIEW_WALLET:
 			this.LoadView(MM.VIEW_WALLET);
 			break;
+		case MM.MENU_WALLET_SHOW_MNEMONIC:
+			this.WalletShowMnemonic();
+			break;
+		case MM.MENU_WALLET_BACKUP:
+			break;
+		case MM.MENU_WALLET_RESTORE:
+			break;
+		case MM.MENU_WALLET_REFRESH:
+			break;
 		}
 	}
 
+	public void WalletShowMnemonic() {
+		
+		try {
+			InfinityPfm.LogMessage(MM.wallet.getMnemonicCode(walletPassword()));
+		} catch (AuthenticationException e) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("288"), true);
+			_walletPassword = null;
+		}
+		
+	}
+	
 	public void LoadView(int iViewID) {
 
 		BaseView vw = InfinityPfm.qzMain.getVwMain().getView(iViewID);
@@ -645,4 +670,23 @@ public class MainAction {
 
 	}
 
+	/**
+	 * Show Password prompt dialog if user has set
+	 * a spending password in options
+	 * 
+	 * @return true/false user authorized
+	 */
+	private String walletPassword() {
+		
+		if (_walletPassword != null) return _walletPassword;
+		
+		if (MM.options.getSpendPassword() != null) {
+			PasswordDialog password = new PasswordDialog(false);
+			String[] answer = password.getCredentials();
+			_walletPassword = answer[1];
+		}
+		
+		return _walletPassword;
+	}
+	
 }

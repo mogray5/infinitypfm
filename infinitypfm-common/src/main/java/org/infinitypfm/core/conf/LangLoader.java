@@ -321,6 +321,8 @@ public class LangLoader {
 		hmPhrases.put("274",  i18n.tr("Send address and send amount required."));
 		hmPhrases.put("275",  i18n.tr("address"));
 		hmPhrases.put("276",  i18n.tr("Confirm"));
+		hmPhrases.put("277",  i18n.tr("Show mnemonic phrase"));
+		hmPhrases.put("278",  i18n.tr("Invalid wallet password"));
 	}
 	
 	
