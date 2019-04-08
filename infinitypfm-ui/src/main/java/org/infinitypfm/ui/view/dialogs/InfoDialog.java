@@ -40,6 +40,7 @@ public class InfoDialog extends BaseDialog {
 	private String sDMsg = "";
 	private int iReturn = MM.CANCEL;
 	private String sReturn = "";
+	private boolean bValueInText = false;
 
 	/*
 	 * Widgets
@@ -74,7 +75,13 @@ public class InfoDialog extends BaseDialog {
 		super();
 		sDTitle = sTitle;
 		sDMsg = sMsg;
-
+	}
+	
+	public InfoDialog(String sTitle, String sMsg, boolean valueInText) {
+		super();
+		sDTitle = sTitle;
+		sDMsg = sMsg;
+		bValueInText = valueInText;
 	}
 
 	protected void LoadUI(Shell sh) {
@@ -82,7 +89,7 @@ public class InfoDialog extends BaseDialog {
 		sh.setText(sDTitle);
 
 		lblInfo = new Label(sh, SWT.WRAP);
-		lblInfo.setText(sDMsg);
+		if (!bValueInText) lblInfo.setText(sDMsg);
 
 		cmdOne = new Button(sh, SWT.PUSH);
 		cmdOne.addSelectionListener(cmdOne_OnClick);
@@ -94,7 +101,8 @@ public class InfoDialog extends BaseDialog {
 
 		txtInfo = new Text(sh, SWT.BORDER);
 		txtInfo.setFocus();
-
+		if (bValueInText) txtInfo.setText(sDMsg);
+		
 		this.CenterWindow();
 	}
 

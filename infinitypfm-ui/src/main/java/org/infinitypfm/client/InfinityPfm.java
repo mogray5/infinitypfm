@@ -20,6 +20,7 @@
 package org.infinitypfm.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,6 +75,9 @@ public class InfinityPfm {
 	
 	public static void main(String[] args) {
 		Display display = new Display();
+		
+		//System.out.println(Integer.toBinaryString(1 << 1));
+		
 		
 		if (System.getenv(MM.ENVAPPHOME) != null) {
 			homeDirectory = new File(System.getenv(MM.ENVAPPHOME));
@@ -141,8 +145,23 @@ public class InfinityPfm {
 		
 		//Load BsvWallet in background if enabled
 		if (MM.options.isEnableWallet()) {
+			
+			InputStream input = null;
+			String peer = null;
+			
 			try {
-				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath());
+				input = new FileInputStream(homeDirectory.getPath() + File.separator + MM.PROPS_FILE);
+				Properties props = new Properties ();
+				props.load(input);
+				peer = props.getProperty("wallet.peer");
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			} finally {
+				try {input.close();} catch (Exception e1) {}
+			}
+			
+			try {
+				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath(), peer);
 				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
 				MM.wallet = new BsvWallet(kit, spendPassword); 
 			} catch (IOException e) {

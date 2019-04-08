@@ -2,10 +2,14 @@ package org.infinitypfm.bitcoin.wallet;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -23,7 +27,7 @@ public class BsvKit {
 	private final String _walletDir;
 	public static final String WALLET_PREFIX = "infinitypfm_bsv";
 	
-	public BsvKit(String walletDir) {
+	public BsvKit(String walletDir, String nodeIp) throws UnknownHostException {
 		
 		LOG.info("Initializing wallet kit");
 		
@@ -33,10 +37,18 @@ public class BsvKit {
 		
 		_kit = new WalletAppKit(params, new File(_walletDir), BsvKit.WALLET_PREFIX);
 		_kit.setAutoSave(false);
-		_kit.startAsync();
-		_kit.awaitRunning();
+
+		if (nodeIp != null && nodeIp.length()>0) {
+			PeerAddress address = new PeerAddress(InetAddress.getByName(nodeIp), params.getPort());
+			_kit.setPeerNodes(address);
+			_kit.startAsync();
+			_kit.awaitRunning();
+			_kit.peerGroup().setMaxConnections(1);
+		} else {
+			_kit.startAsync();
+			_kit.awaitRunning();
 		_kit.peerGroup().setMaxConnections(5);
-		
+		}
 	}
 
 	public WalletAppKit get() {
@@ -51,7 +63,7 @@ public class BsvKit {
         this.removeChainFile();
         this.backupWalletFile();
         
-		Long creationtime = 1409478661L;
+		Long creationtime = new Date().getTime();
 		DeterministicSeed seed = new DeterministicSeed(seedCode, null, passphrase, creationtime);
 		_kit.restoreWalletFromSeed(seed);
         		

@@ -32,6 +32,7 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
@@ -251,16 +252,46 @@ public class MainAction {
 		case MM.MENU_WALLET_BACKUP:
 			break;
 		case MM.MENU_WALLET_RESTORE:
+			this.WalletRestore();
 			break;
 		case MM.MENU_WALLET_REFRESH:
 			break;
 		}
 	}
 
+	public void WalletRestore() {
+		
+		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("279"), 
+				MM.PHRASES.getPhrase("279"));
+		String seedCode = infoDialog.getInput();
+		
+		if (seedCode == null || seedCode.length() ==0 ) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("280"), true);
+			return;
+		}
+	
+		try {
+			MM.wallet.restoreFromSeed(seedCode, walletPassword(), null);
+		} catch (AuthenticationException e) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("288"), true);
+			_walletPassword = null;
+		} catch (UnreadableWalletException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		}
+		
+		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("281"), true);
+	}
+	
 	public void WalletShowMnemonic() {
 		
 		try {
-			InfinityPfm.LogMessage(MM.wallet.getMnemonicCode(walletPassword()));
+			
+			String mnemonic = MM.wallet.getMnemonicCode(walletPassword());
+			InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("277"), 
+					mnemonic, true);
+			InfinityPfm.LogMessage(mnemonic);
+			infoDialog.Open();
+			
 		} catch (AuthenticationException e) {
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("288"), true);
 			_walletPassword = null;

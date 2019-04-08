@@ -323,6 +323,10 @@ public class LangLoader {
 		hmPhrases.put("276",  i18n.tr("Confirm"));
 		hmPhrases.put("277",  i18n.tr("Show mnemonic phrase"));
 		hmPhrases.put("278",  i18n.tr("Invalid wallet password"));
+		hmPhrases.put("279",  i18n.tr("Enter mnemonic phrase"));
+		hmPhrases.put("280",  i18n.tr("Mnemonic phrase required"));
+		hmPhrases.put("281",  i18n.tr("Wallet restored"));
+		hmPhrases.put("282",  i18n.tr("Coins Received"));
 	}
 	
 	

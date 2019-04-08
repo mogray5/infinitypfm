@@ -39,6 +39,7 @@ import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.Wallet.BalanceType;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
 import org.infinitypfm.core.data.Password;
@@ -46,7 +47,7 @@ import org.infinitypfm.core.util.EncryptUtil;
 
 import net.glxn.qrgen.javase.QRCode;
 
-public class BsvWallet implements Runnable {
+public class BsvWallet {
 
 	private final static Logger LOG = Logger.getLogger(BsvWallet.class);
 	private BsvKit _bsvKit;
@@ -57,29 +58,32 @@ public class BsvWallet implements Runnable {
 	private final EncryptUtil _encryptUtil;
 	
 	public BsvWallet(BsvKit kit, Password spendPwd) {
+		
+		BriefLogFormatter.init();
+		
 		_bsvKit = kit;
 		_kit = _bsvKit.get();
 		_spendingPassword = spendPwd;
 		_encryptUtil = new EncryptUtil();
-	}
-	
-	@Override
-	public void run() {
-	
-		LOG.info("Starting BSV Wallet");
-		BriefLogFormatter.init();
-        
+		
 		_kit.wallet().addCoinsReceivedEventListener(onCoinsReceived);;
         _kit.wallet().addCoinsSentEventListener(onCoinsSent);
-		
-		while (_running) {
-			try {
-				Thread.sleep(15000);
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
 	}
+	
+//	@Override
+//	public void run() {
+//	
+//		LOG.info("Starting BSV Wallet");
+//
+//		
+//		while (_running) {
+//			try {
+//				Thread.sleep(15000);
+//			} catch (InterruptedException e) {
+//				break;
+//			}
+//		}
+//	}
 	
 	/**************/
 	/* Public API */
@@ -106,7 +110,7 @@ public class BsvWallet implements Runnable {
 	 * @return
 	 */
 	public String getFiatBalance() {
-		return MonetaryFormat.FIAT.noCode().format(_kit.wallet().getBalance()).toString();
+		return MonetaryFormat.FIAT.noCode().format(_kit.wallet().getBalance(BalanceType.ESTIMATED)).toString();
 	}
 
 	/**
@@ -117,7 +121,7 @@ public class BsvWallet implements Runnable {
 	 * @return
 	 */
 	public String getBsvBalance() {
-		return MonetaryFormat.BTC.noCode().format(_kit.wallet().getBalance()).toString();
+		return MonetaryFormat.BTC.noCode().format(_kit.wallet().getBalance(BalanceType.ESTIMATED)).toString();
 	}
 	
 	/**
@@ -204,12 +208,16 @@ public class BsvWallet implements Runnable {
 	 */
 	public void sendCoins(String toAddress, Coin amount) throws AddressFormatException, InsufficientMoneyException {
 		
-		Transaction tx = _kit.wallet().createSend(Address.fromBase58(_kit.params(), toAddress), amount);
-		SendRequest request = SendRequest.forTx(tx);
-		request.ensureMinRequiredFee = true;
-		_kit.wallet().completeTx(request);
-		TransactionBroadcast broadCast = _kit.peerGroup().broadcastTransaction(request.tx);
-		broadCast.broadcast();
+		//Transaction tx = _kit.wallet().createSend(Address.fromBase58(_kit.params(), toAddress), amount);
+		//SendRequest request = SendRequest.forTx(tx);
+		//request.ensureMinRequiredFee = true;
+		//_kit.wallet().completeTx(request);
+		
+		final Wallet.SendResult sendResult = _kit.wallet().sendCoins(_kit.peerGroup(), Address.fromBase58(_kit.params(), toAddress), amount);
+		
+		
+		//TransactionBroadcast broadCast = _kit.peerGroup().broadcastTransaction(request.tx);
+		//broadCast.broadcast();
 		
 	}
 	

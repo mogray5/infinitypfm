@@ -25,7 +25,10 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.AddressFormatException;
@@ -48,6 +51,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -55,6 +59,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.bitcoin.wallet.WalletEvents;
 import org.infinitypfm.client.InfinityPfm;
@@ -63,6 +68,7 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.ParamDateRangeAccount;
 import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
@@ -100,6 +106,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Combo cmbSendAmountIso = null;
 	
 	private String _receiveAddress;
+	private Account bsvAccount = null;
 	private Currency _bsvCurrency;
 	private DataFormatUtil _format;
 	
@@ -112,6 +119,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 		_format = new DataFormatUtil();
 		refreshExchangeRate();
+		
+		try {
+			bsvAccount = (Account) MM.sqlMap.queryForObject("getAccountForName", "Bitcion SV Wallet");
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
 		LoadUI();
 		LoadLayout();
 		LoadColumns();
@@ -158,8 +172,8 @@ public class WalletView extends BaseView implements WalletEvents {
 		sendItem.setControl(sendGroup);
 		receiveItem.setControl(receiveGroup);
 
-		tblHistory = new Table(this, SWT.MULTI | SWT.HIDE_SELECTION);
-		tblHistory.setLinesVisible(true);
+		tblHistory = new Table(this, SWT.BORDER);
+		//tblHistory.setLinesVisible(true);
 		
 		lblSendTo = new Label(sendGroup, SWT.NONE);
 		FontData[] fD2 = lblSendTo.getFont().getFontData();
@@ -175,6 +189,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmdSend = new Button(sendGroup, SWT.PUSH);
 		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_ARROW_RIGHT));
 		cmdSend.addSelectionListener(cmdSend_OnClick);
+		cmdSend.setToolTipText(MM.PHRASES.getPhrase("263"));
 		
 		lblOffset = new Label(sendGroup, SWT.NONE);
 		lblOffset.setText(MM.PHRASES.getPhrase("273") + ":");
@@ -217,6 +232,14 @@ public class WalletView extends BaseView implements WalletEvents {
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
+		
+		// Set tab order
+		sendGroup.setTabList(new Control[] {txtSendTo, cmdSend, txtSendAmount, cmbSendAmountIso, txtMemo, cmbOffset});
+		receiveGroup.setTabList(new Control[] {cmdClipBoard});
+		tabFolder.setTabList(new Control[] {sendGroup, receiveGroup});
+		this.setTabList(new Control[] {tabFolder});
+		
+		LoadTransactionHistory();
 	}
 	
 	protected void LoadLayout() {
@@ -294,7 +317,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		lblSendAmount.setLayoutData(lblsendamountdata);
 		
 		FormData txtsendamountdata = new FormData();
-		txtsendamountdata.top = new FormAttachment(lblSendTo, 0);
+		txtsendamountdata.top = new FormAttachment(lblSendTo, -2);
 		txtsendamountdata.left = new FormAttachment(lblSendAmount, 5);
 		txtsendamountdata.right = new FormAttachment(lblSendAmount, 300);
 		txtSendAmount.setLayoutData(txtsendamountdata);
@@ -376,6 +399,55 @@ public class WalletView extends BaseView implements WalletEvents {
 		tc6.setWidth(80);
 
 		tblHistory.setHeaderVisible(true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void LoadTransactionHistory() {
+		
+		tblHistory.removeAll();
+		ParamDateRangeAccount range = new ParamDateRangeAccount();
+		LocalDateTime today = LocalDateTime.now();
+		range.setEndDate(Timestamp.valueOf(today));
+		range.setStartDate(Timestamp.valueOf(today.minusDays(30)));
+		range.setActId(bsvAccount.getActId());
+		TableItem ti = null;
+		final Display display = InfinityPfm.shMain.getDisplay();
+		int rowCount = 0;
+		try {
+			List<org.infinitypfm.core.data.Transaction> tranList = MM.sqlMap.queryForList("getTransactionsForRangeAndAccountReverseSort", range);
+			if (tranList != null && tranList.size() > 0) {
+				
+				for (org.infinitypfm.core.data.Transaction t : tranList) {
+					
+					ti = new TableItem(tblHistory, SWT.NONE);
+					if (rowCount % 2D == 0) {
+						for (int i=0; i< 6; i++ ) 
+							ti.setBackground(i,display.getSystemColor(MM.ROW_BACKGROUND));
+						
+					}
+					
+					//Date, Memo, Debit, Credit, Balance, View
+					ti.setText(0, t.getTranDateFmt());
+					ti.setText(1, t.getTranMemo());
+					if (t.getTranAmount() > 0) 
+						ti.setText(2, _format.getAmountFormatted(Math.abs(t.getTranAmount())));
+					else
+						ti.setText(3, _format.getAmountFormatted(Math.abs(t.getTranAmount())));
+					
+					ti.setText(4, _format.getAmountFormatted(t.getActBalance()));
+					
+					if (t.getTransactionKey()!=null)
+					ti.setText(5, t.getTransactionKey());
+					
+					rowCount++;
+				}
+			}
+				
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		
 	}
 	
 	private void LoadAccountCombos() {
@@ -583,48 +655,66 @@ public class WalletView extends BaseView implements WalletEvents {
 	@Override
 	public void coinsReceived(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
 		
-		org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
-		t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
-		t.setActId(62);
-		t.setActOffset(25);
-		t.setExchangeRate(_bsvCurrency.getExchangeRate());
-		
-		DataHandler handler = new DataHandler();
-		try {
-			handler.AddTransaction(t, false);
-		} catch (Exception e) {
-			InfinityPfm.LogMessage(e.getMessage());
-		} 
-		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
-				setFiatAndBsvBalance(newBalance.toPlainString());
-			}
-		});
 		
+			Account offset = (Account) cmbOffset.getData(cmbOffset.getText());
+			
+			if (bsvAccount != null && offset != null) {
+				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
+				t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+				t.setActId(bsvAccount.getActId());
+				
+				t.setActOffset(offset.getActId());
+				t.setExchangeRate(_bsvCurrency.getExchangeRate());
+				t.setTranDate(new Date());
+				if (tx.getMemo() != null && tx.getMemo().length() > 0)
+					t.setTranMemo(tx.getMemo());
+				else
+					t.setTranMemo(MM.PHRASES.getPhrase("282"));
+				
+				DataHandler handler = new DataHandler();
+				try {
+					handler.AddTransaction(t, false);
+				} catch (Exception e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				} 
+			}
+				setFiatAndBsvBalance(newBalance.toPlainString());
+				LoadTransactionHistory();
+			}
+			
+		});
 	}
 
 	@Override
 	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
-		org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
-		t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
-		t.setActId(62);
-		Account act = (Account) cmbOffset.getData(cmbOffset.getText());
-		t.setActOffset(act.getActId());
-		t.setExchangeRate(_bsvCurrency.getExchangeRate());
-		t.setTranMemo(txtMemo.getText());
-		t.setTransactionKey(tx.getHashAsString());
-		
-		DataHandler handler = new DataHandler();
-		try {
-			handler.AddTransaction(t, false);
-		} catch (Exception e) {
-			InfinityPfm.LogMessage(e.getMessage());
-		} 
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
+		
+			Account offset = (Account) cmbOffset.getData(cmbOffset.getText());
+			
+			if (bsvAccount != null && offset != null) {
+				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
+				t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+				t.setActId(bsvAccount.getActId());
+				t.setActOffset(offset.getActId());
+				t.setExchangeRate(_bsvCurrency.getExchangeRate());
+				t.setTranMemo(txtMemo.getText());
+				t.setTransactionKey(tx.getHashAsString());
+				t.setTranDate(new Date());
+				
+				DataHandler handler = new DataHandler();
+				try {
+					handler.AddTransaction(t, false);
+					
+				} catch (Exception e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				} 
+			}
 				setFiatAndBsvBalance(newBalance.toPlainString());
+				LoadTransactionHistory();
 			}
 		});
 	}

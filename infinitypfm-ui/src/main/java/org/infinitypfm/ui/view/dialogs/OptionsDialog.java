@@ -344,7 +344,7 @@ public class OptionsDialog extends BaseDialog {
 				Currency defaultCurrency = (Currency) MM.sqlMap.queryForObject("getCurrencyById", 
 						Long.valueOf(MM.options.getDefaultCurrencyID()));
 				
-				
+				//http://bitcoinsv-rates.com/api/rates/
 				//https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=usd
 				//https://api.cryptonator.com/api/ticker/bsv-usd
 				
