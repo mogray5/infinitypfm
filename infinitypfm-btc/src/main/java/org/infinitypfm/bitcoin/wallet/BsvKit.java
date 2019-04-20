@@ -20,35 +20,27 @@ import org.bitcoinj.wallet.UnreadableWalletException;
  * will be injected into BsvWallet class to make
  * it easier to test.
  */
-public class BsvKit {
+public class BsvKit implements Runnable {
 
 	private final static Logger LOG = Logger.getLogger(BsvKit.class);
 	private WalletAppKit _kit;
 	private final String _walletDir;
+	private final String _nodeIp;
+	private NetworkParameters _params;
+	private boolean _running;
+	
 	public static final String WALLET_PREFIX = "infinitypfm_bsv";
 	
 	public BsvKit(String walletDir, String nodeIp) throws UnknownHostException {
 		
 		LOG.info("Initializing wallet kit");
 		
+		_nodeIp = nodeIp;
 		_walletDir = walletDir;
-		
-		NetworkParameters params= MainNetParams.get();
-		
-		_kit = new WalletAppKit(params, new File(_walletDir), BsvKit.WALLET_PREFIX);
+		_params= MainNetParams.get();
+		_kit = new WalletAppKit(_params, new File(_walletDir), BsvKit.WALLET_PREFIX);
 		_kit.setAutoSave(false);
-
-		if (nodeIp != null && nodeIp.length()>0) {
-			PeerAddress address = new PeerAddress(InetAddress.getByName(nodeIp), params.getPort());
-			_kit.setPeerNodes(address);
-			_kit.startAsync();
-			_kit.awaitRunning();
-			_kit.peerGroup().setMaxConnections(1);
-		} else {
-			_kit.startAsync();
-			_kit.awaitRunning();
-		_kit.peerGroup().setMaxConnections(5);
-		}
+		_running = false;
 	}
 
 	public WalletAppKit get() {
@@ -66,7 +58,6 @@ public class BsvKit {
 		Long creationtime = new Date().getTime();
 		DeterministicSeed seed = new DeterministicSeed(seedCode, null, passphrase, creationtime);
 		_kit.restoreWalletFromSeed(seed);
-        		
         		
 	}
 	
@@ -88,6 +79,37 @@ public class BsvKit {
 			}
 		}
 	}
+
+	@Override
+	public void run() {
+
+		if (_nodeIp != null && _nodeIp.length()>0) {
+			PeerAddress address =  null;
+			try {
+				address = new PeerAddress(InetAddress.getByName(_nodeIp), _params.getPort());
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			_kit.setPeerNodes(address);
+			_kit.startAsync();
+			_kit.awaitRunning();
+			_kit.peerGroup().setMaxConnections(1);
+			
+		} else {
+			_kit.startAsync();
+			_kit.awaitRunning();
+		_kit.peerGroup().setMaxConnections(5);
+		}
+		
+		_running = true;
+		
+	}
+
+	public boolean isRunning() {
+		return _running;
+	}	
 	
-	
+	public void setRunning(boolean val) {
+		_running = val;
+	}
 }

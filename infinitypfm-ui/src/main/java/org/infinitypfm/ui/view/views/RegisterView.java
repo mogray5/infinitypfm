@@ -272,6 +272,7 @@ public class RegisterView extends BaseView {
 				Account account = (Account) MM.sqlMap.queryForObject(
 						"getAccountForName", act.getActName());
 				// set act balance and name
+				formatter.setPrecision(account.getCurrencyPrecision());
 				lblBalance
 						.setText(MM.PHRASES.getPhrase("2")
 								+ ": "

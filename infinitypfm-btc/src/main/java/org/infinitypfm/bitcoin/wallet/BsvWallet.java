@@ -29,14 +29,12 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Utils;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.MonetaryFormat;
 import org.bitcoinj.wallet.DeterministicSeed;
-import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.Wallet.BalanceType;
@@ -53,44 +51,23 @@ public class BsvWallet {
 	private BsvKit _bsvKit;
 	private WalletAppKit _kit;
 	private final Password _spendingPassword;
-	private boolean _running = true;
 	private WalletEvents _walletEvents;
 	private final EncryptUtil _encryptUtil;
+	private boolean _firstUse = true;
+
 	
 	public BsvWallet(BsvKit kit, Password spendPwd) {
-		
-		BriefLogFormatter.init();
-		
-		_bsvKit = kit;
-		_kit = _bsvKit.get();
 		_spendingPassword = spendPwd;
+		_bsvKit = kit;
 		_encryptUtil = new EncryptUtil();
-		
-		_kit.wallet().addCoinsReceivedEventListener(onCoinsReceived);;
-        _kit.wallet().addCoinsSentEventListener(onCoinsSent);
 	}
-	
-//	@Override
-//	public void run() {
-//	
-//		LOG.info("Starting BSV Wallet");
-//
-//		
-//		while (_running) {
-//			try {
-//				Thread.sleep(15000);
-//			} catch (InterruptedException e) {
-//				break;
-//			}
-//		}
-//	}
 	
 	/**************/
 	/* Public API */
 	/**************/
 	
 	public boolean isRunning() {
-		return _running;
+		return _bsvKit.isRunning();
 	}
 	
 	/**
@@ -99,7 +76,7 @@ public class BsvWallet {
 	public void stop() {
 		_kit.stopAsync();
         _kit.awaitTerminated();
-		_running = false;
+        _bsvKit.setRunning(false);
 	}
 	
 	/**
@@ -110,6 +87,7 @@ public class BsvWallet {
 	 * @return
 	 */
 	public String getFiatBalance() {
+		if (_firstUse) init();
 		return MonetaryFormat.FIAT.noCode().format(_kit.wallet().getBalance(BalanceType.ESTIMATED)).toString();
 	}
 
@@ -121,6 +99,7 @@ public class BsvWallet {
 	 * @return
 	 */
 	public String getBsvBalance() {
+		if (_firstUse) init();
 		return MonetaryFormat.BTC.noCode().format(_kit.wallet().getBalance(BalanceType.ESTIMATED)).toString();
 	}
 	
@@ -130,6 +109,7 @@ public class BsvWallet {
 	 * @param events Callback object to UI
 	 */
 	public void registerForEvents(WalletEvents events) {
+		if (_firstUse) init();
 		_walletEvents = events;
 	}
 	
@@ -137,6 +117,7 @@ public class BsvWallet {
 	 * Stop listening for wallet events like coin receipt.
 	 */
 	public void unregisterForEvents() {
+		if (_firstUse) init();
 		_walletEvents = null;
 	}
 	
@@ -147,6 +128,7 @@ public class BsvWallet {
 	 * @return base58 receiving address
 	 */
 	public String getCurrentReceivingAddress() {
+		if (_firstUse) init();
 		Address a = _kit.wallet().currentReceiveAddress();
 		return a.toBase58();
 	}
@@ -159,6 +141,7 @@ public class BsvWallet {
 	 * @throws AuthenticationException 
 	 */
 	public String getMnemonicCode(String password) throws AuthenticationException {
+		if (_firstUse) init();
 		
 		if (authorized(password)) {
 			DeterministicSeed seed = _kit.wallet().getKeyChainSeed();
@@ -178,6 +161,7 @@ public class BsvWallet {
 	 * @throws UnreadableWalletException thrown if wallet seed can not be used
 	 */
 	public void restoreFromSeed(String seedCode, String password, String passphrase) throws AuthenticationException, UnreadableWalletException{
+		if (_firstUse) init();
 		if (authorized(password)) {
 			_bsvKit.restoreFromSeed(seedCode, passphrase);
 			_kit = _bsvKit.get();
@@ -185,7 +169,7 @@ public class BsvWallet {
 	}
 	
 	public File getQrCode(String address) throws IOException {
-		
+		if (_firstUse) init();
 		File newFile = QRCode.from(address)
 		.withSize(250, 250).file();
 		
@@ -208,6 +192,7 @@ public class BsvWallet {
 	 */
 	public void sendCoins(String toAddress, Coin amount) throws AddressFormatException, InsufficientMoneyException {
 		
+		if (_firstUse) init();
 		//Transaction tx = _kit.wallet().createSend(Address.fromBase58(_kit.params(), toAddress), amount);
 		//SendRequest request = SendRequest.forTx(tx);
 		//request.ensureMinRequiredFee = true;
@@ -225,6 +210,23 @@ public class BsvWallet {
 	/* Private Methods */
 	/*******************/
 
+	private void init() {
+		BriefLogFormatter.init();
+		_kit = _bsvKit.get();
+		
+		while (!_kit.isRunning()) {
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		_kit.wallet().addCoinsReceivedEventListener(onCoinsReceived);;
+        _kit.wallet().addCoinsSentEventListener(onCoinsSent);
+        _firstUse = false;
+	}
+	
 	private boolean authorized(String password) throws AuthenticationException {
 		
 		Password p = new Password(password, null, _encryptUtil);

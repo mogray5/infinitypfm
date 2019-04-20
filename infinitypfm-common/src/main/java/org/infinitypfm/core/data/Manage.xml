@@ -172,6 +172,7 @@
 		IsoCode VARCHAR(5),
 		ExchRate VARCHAR(25),
 		LastUpdate DATETIME,
+		CurrencyPrecision INT DEFAULT 2,
 		UNIQUE (IsoCode),
 		UNIQUE (CurrencyID)
 		)

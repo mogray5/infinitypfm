@@ -162,6 +162,8 @@ public class InfinityPfm {
 			
 			try {
 				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath(), peer);
+				Thread walletThread = new Thread(kit);
+				walletThread.start();
 				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
 				MM.wallet = new BsvWallet(kit, spendPassword); 
 			} catch (IOException e) {
@@ -213,9 +215,6 @@ public class InfinityPfm {
 		}
 		
 		//clean up		
-
-		
-		
 		qzMain.QZDispose();
 		
 		display.dispose();

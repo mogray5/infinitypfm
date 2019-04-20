@@ -324,12 +324,15 @@ public class OptionsDialog extends BaseDialog {
 				// Need to add BSV
 				c.setCurrencyName("Bitcoin SV");
 				c.setExchangeRate("69");
+				c.setCurrencyPrecision(8);
 				MM.sqlMap.insert("addCurrency", c);
-				// Refetch the currency to get the ID
-				c = (Currency) MM.sqlMap.queryForObject("getCurrencyByIsoCode", c.getIsoName());
 				
 				//Refresh BSV currency to get the ID
 				bsv = (Currency) MM.sqlMap.queryForObject("getCurrencyByIsoCode", c.getIsoName());
+				
+				//Set the option in memory as it's used later when the wallet
+				//account is created.
+				MM.options.setDefaultBsvCurrencyID(bsv.getCurrencyID());
 			}
 			
 			List<CurrencyMethod> methods = MM.sqlMap.queryForList("getCurrencyMethods", bsv);
@@ -419,9 +422,7 @@ public class OptionsDialog extends BaseDialog {
 				MM.PHRASES.getPhrase("70"));
 		
 		dialog.Open();
-	
 	}
-	
 	
 	/*
 	 * Listeners

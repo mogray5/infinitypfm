@@ -242,4 +242,7 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
    <update id="v0_9_0_e">
  	ALTER TABLE AppSettings ADD COLUMN DefaultBsvCurrencyID INT DEFAULT 0;
    </update>
+   <update id="v0_9_0_f">
+ 	ALTER TABLE Currencies ADD COLUMN CurrencyPrecision INT DEFAULT 2;
+   </update>
 </sqlMap>

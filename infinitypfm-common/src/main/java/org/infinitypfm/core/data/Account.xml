@@ -39,7 +39,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
          INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -60,7 +61,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
          INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -80,7 +82,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
          INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -100,7 +103,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
          INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -120,7 +124,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
          INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -139,7 +144,8 @@
            ActBalance as actBalance,
           curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
         FROM Accounts
         INNER JOIN AccountTypes
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
@@ -198,7 +204,8 @@
            ActBalance as actBalance,
            curr.CurrencyID,
           curr.Name as currencyName,
-          curr.IsoCode as isoCode
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
          FROM Accounts 
          	INNER JOIN
          		ImportHistory ON

@@ -29,8 +29,8 @@
 	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
 	
 	<insert id="addCurrency" parameterClass="org.infinitypfm.core.data.Currency">
-		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate)
-		VALUES (#currencyName#, #isoName#, #exchangeRate#, CURTIME ());
+		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate, CurrencyPrecision)
+		VALUES (#currencyName#, #isoName#, #exchangeRate#, CURTIME (), #currencyPrecision#);
  	</insert>
 	
 	  <select id="getCurrencies" resultClass="currency">
@@ -42,7 +42,8 @@
            ExchRate as exchangeRate,
            LastUpdate as lastUpdate,
            CASE WHEN DefaultCurrencyId IS NOT NULL THEN TRUE
-           ELSE FALSE END AS IsDefault
+           ELSE FALSE END AS IsDefault,
+           CurrencyPrecision
          FROM Currencies
 			LEFT OUTER JOIN
 			AppSettings
@@ -60,7 +61,8 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE IsoCode = #value#
          	
@@ -75,7 +77,8 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE CurrencyID = #value#
          	
@@ -90,7 +93,8 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE Name = #value#
          	

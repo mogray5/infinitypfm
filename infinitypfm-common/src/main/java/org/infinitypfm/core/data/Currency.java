@@ -37,6 +37,7 @@ public class Currency  implements Serializable {
 	private String exchangeRate = "1"; 
 	private Date lastUpdate;
 	private String isDefault = "";
+	private int currencyPrecision = 2;
 	
 	public long getCurrencyID() {
 		return currencyID;
@@ -73,6 +74,12 @@ public class Currency  implements Serializable {
 	}
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
+	}
+	public int getCurrencyPrecision() {
+		return currencyPrecision;
+	}
+	public void setCurrencyPrecision(int currencyPrecision) {
+		this.currencyPrecision = currencyPrecision;
 	}
 	
 }

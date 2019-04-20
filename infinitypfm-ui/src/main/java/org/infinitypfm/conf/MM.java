@@ -94,6 +94,7 @@ public class MM {
 	public static final String IMG_WALLET = "accessories-dictionary.png";
 	public static final String IMG_KEY = "dialog-password.png";
 	public static final String IMG_FOLDER_DOWNLOAD = "folder-download.png";
+	public static final String IMG_MESSAGE_DEFAULT = "hwinfo.png";
 	
 	public static final String ACT_TYPE_BANK = "Bank";
 	public static final String ACT_TYPE_EXPENSE = "Expense";

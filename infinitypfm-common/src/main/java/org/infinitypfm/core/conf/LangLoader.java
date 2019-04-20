@@ -268,7 +268,7 @@ public class LangLoader {
 		hmPhrases.put("222", i18n.tr("Start Date"));
 		hmPhrases.put("223", i18n.tr("End Date"));
 		hmPhrases.put("224", i18n.tr("Currencies"));
-		hmPhrases.put("225", i18n.tr("Currency Precision"));
+		hmPhrases.put("225", i18n.tr("Precision"));
 		hmPhrases.put("226", i18n.tr("Method Name"));
 		hmPhrases.put("227", i18n.tr("Service URL"));
 		hmPhrases.put("228", i18n.tr("Search Path"));
@@ -327,6 +327,7 @@ public class LangLoader {
 		hmPhrases.put("280",  i18n.tr("Mnemonic phrase required"));
 		hmPhrases.put("281",  i18n.tr("Wallet restored"));
 		hmPhrases.put("282",  i18n.tr("Coins Received"));
+		hmPhrases.put("283",  i18n.tr("Detail"));
 	}
 	
 	

@@ -36,6 +36,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,6 +48,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
@@ -55,6 +57,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
@@ -109,6 +112,8 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Account bsvAccount = null;
 	private Currency _bsvCurrency;
 	private DataFormatUtil _format;
+	
+	private boolean _inSend = false;
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -239,7 +244,19 @@ public class WalletView extends BaseView implements WalletEvents {
 		tabFolder.setTabList(new Control[] {sendGroup, receiveGroup});
 		this.setTabList(new Control[] {tabFolder});
 		
-		LoadTransactionHistory();
+
+		// Load transactions table after a pause to work around a timing issue with rendering. 
+		Display.getDefault().asyncExec( new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1000);
+					LoadTransactionHistory();
+				} catch (InterruptedException e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}
+			}
+		} );
 	}
 	
 	protected void LoadLayout() {
@@ -372,7 +389,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		//cmdclipboarddata.right = new FormAttachment(100, 0);
 		//cmdclipboarddata.bottom = new FormAttachment(100, 0);
 		cmdClipBoard.setLayoutData(cmdclipboarddata);
-		
+
 	}
 	
 	private void LoadColumns() {
@@ -417,6 +434,8 @@ public class WalletView extends BaseView implements WalletEvents {
 			List<org.infinitypfm.core.data.Transaction> tranList = MM.sqlMap.queryForList("getTransactionsForRangeAndAccountReverseSort", range);
 			if (tranList != null && tranList.size() > 0) {
 				
+				_format.setPrecision(bsvAccount.getCurrencyPrecision());
+				
 				for (org.infinitypfm.core.data.Transaction t : tranList) {
 					
 					ti = new TableItem(tblHistory, SWT.NONE);
@@ -436,10 +455,21 @@ public class WalletView extends BaseView implements WalletEvents {
 					
 					ti.setText(4, _format.getAmountFormatted(t.getActBalance()));
 					
-					if (t.getTransactionKey()!=null)
-					ti.setText(5, t.getTransactionKey());
+					if (t.getTransactionKey()!=null) {
+						TableEditor editor = new TableEditor(tblHistory);
+						Link link = new Link(tblHistory, SWT.NONE);
+						link.setText("<a href=\"https://eclipse.org\">" + MM.PHRASES.getPhrase("283") + "</a>");
+						//link.setText(MM.PHRASES.getPhrase("86"));
+						link.addSelectionListener(linkView_OnClick);
+						link.setEnabled(true);
+						link.setData(t);
+						editor.minimumWidth = 50;
+						editor.horizontalAlignment = SWT.CENTER;
+						editor.setEditor(link, ti, 5);
+					}
 					
 					rowCount++;
+					tblHistory.redraw();
 				}
 			}
 				
@@ -637,6 +667,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				
 				// Send it!!
 				try {
+					_inSend = true;
 					MM.wallet.sendCoins(sendTo, amount);
 				} catch (AddressFormatException e1) {
 					InfinityPfm.LogMessage(e1.getMessage(), true);
@@ -645,6 +676,21 @@ public class WalletView extends BaseView implements WalletEvents {
 				}
 			}
 			
+		}
+	};
+
+	SelectionAdapter linkView_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+	
+			String s = "stop";
+			
+			org.infinitypfm.core.data.Transaction t = 
+					(org.infinitypfm.core.data.Transaction) e.widget.getData();
+			
+			if (t.getTransactionKey() != null) {
+				String sLink = "https://whatsonchain.com/tx/" + t.getTransactionKey();
+				Program.launch(sLink);
+			}
 		}
 	};
 	
@@ -658,6 +704,11 @@ public class WalletView extends BaseView implements WalletEvents {
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
 		
+			if (_inSend) {
+				_inSend = false;
+				return;
+			}
+				
 			Account offset = (Account) cmbOffset.getData(cmbOffset.getText());
 			
 			if (bsvAccount != null && offset != null) {
