@@ -262,6 +262,12 @@
         WHERE ActId = #actId#
    </update>
    
+   <update id="updateAccountBalanceFromAccount" parameterClass="act">
+        UPDATE Accounts
+        	SET ActBalance = #actBalance#
+        WHERE ActId = #actId#
+   </update>
+   
    <update id="updateAccountName" parameterClass="act">
      UPDATE Accounts
      	SET ActName = #actName#

@@ -27,9 +27,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    <typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
    <typeAlias alias="dateRange" type="org.infinitypfm.core.data.ParamDateRange"/>
    <typeAlias alias="dateRangeAccount" type="org.infinitypfm.core.data.ParamDateRangeAccount"/>
-   <typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
-   
-   
+      
      <select id="getTransactionsForRange" parameterClass="dateRange"
                           resultClass="tran">
        <![CDATA[
@@ -186,26 +184,9 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
     	 )
    </insert>
    
-   <insert id="insertTrade" parameterClass="trade">
-	    INSERT INTO Trades
-	     (
-	      TranID,
-		  CurrencyID,
-		  TranDate,
-		  Amount
-	     )
-    	VALUES 
-    	 (
-    	  #tranId#,
-    	  #currencyID#,
-    	  #tranDate#,
-    	  #amount#
-    	 )
-   </insert>
+
    
-   <insert id="shutdown" parameterClass="java.lang.String">
-     SHUTDOWN;
-   </insert>
+
    
    <select id="getRecurringTransactions" resultClass="org.infinitypfm.core.data.RecurHeader">
    	SELECT 

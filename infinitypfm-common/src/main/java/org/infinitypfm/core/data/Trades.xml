@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (c) 2005-2019 Wayne Gray All rights reserved This file is 
+	part of Infinity PFM. Infinity PFM is free software: you can redistribute 
+	it and/or modify it under the terms of the GNU General Public License as 
+	published by the Free Software Foundation, either version 3 of the License, 
+	or (at your option) any later version. Infinity PFM is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU General Public License for more details. You should have received a copy 
+	of the GNU General Public License along with Infinity PFM. If not, see <http://www.gnu.org/licenses/>. -->
+
+
+<!DOCTYPE sqlMap PUBLIC
+  "-//iBATIS.com//DTD SQL Map 2.0//EN"
+  "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Trades">
+
+	<typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
+	<typeAlias alias="trade2" type="org.infinitypfm.core.data.Trade2"/>
+	<typeAlias alias="basis" type="org.infinitypfm.core.data.Basis"/>
+	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
+
+   <insert id="insertTrade2" parameterClass="trade2">
+		INSERT INTO TRADES2
+		( 
+			TRANID, 
+			FROMCURRENCYID, 
+			TOCURRENCYID, 
+			TRANDATE, 
+			FROMAMOUNT, 
+			TOAMOUNT, 
+			BASISFIFO, 
+			BASISLIFO 
+		)
+		VALUES 
+		( 
+			#tranId#, 
+			#fromCurrencyId#, 
+			#toCurrencyId#, 
+			#tranDate#, 
+			#fromAmount#, 
+			#toAmount#, 
+			#basisFifo#,
+			#basisLifo# 
+		)
+   </insert>
+
+	<insert id="insertBasis" parameterClass="basis">
+		INSERT INTO BASIS
+		( 
+			AQUIRECURRENCYID, 
+			AQUIREDATE, 
+			QTYFIFO, 
+			QTYLIFO, 
+			COST, 
+			COSTCURRENCYID 
+		)
+		VALUES 
+		( 
+			#aquireCurrencyId#, 
+			#aquireDate#, 
+			#qtyFifo#, 
+			#qtyLifo#, 
+			#cost#,
+			#costCurrencyId# 
+		)
+	</insert>
+
+	<select id="getLifoBasis" paraeterClass="currency" resultClass="Basis">
+		SELECT * 
+		FROM BASIS b
+		WHERE b.AquireCurrencyId = #currencyId#
+		  AND b.QtyLifo > 0
+		  AND b.AquireDate = (
+		
+		  SELECT max(b2.AquireDate
+		  FROM BASIS b2
+		  WHERE b.AquireCurrencyId = #currencyId#
+		  AND b2.QtyLifo > 0
+		)
+	</select>
+
+	<select id="getFifoBasis" paraeterClass="currency" resultClass="Basis">
+		SELECT * 
+		FROM BASIS b
+		WHERE b.AquireCurrencyId = #currencyId#
+		  AND b.QtyLifo > 0
+		  AND b.AquireDate = (
+		
+		  SELECT min(b2.AquireDate
+		  FROM BASIS b2
+		  WHERE b.AquireCurrencyId = #currencyId#
+		  AND b2.QtyLifo > 0
+		)
+	</select>
+
+   <insert id="insertTrade" parameterClass="trade">
+	    INSERT INTO Trades
+	     (
+	      TranID,
+		  CurrencyID,
+		  TranDate,
+		  Amount
+	     )
+    	VALUES 
+    	 (
+    	  #tranId#,
+    	  #currencyID#,
+    	  #tranDate#,
+    	  #amount#
+    	 )
+   </insert>
+
+<insert id="insertBasis" 
+
+</sqlMap>

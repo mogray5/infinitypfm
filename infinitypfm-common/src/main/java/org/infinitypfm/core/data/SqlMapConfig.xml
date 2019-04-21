@@ -68,5 +68,6 @@
   <sqlMap resource="org/infinitypfm/core/data/Currency.xml" />
   <sqlMap resource="org/infinitypfm/core/data/ImportRules.xml" />
   <sqlMap resource="org/infinitypfm/core/data/Connectors.xml" />
+  <sqlMap resource="org/infinitypfm/core/data/Trades.xml" />
 
 </sqlMapConfig>

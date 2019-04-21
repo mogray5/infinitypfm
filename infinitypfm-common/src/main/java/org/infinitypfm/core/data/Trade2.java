@@ -20,12 +20,16 @@ package org.infinitypfm.core.data;
 
 import java.util.Date;
 
-public class Trade {
+public class Trade2 {
 
 	private long tranId; 
-	private long currencyID = 0;
+	private long fromCurrencyID = 0;
+	private long toCurrencyID = 0;
 	private Date tranDate;
-	private long amount=0;
+	private long fromAmount=0;
+	private long toAmount=0;
+	private long basisFifo=0;
+	private long basisLifo=0;
 	
 	public long getTranId() {
 		return tranId;
@@ -33,11 +37,17 @@ public class Trade {
 	public void setTranId(long tranId) {
 		this.tranId = tranId;
 	}
-	public long getCurrencyID() {
-		return currencyID;
+	public long getFromCurrencyID() {
+		return fromCurrencyID;
 	}
-	public void setCurrencyID(long currencyID) {
-		this.currencyID = currencyID;
+	public void setFromCurrencyID(long fromCurrencyID) {
+		this.fromCurrencyID = fromCurrencyID;
+	}
+	public long getToCurrencyID() {
+		return toCurrencyID;
+	}
+	public void setToCurrencyID(long toCurrencyID) {
+		this.toCurrencyID = toCurrencyID;
 	}
 	public Date getTranDate() {
 		return tranDate;
@@ -45,11 +55,28 @@ public class Trade {
 	public void setTranDate(Date tranDate) {
 		this.tranDate = tranDate;
 	}
-	public long getAmount() {
-		return amount;
+	public long getFromAmount() {
+		return fromAmount;
 	}
-	public void setAmount(long amount) {
-		this.amount = amount;
+	public void setFromAmount(long fromAmount) {
+		this.fromAmount = fromAmount;
 	}
-	
+	public long getToAmount() {
+		return toAmount;
+	}
+	public void setToAmount(long toAmount) {
+		this.toAmount = toAmount;
+	}
+	public long getBasisFifo() {
+		return basisFifo;
+	}
+	public void setBasisFifo(long basisFifo) {
+		this.basisFifo = basisFifo;
+	}
+	public long getBasisLifo() {
+		return basisLifo;
+	}
+	public void setBasisLifo(long basisLifo) {
+		this.basisLifo = basisLifo;
+	}
 }

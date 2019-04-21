@@ -136,12 +136,14 @@ public class DataHandler {
 		Trade trade = null;
 		BigDecimal newAmount = null;
 		TransactionOffset offset = null;
+		Account offsetAccount = null;
+		Account account = null;
 
 		try {
 			
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("79") + " " + tran.getTranMemo());
 			
-			boolean isExchange = tran.getExchangeRate() != null && !tran.getExchangeRate().equals("1");
+			boolean isExchange = false;
 			
 			if (!offsetsValid(tran.getOffsets(), tran.getTranAmount())) {
 				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("234"));
@@ -154,11 +156,16 @@ public class DataHandler {
 				offset = (TransactionOffset)tran.getOffsets().get(i);
 				tranOffset = new Transaction();
 				tranOffset.setActId(offset.getOffsetId());
+
+				offsetAccount = (Account)MM.sqlMap.queryForObject("getAccountForOffset", tran);
+				account = (Account)MM.sqlMap.queryForObject("getAccountById", tran);
+				
+				isExchange = tran.getExchangeRate() != null && !tran.getExchangeRate().equals("1")
+						&& account.getCurrencyID() != offsetAccount.getCurrencyID();
 				
 				if (isExchange){
 					
 					newAmount = formatter.strictMultiply(tran.getExchangeRate(), Long.toString(offset.getOffsetAmount()));
-					
 					tranOffset.setTranAmount(newAmount.longValue());
 				
 				} else {
@@ -200,9 +207,6 @@ public class DataHandler {
 			if (isExchange){
 				
 				MM.sqlMap.startTransaction();
-				
-				Account account = (Account)MM.sqlMap.queryForObject("getAccountById", tran);
-				Account offsetAccount = (Account)MM.sqlMap.queryForObject("getAccountForOffset", tran);
 				
 				tran = (Transaction)MM.sqlMap.queryForObject("getLastTransactionByAccount", account.getActId());
 				

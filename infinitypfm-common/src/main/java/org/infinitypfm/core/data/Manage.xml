@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Copyright (c) 2005-2011 Wayne Gray All rights reserved This file is 
+<!-- Copyright (c) 2005-2019 Wayne Gray All rights reserved This file is 
 	part of Infinity PFM. Infinity PFM is free software: you can redistribute 
 	it and/or modify it under the terms of the GNU General Public License as 
 	published by the Free Software Foundation, either version 3 of the License, 
@@ -200,6 +200,33 @@
 		)
 	</statement>
 
+	<statement id="createTableTrades2">
+		CREATE CACHED TABLE Trades2
+		(
+		TranID BIGINT,
+		FromCurrencyID INT,
+		ToCurrencyID INT,
+		TranDate DATETIME,
+		FromAmount BIGINT,
+		ToAmount BIGINT,
+		BasisFifo BIGINT,
+		BasisLifo BIGINT,
+		UNIQUE (TranID)
+		)
+	</statement>
+
+	<statement id="createTableBasis">
+		CREATE CACHED TABLE Basis
+		(
+		AquireCurrencyID INT,
+		AquireDate DATETIME,
+		QtyFifo INT,
+		QtyLifo INT,
+		Cost BIGINT,
+		CostCurrencyId INT
+		)
+	</statement>
+
 	<statement id="createTableConnectors">
 		CREATE CACHED TABLE Connectors
 		(
@@ -265,6 +292,41 @@
 		CONSTRAINT
 		FK_Trades_Transactions
 		FOREIGN KEY (TranID) REFERENCES Transactions (TranID)
+	 </statement>
+
+	<statement id="createFKTrades21">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Currencies_1
+		FOREIGN KEY (FromCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </statement>
+
+	<statement id="createFKTrades22">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Currencies_2
+		FOREIGN KEY (ToCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </statement>
+	 
+	 <statement id="createFKTrades23">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Transactions
+		FOREIGN KEY (TranID) REFERENCES Transactions (TranID)
+	 </statement>
+
+	<statement id="createFKBasis1">
+		ALTER TABLE Basis ADD
+		CONSTRAINT
+		FK_Basis_Currencies_1
+		FOREIGN KEY (AquireCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </statement>
+
+	<statement id="createFKBasis2">
+		ALTER TABLE Basis ADD
+		CONSTRAINT
+		FK_Basis_Currencies_2
+		FOREIGN KEY (CostCurrencyID) REFERENCES Currencies (CurrencyID)
 	 </statement>
 
 	<statement id="createFKBudgetDetail">
@@ -341,5 +403,10 @@
 	<statement id="akTransactions">
 	 CREATE UNIQUE INDEX ak_transactions ON transactions (ACTID,TRANDATE,TRANMEMO,TRANAMOUNT)
 	</statement>
+	
+	<insert id="shutdown" parameterClass="java.lang.String">
+     SHUTDOWN;
+   </insert>
+   
 </sqlMap>
  

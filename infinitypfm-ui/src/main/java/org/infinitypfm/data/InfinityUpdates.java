@@ -329,6 +329,15 @@ public class InfinityUpdates {
 		MM.sqlMap.update("v0_9_0_d");
 		MM.sqlMap.update("v0_9_0_e");
 		MM.sqlMap.update("v0_9_0_f");
+		
+		MM.sqlMap.insert("createTableTrades2");
+		MM.sqlMap.insert("createTableBasis");
+		MM.sqlMap.insert("createFKTrades21");
+		MM.sqlMap.insert("createFKTrades22");
+		MM.sqlMap.insert("createFKTrades23");
+		MM.sqlMap.insert("createFKBasis1");
+		MM.sqlMap.insert("createFKBasis2");
+		
 		MM.sqlMap.update("bumpVersion", "0.9.0");
 	}
 

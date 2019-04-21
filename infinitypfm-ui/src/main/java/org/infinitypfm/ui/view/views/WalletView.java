@@ -27,8 +27,10 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.bitcoinj.core.AddressFormatException;
@@ -114,10 +116,13 @@ public class WalletView extends BaseView implements WalletEvents {
 	private DataFormatUtil _format;
 	
 	private boolean _inSend = false;
+	private List<Link> _links = null;
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
 	
+		_links = new ArrayList<Link>();
+		
 		if (MM.wallet != null) {
 			MM.wallet.registerForEvents(this);
 			_receiveAddress = MM.wallet.getCurrentReceivingAddress();
@@ -245,18 +250,20 @@ public class WalletView extends BaseView implements WalletEvents {
 		this.setTabList(new Control[] {tabFolder});
 		
 
+		LoadTransactionHistoryAsync();
+		
 		// Load transactions table after a pause to work around a timing issue with rendering. 
-		Display.getDefault().asyncExec( new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-					LoadTransactionHistory();
-				} catch (InterruptedException e) {
-					InfinityPfm.LogMessage(e.getMessage());
-				}
-			}
-		} );
+//		Display.getDefault().asyncExec( new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					Thread.sleep(1000);
+//					LoadTransactionHistory();
+//				} catch (InterruptedException e) {
+//					InfinityPfm.LogMessage(e.getMessage());
+//				}
+//			}
+//		} );
 	}
 	
 	protected void LoadLayout() {
@@ -329,12 +336,12 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmdSend.setLayoutData(cmdsenddata);
 	
 		FormData lblsendamountdata = new FormData();
-		lblsendamountdata.top = new FormAttachment(lblSendTo, 5);
+		lblsendamountdata.top = new FormAttachment(lblSendTo, 0);
 		lblsendamountdata.left = new FormAttachment(0, 70);
 		lblSendAmount.setLayoutData(lblsendamountdata);
 		
 		FormData txtsendamountdata = new FormData();
-		txtsendamountdata.top = new FormAttachment(lblSendTo, -2);
+		txtsendamountdata.top = new FormAttachment(lblSendTo, -6);
 		txtsendamountdata.left = new FormAttachment(lblSendAmount, 5);
 		txtsendamountdata.right = new FormAttachment(lblSendAmount, 300);
 		txtSendAmount.setLayoutData(txtsendamountdata);
@@ -357,12 +364,12 @@ public class WalletView extends BaseView implements WalletEvents {
 		txtMemo.setLayoutData(txtmemotdata);
 		
 		FormData lbloffsetdata = new FormData();
-		lbloffsetdata.top = new FormAttachment(lblMemo, 25);
+		lbloffsetdata.top = new FormAttachment(lblMemo, 27);
 		lbloffsetdata.left = new FormAttachment(0, 70);
 		lblOffset.setLayoutData(lbloffsetdata);
 
 		FormData cmboffsetdata = new FormData();
-		cmboffsetdata.top = new FormAttachment(lblMemo, 20);
+		cmboffsetdata.top = new FormAttachment(lblMemo, 22);
 		cmboffsetdata.left = new FormAttachment(lblSendAmount, 5);
 		//cmboffsetdata.right = new FormAttachment(lblAccount, 300);
 		cmbOffset.setLayoutData(cmboffsetdata);
@@ -418,6 +425,23 @@ public class WalletView extends BaseView implements WalletEvents {
 		tblHistory.setHeaderVisible(true);
 	}
 	
+	protected void LoadTransactionHistoryAsync() {
+		
+		// Load transactions table after a pause to work around a timing issue with rendering. 
+		Display.getDefault().asyncExec( new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1000);
+					LoadTransactionHistory();
+				} catch (InterruptedException e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}
+			}
+		} );
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected void LoadTransactionHistory() {
 		
@@ -435,6 +459,29 @@ public class WalletView extends BaseView implements WalletEvents {
 			if (tranList != null && tranList.size() > 0) {
 				
 				_format.setPrecision(bsvAccount.getCurrencyPrecision());
+				
+				// Dispose previous links
+				for (int i=0; i<_links.size(); i++) {
+					Link oldLink = (Link)_links.get(i);
+					try {
+						oldLink.dispose();
+					} catch (Exception e) {
+						InfinityPfm.LogMessage(e.getMessage());
+					}
+				}
+				
+				_links.clear();
+				
+				//Loop through list and calculate account balance
+				ListIterator li = tranList.listIterator(0);
+				long newBalance = bsvAccount.getActBalance();
+				org.infinitypfm.core.data.Transaction tran = null;
+				
+				while(li.hasNext()) {
+				  tran = (org.infinitypfm.core.data.Transaction)li.next();
+				  tran.setActBalance(newBalance);
+				  newBalance-=tran.getTranAmount();
+				}
 				
 				for (org.infinitypfm.core.data.Transaction t : tranList) {
 					
@@ -463,6 +510,7 @@ public class WalletView extends BaseView implements WalletEvents {
 						link.addSelectionListener(linkView_OnClick);
 						link.setEnabled(true);
 						link.setData(t);
+						_links.add(link);
 						editor.minimumWidth = 50;
 						editor.horizontalAlignment = SWT.CENTER;
 						editor.setEditor(link, ti, 5);
@@ -476,8 +524,6 @@ public class WalletView extends BaseView implements WalletEvents {
 		} catch (SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
-		
-		
 	}
 	
 	private void LoadAccountCombos() {
@@ -539,14 +585,22 @@ public class WalletView extends BaseView implements WalletEvents {
 	 * @param bsvBalance Wallet balance in BSV
 	 */
 	private void setFiatAndBsvBalance(String bsvBalance) {
-			
+		
 		lblAmountBsv.setText(bsvBalance + " BSV");
 		if (bsvBalance != null) {
 			BigDecimal amount = _format.strictMultiply(bsvBalance, _bsvCurrency.getExchangeRate());
+			BigDecimal bsvAmount = new BigDecimal(bsvBalance);
+			long lbsvAmount = DataFormatUtil.moneyToLong(bsvAmount);
+			bsvAccount.setActBalance(lbsvAmount);
 			long lAmount = DataFormatUtil.moneyToLong(amount);
 			_format.setPrecision(MM.options.getCurrencyPrecision());
 			String fiatBalance = _format.getAmountFormatted(lAmount);
 			lblAmount.setText("$" + fiatBalance);
+			try {
+				MM.sqlMap.update("updateAccountBalanceFromAccount", bsvAccount);
+			} catch (SQLException e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
 		}
 	}
 	
@@ -732,7 +786,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				} 
 			}
 				setFiatAndBsvBalance(newBalance.toPlainString());
-				LoadTransactionHistory();
+				LoadTransactionHistoryAsync();
 			}
 			
 		});
@@ -765,7 +819,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				} 
 			}
 				setFiatAndBsvBalance(newBalance.toPlainString());
-				LoadTransactionHistory();
+				LoadTransactionHistoryAsync();
 			}
 		});
 	}
