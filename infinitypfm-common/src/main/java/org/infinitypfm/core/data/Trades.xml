@@ -35,8 +35,8 @@
 		VALUES 
 		( 
 			#tranId#, 
-			#fromCurrencyId#, 
-			#toCurrencyId#, 
+			#fromCurrencyID#, 
+			#toCurrencyID#, 
 			#tranDate#, 
 			#fromAmount#, 
 			#toAmount#, 
@@ -45,53 +45,35 @@
 		)
    </insert>
 
-	<insert id="insertBasis" parameterClass="basis">
-		INSERT INTO BASIS
-		( 
-			AQUIRECURRENCYID, 
-			AQUIREDATE, 
-			QTYFIFO, 
-			QTYLIFO, 
-			COST, 
-			COSTCURRENCYID 
-		)
-		VALUES 
-		( 
-			#aquireCurrencyId#, 
-			#aquireDate#, 
-			#qtyFifo#, 
-			#qtyLifo#, 
-			#cost#,
-			#costCurrencyId# 
-		)
-	</insert>
-
-	<select id="getLifoBasis" paraeterClass="currency" resultClass="Basis">
+	<select id="getLifoBasis" parameterClass="currency" resultClass="basis">
 		SELECT * 
 		FROM BASIS b
-		WHERE b.AquireCurrencyId = #currencyId#
+		WHERE b.AquireCurrencyId = #currencyID#
 		  AND b.QtyLifo > 0
 		  AND b.AquireDate = (
 		
-		  SELECT max(b2.AquireDate
+		  SELECT max(b2.AquireDate)
 		  FROM BASIS b2
-		  WHERE b.AquireCurrencyId = #currencyId#
+		  WHERE b2.AquireCurrencyId = #currencyID#
 		  AND b2.QtyLifo > 0
 		)
+		LIMIT 1
 	</select>
 
-	<select id="getFifoBasis" paraeterClass="currency" resultClass="Basis">
+	<select id="getFifoBasis" parameterClass="currency" resultClass="Basis">
 		SELECT * 
 		FROM BASIS b
-		WHERE b.AquireCurrencyId = #currencyId#
-		  AND b.QtyLifo > 0
+		WHERE b.AquireCurrencyId = #currencyID#
+		  AND b.QtyFifo > 0
 		  AND b.AquireDate = (
 		
-		  SELECT min(b2.AquireDate
+		  SELECT min(b2.AquireDate)
 		  FROM BASIS b2
-		  WHERE b.AquireCurrencyId = #currencyId#
-		  AND b2.QtyLifo > 0
+		  WHERE b2.AquireCurrencyId = #currencyID#
+		  AND b2.QtyFifo > 0
 		)
+		LIMIT 1
+		ORDER BY b.QtyLifo DESC
 	</select>
 
    <insert id="insertTrade" parameterClass="trade">
@@ -111,6 +93,39 @@
     	 )
    </insert>
 
-<insert id="insertBasis" 
+<insert id="insertBasis" parameterClass="basis">
+	INSERT INTO BASIS
+	( 
+		AQUIRECURRENCYID, 
+		AQUIREDATE, 
+		QTYFIFO, 
+		QTYLIFO, 
+		COST, 
+		COSTCURRENCYID 
+	)
+	VALUES 
+	( 
+		#aquireCurrencyID#, 
+		#aquireDate#,
+		#qtyFifo#, 
+		#qtyLifo#, 
+		#cost#,
+		#costCurrencyID# 
+	)
+</insert>
+
+<update id="updateFifo" parameterClass="basis">
+	UPDATE basis SET QtyFifo = #qtyFifo#
+	WHERE CostCurrencyID = #costCurrencyID#
+		AND AquireCurrencyID = #aquireCurrencyID#
+		AND AquireDate = #aquireDate#
+</update>
+
+<update id="updateLifo" parameterClass="basis">
+	UPDATE basis SET QtyLifo = #qtyLifo#
+	WHERE CostCurrencyID = #costCurrencyID#
+		AND AquireCurrencyID = #aquireCurrencyID#
+		AND AquireDate = #aquireDate#
+</update>
 
 </sqlMap>

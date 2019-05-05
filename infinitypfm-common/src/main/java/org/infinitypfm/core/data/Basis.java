@@ -26,8 +26,8 @@ public class Basis {
 	private long aquireCurrencyID = 0;
 	private long costCurrencyID = 0;
 	private Date aquireDate;
-	private int qtyFifo;
-	private int qtyLifo;
+	private long qtyFifo;
+	private long qtyLifo;
 	private long cost=0;
 	
 	public long getTranId() {
@@ -54,16 +54,16 @@ public class Basis {
 	public void setAquireDate(Date aquireDate) {
 		this.aquireDate = aquireDate;
 	}
-	public int getQtyFifo() {
+	public long getQtyFifo() {
 		return qtyFifo;
 	}
-	public void setQtyFifo(int qtyFifo) {
+	public void setQtyFifo(long qtyFifo) {
 		this.qtyFifo = qtyFifo;
 	}
-	public int getQtyLifo() {
+	public long getQtyLifo() {
 		return qtyLifo;
 	}
-	public void setQtyLifo(int qtyLifo) {
+	public void setQtyLifo(long qtyLifo) {
 		this.qtyLifo = qtyLifo;
 	}
 	public long getCost() {

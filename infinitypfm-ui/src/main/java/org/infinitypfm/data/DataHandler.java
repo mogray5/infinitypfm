@@ -29,6 +29,7 @@ import java.util.List;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
+import org.infinitypfm.core.data.Basis;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.Currency;
@@ -36,7 +37,7 @@ import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.RecurDetail;
 import org.infinitypfm.core.data.RecurHeader;
-import org.infinitypfm.core.data.Trade;
+import org.infinitypfm.core.data.Trade2;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
 import org.infinitypfm.exception.AccountException;
@@ -133,7 +134,7 @@ public class DataHandler {
 			throws SQLException, TransactionException {
 
 		Transaction tranOffset = null;
-		Trade trade = null;
+		Trade2 trade = null;
 		BigDecimal newAmount = null;
 		TransactionOffset offset = null;
 		Account offsetAccount = null;
@@ -144,6 +145,8 @@ public class DataHandler {
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("79") + " " + tran.getTranMemo());
 			
 			boolean isExchange = false;
+			boolean isDefaultToOther = false;
+			boolean isOtherToDefault = false;
 			
 			if (!offsetsValid(tran.getOffsets(), tran.getTranAmount())) {
 				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("234"));
@@ -160,13 +163,23 @@ public class DataHandler {
 				offsetAccount = (Account)MM.sqlMap.queryForObject("getAccountForOffset", tran);
 				account = (Account)MM.sqlMap.queryForObject("getAccountById", tran);
 				
-				isExchange = tran.getExchangeRate() != null && !tran.getExchangeRate().equals("1")
-						&& account.getCurrencyID() != offsetAccount.getCurrencyID();
+				isExchange =  account.getCurrencyID() != offsetAccount.getCurrencyID();
+				
+				isDefaultToOther = account.getCurrencyID() == MM.options.getDefaultCurrencyID() && 
+						offsetAccount.getCurrencyID() == MM.options.getDefaultBsvCurrencyID();
+				
+				isOtherToDefault = account.getCurrencyID() == MM.options.getDefaultBsvCurrencyID() && 
+						offsetAccount.getCurrencyID() == MM.options.getDefaultCurrencyID(); 
 				
 				if (isExchange){
 					
-					newAmount = formatter.strictMultiply(tran.getExchangeRate(), Long.toString(offset.getOffsetAmount()));
-					tranOffset.setTranAmount(newAmount.longValue());
+					if (isDefaultToOther) {
+						newAmount = formatter.strictMultiply(tran.getExchangeRate(), Long.toString(offset.getOffsetAmount()));
+						tranOffset.setTranAmount(newAmount.longValue());
+					} else if (isOtherToDefault) {
+						newAmount = formatter.strictDivide(tran.getExchangeRate(), Long.toString(offset.getOffsetAmount()), MM.MAX_PRECISION);
+						tranOffset.setTranAmount(newAmount.longValue());
+					}
 				
 				} else {
 					tranOffset.setTranAmount(offset.getOffsetAmount());
@@ -178,15 +191,12 @@ public class DataHandler {
 				
 				MM.sqlMap.insert("insertTransaction", tranOffset);
 				MM.sqlMap.insert("updateAccountBalance", tranOffset);
-				
 				UpdateMonthlyBalance(tranOffset);
-				
 			}
 			
 			MM.sqlMap.insert("insertTransaction", tran);
 			MM.sqlMap.insert("updateAccountBalance", tran);
 			UpdateMonthlyBalance(tran);
-			
 
 			Transaction memoResult = null;
 
@@ -197,12 +207,10 @@ public class DataHandler {
 				if (memoResult == null) {
 					MM.sqlMap.insert("insertMemo", tranOffset);
 				}
-
 			}
 			
 			MM.sqlMap.commitTransaction();
 			MM.sqlMap.endTransaction();
-			
 			
 			if (isExchange){
 				
@@ -210,24 +218,44 @@ public class DataHandler {
 				
 				tran = (Transaction)MM.sqlMap.queryForObject("getLastTransactionByAccount", account.getActId());
 				
-				trade = new Trade();
+				trade = new Trade2();
 				trade.setTranId(tran.getTranId());
 				trade.setTranDate(tran.getTranDate());
-				trade.setAmount(tran.getTranAmount());
-				trade.setCurrencyID(account.getCurrencyID());
+				
+				//trade.setAmount(tran.getTranAmount());
+				//trade.setCurrencyID(account.getCurrencyID());
 				
 				MM.sqlMap.insert("insertTrade", trade);
 				
-				trade.setCurrencyID(offsetAccount.getCurrencyID());
-				trade.setAmount(newAmount.longValue());
+				//trade.setCurrencyID(offsetAccount.getCurrencyID());
+				//trade.setAmount(newAmount.longValue());
 				
 				MM.sqlMap.insert("insertTrade", trade);
 				
 				MM.sqlMap.commitTransaction();
 				
 			}
-
 			
+			if (isDefaultToOther || isOtherToDefault) {
+				
+				MM.sqlMap.startTransaction();
+				
+				tran = (Transaction)MM.sqlMap.queryForObject("getLastTransactionByAccount", account.getActId());
+				
+				Basis basis = new Basis();
+				basis.setAquireCurrencyID(offsetAccount.getCurrencyID());
+				basis.setAquireDate(tran.getTranDate());
+				basis.setCost(tran.getTranAmount());
+				basis.setCostCurrencyID(account.getCurrencyID());
+				basis.setTranId(tran.getTranId());
+				Currency bsv = (Currency) MM.sqlMap.queryForObject("getCurrencyById", MM.options.getDefaultBsvCurrencyID());
+				BigDecimal bdQty = formatter.strictMultiply(formatter.getAmountFormatted(tran.getTranAmount()), 
+						bsv.getExchangeRate());
+				basis.setQtyFifo(DataFormatUtil.moneyToLong(bdQty));
+				basis.setQtyLifo(DataFormatUtil.moneyToLong(bdQty));
+				MM.sqlMap.insert("insertBasis", basis);
+				MM.sqlMap.commitTransaction();
+			}
 
 		} finally {
 			try {
@@ -237,6 +265,12 @@ public class DataHandler {
 		}
 	}
 
+	public void addTrade(Transaction transaction) {
+		
+		
+		
+	}
+	
 	public void AddTransactionBatch(Object tran[]) throws SQLException, TransactionException {
 
 		Transaction transaction = null;

@@ -50,6 +50,7 @@ public class MM {
 	public static final String IMG_ARROW_DOWN = "go-down.png";
 	public static final String IMG_ARROW_UP = "go-up.png";
 	public static final String IMG_ARROW_RIGHT = "arrowr_32x32.png";
+	public static final String IMG_BSV = "bsv.png";
 	public static final String IMG_CALCULATOR = "accessories-calculator.png";
 	public static final String IMG_CALENDAR = "x-office-calendar.png";
 	public static final String IMG_CANCEL = "edit-undo.png";

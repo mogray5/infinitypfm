@@ -197,7 +197,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		txtSendTo.setFont(new Font(InfinityPfm.shMain.getDisplay(), fD3[0]));
 
 		cmdSend = new Button(sendGroup, SWT.PUSH);
-		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_ARROW_RIGHT));
+		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_BSV));
 		cmdSend.addSelectionListener(cmdSend_OnClick);
 		cmdSend.setToolTipText(MM.PHRASES.getPhrase("263"));
 		

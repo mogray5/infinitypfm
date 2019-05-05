@@ -220,8 +220,8 @@
 		(
 		AquireCurrencyID INT,
 		AquireDate DATETIME,
-		QtyFifo INT,
-		QtyLifo INT,
+		QtyFifo BIGINT,
+		QtyLifo BIGINT,
 		Cost BIGINT,
 		CostCurrencyId INT
 		)

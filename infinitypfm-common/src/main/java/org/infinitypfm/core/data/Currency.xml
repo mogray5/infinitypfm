@@ -36,7 +36,7 @@
 	  <select id="getCurrencies" resultClass="currency">
    		
    		SELECT 
-           CurrencyID as currencyId,
+           CurrencyID as currencyID,
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
@@ -57,7 +57,7 @@
    						resultClass="currency">
    		
    		SELECT 
-           CurrencyID as currencyId,
+           CurrencyID as currencyID,
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
@@ -73,7 +73,7 @@
    						resultClass="currency">
    		
    		SELECT 
-           CurrencyID as currencyId,
+           CurrencyID as currencyID,
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
@@ -89,7 +89,7 @@
    						resultClass="currency">
    		
    		SELECT 
-           CurrencyID as currencyId,
+           CurrencyID as currencyID,
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
