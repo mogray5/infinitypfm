@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -139,6 +139,8 @@ public class DataHandler {
 		TransactionOffset offset = null;
 		Account offsetAccount = null;
 		Account account = null;
+		Currency actCurrency = null;
+		Currency offsetCurrency = null;
 
 		try {
 			
@@ -163,12 +165,15 @@ public class DataHandler {
 				offsetAccount = (Account)MM.sqlMap.queryForObject("getAccountForOffset", tran);
 				account = (Account)MM.sqlMap.queryForObject("getAccountById", tran);
 				
+				actCurrency = (Currency) MM.sqlMap.queryForObject("getCurrencyById", account.getCurrencyID());
+				offsetCurrency = (Currency) MM.sqlMap.queryForObject("getCurrencyById", offsetAccount.getCurrencyID());
+				
 				isExchange =  account.getCurrencyID() != offsetAccount.getCurrencyID();
 				
 				isDefaultToOther = account.getCurrencyID() == MM.options.getDefaultCurrencyID() && 
-						offsetAccount.getCurrencyID() == MM.options.getDefaultBsvCurrencyID();
+						offsetAccount.getCurrencyID() != MM.options.getDefaultCurrencyID();
 				
-				isOtherToDefault = account.getCurrencyID() == MM.options.getDefaultBsvCurrencyID() && 
+				isOtherToDefault = account.getCurrencyID() != MM.options.getDefaultCurrencyID() && 
 						offsetAccount.getCurrencyID() == MM.options.getDefaultCurrencyID(); 
 				
 				if (isExchange){
@@ -212,6 +217,103 @@ public class DataHandler {
 			MM.sqlMap.commitTransaction();
 			MM.sqlMap.endTransaction();
 			
+			// Add to basis if receiving cc funds
+			if (isOtherToDefault && tran.getTranAmount() > 0) 
+				addBasis(actCurrency, offsetCurrency, tran, tran.getTranAmount(), tranOffset.getTranAmount());
+			else if (isDefaultToOther && tranOffset.getTranAmount() > 0)
+				addBasis(offsetCurrency, actCurrency, tran,  tranOffset.getTranAmount(), tran.getTranAmount());
+
+			long basisAmountLifo = 0, basisAmountFifo = 0, tradeAmount=0;
+			Currency basisCurrency = null;
+			
+			// Subtract from basis if spending cc funds
+			if (isOtherToDefault && tran.getTranAmount() < 0 || isDefaultToOther && tranOffset.getTranAmount() < 0) {
+				
+				long spendQtyLifo=0, spendQtyFifo=0;
+				
+				Basis basis = null;
+				
+				if (isOtherToDefault) {
+					spendQtyLifo = tran.getTranAmount();
+					spendQtyFifo = tran.getTranAmount();
+					tradeAmount = tranOffset.getTranAmount();
+					basisCurrency = actCurrency;
+				}
+				else {
+					spendQtyLifo = tranOffset.getTranAmount();
+					spendQtyFifo  = tranOffset.getTranAmount();
+					tradeAmount = tran.getTranAmount();
+					basisCurrency = offsetCurrency;
+				}
+				
+				// Lifo
+				while (spendQtyLifo > 0) {
+				
+					if (basis == null || basis.getQtyLifo() ==0) 
+						basis = (Basis) MM.sqlMap.queryForObject("getLifoBasis", basisCurrency);
+					
+					if (basis == null || basis.getQtyLifo() == 0) break;
+					
+					if (basis.getQtyLifo() < spendQtyLifo) {
+						
+						BigDecimal amt = formatter.strictMultiply(formatter.getAmountFormatted(basis.getQtyLifo()), 
+								formatter.getAmountFormatted(basis.getCost()));
+
+						basisAmountLifo += DataFormatUtil.moneyToLong(amt);
+						
+						spendQtyLifo = spendQtyLifo - basis.getQtyLifo();
+						basis.setQtyLifo(0);
+						
+					} else {
+						
+						BigDecimal amt = formatter.strictMultiply(formatter.getAmountFormatted(spendQtyLifo), 
+								formatter.getAmountFormatted(basis.getCost()));
+
+						basisAmountLifo += DataFormatUtil.moneyToLong(amt);
+						
+						basis.setQtyLifo(basis.getQtyLifo() - spendQtyLifo);
+						spendQtyLifo = 0;
+					}
+					
+					MM.sqlMap.update("updateLifo", basis);
+					
+				}
+
+				// Fifo
+				while (spendQtyFifo > 0) {
+				
+					if (basis == null || basis.getQtyFifo() ==0) 
+						basis = (Basis) MM.sqlMap.queryForObject("getFifoBasis", basisCurrency);
+					
+					if (basis == null || basis.getQtyFifo() == 0) break;
+					
+					if (basis.getQtyFifo() < spendQtyFifo) {
+						
+						BigDecimal amt = formatter.strictMultiply(formatter.getAmountFormatted(basis.getQtyFifo()), 
+								formatter.getAmountFormatted(basis.getCost()));
+
+						basisAmountFifo += DataFormatUtil.moneyToLong(amt);
+						
+						spendQtyFifo = spendQtyFifo - basis.getQtyFifo();
+						basis.setQtyFifo(0);
+					} else {
+						
+						BigDecimal amt = formatter.strictMultiply(formatter.getAmountFormatted(spendQtyFifo), 
+								formatter.getAmountFormatted(basis.getCost()));
+
+						basisAmountFifo += DataFormatUtil.moneyToLong(amt);
+						
+						basis.setQtyFifo(basis.getQtyFifo() - spendQtyFifo);
+						spendQtyLifo = 0;
+					}
+					
+					MM.sqlMap.update("updateFifo", basis);
+					
+				}
+			}
+			
+			// Post a trade if an exchange being made.  Use calculated basis
+			
 			if (isExchange){
 				
 				MM.sqlMap.startTransaction();
@@ -221,47 +323,53 @@ public class DataHandler {
 				trade = new Trade2();
 				trade.setTranId(tran.getTranId());
 				trade.setTranDate(tran.getTranDate());
+				trade.setBasisFifo(basisAmountFifo);
+				trade.setBasisLifo(basisAmountLifo);
+				trade.setToAmount(tradeAmount);
+				trade.setFromCurrencyID(basisCurrency == null ? MM.options.getDefaultBsvCurrencyID() : basisCurrency.getCurrencyID());
+				trade.setToCurrencyID(MM.options.getDefaultCurrencyID());
 				
-				//trade.setAmount(tran.getTranAmount());
-				//trade.setCurrencyID(account.getCurrencyID());
-				
-				MM.sqlMap.insert("insertTrade", trade);
-				
-				//trade.setCurrencyID(offsetAccount.getCurrencyID());
-				//trade.setAmount(newAmount.longValue());
-				
-				MM.sqlMap.insert("insertTrade", trade);
+				MM.sqlMap.insert("insertTrade2", trade);
 				
 				MM.sqlMap.commitTransaction();
 				
 			}
 			
-			if (isDefaultToOther || isOtherToDefault) {
-				
-				MM.sqlMap.startTransaction();
-				
-				tran = (Transaction)MM.sqlMap.queryForObject("getLastTransactionByAccount", account.getActId());
-				
-				Basis basis = new Basis();
-				basis.setAquireCurrencyID(offsetAccount.getCurrencyID());
-				basis.setAquireDate(tran.getTranDate());
-				basis.setCost(tran.getTranAmount());
-				basis.setCostCurrencyID(account.getCurrencyID());
-				basis.setTranId(tran.getTranId());
-				Currency bsv = (Currency) MM.sqlMap.queryForObject("getCurrencyById", MM.options.getDefaultBsvCurrencyID());
-				BigDecimal bdQty = formatter.strictMultiply(formatter.getAmountFormatted(tran.getTranAmount()), 
-						bsv.getExchangeRate());
-				basis.setQtyFifo(DataFormatUtil.moneyToLong(bdQty));
-				basis.setQtyLifo(DataFormatUtil.moneyToLong(bdQty));
-				MM.sqlMap.insert("insertBasis", basis);
-				MM.sqlMap.commitTransaction();
-			}
-
 		} finally {
 			try {
 				MM.sqlMap.endTransaction();
 			} catch (SQLException se) {
 			}
+		}
+	}
+	
+	/**
+	 * Add an entry to table bases to keep track of cost basis needed for capital gains/loss estimation when
+	 * spending a digital currency that increased/decreased in value.
+	 * 
+	 * @param aquireCurrency
+	 * @param costCurrency
+	 * @param tran
+	 * @param qty
+	 * @param cost
+	 */
+	public void addBasis(Currency aquireCurrency, Currency costCurrency, Transaction tran, long qty, long cost) {
+		
+		try {
+			MM.sqlMap.startTransaction();
+			Basis basis = new Basis();
+			basis.setAquireCurrencyID(aquireCurrency.getCurrencyID());
+			basis.setAquireDate(tran.getTranDate());
+			basis.setCost(cost);
+			basis.setCostCurrencyID(costCurrency.getCurrencyID());
+			basis.setTranId(tran.getTranId());
+			basis.setQtyFifo(qty);
+			basis.setQtyLifo(qty);
+			MM.sqlMap.commitTransaction();
+			MM.sqlMap.endTransaction();
+			MM.sqlMap.insert("insertBasis", basis);
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
 		}
 	}
 

@@ -29,6 +29,11 @@ pbuilder-dist trusty build infinitypfm-ui_0.7.0-3ppa1.dsc
 
 java -cp /usr/share/java/hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
 
+sql to convert bigint currency values to double:
+
+select convert(tranamount, SQL_DOUBLE) / 100000000 from transactions order by trandate desc;
+
+
 ...or...
 
 hsqldb-databasemanagerswing

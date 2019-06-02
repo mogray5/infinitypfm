@@ -74,6 +74,7 @@ import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.ParamDateRangeAccount;
+import org.infinitypfm.core.data.TransactionOffset;
 import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
@@ -112,6 +113,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private String _receiveAddress;
 	private Account bsvAccount = null;
+	private Account bsvCoinsReceived = null;
 	private Currency _bsvCurrency;
 	private DataFormatUtil _format;
 	
@@ -131,7 +133,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		refreshExchangeRate();
 		
 		try {
-			bsvAccount = (Account) MM.sqlMap.queryForObject("getAccountForName", "Bitcion SV Wallet");
+			bsvAccount = (Account) MM.sqlMap.queryForObject("getAccountForName", MM.BSV_WALLET_ACCOUNT);
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		try {
+			bsvCoinsReceived = (Account) MM.sqlMap.queryForObject("getAccountForName", MM.BSV_WALLET_RECEIVING_ACCOUNT);
 		} catch (SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -763,14 +771,27 @@ public class WalletView extends BaseView implements WalletEvents {
 				return;
 			}
 				
-			Account offset = (Account) cmbOffset.getData(cmbOffset.getText());
-			
-			if (bsvAccount != null && offset != null) {
+			if (bsvAccount != null && bsvCoinsReceived != null) {
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
 				t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
 				t.setActId(bsvAccount.getActId());
 				
-				t.setActOffset(offset.getActId());
+				TransactionOffset offset = new TransactionOffset();
+				offset.setOffsetId(bsvCoinsReceived.getActId());
+
+				offset.setOffsetAmount(
+						DataFormatUtil.moneyToLong(
+								_format.strictMultiply(
+										_bsvCurrency.getExchangeRate(), 
+										value.toPlainString())));
+				
+				offset.setOffsetName("Coins received");
+				
+				ArrayList<TransactionOffset> offsets = new ArrayList<TransactionOffset>();
+				offsets.add(offset);
+				
+				t.setOffsets(offsets);
+				
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				t.setTranDate(new Date());
 				if (tx.getMemo() != null && tx.getMemo().length() > 0)

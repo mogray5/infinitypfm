@@ -404,6 +404,26 @@ public class OptionsDialog extends BaseDialog {
 			action.AddAccount(account);
 		
 		}
+		
+		// Also add a receiving account for new coins
+		try {
+			account = (Account) MM.sqlMap.queryForObject("getAccountForName", MM.BSV_WALLET_RECEIVING_ACCOUNT);
+		} catch (SQLException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		if (account == null) {
+		
+			MainAction action = new MainAction();
+			account = new Account();
+			account.setActBalance(0);
+			account.setActTypeName(MM.ACT_TYPE_INCOME);
+			account.setActName(MM.BSV_WALLET_RECEIVING_ACCOUNT);
+			account.setCurrencyID(MM.options.getDefaultCurrencyID());
+			action.AddAccount(account);
+		
+		}
+		
 	}
 	
 	private boolean ConfirmNoPassword() {
