@@ -638,7 +638,7 @@ public class ImportDialog extends BaseDialog {
 
 						editor.getItem().setText(4, act.getIsoCode());
 
-					} else if (sAct.equals(SPLIT)) {
+					} else if (sAct != null && sAct.equals(SPLIT)) {
 						editor.getItem().setText(EDITABLECOLUMN, SPLIT);
 					}
 				}

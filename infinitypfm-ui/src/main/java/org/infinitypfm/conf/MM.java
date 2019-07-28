@@ -248,7 +248,7 @@ public class MM {
 	
 	public static Options options = null;
 	public static BsvWallet wallet = null;
-	public static final String BSV_WALLET_ACCOUNT = "Bitcion SV Wallet";
+	public static final String BSV_WALLET_ACCOUNT = "Bitcoin SV Wallet";
 	public static final String BSV_WALLET_RECEIVING_ACCOUNT = "Coins Received";
 	
 }

@@ -306,7 +306,7 @@ public class DataFormatUtil implements Serializable {
 		return result;
 
 	}
-
+	
 	/**
 	 * Multiply two money values passed as strings without losing
 	 * precision.

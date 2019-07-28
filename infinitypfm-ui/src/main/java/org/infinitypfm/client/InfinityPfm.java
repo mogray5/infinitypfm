@@ -198,13 +198,13 @@ public class InfinityPfm {
 	    { 
 	      public void run() 
 	      { 
-	        if (MM.wallet != null)
+	        if (MM.wallet != null) {
 	        	MM.wallet.stop();
-			
-	        while (MM.wallet.isRunning()) {
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			}
 	        
+	        	while (MM.wallet.isRunning()) {
+	        		try {Thread.sleep(1000);} catch (InterruptedException e) {}
+	        	}
+	        }
 	      } 
 	    }); 
 		
@@ -421,9 +421,11 @@ public class InfinityPfm {
 		try {
 			logFile = homeDirectory.getCanonicalPath() + File.separator + "infinitypfm.log";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if (logFile == null) return;
+		
 		File logFileObj = new File(logFile);
 		
 		if (logFileObj.exists())

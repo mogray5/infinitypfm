@@ -146,6 +146,9 @@ public class DataHandler {
 			
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("79") + " " + tran.getTranMemo());
 			
+			Integer accountTypeBank = (Integer) MM.sqlMap.queryForObject("getAccountTypeIdForName", MM.ACT_TYPE_BANK);
+			
+			
 			boolean isExchange = false;
 			boolean isDefaultToOther = false;
 			boolean isOtherToDefault = false;
@@ -171,10 +174,12 @@ public class DataHandler {
 				isExchange =  account.getCurrencyID() != offsetAccount.getCurrencyID();
 				
 				isDefaultToOther = account.getCurrencyID() == MM.options.getDefaultCurrencyID() && 
-						offsetAccount.getCurrencyID() != MM.options.getDefaultCurrencyID();
+						offsetAccount.getCurrencyID() != MM.options.getDefaultCurrencyID() &&
+						account.getActTypeId() == accountTypeBank.intValue();
 				
 				isOtherToDefault = account.getCurrencyID() != MM.options.getDefaultCurrencyID() && 
-						offsetAccount.getCurrencyID() == MM.options.getDefaultCurrencyID(); 
+						offsetAccount.getCurrencyID() == MM.options.getDefaultCurrencyID() &&
+						offsetAccount.getActTypeId() == accountTypeBank.intValue(); 
 				
 				if (isExchange){
 					

@@ -158,7 +158,9 @@ public class OptionsDialog extends BaseDialog {
 
 		chkReportsInBrowswer = new Button(reportGroup, SWT.CHECK);
 		chkReportsInBrowswer.setText(MM.PHRASES.getPhrase("249"));
-		chkReportsInBrowswer.setSelection(options.isReportsInBrowswer());
+		
+		if (options != null)
+			chkReportsInBrowswer.setSelection(options.isReportsInBrowswer());
 		
 		chkDefaultOpenConsole = new Button(reportGroup, SWT.CHECK);
 		chkDefaultOpenConsole.setText(MM.PHRASES.getPhrase("251"));
@@ -417,7 +419,7 @@ public class OptionsDialog extends BaseDialog {
 			MainAction action = new MainAction();
 			account = new Account();
 			account.setActBalance(0);
-			account.setActTypeName(MM.ACT_TYPE_INCOME);
+			account.setActTypeName(MM.ACT_TYPE_BANK);
 			account.setActName(MM.BSV_WALLET_RECEIVING_ACCOUNT);
 			account.setCurrencyID(MM.options.getDefaultCurrencyID());
 			action.AddAccount(account);

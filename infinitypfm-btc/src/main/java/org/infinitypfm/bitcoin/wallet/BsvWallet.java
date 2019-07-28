@@ -20,6 +20,7 @@ package org.infinitypfm.bitcoin.wallet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.naming.AuthenticationException;
 
@@ -100,6 +101,15 @@ public class BsvWallet {
 	 */
 	public String getBsvBalance() {
 		if (_firstUse) init();
+		
+		List<Address> adrList = _kit.wallet().getIssuedReceiveAddresses();
+		
+		if (adrList != null) {
+			for (Address a : adrList) {
+				System.out.println(a.toBase58());
+			}
+		}
+		
 		return MonetaryFormat.BTC.noCode().format(_kit.wallet().getBalance(BalanceType.ESTIMATED)).toString();
 	}
 	

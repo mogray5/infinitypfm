@@ -458,7 +458,8 @@ public class WalletView extends BaseView implements WalletEvents {
 		LocalDateTime today = LocalDateTime.now();
 		range.setEndDate(Timestamp.valueOf(today));
 		range.setStartDate(Timestamp.valueOf(today.minusDays(30)));
-		range.setActId(bsvAccount.getActId());
+		if (bsvAccount != null)
+			range.setActId(bsvAccount.getActId());
 		TableItem ti = null;
 		final Display display = InfinityPfm.shMain.getDisplay();
 		int rowCount = 0;
@@ -466,7 +467,8 @@ public class WalletView extends BaseView implements WalletEvents {
 			List<org.infinitypfm.core.data.Transaction> tranList = MM.sqlMap.queryForList("getTransactionsForRangeAndAccountReverseSort", range);
 			if (tranList != null && tranList.size() > 0) {
 				
-				_format.setPrecision(bsvAccount.getCurrencyPrecision());
+				if (bsvAccount != null)
+					_format.setPrecision(bsvAccount.getCurrencyPrecision());
 				
 				// Dispose previous links
 				for (int i=0; i<_links.size(); i++) {
@@ -482,7 +484,11 @@ public class WalletView extends BaseView implements WalletEvents {
 				
 				//Loop through list and calculate account balance
 				ListIterator li = tranList.listIterator(0);
-				long newBalance = bsvAccount.getActBalance();
+				
+				long newBalance = 0;
+				
+				if (bsvAccount != null)
+					newBalance = bsvAccount.getActBalance();
 				org.infinitypfm.core.data.Transaction tran = null;
 				
 				while(li.hasNext()) {
@@ -599,7 +605,8 @@ public class WalletView extends BaseView implements WalletEvents {
 			BigDecimal amount = _format.strictMultiply(bsvBalance, _bsvCurrency.getExchangeRate());
 			BigDecimal bsvAmount = new BigDecimal(bsvBalance);
 			long lbsvAmount = DataFormatUtil.moneyToLong(bsvAmount);
-			bsvAccount.setActBalance(lbsvAmount);
+			if (bsvAccount != null)
+				bsvAccount.setActBalance(lbsvAmount);
 			long lAmount = DataFormatUtil.moneyToLong(amount);
 			_format.setPrecision(MM.options.getCurrencyPrecision());
 			String fiatBalance = _format.getAmountFormatted(lAmount);
@@ -772,18 +779,18 @@ public class WalletView extends BaseView implements WalletEvents {
 			}
 				
 			if (bsvAccount != null && bsvCoinsReceived != null) {
+				long amount = DataFormatUtil.moneyToLong(
+						_format.strictMultiply(
+								_bsvCurrency.getExchangeRate(), 
+								value.toPlainString()));
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
-				t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+				t.setTranAmount(amount);
 				t.setActId(bsvAccount.getActId());
 				
 				TransactionOffset offset = new TransactionOffset();
 				offset.setOffsetId(bsvCoinsReceived.getActId());
-
-				offset.setOffsetAmount(
-						DataFormatUtil.moneyToLong(
-								_format.strictMultiply(
-										_bsvCurrency.getExchangeRate(), 
-										value.toPlainString())));
+				
+				offset.setOffsetAmount(-amount);
 				
 				offset.setOffsetName("Coins received");
 				

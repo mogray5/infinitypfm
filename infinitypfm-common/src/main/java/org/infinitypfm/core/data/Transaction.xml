@@ -142,6 +142,29 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         Order By TranDate, ActName;
         ]]>
    </select>
+
+   <select id="getTransactionsByKeyBSVOnly" parameterClass="java.lang.String"
+                          resultClass="tran">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranKey = #value#
+        	AND Accounts.ActName = 'Bitcoin SV Wallet'
+        Order By TranDate, ActName;
+        ]]>
+   </select>
    
    <select id="getLastTransactionByAccount" parameterClass="java.lang.Integer"
                           resultClass="tran">

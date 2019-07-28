@@ -328,6 +328,12 @@ public class LangLoader {
 		hmPhrases.put("281",  i18n.tr("Wallet restored"));
 		hmPhrases.put("282",  i18n.tr("Coins Received"));
 		hmPhrases.put("283",  i18n.tr("Detail"));
+		hmPhrases.put("284",  i18n.tr("Aquire Currency"));
+		hmPhrases.put("285",  i18n.tr("Cost Currency"));
+		hmPhrases.put("286",  i18n.tr("Aquire Date"));
+		hmPhrases.put("287",  i18n.tr("Qty Lifo"));
+		hmPhrases.put("288",  i18n.tr("Qty Fifo"));
+		hmPhrases.put("289",  i18n.tr("Cost"));
 	}
 	
 	
