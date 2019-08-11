@@ -292,7 +292,7 @@ public class ImportDialog extends BaseDialog {
 						// Found a rule match. Add mapped offset to the
 						// transactions
 						offset = (Account) MM.sqlMap.queryForObject(
-								"getAccountByActId", offset);
+								"getAccountByActId", offset.getActId());
 						if (offset != null) {
 							tran.setActOffset(offset.getActId());
 							ti.setText(2, offset.getActName());

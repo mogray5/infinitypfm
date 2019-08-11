@@ -31,11 +31,29 @@ public class TradeProcessor extends BaseProcessor {
 				while (offsets.hasNext()) {
 				
 					TransactionOffset offset = (TransactionOffset) offsets.next();
-									
+					
+					// Record a basis when SV coins are spent.
+					
 					// All trades are recorded in the default currency so
 					// convert if necessary
-					if (this.isBSV(this._transaction.getActId())) {
-						if (this.isDefault(offset.getOffsetId())) {
+					
+					long amount = 0;
+					
+					if (this.isBSV(this._transaction.getActId()) && 
+							this._transaction.getTranAmount() < 0 && 
+							this.isDefault(offset.getOffsetId())) {
+						
+						amount = offset.getOffsetAmount();
+					
+					} else if (this.isBSV(offset.getOffsetId()) && 
+							offset.getOffsetAmount() < 0 &&
+							this.isDefault(this._transaction.getActId())) {
+						
+						amount = this._transaction.getTranAmount();
+						
+					}
+					
+					if (amount > 0) {
 							
 							// Transactions should already be posted
 							// Lookup transaction using the key from the blockchain
@@ -53,9 +71,9 @@ public class TradeProcessor extends BaseProcessor {
 								trade.setToCurrencyID(this._defaultCurrency.getCurrencyID());
 								
 								// LIFO
-								trade.setBasisLifo(this.getLifoBasis(tran.getTranAmount()));
+								trade.setBasisLifo(this.getLifoBasis(amount));
 								// FIFO
-								trade.setBasisFifo(this.getFifoBasis(tran.getTranAmount()));
+								trade.setBasisFifo(this.getFifoBasis(amount));
 								
 								trade.setFromAmount(tran.getTranAmount());
 								
@@ -63,15 +81,12 @@ public class TradeProcessor extends BaseProcessor {
 								trade.setToAmount( DataFormatUtil.moneyToLong(
 										this._formatter.strictMultiply(
 												_bsvCurrency.getExchangeRate(), 
-												this._formatter.getAmountFormatted(tran.getTranAmount()))));
+												this._formatter.getAmountFormatted(amount))));
 								
 								this._map.insert("insertTrade", trade);
-								this._map.commitTransaction();
-							}
 							
+							}
 						}
-					}
-					
 				}
 			}
 			

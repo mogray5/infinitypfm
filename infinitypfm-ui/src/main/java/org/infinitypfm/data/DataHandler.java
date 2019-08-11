@@ -40,6 +40,10 @@ import org.infinitypfm.core.data.RecurHeader;
 import org.infinitypfm.core.data.Trade2;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
+import org.infinitypfm.core.transaction.BasisProcessor;
+import org.infinitypfm.core.transaction.DoubleEntryProcessor;
+import org.infinitypfm.core.transaction.TradeProcessor;
+import org.infinitypfm.core.transaction.TransactionBuilder;
 import org.infinitypfm.exception.AccountException;
 import org.infinitypfm.exception.TransactionException;
 
@@ -129,8 +133,33 @@ public class DataHandler {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Post the transaction to the database.  Apply a basis and record
+	 * a trade if necessary.
+	 * @param tran Transaction to post
+	 * @param saveMemo  record memo for use during imports
+	 * @throws SQLException
+	 * @throws TransactionException
+	 */
 	public void AddTransaction(Transaction tran, boolean saveMemo)
+			throws SQLException, TransactionException {
+		
+		DoubleEntryProcessor doubleEntryProcessor = new DoubleEntryProcessor(MM.sqlMap);
+		BasisProcessor basisProcessor = new BasisProcessor(MM.sqlMap);
+		TradeProcessor tradeProcessor = new TradeProcessor(MM.sqlMap);
+		
+		TransactionBuilder processor = new TransactionBuilder.Builder(tran)
+				.startingProcessor(doubleEntryProcessor)
+				.thenProcessor(basisProcessor)
+				.thenProcessor(tradeProcessor)
+				.build();
+				
+		processor.process();
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void AddTransactionOld(Transaction tran, boolean saveMemo)
 			throws SQLException, TransactionException {
 
 		Transaction tranOffset = null;

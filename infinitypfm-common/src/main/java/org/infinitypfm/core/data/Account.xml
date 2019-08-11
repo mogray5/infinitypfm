@@ -113,7 +113,7 @@
         WHERE ActId = #actId#
    </select>
    
-   <select id="getAccountByActId" parameterClass="act"
+   <select id="getAccountByActId" parameterClass="java.lang.Long"
                            resultClass="act">
      SELECT
            ActId as actId,

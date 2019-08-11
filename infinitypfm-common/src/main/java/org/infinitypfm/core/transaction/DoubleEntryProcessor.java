@@ -49,6 +49,7 @@ public class DoubleEntryProcessor extends BaseProcessor {
 				tranOffset.setTranDate(this._transaction.getTranDate());
 				tranOffset.setTransactionKey(this._transaction.getTransactionKey());
 				tranOffset.setTranAmount(offset.getOffsetAmount());
+				tranOffset.setActId(offset.getOffsetId());
 				
 				this._map.insert("insertTransaction", tranOffset);
 				this._map.insert("updateAccountBalance", tranOffset);

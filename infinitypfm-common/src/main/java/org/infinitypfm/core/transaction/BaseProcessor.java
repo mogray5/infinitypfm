@@ -50,7 +50,7 @@ public class BaseProcessor implements TransactionProcessor {
 		
 		if (!isValid()) return false;
 		
-		Account account = (Account)_map.queryForObject("getAccountById", actId);
+		Account account = (Account)_map.queryForObject("getAccountByActId", actId);
 		
 		return account != null && 
 				account.getCurrencyID() == _bsvCurrency.getCurrencyID();
@@ -61,7 +61,7 @@ public class BaseProcessor implements TransactionProcessor {
 		
 		if (!isValid()) return false;
 		
-		Account account = (Account)_map.queryForObject("getAccountById", actId);
+		Account account = (Account)_map.queryForObject("getAccountByActId", actId);
 		
 		return account != null && 
 				account.getCurrencyID() == _defaultCurrency.getCurrencyID();

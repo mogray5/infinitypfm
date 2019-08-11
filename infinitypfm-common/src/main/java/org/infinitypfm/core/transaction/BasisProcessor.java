@@ -24,20 +24,18 @@ public class BasisProcessor extends BaseProcessor {
 				
 					TransactionOffset offset = (TransactionOffset) offsets.next();
 									
-					// All trades are recorded in the default currency so
-					// convert if necessary
-					if (this.isBSV(offset.getOffsetId())) {
-						if (this.isDefault(this._transaction.getActId())) {
+					// Record basis for SV coins received
+					if (this.isBSV(this._transaction.getActId())) {
+						if (this.isDefault(offset.getOffsetId())) {
 							
 							Basis basis = new Basis();
 							basis.setAquireCurrencyID(this._bsvCurrency.getCurrencyID());
 							basis.setAquireDate(this._transaction.getTranDate());
 							basis.setCost(this._transaction.getTranAmount() / offset.getOffsetAmount());
 							basis.setCostCurrencyID(this._defaultCurrency.getCurrencyID());
-							basis.setQtyFifo(offset.getOffsetAmount());
-							basis.setQtyLifo(offset.getOffsetAmount());
+							basis.setQtyFifo(this._transaction.getTranAmount());
+							basis.setQtyLifo(this._transaction.getTranAmount());
 							this._map.insert("insertBasis", basis);
-							this._map.commitTransaction();
 							
 						}
 					}
@@ -47,16 +45,9 @@ public class BasisProcessor extends BaseProcessor {
 		} finally {
 			super.process();
 		}
-		
 	}
 
 	public BasisProcessor(SqlMapClient map) {
 		super(map);
-		
-		
-		
 	}
-
-	
-	
 }
