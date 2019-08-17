@@ -25,13 +25,21 @@ public class BasisProcessor extends BaseProcessor {
 					TransactionOffset offset = (TransactionOffset) offsets.next();
 									
 					// Record basis for SV coins received
-					if (this.isBSV(this._transaction.getActId())) {
+					if (this.isBSV(this._transaction.getActId()) && this._transaction.getTranAmount() > 0) {
 						if (this.isDefault(offset.getOffsetId())) {
 							
 							Basis basis = new Basis();
 							basis.setAquireCurrencyID(this._bsvCurrency.getCurrencyID());
 							basis.setAquireDate(this._transaction.getTranDate());
-							basis.setCost(this._transaction.getTranAmount() / offset.getOffsetAmount());
+							
+							// Do any need currency conversions
+							this.checkAndConvert(offset);
+							
+							if (offset.getOffsetAmount() >= 0)
+								basis.setCost(offset.getOffsetAmount());
+							else 
+								basis.setCost(-offset.getOffsetAmount());
+							
 							basis.setCostCurrencyID(this._defaultCurrency.getCurrencyID());
 							basis.setQtyFifo(this._transaction.getTranAmount());
 							basis.setQtyLifo(this._transaction.getTranAmount());

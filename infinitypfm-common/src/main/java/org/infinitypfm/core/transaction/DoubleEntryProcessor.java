@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Iterator;
 
+import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
 
@@ -20,29 +21,18 @@ public class DoubleEntryProcessor extends BaseProcessor {
 	public void process() throws SQLException {
 
 		try {
-		
+					
 		if (this.isValid()) {
 			
-			BigDecimal newOffsetAmount = null;
-						
 			Iterator<TransactionOffset> offsets = this._transaction.getOffsets().iterator();
 			
 			while (offsets.hasNext()) {
 			
 				TransactionOffset offset = (TransactionOffset) offsets.next();
 				
-				// Perform currency conversion if going to/from Default/BSV
-				if (this.fromDefault() && this.isBSV(offset.getOffsetId()) && offset.needsConversion()) {
-					
-					newOffsetAmount = this._formatter.strictDivide(this._transaction.getExchangeRate(), Long.toString(offset.getOffsetAmount()), 8);
-					offset.setOffsetAmount(newOffsetAmount.longValue());
-					
-				} else if (this.fromBsv() && this.isDefault(offset.getOffsetId()) && offset.needsConversion()) {
-					
-					newOffsetAmount = this._formatter.strictMultiply(this._transaction.getExchangeRate(), Long.toString(offset.getOffsetAmount()));
-					offset.setOffsetAmount(newOffsetAmount.longValue());
-				}
-				
+				// Do any need currency conversions
+				this.checkAndConvert(offset);
+			
 				Transaction tranOffset = new Transaction();
 				
 				tranOffset.setTranMemo(this._transaction.getTranMemo());

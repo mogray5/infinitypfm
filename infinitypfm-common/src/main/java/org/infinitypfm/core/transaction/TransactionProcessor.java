@@ -1,8 +1,10 @@
 package org.infinitypfm.core.transaction;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.data.TransactionOffset;
 
 public interface TransactionProcessor {
 
@@ -21,5 +23,9 @@ public interface TransactionProcessor {
 	public void setTransaction (Transaction t)  throws SQLException ;
 	
 	public Transaction getTransaction();
+	
+	public BigDecimal convert(long amount, long actId) throws SQLException;
+	
+	public void checkAndConvert(TransactionOffset offset) throws SQLException;
 
 }

@@ -779,10 +779,9 @@ public class WalletView extends BaseView implements WalletEvents {
 			}
 				
 			if (bsvAccount != null && bsvCoinsReceived != null) {
-				long amount = DataFormatUtil.moneyToLong(
-						_format.strictMultiply(
-								_bsvCurrency.getExchangeRate(), 
-								value.toPlainString()));
+				
+				long amount = DataFormatUtil.moneyToLong(new BigDecimal(value.toPlainString()));
+				
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
 				t.setTranAmount(amount);
 				t.setActId(bsvAccount.getActId());
@@ -793,6 +792,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				offset.setOffsetAmount(-amount);
 				
 				offset.setOffsetName("Coins received");
+				offset.setNeedsConversion(true); 
 				
 				ArrayList<TransactionOffset> offsets = new ArrayList<TransactionOffset>();
 				offsets.add(offset);

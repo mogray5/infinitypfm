@@ -1,5 +1,6 @@
 package org.infinitypfm.core.transaction;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -7,6 +8,7 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.MonthlyBalance;
+import org.infinitypfm.core.data.NumberFormat;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
 
@@ -149,6 +151,39 @@ public class BaseProcessor implements TransactionProcessor {
 		if (!isValid()) return false;
 		
 		return _account.getCurrencyID() == _defaultCurrency.getCurrencyID();
+	}
+
+	@Override
+	public BigDecimal convert(long amount, long actId) throws SQLException {
+		
+		BigDecimal newOffsetAmount = null;
+		String numFormat = NumberFormat.getNoCommaNoParems(8);
+		
+		// Perform currency conversion if going to/from Default/BSV
+		if (this.isBSV(actId)) {
+			
+			newOffsetAmount = this._formatter.strictDivide(this._transaction.getExchangeRate(), 
+					_formatter.getAmountFormatted(amount, numFormat), 8);
+			
+		} else if (this.isDefault(actId)) {
+			
+			newOffsetAmount = this._formatter.strictMultiply(this._transaction.getExchangeRate(), 
+					_formatter.getAmountFormatted(amount, numFormat));
+			
+		} 
+	
+		return newOffsetAmount;
+	}
+
+	@Override
+	public void checkAndConvert(TransactionOffset offset) throws SQLException {
+		
+		if (offset.needsConversion()) {
+			
+			offset.setOffsetAmount(DataFormatUtil.moneyToLong(this.convert(offset.getOffsetAmount(), offset.getOffsetId())));
+			offset.setNeedsConversion(false);
+			
+		}		
 	}
 	
 }
