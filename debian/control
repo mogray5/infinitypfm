@@ -13,7 +13,8 @@ Build-Depends-Indep: default-jdk,
  libgettext-commons-java,
  libcommons-httpclient-java,
  libjson-java,
- junit
+ junit,
+ libfreemarker-java
 Standards-Version: 3.9.8
 Homepage: http://infinitypfm.org/
 Section: gnome
@@ -39,6 +40,7 @@ Depends: ${java:Depends},
 	libswt-mozilla-gtk-3.5-jni | libswt-webkit-gtk-3-jni | libswt-webkit-gtk-3.6-jni,
 	libswt-cairo-gtk-3-jni | libswt-cairo-gtk-3.5-jni,
 	infinitypfm-common,
-	infinitypfm-btc
+	infinitypfm-btc,
+	libfreemarker-java
 Description: Desktop client for Infinity PFM
  Infinity PFM is personal finance manager with support for budgets, OFX/QIF/QFX import, color reports and charts.

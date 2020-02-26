@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,11 +20,13 @@
 package org.infinitypfm.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -35,6 +37,11 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.conf.MM;
@@ -52,10 +59,15 @@ import org.infinitypfm.util.FileHandler;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
+
 public class InfinityPfm {
 
 	private static final String CONFIG_ERROR_ENG = "Error setting up home directory for: ";
-	private static File homeDirectory = new File(System.getProperty("user.home") + "/.infinitypfm");
+	private static File homeDirectory = new File(System.getProperty("user.home") + File.separator + ".infinitypfm");
+	final static Logger LOG = Logger.getLogger(InfinityPfm.class);
+
 	
 	public static void main(String[] args) {
 		Display display = new Display();
@@ -72,6 +84,9 @@ public class InfinityPfm {
 			return;
 		}
 		
+		//configure logging
+		configureLogging();
+		
 		//load language
 		getLanguage();
 		
@@ -80,6 +95,13 @@ public class InfinityPfm {
 			loadDatabase();
 		} catch (ConfigurationException e1) {
 			e1.printStackTrace();
+			System.exit(0);
+		}
+
+		try {
+			loadReportTemplates();
+		} catch (Exception e) {
+			e.printStackTrace();
 			System.exit(0);
 		}
 		
@@ -167,12 +189,9 @@ public class InfinityPfm {
 			
 	
 		} catch(Exception e){
-			
 				System.err.println("Error Loading Language File");
 				e.printStackTrace();
 		}
-		
-		
 		
 	}
 	
@@ -181,35 +200,51 @@ public class InfinityPfm {
 		boolean canContinue = true;
 		
 		//Check if folder is set up
-		 if (!homeDirectory.exists()){
-			 canContinue = homeDirectory.mkdir();
-		 }
+		 if (!homeDirectory.exists()) canContinue = homeDirectory.mkdir();
 		 
-		 if (!canContinue) {
+		 if (!canContinue) 
 			throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath()); 
-		 }
 		 
-		 File dataDirectory = new File(homeDirectory.getPath() + "/data");
+		 File dataDirectory = new File(homeDirectory.getPath() + File.separator + "data");
 		 
-		 if (!dataDirectory.exists()){
-			 canContinue = dataDirectory.mkdir();
-		 }
+		 if (!dataDirectory.exists()) canContinue = dataDirectory.mkdir();
 		 
-		 if (!canContinue) {
+		 if (!canContinue) 
 			throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath()); 
-		 }
 		 
-		 File pluginDirectory = new File(homeDirectory.getPath()+ "/plugins");
+		 File pluginDirectory = new File(homeDirectory.getPath()+ File.separator + "plugins");
 		 
-		 if (!pluginDirectory.exists()){
-			 canContinue = pluginDirectory.mkdir();
-		 }
+		 if (!pluginDirectory.exists()) canContinue = pluginDirectory.mkdir();
 
-		 if (!canContinue) {
+		 if (!canContinue) 
 			throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath()); 
-		 }
 		 
-		 String sPropsFile = homeDirectory.getPath() + "/" + MM.PROPS_FILE;
+		 File templateDirectory = new File(homeDirectory.getPath() + File.separator + "templates");
+		 
+		 if (!templateDirectory.exists()) canContinue = templateDirectory.mkdir();
+		 
+		 if (!canContinue) 
+				throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath());
+		 
+		 extractFile(MM.PROPS_FILE, "", homeDirectory.getPath());
+		 extractFile(MM.PIE_CHART_BASE, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.PIE_CHART_1, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.PIE_CHART_2, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.BAR_CHART_BASE, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.BAR_CHART_1, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.LINE_CHART_1, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.LINE_CHART_BASE, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.JS_LIB, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.GRAPH_LIB, "", homeDirectory.getPath() + File.separator + "templates");
+		 extractFile(MM.RPT_ACCOUNT_HISTORY, "org/infinitypfm/reporting/", homeDirectory.getPath() + File.separator + "templates");
+
+	}
+	
+	private static void extractFile(String file, String packagePath, String outFolder) {
+		
+		 String sPropsFile = outFolder +
+			 File.separator +
+			 file;
 		 
 		 //check if database exists
 		 File propsFile = new File (sPropsFile);
@@ -220,11 +255,11 @@ public class InfinityPfm {
 			 OutputStream out = null;
 			 
 			 try {
-				 in = Resources.getResourceAsStream (MM.PROPS_FILE);
+				 in = Resources.getResourceAsStream (packagePath + File.separator + file);
 				 out=new FileOutputStream(sPropsFile);
 				 
-				 @SuppressWarnings("rawtypes")
-				List lines = IOUtils.readLines(in);
+				List<String> lines = IOUtils.readLines(in, Charset.defaultCharset());
+				
 				 ArrayList<String> outLines = new ArrayList<String>();
 				 
 				 String line = null;
@@ -233,25 +268,20 @@ public class InfinityPfm {
 					 
 					 line = (String)lines.get(i);
 					 line = line.replace("{HOME}", homeDirectory.getPath());
-					 
 					 outLines.add(line);
-	
 				 }
 				 
-				 IOUtils.writeLines(outLines, null, out);
-				 
+				 IOUtils.writeLines(outLines, null, out, Charset.defaultCharset());
 				    
 			 } catch (IOException e){
-				 System.err.println("Error Creating " + MM.PROPS_FILE);
+				 System.err.println("Error Creating " + file);
 				 e.printStackTrace();
 			 } finally {
 				 
 				 try {out.close();} catch (Exception e) {System.err.println(e.getMessage());}
 				 try {in.close();} catch (Exception e) {System.err.println(e.getMessage());}
-				 
 			 }
 		 }
-
 	}
 
 	private static void loadDatabase() throws ConfigurationException{
@@ -259,7 +289,7 @@ public class InfinityPfm {
 		Reader reader = null;
 		try {
 			
-			String propsFile = homeDirectory.getPath() + "/" + MM.PROPS_FILE;
+			String propsFile = homeDirectory.getPath() + File.separator + MM.PROPS_FILE;
 			
 			PropertiesConfiguration propsConfig = new PropertiesConfiguration(propsFile);
 			Properties props = propsConfig.getProperties("db.source");
@@ -301,6 +331,18 @@ public class InfinityPfm {
 		}
 	}
 
+	private static void loadReportTemplates() throws IOException {
+		
+		File templateDir = new File(homeDirectory.getPath() + File.separator + "templates");
+	
+		// Create a freemarker configuration instance
+		MM.templateConfig = new Configuration(Configuration.VERSION_2_3_23);
+		MM.templateConfig.setDirectoryForTemplateLoading(templateDir);
+		MM.templateConfig.setDefaultEncoding("UTF-8");
+		MM.templateConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+		MM.templateConfig.setLogTemplateExceptions(false);
+	}
+	
 	private static void removeOldFiles() {
 	
 		FileHandler fileUtil = new FileHandler();
@@ -314,12 +356,9 @@ public class InfinityPfm {
 	}
 	
 	public static void LogMessage(String sMsg){
-		if (qzMain.getMsgMain()==null){
-			return;
-		}
-
+		LOG.info(sMsg);
+		if (qzMain.getMsgMain()==null) return;
 		qzMain.getMsgMain().AppendMsg(sMsg);
-		
 	}
 	
 	public static void LogMessage(String sMsg, boolean promptUser){
@@ -332,8 +371,43 @@ public class InfinityPfm {
 				sMsg);
 			show.Open();
 		}
+	}
+	
+	private static void configureLogging() {
 		
+		String logFile = null;
+		try {
+			logFile = homeDirectory.getCanonicalPath() + File.separator + "infinitypfm.log";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		if (logFile == null) return;
+		
+		File logFileObj = new File(logFile);
+		
+		if (logFileObj.exists())
+			logFileObj.delete();
+		
+		if (logFile != null) {
+			ConsoleAppender console = new ConsoleAppender(); //create appender
+			//configure the appender
+			String PATTERN = "%d [%p|%c|%C{1}] %m%n";
+			console.setLayout(new PatternLayout(PATTERN)); 
+			console.setThreshold(Level.FATAL);
+			console.activateOptions();
+			Logger.getRootLogger().addAppender(console);
+	
+			FileAppender fa = new FileAppender();
+			fa.setName("FileLogger");
+			fa.setFile(logFile);
+			fa.setLayout(new PatternLayout("%d %-5p [%c{1}] %m%n"));
+			fa.setThreshold(Level.INFO);
+			fa.setAppend(true);
+			fa.activateOptions();
+	
+			Logger.getRootLogger().addAppender(fa);
+		}
 	}
 	
 	public static MainFrame qzMain;	

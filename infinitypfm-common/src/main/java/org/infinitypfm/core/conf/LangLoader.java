@@ -268,7 +268,7 @@ public class LangLoader {
 		hmPhrases.put("222", i18n.tr("Start Date"));
 		hmPhrases.put("223", i18n.tr("End Date"));
 		hmPhrases.put("224", i18n.tr("Currencies"));
-		hmPhrases.put("225", i18n.tr("Currency Precision"));
+		hmPhrases.put("225", i18n.tr("Precision"));
 		hmPhrases.put("226", i18n.tr("Method Name"));
 		hmPhrases.put("227", i18n.tr("Service URL"));
 		hmPhrases.put("228", i18n.tr("Search Path"));
@@ -295,7 +295,7 @@ public class LangLoader {
 		hmPhrases.put("249",  i18n.tr("Open reports externally in web browser."));
 		hmPhrases.put("250",  i18n.tr("General"));
 		hmPhrases.put("251",  i18n.tr("Open console on start."));
-		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
+		//hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
 		hmPhrases.put("252",  i18n.tr("Mail"));
 		hmPhrases.put("253",  i18n.tr("CSV"));
 		hmPhrases.put("254",  i18n.tr("Import Name"));
