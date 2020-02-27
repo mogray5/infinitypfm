@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -58,23 +58,19 @@ public abstract class BaseReport {
 	protected HashMap<String, String> reportParams = null;
 	protected HashMap<String, String> rowColors = null; 
 	protected DataFormatUtil formatter = null;
+	private boolean _isTemplate = false;
 	
 	
-	public BaseReport() throws IOException {
-		
-//		try {
-			
-			formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
-	        outFile = File.createTempFile("infinitypfm", ".html");
-	        out = new BufferedWriter(new FileWriter(outFile));
-	        scriptLoader = new ScriptLoader();
-	        reportParams = new HashMap<String, String>();
-			
-//			MM.LogMessage(outFile.getPath());
-//		} catch (IOException e) {
-//			MM.LogMessage(e.getMessage());
-//		}
-		
+	public BaseReport() throws IOException {		
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+        outFile = File.createTempFile("infinitypfm", ".html");
+        out = new BufferedWriter(new FileWriter(outFile));
+        scriptLoader = new ScriptLoader();
+        reportParams = new HashMap<String, String>();
+	}
+	
+	public BaseReport(boolean isTemplate) {
+		_isTemplate = isTemplate;
 	}
 	
 	public abstract File execute(ReportData reportData);

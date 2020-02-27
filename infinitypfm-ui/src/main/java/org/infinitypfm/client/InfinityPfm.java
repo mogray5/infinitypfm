@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2019 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,7 +20,6 @@
 package org.infinitypfm.client;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -255,7 +254,7 @@ public class InfinityPfm {
 			 OutputStream out = null;
 			 
 			 try {
-				 in = Resources.getResourceAsStream (packagePath + File.separator + file);
+				 in = Resources.getResourceAsStream (file);
 				 out=new FileOutputStream(sPropsFile);
 				 
 				List<String> lines = IOUtils.readLines(in, Charset.defaultCharset());

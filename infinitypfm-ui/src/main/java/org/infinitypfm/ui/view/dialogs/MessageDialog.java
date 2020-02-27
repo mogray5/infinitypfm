@@ -152,7 +152,7 @@ public class MessageDialog extends BaseDialog {
 		lblMsg.setLayoutData(lblmsgdata);
 		
 		FormData cmdonedata = new FormData();
-		cmdonedata.top = new FormAttachment(100, -40);
+		cmdonedata.top = new FormAttachment(100, -45);
 		cmdonedata.left = new FormAttachment(20,0);
 		cmdonedata.right = new FormAttachment(40,0);
 		cmdOne.setLayoutData(cmdonedata);
@@ -160,13 +160,13 @@ public class MessageDialog extends BaseDialog {
 		if (iDType == MM.DIALOG_QUESTION){
 		
 			FormData cmdtwodata = new FormData();
-			cmdtwodata.top = new FormAttachment(100, -40);
+			cmdtwodata.top = new FormAttachment(100, -45);
 			cmdtwodata.left = new FormAttachment(cmdOne, 10);
 			cmdtwodata.right = new FormAttachment(60,10);
 			cmdTwo.setLayoutData(cmdtwodata);
 
 			FormData cmdthreedata = new FormData();
-			cmdthreedata.top = new FormAttachment(100, -40);
+			cmdthreedata.top = new FormAttachment(100, -45);
 			cmdthreedata.left = new FormAttachment(cmdTwo, 10);
 			cmdthreedata.right = new FormAttachment(80,10);
 			cmdThree.setLayoutData(cmdthreedata);
