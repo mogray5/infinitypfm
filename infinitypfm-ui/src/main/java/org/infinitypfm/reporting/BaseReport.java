@@ -37,7 +37,6 @@ public abstract class BaseReport {
 	public static final String CHART_TYPE_LINE = "line";
 	
 	private File outFile = null;
-	//private FileWriter fileWriter = null;
 	private BufferedWriter out = null;
 	private static final String FILE_HEADER_START = "<html><head>";
 	private static final String FILE_HEADER_END = "</head><body>";
@@ -45,21 +44,19 @@ public abstract class BaseReport {
 	private static final String TABLE_HEADER_END = "</table>";
 	
 	private static final String FILE_FOOTER = "</body></html>";
-	private static final String PIE_CHART_BASE = "piechartBase.js";
-	private static final String PIE_CHART_1 ="piechart1.js";
-	private static final String PIE_CHART_2 ="piechart2.js";
-	private static final String BAR_CHART_BASE = "barChartBase.js";
-	private static final String BAR_CHART_1 = "barchart1.js";
-	private static final String LINE_CHART_1 = "linechart1.js";
-	private static final String LINE_CHART_BASE = "linechartBase.js";
+	public static final String PIE_CHART_BASE = "piechartBase.js";
+	public static final String PIE_CHART_1 ="piechart1.js";
+	public static final String PIE_CHART_2 ="piechart2.js";
+	public static final String BAR_CHART_BASE = "barChartBase.js";
+	public static final String BAR_CHART_1 = "barchart1.js";
+	public static final String LINE_CHART_1 = "linechart1.js";
+	public static final String LINE_CHART_BASE = "linechartBase.js";
 	
 	
 	private ScriptLoader scriptLoader = null;
 	protected HashMap<String, String> reportParams = null;
 	protected HashMap<String, String> rowColors = null; 
 	protected DataFormatUtil formatter = null;
-	private boolean _isTemplate = false;
-	
 	
 	public BaseReport() throws IOException {		
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
@@ -70,11 +67,19 @@ public abstract class BaseReport {
 	}
 	
 	public BaseReport(boolean isTemplate) {
-		_isTemplate = isTemplate;
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		scriptLoader = new ScriptLoader();
 	}
 	
 	public abstract File execute(ReportData reportData);
 	
+	/**
+	 * Write needed chart libraries to file.
+	 * 
+	 * @param numCharts count of charts in report
+	 * @param chartType type of charts in the report
+	 * @throws IOException
+	 */
 	public void addDocHeader(int numCharts, String chartType) throws IOException{
 		out.write(FILE_HEADER_START);
 		if (numCharts > 0){
@@ -97,6 +102,15 @@ public abstract class BaseReport {
 			}
 		}
 		out.write(FILE_HEADER_END);
+	}
+	
+	/**
+	 * Add necessary script libraries  to the report object
+	 * 
+	 * @param data
+	 */
+	public void addDocHeader(ReportData data) {
+		data.set_scriptLoader(scriptLoader);
 	}
 	
 	public void addChartTestData() throws IOException{

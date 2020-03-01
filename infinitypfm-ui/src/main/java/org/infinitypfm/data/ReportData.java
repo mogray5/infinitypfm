@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,6 +18,7 @@
  */
 package org.infinitypfm.data;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -29,10 +30,20 @@ import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
+import org.infinitypfm.reporting.BaseReport;
+import org.infinitypfm.reporting.ScriptLoader;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.BudgetSelector;
 import org.infinitypfm.ui.view.dialogs.MonthYearDialog;
 
+/**
+ * 
+ * This class gathers up all the data needed for 
+ * a report.  
+ * 
+ * User will be prompted for input if required.
+ *
+ */
 public class ReportData {
 
 	private DataFormatUtil dateUtil;
@@ -44,6 +55,14 @@ public class ReportData {
 	private String title;
 	private String budget;
 	private String account;
+	private String _template;
+	private String _styles = "";
+	
+	/********************/
+	/* Script Libraries */
+	private ScriptLoader _scriptLoader = null;
+	/********************/
+	
 	private Boolean userCancelled = false;
 
 	public ReportData(int reportType) {
@@ -73,6 +92,7 @@ public class ReportData {
 			reportParam.setMth(dateUtil.getMonth());
 			reportParam.setYr(dateUtil.getYear());
 			setReportData("getReportMonthlyBalances", reportParam);
+			
 
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
@@ -89,6 +109,7 @@ public class ReportData {
 				monthlyBalance.setMth(dateUtil.getMonth());
 				monthlyBalance.setYr(dateUtil.getYear() - 1);
 				setReportData("getReportAccountHistory", monthlyBalance);
+				_template = MM.RPT_ACCOUNT_HISTORY;
 
 			}
 
@@ -175,6 +196,14 @@ public class ReportData {
 	public void setUserCanceled(Boolean userCanceled) {
 		this.userCancelled = userCanceled;
 	}
+	
+	public String getTemplate() {
+		return _template;
+	}
+
+	public void setTemplate(String template) {
+		this._template = template;
+	}
 
 	private void initTotals() {
 
@@ -241,6 +270,103 @@ public class ReportData {
 
 		return acctSelect.getAccountName();
 
+	}
+
+	public String getRaphael() {
+		try {
+			return _scriptLoader.getGraphLib();
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getJslib() {
+		try {
+			return _scriptLoader.getJsLib();
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getBarChartBase() {
+		try {
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_BASE);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getLineChartBase() {
+		try {
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getPieChartBase() {
+		try {
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_BASE);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getBarChartOne() {
+		try {
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_1);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getLineChartOne() {
+		try {
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_1);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getPieChartOne() {
+		try {
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_1);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public String getPieChartTwo() {
+		try {
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_2);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+
+	public ScriptLoader get_scriptLoader() {
+		return _scriptLoader;
+	}
+
+	public void set_scriptLoader(ScriptLoader _scriptLoader) {
+		this._scriptLoader = _scriptLoader;
+	}
+
+	public String getStyles() {
+		return _styles;
+	}
+
+	public void setStyles(String _styles) {
+		this._styles = _styles;
 	}
 
 }

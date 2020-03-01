@@ -218,6 +218,8 @@ public class InfinityPfm {
 		 if (!canContinue) 
 			throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath()); 
 		 
+		 /*TODO: may not need this
+		 
 		 File templateDirectory = new File(homeDirectory.getPath() + File.separator + "templates");
 		 
 		 if (!templateDirectory.exists()) canContinue = templateDirectory.mkdir();
@@ -236,7 +238,7 @@ public class InfinityPfm {
 		 extractFile(MM.JS_LIB, "", homeDirectory.getPath() + File.separator + "templates");
 		 extractFile(MM.GRAPH_LIB, "", homeDirectory.getPath() + File.separator + "templates");
 		 extractFile(MM.RPT_ACCOUNT_HISTORY, "org/infinitypfm/reporting/", homeDirectory.getPath() + File.separator + "templates");
-
+		  */
 	}
 	
 	private static void extractFile(String file, String packagePath, String outFolder) {
@@ -254,7 +256,7 @@ public class InfinityPfm {
 			 OutputStream out = null;
 			 
 			 try {
-				 in = Resources.getResourceAsStream (file);
+				 in = Resources.getResourceAsStream (packagePath + file);
 				 out=new FileOutputStream(sPropsFile);
 				 
 				List<String> lines = IOUtils.readLines(in, Charset.defaultCharset());
@@ -336,7 +338,7 @@ public class InfinityPfm {
 	
 		// Create a freemarker configuration instance
 		MM.templateConfig = new Configuration(Configuration.VERSION_2_3_23);
-		MM.templateConfig.setDirectoryForTemplateLoading(templateDir);
+		MM.templateConfig.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(), "org/infinitypfm/reporting");
 		MM.templateConfig.setDefaultEncoding("UTF-8");
 		MM.templateConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 		MM.templateConfig.setLogTemplateExceptions(false);
