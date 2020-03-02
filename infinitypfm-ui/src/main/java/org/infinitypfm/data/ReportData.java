@@ -56,7 +56,6 @@ public class ReportData {
 	private String budget;
 	private String account;
 	private String _template;
-	private String _styles = "";
 	
 	/********************/
 	/* Script Libraries */
@@ -292,7 +291,7 @@ public class ReportData {
 
 	public String getBarChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.BAR_CHART_BASE);
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_BASE, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -301,7 +300,7 @@ public class ReportData {
 
 	public String getLineChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE);
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -310,7 +309,7 @@ public class ReportData {
 
 	public String getPieChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_BASE);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_BASE, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -319,7 +318,7 @@ public class ReportData {
 
 	public String getBarChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.BAR_CHART_1);
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_1, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -328,7 +327,7 @@ public class ReportData {
 
 	public String getLineChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.LINE_CHART_1);
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_1, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -337,7 +336,7 @@ public class ReportData {
 
 	public String getPieChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_1);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_1, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -346,7 +345,7 @@ public class ReportData {
 
 	public String getPieChartTwo() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_2);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_2, false);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -362,11 +361,14 @@ public class ReportData {
 	}
 
 	public String getStyles() {
-		return _styles;
+		try {
+			return _scriptLoader.getScript(BaseReport.REPORT_CSS, false);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
 	}
 
-	public void setStyles(String _styles) {
-		this._styles = _styles;
-	}
+
 
 }

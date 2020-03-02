@@ -1,0 +1,13 @@
+h1,h3 {
+	color:#2f7991;
+}
+
+table  {
+	width:100%;
+	background-color:#004f78;
+	font-size:12px;
+	border-collapse: collapse;
+	border-bottom: 1px solid #ddd;
+	text-align: left;
+	padding: 15px;
+}

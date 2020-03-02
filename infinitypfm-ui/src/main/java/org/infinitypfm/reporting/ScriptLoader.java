@@ -28,18 +28,30 @@ public class ScriptLoader {
 	private String GRAPH_LIB = "raphael-min.js";
 	 
 	public String getGraphLib() throws IOException {
-		return getScript(GRAPH_LIB);
+		return getScript(GRAPH_LIB, true);
 	}
 	
 	public String getJsLib() throws IOException{
-		return getScript(JS_LIB);
+		return getScript(JS_LIB, true);
 	}
 	
-	public String getScript(String fileName) throws IOException {
+	/**
+	 * Reads a script file from disk and returns as a string.
+	 * Pass false if script tag wrappers aren't needed.
+	 * @param fileName name of the file to load
+	 * @param noWrap flag to trigger script wrappers
+	 * @return string of file contents
+	 * @throws IOException
+	 */
+	public String getScript(String fileName, boolean noWrap) throws IOException {
 		
-		return "\n<script type=\"text/javascript\">" +
-			readFileAsString("" + fileName) + 
-		"</script>\n";
+		if (!noWrap) {
+		 return readFileAsString("" + fileName);
+		} else {
+			return "\n<script type=\"text/javascript\">" +
+					readFileAsString("" + fileName) + 
+					"</script>\n";
+		}
 			
 	}
 	

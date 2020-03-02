@@ -51,7 +51,7 @@ public abstract class BaseReport {
 	public static final String BAR_CHART_1 = "barchart1.js";
 	public static final String LINE_CHART_1 = "linechart1.js";
 	public static final String LINE_CHART_BASE = "linechartBase.js";
-	
+	public static final String REPORT_CSS = "reports.css";
 	
 	private ScriptLoader scriptLoader = null;
 	protected HashMap<String, String> reportParams = null;
@@ -65,12 +65,7 @@ public abstract class BaseReport {
         scriptLoader = new ScriptLoader();
         reportParams = new HashMap<String, String>();
 	}
-	
-	public BaseReport(boolean isTemplate) {
-		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
-		scriptLoader = new ScriptLoader();
-	}
-	
+		
 	public abstract File execute(ReportData reportData);
 	
 	/**
@@ -87,18 +82,18 @@ public abstract class BaseReport {
 			out.write(scriptLoader.getJsLib());
 			
 			if (chartType.equalsIgnoreCase(CHART_TYPE_PIE)){
-				out.write(scriptLoader.getScript(PIE_CHART_BASE));
+				out.write(scriptLoader.getScript(PIE_CHART_BASE, true));
 				if (numCharts == 2) {
-					out.write(scriptLoader.getScript(PIE_CHART_2));
+					out.write(scriptLoader.getScript(PIE_CHART_2, true));
 				} else {
-					out.write(scriptLoader.getScript(PIE_CHART_1));
+					out.write(scriptLoader.getScript(PIE_CHART_1, true));
 				}
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_BAR)){
-				out.write(scriptLoader.getScript(BAR_CHART_BASE));
-				out.write(scriptLoader.getScript(BAR_CHART_1));
+				out.write(scriptLoader.getScript(BAR_CHART_BASE, true));
+				out.write(scriptLoader.getScript(BAR_CHART_1, true));
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_LINE)){
-				out.write(scriptLoader.getScript(LINE_CHART_BASE));
-				out.write(scriptLoader.getScript(LINE_CHART_1));
+				out.write(scriptLoader.getScript(LINE_CHART_BASE, true));
+				out.write(scriptLoader.getScript(LINE_CHART_1, true));
 			}
 		}
 		out.write(FILE_HEADER_END);
@@ -216,12 +211,14 @@ public abstract class BaseReport {
 		out.write("<td><b>" + val + "</b></td>");
 	}
 	
-	public void Close() throws IOException {
-		out.write(FILE_FOOTER);
+	public void Close(boolean writeFooter) throws IOException {
+		
+		if (writeFooter) {
+			out.write(FILE_FOOTER);
+		}
 		try {out.close();} catch (Exception e1){}
-		//MM.LogMessage("file close");
 	}
-
+	
 	public File getOutFile() {
 		return outFile;
 	}
@@ -237,5 +234,13 @@ public abstract class BaseReport {
 		
 		reportParams.put(name, val);
 	}
-	
+
+	/**
+	 * Used for template results
+	 * @return BufferedWriter to results file
+	 */
+	public BufferedWriter getOutBuffer() {
+		return out;
+	}
+
 }

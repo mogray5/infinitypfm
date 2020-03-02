@@ -1,59 +1,54 @@
+/*
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * 
+ * This file is part of Infinity PFM.
+ * 
+ * Infinity PFM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Infinity PFM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.infinitypfm.reporting;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.data.ReportData;
 
-import freemarker.core.ParseException;
-import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
 
 public class TemplateReport extends BaseReport {
 	
-	public TemplateReport() {
-		super(true);
+	public TemplateReport() throws IOException {
+		super();
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public File execute(ReportData reportData) {
-
 
 		try {
 					
 			Template temp = MM.templateConfig.getTemplate(reportData.getTemplate());
-			Writer out = new OutputStreamWriter(System.out);
-	
 			this.addDocHeader(reportData);
+			temp.process(reportData, this.getOutBuffer());
 			
-			temp.process(reportData, out);
-			
-			
-		} catch (TemplateNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedTemplateNameException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		} finally {
+			try {
+				this.Close(false);} catch (IOException e) {}
 		}
-		return null;
-	}
-	
+		
+		return this.getOutFile();
+	}	
 }

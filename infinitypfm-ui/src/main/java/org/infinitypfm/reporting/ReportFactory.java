@@ -46,6 +46,7 @@ public class ReportFactory {
 			case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 
 				report = new TemplateReport();
+				//report = new AccountHistory();
 				
 				break;
 			case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
