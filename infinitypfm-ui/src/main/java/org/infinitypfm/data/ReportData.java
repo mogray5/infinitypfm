@@ -28,6 +28,7 @@ import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.BudgetBalance;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.IReportable;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
 import org.infinitypfm.reporting.BaseReport;
@@ -188,6 +189,10 @@ public class ReportData {
 		return title;
 	}
 
+	public String getAccount() {
+		return account;
+	}
+	
 	public Boolean getUserCanceled() {
 		return userCancelled;
 	}
@@ -241,6 +246,12 @@ public class ReportData {
 
 			reportData = MM.sqlMap.queryForList(reportName, args);
 
+			for (Object row : reportData) {
+				if (row != null)
+					((IReportable) row).setFormatter(dateUtil);
+			}
+			
+			
 		} catch (SQLException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -273,7 +284,7 @@ public class ReportData {
 
 	public String getRaphael() {
 		try {
-			return _scriptLoader.getGraphLib();
+			return _scriptLoader.getGraphLib(true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -282,7 +293,7 @@ public class ReportData {
 
 	public String getJslib() {
 		try {
-			return _scriptLoader.getJsLib();
+			return _scriptLoader.getJsLib(true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -291,7 +302,7 @@ public class ReportData {
 
 	public String getBarChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.BAR_CHART_BASE, false);
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_BASE, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -300,16 +311,25 @@ public class ReportData {
 
 	public String getLineChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE, false);
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 		return null;
 	}
 
+	public String getLineChartBaseSingle() {
+		try {
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_BASE_SINGLE, true);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+	
 	public String getPieChartBase() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_BASE, false);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_BASE, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -318,7 +338,7 @@ public class ReportData {
 
 	public String getBarChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.BAR_CHART_1, false);
+			return _scriptLoader.getScript(BaseReport.BAR_CHART_1, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -327,16 +347,25 @@ public class ReportData {
 
 	public String getLineChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.LINE_CHART_1, false);
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_1, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 		return null;
 	}
 
+	public String getLineChartSingleOne() {
+		try {
+			return _scriptLoader.getScript(BaseReport.LINE_CHART_SINGLE_1, true);
+		} catch (IOException e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		return null;
+	}
+	
 	public String getPieChartOne() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_1, false);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_1, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -345,7 +374,7 @@ public class ReportData {
 
 	public String getPieChartTwo() {
 		try {
-			return _scriptLoader.getScript(BaseReport.PIE_CHART_2, false);
+			return _scriptLoader.getScript(BaseReport.PIE_CHART_2, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -362,7 +391,7 @@ public class ReportData {
 
 	public String getStyles() {
 		try {
-			return _scriptLoader.getScript(BaseReport.REPORT_CSS, false);
+			return _scriptLoader.getScript(BaseReport.REPORT_CSS, true);
 		} catch (IOException e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}

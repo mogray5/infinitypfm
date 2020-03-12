@@ -50,7 +50,9 @@ public abstract class BaseReport {
 	public static final String BAR_CHART_BASE = "barChartBase.js";
 	public static final String BAR_CHART_1 = "barchart1.js";
 	public static final String LINE_CHART_1 = "linechart1.js";
+	public static final String LINE_CHART_SINGLE_1 = "linechartSingle1.js";
 	public static final String LINE_CHART_BASE = "linechartBase.js";
+	public static final String LINE_CHART_BASE_SINGLE = "linechartBaseSingle.js";
 	public static final String REPORT_CSS = "reports.css";
 	
 	private ScriptLoader scriptLoader = null;
@@ -82,18 +84,18 @@ public abstract class BaseReport {
 			out.write(scriptLoader.getJsLib());
 			
 			if (chartType.equalsIgnoreCase(CHART_TYPE_PIE)){
-				out.write(scriptLoader.getScript(PIE_CHART_BASE, true));
+				out.write(scriptLoader.getScript(PIE_CHART_BASE, false));
 				if (numCharts == 2) {
-					out.write(scriptLoader.getScript(PIE_CHART_2, true));
+					out.write(scriptLoader.getScript(PIE_CHART_2, false));
 				} else {
-					out.write(scriptLoader.getScript(PIE_CHART_1, true));
+					out.write(scriptLoader.getScript(PIE_CHART_1, false));
 				}
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_BAR)){
-				out.write(scriptLoader.getScript(BAR_CHART_BASE, true));
-				out.write(scriptLoader.getScript(BAR_CHART_1, true));
+				out.write(scriptLoader.getScript(BAR_CHART_BASE, false));
+				out.write(scriptLoader.getScript(BAR_CHART_1, false));
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_LINE)){
-				out.write(scriptLoader.getScript(LINE_CHART_BASE, true));
-				out.write(scriptLoader.getScript(LINE_CHART_1, true));
+				out.write(scriptLoader.getScript(LINE_CHART_BASE, false));
+				out.write(scriptLoader.getScript(LINE_CHART_1, false));
 			}
 		}
 		out.write(FILE_HEADER_END);

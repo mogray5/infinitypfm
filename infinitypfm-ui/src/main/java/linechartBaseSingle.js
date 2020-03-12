@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 */
-Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, title) {
+Raphael.fn.lineChart = function(posX, posY, w, h, values1, labels, title) {
 
 	var paper = this, chartH = h, chartW = w, chartX = posX, chartY = posY + h,
 		pathSeg1 = "", pathSeg2 = "";
@@ -24,9 +24,9 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 	chart = this.set();
 
 	var seriesColor1 = "rgb(83, 156, 255)";
-	var seriesColor2 = "rgb(253, 118, 143)";
+
 	
-	if (name === undefined) {
+	if (title === undefined) {
 		title = "";
 	}
 	var txtTitle = paper.text(80, 15, title).attr( {
@@ -48,9 +48,6 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 			scaleMax = values1[j];
 		}
 		
-		if (values2[j] > scaleMax){
-			scaleMax = values2[j];
-		}
 	}
 	
 	var scaleMaxOrig = scaleMax;
@@ -69,36 +66,26 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 	process = function(i) {
 		var x = chartX + (i * (pointGap));
 		var point1H = (values1[i] * chartH) / scaleMax;
-		var point2H = (values2[i] * chartH) / scaleMax;
 		
 		var y1 = chartY - point1H;
-		var y2 = chartY - point2H;
-	
+		
 		var x1 = x + (pointGap / 2);
 		
 		if (i==0) {
 			pathSeg1 += "M," + Math.round(x1) + ","  + y1
-			pathSeg2 += "M," + Math.round(x1) + ","  + y2
 		} else if (i==1) {
 			
 			pathSeg1 += " L," + Math.round(x1) + "," + y1
-			pathSeg2 += " L," + Math.round(x1) + "," + y2
 		
 		} else {
 			pathSeg1 += "," + Math.round(x1) + "," + y1
-			pathSeg2 += "," + Math.round(x1) + "," + y2
 		}
 		
 		var pointMarker1 = paper.circle(x1, y1, 5).attr( {
 			fill : seriesColor1,
 			stroke: seriesColor1
 		});
-		var pointMarker2 = paper.circle(x1, y2, 5).attr( {
-			fill : seriesColor2,
-			stroke: seriesColor2
-		});;
 		
-	
 		var txt1 = paper.text(x1, y1 - 15, values1[i]);
 		txt1.attr("opacity", 0).attr( {
 			stroke : "none",
@@ -107,15 +94,7 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 			"font-size" : "12px"
 		});
 		
-			
-		var txt2 = paper.text(x1, y2 - 15, values2[i]);
-		txt2.attr("opacity", 0).attr( {
-			stroke : "none",
-			opacity : 0,
-			"font-family" : 'Fontin-Sans, Arial',
-			"font-size" : "12px"
-		});
-		
+	
 		pointMarker1.mouseover(function(event) {
 
 			pointMarker1.animate( {
@@ -133,23 +112,7 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 			}, 2000);
 		});
 		
-		pointMarker2.mouseover(function(event) {
-
-			pointMarker2.animate( {
-				scale : [ 1.01, 1.01, x1, y2 ]
-			}, 2000, "elastic");
-			txt2.animate( {
-				opacity : 1
-			}, 2000, "elastic");
-		}).mouseout(function(event) {
-			pointMarker2.animate( {
-				scale : [ 1, 1, x1, y2 ]
-			}, 2000, "elastic");
-			txt2.animate( {
-				opacity : 0
-			}, 2000);
-		});
-		
+			
 		var t = paper.text(x + (pointGap / 2), chartY + 20, labels[i]);
 		t.rotate(55);
 		
@@ -161,10 +124,8 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 	}
 
 	var seriesLine1 = paper.path(pathSeg1).attr({stroke: seriesColor1, "stroke-width": 4, "stroke-linejoin": "round"});
-	var seriesLine2  = paper.path(pathSeg2).attr({stroke: seriesColor2, "stroke-width": 4, "stroke-linejoin": "round"});
 		
 	animateElement(seriesLine1);
-	animateElement(seriesLine2);
 		
 	var scaleInc = scaleMax / 10;
 	var scaleVal;

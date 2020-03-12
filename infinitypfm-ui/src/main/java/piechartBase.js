@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -31,6 +31,9 @@ Raphael.fn.pieChart = function (cx, cy, r, values, labels, stroke, title) {
         return paper.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]).attr(params);
 
     }
+    
+    var cBlack = "hsb(0, 0, 0)";
+    
     var angle = 0,
         total = 0,
         start = .05,
@@ -43,7 +46,7 @@ Raphael.fn.pieChart = function (cx, cy, r, values, labels, stroke, title) {
                 delta = 30,
                 bcolor = "hsb(" + start + ", 1, 1)",
                 p = sector(cx, cy, r, angle, angle + angleplus, {gradient: "90-" + bcolor + "-" + color, stroke: stroke, "stroke-width": 3}),
-                txt = paper.text(cx + (r + delta + 20) * Math.cos(-popangle * rad), cy + (r + delta + 10) * Math.sin(-popangle * rad), labels[j] + ' ' + value + '%').attr({fill: bcolor, stroke: "none", opacity: 0, "font-family": 'Fontin-Sans, Arial', "font-size": "12px"});
+                txt = paper.text(cx + (r + delta + 20) * Math.cos(-popangle * rad), cy + (r + delta + 10) * Math.sin(-popangle * rad), labels[j] + ' ' + value + '%').attr({fill: cBlack, stroke: "none", opacity: 0, "font-family": 'Fontin-Sans, Arial', "font-size": "12px"});
             p.mouseover(function () {
                 p.animate({scale: [1.1, 1.1, cx, cy]}, ms, "elastic");
                 txt.animate({opacity: 1}, ms, "elastic");

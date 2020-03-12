@@ -28,11 +28,19 @@ public class ScriptLoader {
 	private String GRAPH_LIB = "raphael-min.js";
 	 
 	public String getGraphLib() throws IOException {
-		return getScript(GRAPH_LIB, true);
+		return this.getGraphLib(false);
+	}
+	
+	public String getGraphLib(boolean noWrap) throws IOException {
+		return getScript(GRAPH_LIB, noWrap);
 	}
 	
 	public String getJsLib() throws IOException{
-		return getScript(JS_LIB, true);
+		return getJsLib(false);
+	}
+
+	public String getJsLib(boolean noWrap) throws IOException{
+		return getScript(JS_LIB, noWrap);
 	}
 	
 	/**
@@ -45,7 +53,7 @@ public class ScriptLoader {
 	 */
 	public String getScript(String fileName, boolean noWrap) throws IOException {
 		
-		if (!noWrap) {
+		if (noWrap) {
 		 return readFileAsString("" + fileName);
 		} else {
 			return "\n<script type=\"text/javascript\">" +

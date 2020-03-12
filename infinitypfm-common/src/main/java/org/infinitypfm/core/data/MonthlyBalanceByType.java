@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -24,12 +24,13 @@ import java.io.Serializable;
 public class MonthlyBalanceByType implements Serializable, IReportable{
 
 	private static final long serialVersionUID = 1919973868244212053L;
-	int yr = 0;
-	int mth = 0;
-	long incomeBalance = 0;
-	long expenseBalance = 0;
-	long liabilityBalance = 0;
-	long bankBalance = 0;
+	private int yr = 0;
+	private int mth = 0;
+	private long incomeBalance = 0;
+	private long expenseBalance = 0;
+	private long liabilityBalance = 0;
+	private long bankBalance = 0;
+	private DataFormatUtil _formatter;
 	
 	@Override
 	public String getHeaderRow() {
@@ -101,7 +102,9 @@ StringBuilder sb = new StringBuilder();
 	public void setBankBalance(long bankBalance) {
 		this.bankBalance = bankBalance;
 	}
-	
-	
 
+	@Override
+	public void setFormatter(DataFormatUtil formatter) {
+		_formatter = formatter;
+	}
 }

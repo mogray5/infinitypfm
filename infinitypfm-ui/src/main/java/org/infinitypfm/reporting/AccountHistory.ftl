@@ -11,11 +11,11 @@
  	</script> 	
  	
 	<script type="text/javascript">
-		${lineChartBase}
+		${lineChartBaseSingle}
  	</script> 	
  
  	<script type="text/javascript">
-		${lineChartOne}
+		${lineChartSingleOne}
  	</script>	
 	
 	<style>
@@ -23,20 +23,30 @@
 	</style>
 </head>
 	<body>
-		<input id="chart1Title" type="hidden" value="Credit Card">
+		<h2>${account}</h2>
+	
 
-			<span id="holder1"></span>
-			
+<table id="chart1">
+	<#list reportData as row>
+		<tr>
+			<th>${row.yr}-${row.mth}</th>
+			<td class="barVal1">${row.actBalanceFormattted}</td>
+		</tr>		
+	</#list>
+</table>
+
+
+<span id="holder1"></span>
+									
 			<table>
 				<tr>
-					<td>Year-Month</td>
-					<td>Account Balance</td>
-					<td>Currency</td>
+					<th>Year-Month</td>
+					<th>Account Balance</td>
 				</tr>
 				<#list reportData as row>
 					<tr>
 						<td>${row.yr}-${row.mth}</td>
-						<td>${row.actBalance}</td>
+						<td>${row.actBalanceFormattted}</td>
 					</tr>		
 				</#list>
 				

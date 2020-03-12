@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -38,6 +38,7 @@ public class BudgetBalance implements Serializable, IReportable {
 	int budgetId = -1;
 	String budgetName = null;
 	String actName = null;
+	DataFormatUtil _formatter;
 	
 	public int getYr() {
 		return yr;
@@ -123,6 +124,11 @@ public class BudgetBalance implements Serializable, IReportable {
 		sb.append(expenseBalance).append("|");
 		sb.append(yr).append("-").append(mth);
 		return sb.toString();
+	}
+
+	@Override
+	public void setFormatter(DataFormatUtil formatter) {
+		_formatter = formatter;
 	}
 
 }
