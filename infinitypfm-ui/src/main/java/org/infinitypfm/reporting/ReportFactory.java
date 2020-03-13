@@ -35,12 +35,14 @@ public class ReportFactory {
 
 			case MM.THIS_MONTH:
 
-				report = new GridReport();
+				report = new TemplateReport();
+				//report = new GridReport();
 
 				break;
 			case MM.LAST_MONTH:
 
-				report = new GridReport();
+				report = new TemplateReport();
+				//report = new GridReport();
 				
 				break;
 			case MM.MENU_REPORTS_ACCOUNT_HISTORY:

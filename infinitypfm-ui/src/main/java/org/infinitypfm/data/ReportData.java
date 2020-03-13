@@ -20,8 +20,11 @@ package org.infinitypfm.data;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
@@ -50,6 +53,10 @@ public class ReportData {
 	private DataFormatUtil dateUtil;
 	@SuppressWarnings("rawtypes")
 	private List reportData;
+	@SuppressWarnings("rawtypes")
+	private List reportDataIncome;
+	@SuppressWarnings("rawtypes")
+	private List reportDataExpense;
 	private String incomeTotal;
 	private String expenseTotal;
 	private String liabilityTotal;
@@ -82,6 +89,10 @@ public class ReportData {
 			reportParam.setYr(dateUtil.getYear());
 			setReportData("getReportMonthlyBalances", reportParam);
 
+			populateIncomeAndExpenseLists();
+			
+			_template = MM.RPT_MONTHLY_BALANCES;
+			
 			break;
 		case MM.LAST_MONTH:
 
@@ -91,9 +102,13 @@ public class ReportData {
 					+ dateUtil.getMonthName(0) + " " + dateUtil.getYear();
 			reportParam.setMth(dateUtil.getMonth());
 			reportParam.setYr(dateUtil.getYear());
+			
 			setReportData("getReportMonthlyBalances", reportParam);
 			
-
+			populateIncomeAndExpenseLists();
+			
+			_template = MM.RPT_MONTHLY_BALANCES;
+			
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 
@@ -164,7 +179,6 @@ public class ReportData {
 			setReportData("getIncomeVsExpense", reportParam);
 
 			break;
-
 		}
 	}
 
@@ -173,18 +187,31 @@ public class ReportData {
 		return reportData;
 	}
 
-	public String getIncomeTotal() {
-		return incomeTotal;
+	public String getIncomeTotal() {		
+		return formatLongString(incomeTotal);
 	}
 
+	public long getIncomeTotalRaw() {
+	
+		return Long.parseLong(incomeTotal);
+	}
+	
 	public String getExpenseTotal() {
-		return expenseTotal;
+		return formatLongString(expenseTotal);
+	}
+	
+	public long getExpenseTotalRaw() {
+		return Long.parseLong(expenseTotal);
 	}
 
 	public String getLiabilityTotal() {
-		return liabilityTotal;
+		return formatLongString(liabilityTotal);
 	}
 
+	public long getLiabilityTotalRaw() {
+		return Long.parseLong(liabilityTotal);
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -207,6 +234,16 @@ public class ReportData {
 
 	public void setTemplate(String template) {
 		this._template = template;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getReportDataIncome() {
+		return reportDataIncome;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getReportDataExpense() {
+		return reportDataExpense;
 	}
 
 	private void initTotals() {
@@ -398,6 +435,76 @@ public class ReportData {
 		return null;
 	}
 
+	
 
+/**
+ * From: https://stackoverflow.com/questions/3548733/how-do-i-convert-from-list-to-listt-in-java-using-generics
+ * 
+ * @param <T>
+ * @param <C>
+ * @param from
+ * @param to
+ * @param listClass
+ * @return
+ */
+  private <T, C extends Collection<T>> C typesafeAdd(Iterable<?> from, C to, Class<T> listClass) {
+    for (Object item: from) {
+      to.add(listClass.cast(item));
+    }
+    return to;
+  }
 
+  /**
+   * This method creates separate lists for income and account data and 
+   * stores them in reportDataIncome and reportDataExpense
+   */
+  private void populateIncomeAndExpenseLists() {
+	  
+	  List<MonthlyBalance>listMB = new ArrayList<MonthlyBalance>();
+		listMB = typesafeAdd(this.reportData, listMB, MonthlyBalance.class);
+		
+		reportDataIncome = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("income"))
+				.collect(Collectors.toList());
+
+		reportDataExpense = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("expense"))
+				.collect(Collectors.toList());
+		
+  }
+  
+  /**
+   * Takes a currency value represented as long and returns formatted number.
+   * If formatter class is null then original value is returned.
+   * @param value
+   * @return
+   */
+  private String formatLongString(String value) {
+
+	if (dateUtil != null && value != null) 
+		return dateUtil.getAmountFormatted(Long.parseLong(value)*-1);
+	 else 
+		return value;
+  }
+  
+  
+  /* Header translations */
+  
+  public String getWordIncome() {
+	  return MM.PHRASES.getPhrase("118");
+  }
+
+  public String getWordIncomeTotal() {
+	  return MM.PHRASES.getPhrase("262");
+  }
+  
+  public String getWordExpenses() {
+	  return MM.PHRASES.getPhrase("94");
+  }
+  
+  public String getWordExpenseTotal() {
+	  return MM.PHRASES.getPhrase("263");
+  }
+  
+  public String getWordLiabilityTotal() {
+	  return MM.PHRASES.getPhrase("264");
+  }
 }

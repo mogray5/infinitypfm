@@ -106,6 +106,11 @@ public class MonthlyBalance implements Serializable, IReportable {
 	public int getYr() {
 		return yr;
 	}
+	
+	public String getYrString() {
+		return Integer.toString(yr);
+	}
+	
 	/**
 	 * @param yr The yr to set.
 	 */

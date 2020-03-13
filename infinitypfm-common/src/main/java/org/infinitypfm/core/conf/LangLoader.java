@@ -306,6 +306,9 @@ public class LangLoader {
 		hmPhrases.put("259",  i18n.tr("None"));
 		hmPhrases.put("260",  i18n.tr("Date Format"));
 		hmPhrases.put("261",  i18n.tr("Continue"));
+		hmPhrases.put("262",  i18n.tr("Income Total"));
+		hmPhrases.put("263",  i18n.tr("Expense Total"));
+		hmPhrases.put("264",  i18n.tr("Liability Total"));
 	}
 	
 	

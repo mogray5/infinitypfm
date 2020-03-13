@@ -1,5 +1,6 @@
 <html>
 <head>
+
  <h1>${title}</h1>
 
 	<script type="text/javascript">
@@ -29,7 +30,7 @@
 <table id="chart1">
 	<#list reportData as row>
 		<tr>
-			<th>${row.yr}-${row.mth}</th>
+			<th>${row.yrString}-${row.mth}</th>
 			<td class="barVal1">${row.actBalanceFormattted}</td>
 		</tr>		
 	</#list>
@@ -41,11 +42,11 @@
 			<table>
 				<tr>
 					<th>Year-Month</td>
-					<th>Account Balance</td>
+					<th>Account Balance (${reportData[0].isoCode})</td>
 				</tr>
 				<#list reportData as row>
 					<tr>
-						<td>${row.yr}-${row.mth}</td>
+						<td>${row.yrString}-${row.mth}</td>
 						<td>${row.actBalanceFormattted}</td>
 					</tr>		
 				</#list>
