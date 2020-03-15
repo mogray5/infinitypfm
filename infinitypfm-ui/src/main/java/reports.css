@@ -14,17 +14,24 @@ table  {
 th {
 	background-color:#004f78;
 	color: white;
-	
 }
 
 th,td {
 	 border-bottom: 1px solid #ddd;
 }
 
+.totals, .totals-dat {
+	font-size:16px;
+	display: inline-block;
+}
+
 .totals {
 	color:#2f7991;
-	font-size:16px;
-	margin: 25px;
+	width: 150px;
+}
+
+.totals-dat {
+	margin-left; 20px;	
 }
 
 .chartArea {

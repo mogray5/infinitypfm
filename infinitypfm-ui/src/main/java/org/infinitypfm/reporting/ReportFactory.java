@@ -31,6 +31,8 @@ public class ReportFactory {
 
 		try {
 
+			//TODO:  Can consolidate this case statement.
+			
 			switch (reportType) {
 
 			case MM.THIS_MONTH:
@@ -53,17 +55,20 @@ public class ReportFactory {
 				break;
 			case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 
-				report = new BudgetPerformance();
+				report = new TemplateReport();
+				//report = new BudgetPerformance();
 				
 				break;
 			case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
 
-				report = new BudgetPerformance();
+				report = new TemplateReport();
+				//report = new BudgetPerformance();
 				
 				break;
 			case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 
-				report = new IncomeVsExpense();
+				report = new TemplateReport();
+				//report = new IncomeVsExpense();
 				
 				break;
 			}

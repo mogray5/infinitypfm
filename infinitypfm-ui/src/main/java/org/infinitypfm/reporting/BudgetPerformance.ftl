@@ -12,11 +12,11 @@
  	</script> 	
  	
 	<script type="text/javascript">
-		${lineChartBaseSingle}
+		${barChartBase}
  	</script> 	
  
  	<script type="text/javascript">
-		${lineChartSingleOne}
+		${barChartOne}
  	</script>	
 	
 	<style>
@@ -24,14 +24,15 @@
 	</style>
 </head>
 	<body>
-		<h2>${account}</h2>
+		<h3>Using Budget: ${reportData[0].budgetName}</h3>
 	
 
 <table id="chart1">
 	<#list reportData as row>
 		<tr>
 			<th>${row.yrString}-${row.mth}</th>
-			<td class="barVal1">${row.actBalanceFormattted}</td>
+			<td class="barVal">${row.expenseBalanceFmt!0}</td>
+			<td class="guideVal">${row.budgetBalanceFmt!0}</td>
 		</tr>		
 	</#list>
 </table>
@@ -42,12 +43,16 @@
 			<table>
 				<tr>
 					<th>${wordYearMonth}</th>
-					<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
+					<th>${wordExpenseBalance}</th>
+					<th>${wordBudgetBalance}</th>
+					<th>${wordBudgetName}</th>
 				</tr>
 				<#list reportData as row>
 					<tr>
 						<td>${row.yrString}-${row.mth}</td>
-						<td>${row.actBalanceFormattted}</td>
+						<td>${row.expenseBalanceFmt!0}</td>
+						<td>${row.budgetBalanceFmt!0}</td>
+						<td>${row.budgetName}</td>
 					</tr>		
 				</#list>
 				

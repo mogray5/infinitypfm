@@ -62,7 +62,7 @@ public class MonthlyBalance implements Serializable, IReportable {
 	/**
 	 * @return Returns the actBalance.
 	 */
-	public String getActBalanceFormattted() {
+	public String getActBalanceFmt() {
 		
 		if (_formatter != null) 
 			return _formatter.getAmountFormatted(actBalance);

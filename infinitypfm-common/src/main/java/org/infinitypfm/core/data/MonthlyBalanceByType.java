@@ -59,6 +59,10 @@ StringBuilder sb = new StringBuilder();
 		return yr;
 	}
 
+	public String getYrString() {
+		return Integer.toString(yr);
+	}
+	
 	public void setYr(int yr) {
 		this.yr = yr;
 	}
@@ -75,12 +79,20 @@ StringBuilder sb = new StringBuilder();
 		return incomeBalance;
 	}
 
+	public String getIncomeBalanceFmt() {
+		return _formatter.getAmountFormatted(-incomeBalance, "##0.00");
+	}
+	
 	public void setIncomeBalance(long incomeBalance) {
 		this.incomeBalance = incomeBalance;
 	}
 
 	public long getExpenseBalance() {
 		return expenseBalance;
+	}
+	
+	public String getExpenseBalanceFmt() {
+		return _formatter.getAmountFormatted(expenseBalance, "##0.00");
 	}
 
 	public void setExpenseBalance(long expenseBalance) {
@@ -91,6 +103,14 @@ StringBuilder sb = new StringBuilder();
 		return liabilityBalance;
 	}
 
+	public String getLiabilityBalanceFmt() {
+		return _formatter.getAmountFormatted(liabilityBalance, "##0.00");
+	}
+	
+	public String getLiabilityPlusExpenseBalanceFmt() {
+		return _formatter.getAmountFormatted(liabilityBalance+expenseBalance, "##0.00");
+	}
+	
 	public void setLiabilityBalance(long liabilityBalance) {
 		this.liabilityBalance = liabilityBalance;
 	}

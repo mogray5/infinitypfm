@@ -237,6 +237,8 @@ public class MM {
 	public static final String GRAPH_LIB = "raphael-min.js";
 	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
 	public static final String RPT_MONTHLY_BALANCES = "MonthlyBalances.ftl";
+	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";
+	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
 	
 	public static Options options = null;
 	

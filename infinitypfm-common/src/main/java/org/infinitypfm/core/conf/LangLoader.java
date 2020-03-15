@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -309,6 +309,14 @@ public class LangLoader {
 		hmPhrases.put("262",  i18n.tr("Income Total"));
 		hmPhrases.put("263",  i18n.tr("Expense Total"));
 		hmPhrases.put("264",  i18n.tr("Liability Total"));
+		hmPhrases.put("265",  i18n.tr("Year-Month"));
+		hmPhrases.put("266",  i18n.tr("Account Balance"));
+		hmPhrases.put("267",  i18n.tr("Expense Balance"));
+		hmPhrases.put("268",  i18n.tr("Budget Balance"));
+		hmPhrases.put("269",  i18n.tr("Budget Name"));
+		hmPhrases.put("270",  i18n.tr("Income Balance"));
+		hmPhrases.put("271",  i18n.tr("Liability Balance"));
+		hmPhrases.put("272",  i18n.tr("Account Type"));
 	}
 	
 	

@@ -35,7 +35,7 @@
               
         var chart1Title = $("#chart1Title").val();
         
-        raphael("holder1", 650, 400).lineChart(100,100,550,250,values1, values2, labels, chart1Title);
+        raphael("holder1", 650, 400).lineChart(100,75,550,250,values1, values2, labels, chart1Title);
          
 
     });

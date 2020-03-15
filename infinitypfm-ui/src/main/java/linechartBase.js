@@ -26,14 +26,13 @@ Raphael.fn.lineChart = function(posX, posY, w, h, values1, values2, labels, titl
 	var seriesColor1 = "rgb(83, 156, 255)";
 	var seriesColor2 = "rgb(253, 118, 143)";
 	
-	if (name === undefined) {
-		title = "";
+	if (title != undefined) {
+		var txtTitle = paper.text(80, 15, title).attr( {
+			fill : "rgb(27,95,138)",
+			"font-family" : 'Fontin-Sans, Arial',
+			"font-size" : "18px"
+		});
 	}
-	var txtTitle = paper.text(80, 15, title).attr( {
-		fill : "rgb(27,95,138)",
-		"font-family" : 'Fontin-Sans, Arial',
-		"font-size" : "18px"
-	});
 
 	paper.rect(chartX, posY, 0.5, chartH);
 	paper.rect(chartX, chartY, chartW, 0.5);

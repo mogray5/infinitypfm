@@ -20,6 +20,7 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
+
 /**
  * POJO for storing budget totals.
  *
@@ -44,6 +45,10 @@ public class BudgetBalance implements Serializable, IReportable {
 		return yr;
 	}
 
+	public String getYrString() {
+		return Integer.toString(yr);
+	}
+	
 	public void setYr(int yr) {
 		this.yr = yr;
 	}
@@ -60,6 +65,10 @@ public class BudgetBalance implements Serializable, IReportable {
 		return budgetBalance;
 	}
 
+	public String getBudgetBalanceFmt() {
+		return _formatter.getAmountFormatted(budgetBalance, "###0.00");
+	}
+	
 	public void setBudgetBalance(long budgetBalance) {
 		this.budgetBalance = budgetBalance;
 	}
@@ -68,6 +77,10 @@ public class BudgetBalance implements Serializable, IReportable {
 		return expenseBalance;
 	}
 
+	public String getExpenseBalanceFmt() {
+		return _formatter.getAmountFormatted(expenseBalance, "###0.00");
+	}
+	
 	public void setExpenseBalance(long expenseBalance) {
 		this.expenseBalance = expenseBalance;
 	}

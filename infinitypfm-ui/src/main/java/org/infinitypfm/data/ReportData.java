@@ -145,6 +145,8 @@ public class ReportData {
 				args.setActTypeName(MM.ACT_TYPE_EXPENSE);
 				setReportData("getBudgetVsExpenseByMonth", args);
 
+				_template = MM.RPT_BUDGET_PERFORMANCE;
+				
 			}
 
 			break;
@@ -167,6 +169,7 @@ public class ReportData {
 				args.setActTypeName(MM.ACT_TYPE_EXPENSE);
 				setReportData("getBudgetVsExpenseByMonthAndAccount", args);
 
+				_template = MM.RPT_BUDGET_PERFORMANCE;
 			}
 
 			break;
@@ -178,6 +181,8 @@ public class ReportData {
 			reportParam.setYr(dateUtil.getYear());
 			setReportData("getIncomeVsExpense", reportParam);
 
+			_template = MM.RPT_INCOME_VS_EXPENSE;
+			
 			break;
 		}
 	}
@@ -507,4 +512,34 @@ public class ReportData {
   public String getWordLiabilityTotal() {
 	  return MM.PHRASES.getPhrase("264");
   }
+  
+  public String getWordYearMonth() {
+	  return MM.PHRASES.getPhrase("265");
+  }
+  
+  public String getWordAccountBalance() {
+	  return MM.PHRASES.getPhrase("266");
+  }
+  public String getWordExpenseBalance() {
+	  return MM.PHRASES.getPhrase("267");
+  }
+  public String getWordBudgetBalance() {
+	  return MM.PHRASES.getPhrase("268");
+  }
+  public String getWordBudgetName() {
+	  return MM.PHRASES.getPhrase("269");
+  }
+  public String getWordIncomeBalance() {
+	  return MM.PHRASES.getPhrase("270");
+  }
+  public String getWordLiabilityBalance() {
+	  return MM.PHRASES.getPhrase("271");
+  }
+  public String getWordAccountType() {
+	  return MM.PHRASES.getPhrase("272");
+  }
+  public String getWordAccountName() {
+	  return MM.PHRASES.getPhrase("93");
+  }
 }
+

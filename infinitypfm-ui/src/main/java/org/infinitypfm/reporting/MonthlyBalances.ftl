@@ -25,12 +25,17 @@
 </head>
 	<body>
 	<div>
-		<span class="totals">${wordIncomeTotal}: ${incomeTotal!"0"}</span>
+		<span class="totals">${wordIncomeTotal}:</span>
+		<span class="totals-dat">${incomeTotal!"0"}</span>
 	</div>
 
 	<div>
-		<span class="totals">${wordExpenseTotal}: ${expenseTotal!"0"}</span>
-		<span class="totals">${wordLiabilityTotal}: ${liabilityTotal!"0"}</span>
+		<span class="totals">${wordExpenseTotal}:</span>
+		<span class="totals-dat">${expenseTotal!"0"}</span>
+	</div>
+	<div>
+		<span class="totals">${wordLiabilityTotal}:</span>
+		<span class="totals-dat">${liabilityTotal!"0"}</span>
 	</div>
 
 	<div class="chartArea">
@@ -38,7 +43,7 @@
 			<#list reportDataIncome as row>
 				<tr>
 					<th>${row.actName}</th>
-					<td class="barVal1">${(row.actBalance!0 / incomeTotalRaw!1)*100}</td>
+					<td class="barVal1">${(row.actBalance!0 / incomeTotalRaw)*100}</td>
 				</tr>		
 			</#list>
 		</table>
@@ -48,7 +53,8 @@
 			<#list reportDataExpense as row>
 				<tr>
 					<th>${row.actName}</th>
-					<td class="barVal1">${(row.actBalance!0 / expenseTotalRaw!1)*100}</td>
+					<!-- <td class="barVal1">${(row.actBalance!0 / expenseTotalRaw)*100}</td> -->
+					<td class="barVal1">(${row.actBalance!0} / ${expenseTotalRaw})*100</td>
 				</tr>		
 			</#list>
 		</table>
@@ -62,17 +68,17 @@
 									
 			<table>
 				<tr>
-					<th>Year-Month</th>
-					<th>Account Type</th>
-					<th>Account Name</th>
-					<th>Account Balance (${reportData[0].isoCode})</th>
+					<th>${wordYearMonth}</th>
+					<th>${wordAccountType}</th>
+					<th>${wordAccountName}</th>
+					<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
 				</tr>
 				<#list reportData as row>
 					<tr>
 						<td>${row.yrString}-${row.mth}</td>
 						<td>${row.actTypeName}</td>
 						<td>${row.actName}</td>
-						<td>${row.actBalanceFormattted}</td>
+						<td>${row.actBalanceFmt}</td>
 					</tr>		
 				</#list>
 				
