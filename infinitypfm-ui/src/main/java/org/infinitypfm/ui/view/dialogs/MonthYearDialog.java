@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -95,12 +95,12 @@ public class MonthYearDialog extends BaseDialog {
 	protected void LoadLayout() {
 		
 		FormData lblmonthdata = new FormData();
-		lblmonthdata.top = new FormAttachment(0, 40);
+		lblmonthdata.top = new FormAttachment(0, 35);
 		lblmonthdata.left = new FormAttachment(20, 0);
 		lblMonth.setLayoutData(lblmonthdata);
 		
 		FormData cmbmonthdata = new FormData();
-		cmbmonthdata.top = new FormAttachment(0, 40);
+		cmbmonthdata.top = new FormAttachment(0, 35);
 		cmbmonthdata.left = new FormAttachment(lblMonth, 30);
 		cmbMonth.setLayoutData(cmbmonthdata);
 		

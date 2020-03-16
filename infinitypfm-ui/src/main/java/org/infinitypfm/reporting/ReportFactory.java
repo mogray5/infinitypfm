@@ -31,44 +31,19 @@ public class ReportFactory {
 
 		try {
 
-			//TODO:  Can consolidate this case statement.
+			//TODO:  Can remove this case statement.
 			
 			switch (reportType) {
 
-			case MM.THIS_MONTH:
-
-				report = new TemplateReport();
-				//report = new GridReport();
-
-				break;
+			case MM.THIS_MONTH: 
 			case MM.LAST_MONTH:
-
-				report = new TemplateReport();
-				//report = new GridReport();
-				
-				break;
 			case MM.MENU_REPORTS_ACCOUNT_HISTORY:
-
-				report = new TemplateReport();
-				//report = new AccountHistory();
-				
-				break;
+			case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
 			case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
-
-				report = new TemplateReport();
-				//report = new BudgetPerformance();
-				
-				break;
 			case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
-
-				report = new TemplateReport();
-				//report = new BudgetPerformance();
-				
-				break;
 			case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 
 				report = new TemplateReport();
-				//report = new IncomeVsExpense();
 				
 				break;
 			}

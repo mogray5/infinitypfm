@@ -58,6 +58,7 @@ public class AboutDialog extends BaseDialog {
 	private Label lblUsedBy2 = null;
 	private Label lblUsedBy3 = null;
 	private Label lblUsedBy4 = null;
+	private Label lblUsedBy5 = null;
 	private Label lblCopyRight = null;
 	private Label lblLic = null;
 	private Image banner = null;
@@ -96,6 +97,7 @@ public class AboutDialog extends BaseDialog {
 		lblUsedBy2 = new Label(grpBotBorder, SWT.NONE);
 		lblUsedBy3 = new Label(grpBotBorder, SWT.NONE);
 		lblUsedBy4 = new Label(grpBotBorder, SWT.NONE);
+		lblUsedBy5 = new Label(grpBotBorder, SWT.NONE);
 		lblCopyRight = new Label(grpBotBorder, SWT.NONE);
 		lblLic = new Label(grpBotBorder, SWT.NONE);
 		
@@ -112,6 +114,7 @@ public class AboutDialog extends BaseDialog {
 		lblUsedBy2.setText(MM.PHRASES.getPhrase("74"));
 		lblUsedBy3.setText(MM.PHRASES.getPhrase("124"));
 		lblUsedBy4.setText(MM.PHRASES.getPhrase("248"));
+		lblUsedBy5.setText(MM.PHRASES.getPhrase("274"));
 		lblCopyRight.setText(MM.APPCOPYRIGHT);
 		lblCopyRight.setAlignment(SWT.CENTER);
 		lblLic.setText(MM.APPLICENCE);
@@ -188,6 +191,11 @@ public class AboutDialog extends BaseDialog {
 		lblusedby4data.top = new FormAttachment(lblUsedBy3, 3);
 		lblusedby4data.left = new FormAttachment(0, 20);
 		lblUsedBy4.setLayoutData(lblusedby4data);
+		
+		FormData lblusedby5data = new FormData();
+		lblusedby5data.top = new FormAttachment(lblUsedBy4, 3);
+		lblusedby5data.left = new FormAttachment(0, 20);
+		lblUsedBy5.setLayoutData(lblusedby5data);
 		
 		FormData lbllicdata = new FormData();
 		lbllicdata.top = new FormAttachment(70, 10);

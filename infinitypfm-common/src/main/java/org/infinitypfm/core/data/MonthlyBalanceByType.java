@@ -110,6 +110,10 @@ StringBuilder sb = new StringBuilder();
 	public String getLiabilityPlusExpenseBalanceFmt() {
 		return _formatter.getAmountFormatted(liabilityBalance+expenseBalance, "##0.00");
 	}
+
+	public long getLiabilityPlusExpenseBalance() {
+		return liabilityBalance+expenseBalance;
+	}
 	
 	public void setLiabilityBalance(long liabilityBalance) {
 		this.liabilityBalance = liabilityBalance;

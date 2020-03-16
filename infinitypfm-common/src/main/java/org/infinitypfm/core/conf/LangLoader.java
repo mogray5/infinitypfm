@@ -317,6 +317,8 @@ public class LangLoader {
 		hmPhrases.put("270",  i18n.tr("Income Balance"));
 		hmPhrases.put("271",  i18n.tr("Liability Balance"));
 		hmPhrases.put("272",  i18n.tr("Account Type"));
+		hmPhrases.put("273", i18n.tr("Account History All Time"));
+		hmPhrases.put("274", i18n.tr("Apache FreeMarker (https://freemarker.apache.org/) "));
 	}
 	
 	

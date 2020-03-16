@@ -43,7 +43,16 @@
 			<#list reportDataIncome as row>
 				<tr>
 					<th>${row.actName}</th>
-					<td class="barVal1">${(row.actBalance!0 / incomeTotalRaw)*100}</td>
+					<!-- <td class="barVal1">${(row.actBalance / incomeTotalRaw)*100}</td> -->
+					<td class="barVal1">
+					<#if ((row.actBalance / incomeTotalRaw)*100) gte 99 >
+						99
+					<#elseif ((row.actBalance / incomeTotalRaw)*100) lt 1 >
+						1
+					<#else>
+						${(row.actBalance / incomeTotalRaw)*100}
+					</#if>
+					</td>
 				</tr>		
 			</#list>
 		</table>
@@ -53,8 +62,8 @@
 			<#list reportDataExpense as row>
 				<tr>
 					<th>${row.actName}</th>
-					<!-- <td class="barVal1">${(row.actBalance!0 / expenseTotalRaw)*100}</td> -->
-					<td class="barVal1">(${row.actBalance!0} / ${expenseTotalRaw})*100</td>
+					<!-- <td class="barVal1">(${row.actBalance} / ${expenseTotalRaw})*100</td> -->
+					<td class="barVal1">${(row.actBalance / expenseTotalRaw)*100}</td>
 				</tr>		
 			</#list>
 		</table>
@@ -65,7 +74,7 @@
 		<span id="holder1"></span>
 		<span id="holder2"></span>
 	</div>		
-									
+	<div class="tblWrapper">								
 			<table>
 				<tr>
 					<th>${wordYearMonth}</th>
@@ -83,5 +92,6 @@
 				</#list>
 				
 			</table>
+	</div>
 	</body>
 </html>

@@ -38,7 +38,7 @@ public class MM {
 	public static final String APPVERSION = "0.8.5"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2017 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2020 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -174,9 +174,10 @@ public class MM {
 	public static final int MENU_REPORTS_MONTHLY_BALANCE = 100;
 	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 101;
 	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 102;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 103;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 104;
-	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 105;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 103;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 104;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 105;
+	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 106;
 	
 	public static final int MENU_BUDGET_SAVE = 120;
 	

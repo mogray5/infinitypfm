@@ -56,7 +56,9 @@ public class MonthlyBalance implements Serializable, IReportable {
 	 * @return Returns the actBalance.
 	 */
 	public long getActBalance() {
-		return actBalance;
+		if (actTypeName.equalsIgnoreCase("income"))
+			return -actBalance;
+		else return actBalance;
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class MonthlyBalance implements Serializable, IReportable {
 	public String getActBalanceFmt() {
 		
 		if (_formatter != null) 
-			return _formatter.getAmountFormatted(actBalance);
+			return _formatter.getAmountFormatted(actBalance, "###0.00");
 		 else 
 			return Long.toString(actBalance);
 	}

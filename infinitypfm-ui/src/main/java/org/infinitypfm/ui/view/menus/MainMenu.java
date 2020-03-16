@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -97,9 +97,6 @@ public class MainMenu implements Widget {
 				' ');
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_BTC,
 				MM.PHRASES.getPhrase("217"), ' ');
-
-//		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_MAIL,
-//				MM.PHRASES.getPhrase("252"), ' ');
 		
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_CSV,
 				MM.PHRASES.getPhrase("253"), ' ');
@@ -178,6 +175,10 @@ public class MainMenu implements Widget {
 				MM.MENU_REPORTS_ACCOUNT_HISTORY, MM.PHRASES.getPhrase("136"),
 				' ');
 
+		mi = addSelection(mnuReports, SWT.PUSH,
+				MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME, MM.PHRASES.getPhrase("273"),
+				' ');
+		
 		mi = addSelection(mnuReports, SWT.PUSH,
 				MM.MENU_REPORTS_BUDGET_PERFORMANCE,
 				MM.PHRASES.getPhrase("164"), ' ');

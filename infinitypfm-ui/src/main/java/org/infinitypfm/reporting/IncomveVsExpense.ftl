@@ -32,14 +32,20 @@
 		<tr>
 			<th>${row.yrString}-${row.mth}</th>
 			<td class="barVal1">${row.incomeBalanceFmt!0}</td>
-			<td class="barVal2">${row.liabilityPlusExpenseBalanceFmt!0}</td>
+			<td class="barVal2">
+			<#if row.liabilityPlusExpenseBalance lt 0>
+				0
+			<#else>
+				${row.liabilityPlusExpenseBalanceFmt!0}
+			</#if>
+			</td>
 		</tr>		
 	</#list>
 </table>
 
 
 <span id="holder1"></span>
-									
+<div class="tblWrapper">									
 			<table>
 				<tr>
 					<th>${wordYearMonth}</th>
@@ -57,5 +63,6 @@
 				</#list>
 				
 			</table>
+</div>
 	</body>
 </html>

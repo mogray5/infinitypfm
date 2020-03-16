@@ -129,6 +129,23 @@ public class ReportData {
 			}
 
 			break;
+		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
+			dateUtil.setDate(new Date());
+			title = MM.PHRASES.getPhrase("273");
+			monthlyBalance = new MonthlyBalance();
+
+			account = promptForAccount(true); //Include income accounts
+
+			if (account != null) {
+
+				monthlyBalance.setActName(account);
+				monthlyBalance.setMth(dateUtil.getMonth());
+				monthlyBalance.setYr(dateUtil.getYear() - 50);
+				setReportData("getReportAccountHistory", monthlyBalance);
+				_template = MM.RPT_ACCOUNT_HISTORY;
+
+			}
+			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 
 			dateUtil.setDate(new Date());
@@ -198,7 +215,7 @@ public class ReportData {
 
 	public long getIncomeTotalRaw() {
 	
-		return Long.parseLong(incomeTotal);
+		return -Long.parseLong(incomeTotal);
 	}
 	
 	public String getExpenseTotal() {

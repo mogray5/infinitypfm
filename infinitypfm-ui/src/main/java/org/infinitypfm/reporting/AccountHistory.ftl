@@ -26,31 +26,30 @@
 	<body>
 		<h2>${account}</h2>
 	
-
 <table id="chart1">
 	<#list reportData as row>
 		<tr>
 			<th>${row.yrString}-${row.mth}</th>
-			<td class="barVal1">${row.actBalanceFormattted}</td>
+			<td class="barVal1">${row.actBalanceFmt}</td>
 		</tr>		
 	</#list>
 </table>
 
-
 <span id="holder1"></span>
-									
-			<table>
+<div class="tblWrapper">									
+		<table>
+			<tr>
+				<th>${wordYearMonth}</th>
+				<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
+			</tr>
+			<#list reportData as row>
 				<tr>
-					<th>${wordYearMonth}</th>
-					<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
-				</tr>
-				<#list reportData as row>
-					<tr>
-						<td>${row.yrString}-${row.mth}</td>
-						<td>${row.actBalanceFormattted}</td>
-					</tr>		
-				</#list>
-				
-			</table>
+					<td>${row.yrString}-${row.mth}</td>
+					<td>${row.actBalanceFmt}</td>
+				</tr>		
+			</#list>
+			
+		</table>
+</div>
 	</body>
 </html>

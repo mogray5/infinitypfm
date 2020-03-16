@@ -39,7 +39,7 @@
 
 
 <span id="holder1"></span>
-									
+<div class="tblWrapper">									
 			<table>
 				<tr>
 					<th>${wordYearMonth}</th>
@@ -57,5 +57,6 @@
 				</#list>
 				
 			</table>
+</div>
 	</body>
 </html>
