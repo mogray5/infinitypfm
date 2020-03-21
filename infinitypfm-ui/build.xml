@@ -3,8 +3,8 @@
 	<property name="build.sourceDirectory" value="infinitypfm-ui/src/main/java" />
 	<property name="build.directory" value="build" />
 	<property name="build.outputDirectory" value="${build.directory}/classes" />
-	<property name="classpath" value="/usr/share/java/swt.jar:/usr/share/java/ibatis.jar:/usr/share/java/commons-io.jar:/usr/share/java/commons-compress.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/commons-httpclient.jar:/usr/share/java/commons-beanutils.jar:/usr/share/java/commons-logging.jar:/usr/share/java/json-lib.jar:/usr/share/java/commons-lang.jar:/usr/share/java/ezmorph.jar:/usr/share/java/commons-collections3.jar:/usr/share/java/hsqldb.jar:/usr/share/java/commons-configuration.jar:infinitypfm-common.jar:infinitypfm-btc.jar:/usr/share/java/commons-csv.jar:/usr/share/java/freemarker.jar" />
-	<property name="jar" value="infinitypfm-ui.jar" />
+	<property name="classpath" value="/usr/share/java/swt.jar:/usr/share/java/ibatis.jar:/usr/share/java/commons-io.jar:/usr/share/java/commons-compress.jar:/usr/share/java/gettext-commons.jar:/usr/share/java/commons-httpclient.jar:/usr/share/java/commons-beanutils.jar:/usr/share/java/commons-logging.jar:/usr/share/java/json-lib.jar:/usr/share/java/commons-lang.jar:/usr/share/java/ezmorph.jar:/usr/share/java/commons-collections3.jar:/usr/share/java/hsqldb.jar:/usr/share/java/commons-configuration.jar:target/infinitypfm-common.jar:target/infinitypfm-btc.jar:/usr/share/java/commons-csv.jar:/usr/share/java/freemarker.jar" />
+	<property name="jar" value="target/infinitypfm-ui.jar" />
 	<target name="clean">
 		<delete dir="${build.directory}" />
 		<delete file="${jar}" />

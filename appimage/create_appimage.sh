@@ -25,7 +25,7 @@ cp appimage/AppRun infinitypfm.AppDir/;
 chmod a+x infinitypfm.AppDir/AppRun;
 cp infinitypfm-ui/infinitypfm.desktop infinitypfm.AppDir/;
 cp infinitypfm-ui/infinitypfm.xpm infinitypfm.AppDir/;
-cp *.jar infinitypfm.AppDir/usr/lib/;
+cp target/*.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/swt.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/ibatis.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/commons-io.jar infinitypfm.AppDir/usr/lib/;
@@ -54,4 +54,4 @@ cp -L -R /usr/lib/jvm/java-1.8.0-openjdk-amd64 infinitypfm.AppDir/usr/lib/;
 
 #cp infinitypfm.run infinitypfm.AppDir/usr/bin/infinitypfm
 
-appimagetool-x86_64.AppImage infinitypfm.AppDir infinitypfm-"$response".AppImage generate
+~/bin/appimagetool-x86_64.AppImage infinitypfm.AppDir infinitypfm-"$response".AppImage generate

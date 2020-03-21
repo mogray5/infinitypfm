@@ -4,7 +4,7 @@
 	<property name="build.directory" value="build" />
 	<property name="build.outputDirectory" value="${build.directory}/classes" />
 	<property name="classpath" value="/usr/share/java/json-lib.jar:/usr/share/java/commons-httpclient.jar:/usr/share/java/commons-lang.jar" />
-	<property name="jar" value="infinitypfm-btc.jar" />
+	<property name="jar" value="target/infinitypfm-btc.jar" />
 	<target name="clean">
 		<delete dir="${build.directory}" />
 		<delete file="${jar}" />
