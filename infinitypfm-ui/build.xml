@@ -25,6 +25,7 @@
 		<copy todir="${build.outputDirectory}">
 			<fileset dir="${build.sourceDirectory}">
 				<include name="*.js" />
+				<include name="*.css" />
 			</fileset>
 		</copy>
 		<copy todir="${build.outputDirectory}">
@@ -32,6 +33,12 @@
 				<include name="*.properties" />
 			</fileset>
 		</copy>
+		<copy todir="${build.outputDirectory}/org/infinitypfm/reporting">
+			<fileset dir="${build.sourceDirectory}/org/infinitypfm/reporting">
+				<include name="*.ftl" />
+			</fileset>
+		</copy>
+
 		<jar jarfile="${jar}" basedir="${build.outputDirectory}" />
 	</target>
 

@@ -11,7 +11,7 @@ read doinstall
 
 if [[ "${doinstall}" == *"y"* ]]
 then
-	sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
+	sudo apt-get install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java libfreemarker-java liblog4j1.2-java
 	sudo apt-get install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni	
 	sudo apt-get install ant default-jdk
 fi
@@ -50,6 +50,8 @@ cp -L /usr/lib/jni/libswt-pi-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/lib/jni/libswt-webkit-gtk-3836.so infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/mailapi.jar infinitypfm.AppDir/usr/lib/;
 cp -L /usr/share/java/commons-csv.jar infinitypfm.AppDir/usr/lib/;
+cp -L /usr/share/java/freemarker.jar infinitypfm.AppDir/usr/lib/;
+cp -L /usr/share/java/log4j-1.2.jar infinitypfm.AppDir/usr/lib/;
 cp -L -R /usr/lib/jvm/java-1.8.0-openjdk-amd64 infinitypfm.AppDir/usr/lib/;
 
 #cp infinitypfm.run infinitypfm.AppDir/usr/bin/infinitypfm
