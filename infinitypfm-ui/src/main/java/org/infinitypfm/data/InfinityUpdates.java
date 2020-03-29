@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -161,6 +161,8 @@ public class InfinityUpdates {
 			ApplyVersion078();
 		} else if (sVersion.equalsIgnoreCase("0.7.7")) {
 			ApplyVersion078();
+		 } else if (sVersion.equalsIgnoreCase("0.7.8")) {
+			ApplyVersion085();
 		}
 
 	}
@@ -306,5 +308,9 @@ public class InfinityUpdates {
 		MM.sqlMap.update("bumpVersion", "0.7.8");
 	}
 	
-
+	private void ApplyVersion085() throws SQLException {
+		
+		MM.sqlMap.update("bumpVersion", "0.8.5");
+	}
+	
 }

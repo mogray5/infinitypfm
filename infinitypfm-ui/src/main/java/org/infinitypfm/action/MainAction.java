@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -179,6 +179,13 @@ public class MainAction {
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 			try {
 				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY);
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
+		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
+			try {
+				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}

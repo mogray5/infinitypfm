@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -15,45 +15,40 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package org.infinitypfm.reporting;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.data.ReportData;
 
-public class ReportFactory {
+import freemarker.template.Template;
 
-	public static BaseReport getReport(int reportType) {
-
-		BaseReport report = null;
+public class TemplateReport extends BaseReport {
+	
+	public TemplateReport() throws IOException {
+		super();
+	}
+	
+	@Override
+	public File execute(ReportData reportData) {
 
 		try {
-
-			//TODO:  Can remove this case statement.
+					
+			Template temp = MM.templateConfig.getTemplate(reportData.getTemplate());
+			this.addDocHeader(reportData);
+			temp.process(reportData, this.getOutBuffer());
 			
-			switch (reportType) {
-
-			case MM.THIS_MONTH: 
-			case MM.LAST_MONTH:
-			case MM.MENU_REPORTS_ACCOUNT_HISTORY:
-			case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
-			case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
-			case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
-			case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
-
-				report = new TemplateReport();
-				
-				break;
-			}
-
-		} catch (IOException e) {
-			InfinityPfm.LogMessage(e.getMessage());
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		} finally {
+			try {
+				this.Close(false);} catch (IOException e) {}
 		}
-
-		return report;
-
-	}
-
+		
+		return this.getOutFile();
+	}	
 }

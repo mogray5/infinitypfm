@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -167,18 +167,18 @@ public class NewAccountDialog extends BaseDialog {
 		txtActName.setLayoutData(txtactnamedata);
 
 		FormData lblactiddata = new FormData();
-		lblactiddata.top = new FormAttachment(lblActName, 10);
+		lblactiddata.top = new FormAttachment(lblActName, 25);
 		lblactiddata.left = new FormAttachment(0, 40);
 		lblActId.setLayoutData(lblactiddata);
 
 		FormData txtactiddata = new FormData();
-		txtactiddata.top = new FormAttachment(lblActName, 10);
+		txtactiddata.top = new FormAttachment(lblActName, 25);
 		txtactiddata.left = new FormAttachment(lblActName, 80);
 		txtactiddata.right = new FormAttachment(100, -120);
 		txtActId.setLayoutData(txtactiddata);
 
 		FormData lblacttypedata = new FormData();
-		lblacttypedata.top = new FormAttachment(lblActId, 30);
+		lblacttypedata.top = new FormAttachment(lblActId, 35);
 		lblacttypedata.left = new FormAttachment(0, 40);
 		lblActType.setLayoutData(lblacttypedata);
 
@@ -188,36 +188,36 @@ public class NewAccountDialog extends BaseDialog {
 		cmbActType.setLayoutData(txtacttypedata);
 
 		FormData lblbeginbalancedata = new FormData();
-		lblbeginbalancedata.top = new FormAttachment(lblActType, 20);
+		lblbeginbalancedata.top = new FormAttachment(lblActType, 25);
 		lblbeginbalancedata.left = new FormAttachment(0, 40);
 		lblBeginBalance.setLayoutData(lblbeginbalancedata);
 
 		FormData txtbeginbalancedata = new FormData();
-		txtbeginbalancedata.top = new FormAttachment(lblActType, 20);
+		txtbeginbalancedata.top = new FormAttachment(lblActType, 25);
 		txtbeginbalancedata.left = new FormAttachment(lblActName, 80);
 		txtbeginbalancedata.right = new FormAttachment(100, -200);
 		txtBeginBalance.setLayoutData(txtbeginbalancedata);
 
 		FormData lblcurrencydata = new FormData();
-		lblcurrencydata.top = new FormAttachment(lblBeginBalance, 20);
+		lblcurrencydata.top = new FormAttachment(lblBeginBalance, 25);
 		lblcurrencydata.left = new FormAttachment(0, 40);
 		// lblcurrencydata.right = new FormAttachment(100, -200);
 		lblCurrency.setLayoutData(lblcurrencydata);
 
 		FormData cmbcurrencydata = new FormData();
-		cmbcurrencydata.top = new FormAttachment(lblBeginBalance, 20);
+		cmbcurrencydata.top = new FormAttachment(lblBeginBalance, 25);
 		cmbcurrencydata.left = new FormAttachment(lblActName, 80);
 		cmbcurrencydata.right = new FormAttachment(100, -260);
 		cmbCurrency.setLayoutData(cmbcurrencydata);
 
 		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(cmbCurrency, 30);
+		cmdsavedata.top = new FormAttachment(cmbCurrency, 20);
 		cmdsavedata.left = new FormAttachment(0, 95);
 		cmdsavedata.right = new FormAttachment(100, -255);
 		cmdSave.setLayoutData(cmdsavedata);
 				
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(cmbCurrency, 30);
+		cmdcanceldata.top = new FormAttachment(cmbCurrency, 20);
 		cmdcanceldata.left = new FormAttachment(cmdSave, 5);
 		cmdcanceldata.right = new FormAttachment(100, -115);
 		cmdCancel.setLayoutData(cmdcanceldata);
@@ -229,7 +229,7 @@ public class NewAccountDialog extends BaseDialog {
 		super.Open();
 		shell.setText(MM.PHRASES.getPhrase("82") + " " + MM.APPTITLE);
 
-		shell.setSize(500, 300);
+		shell.setSize(500, 350);
 		this.CenterWindow();
 
 		shell.open();

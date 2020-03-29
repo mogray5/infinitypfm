@@ -74,7 +74,7 @@ public class DateDialog extends BaseDialog {
 		
 		FormData okdata = new FormData();
 		okdata.top = new FormAttachment(100, -40);
-		okdata.left = new FormAttachment(100,-50);
+		okdata.left = new FormAttachment(100,-70);
 		okdata.right = new FormAttachment(100, -20);
 		ok.setLayoutData(okdata);
 		

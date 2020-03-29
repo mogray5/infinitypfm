@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,19 +20,8 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
-
-/**
- * @author wayne
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class MonthlyBalance implements Serializable, IReportable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	int actId=0;
 	int yr = 0;
@@ -41,7 +30,11 @@ public class MonthlyBalance implements Serializable, IReportable {
 	String actTypeName = "";
 	String actName = "";
 	String isoCode = "";
+	DataFormatUtil _formatter;
 	
+	public MonthlyBalance() {
+		super();
+	}
 
 	public String getActTypeName() {
 		return actTypeName;
@@ -60,19 +53,25 @@ public class MonthlyBalance implements Serializable, IReportable {
 	}
 
 	/**
-	 * 
-	 */
-	public MonthlyBalance() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
 	 * @return Returns the actBalance.
 	 */
 	public long getActBalance() {
-		return actBalance;
+		if (actTypeName.equalsIgnoreCase("income"))
+			return -actBalance;
+		else return actBalance;
 	}
+	
+	/**
+	 * @return Returns the actBalance.
+	 */
+	public String getActBalanceFmt() {
+		
+		if (_formatter != null) 
+			return _formatter.getAmountFormatted(actBalance, "###0.00");
+		 else 
+			return Long.toString(actBalance);
+	}
+	
 	/**
 	 * @param actBalance The actBalance to set.
 	 */
@@ -109,6 +108,11 @@ public class MonthlyBalance implements Serializable, IReportable {
 	public int getYr() {
 		return yr;
 	}
+	
+	public String getYrString() {
+		return Integer.toString(yr);
+	}
+	
 	/**
 	 * @param yr The yr to set.
 	 */
@@ -122,6 +126,11 @@ public class MonthlyBalance implements Serializable, IReportable {
 
 	public void setIsoCode(String isoCode) {
 		this.isoCode = isoCode;
+	}
+	
+	@Override
+	public void setFormatter(DataFormatUtil _formatter) {
+		this._formatter = _formatter;
 	}
 
 	@Override
@@ -147,4 +156,5 @@ public class MonthlyBalance implements Serializable, IReportable {
 		sb.append(yr).append("-").append(mth);
 		return sb.toString();
 	}
+	
 }

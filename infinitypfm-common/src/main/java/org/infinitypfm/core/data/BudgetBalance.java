@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,6 +20,7 @@ package org.infinitypfm.core.data;
 
 import java.io.Serializable;
 
+
 /**
  * POJO for storing budget totals.
  *
@@ -38,11 +39,16 @@ public class BudgetBalance implements Serializable, IReportable {
 	int budgetId = -1;
 	String budgetName = null;
 	String actName = null;
+	DataFormatUtil _formatter;
 	
 	public int getYr() {
 		return yr;
 	}
 
+	public String getYrString() {
+		return Integer.toString(yr);
+	}
+	
 	public void setYr(int yr) {
 		this.yr = yr;
 	}
@@ -59,6 +65,10 @@ public class BudgetBalance implements Serializable, IReportable {
 		return budgetBalance;
 	}
 
+	public String getBudgetBalanceFmt() {
+		return _formatter.getAmountFormatted(budgetBalance, "###0.00");
+	}
+	
 	public void setBudgetBalance(long budgetBalance) {
 		this.budgetBalance = budgetBalance;
 	}
@@ -67,6 +77,10 @@ public class BudgetBalance implements Serializable, IReportable {
 		return expenseBalance;
 	}
 
+	public String getExpenseBalanceFmt() {
+		return _formatter.getAmountFormatted(expenseBalance, "###0.00");
+	}
+	
 	public void setExpenseBalance(long expenseBalance) {
 		this.expenseBalance = expenseBalance;
 	}
@@ -123,6 +137,11 @@ public class BudgetBalance implements Serializable, IReportable {
 		sb.append(expenseBalance).append("|");
 		sb.append(yr).append("-").append(mth);
 		return sb.toString();
+	}
+
+	@Override
+	public void setFormatter(DataFormatUtil formatter) {
+		_formatter = formatter;
 	}
 
 }

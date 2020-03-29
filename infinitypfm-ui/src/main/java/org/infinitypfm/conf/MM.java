@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -27,16 +27,18 @@ import org.infinitypfm.core.data.Options;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+import freemarker.template.Configuration;
+
 public class MM {
 
 	/*
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.8.0"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.8.5"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2017 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2020 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -46,11 +48,14 @@ public class MM {
 	public static final String IMG_ADD = "list-add.png";
 	public static final String IMG_ARROW_DOWN = "go-down.png";
 	public static final String IMG_ARROW_UP = "go-up.png";
+	public static final String IMG_ARROW_RIGHT = "arrowr_32x32.png";
+	public static final String IMG_BSV = "bsv.png";
 	public static final String IMG_CALCULATOR = "accessories-calculator.png";
 	public static final String IMG_CALENDAR = "x-office-calendar.png";
 	public static final String IMG_CANCEL = "edit-undo.png";
 	public static final String IMG_CHART = "chart2_32x32.png";
 	public static final String IMG_CLEAR = "edit-clear.png";
+	public static final String IMG_CLIPBOARD = "clipboard_32x32.png";
 	public static final String IMG_CLOCK = "appointment-soon.png";
 	public static final String IMG_CLOSE_SMALL = "fileclose.png";
 	public static final String IMG_CLOSE = "window-close.png";
@@ -74,8 +79,9 @@ public class MM {
 	public static final String IMG_QUE = "circle.gif";
 	public static final String IMG_QUEZEN_BANNER = "infinitylogo2.jpg";
 	public static final String IMG_QUEZEN_BANNER_SMALL = "infinitylogo1_small.jpg";
-	public static final String IMG_QUEZEN_ICON = "eye.gif";
+	public static final String IMG_LOGO_ICON = "infinityLogo_128x128.png";
 	public static final String IMG_REFRESH = "reload.png";
+	public static final String IMG_REFRESH2 = "refresh.png";
 	public static final String IMG_REMOVEQUEUE = "remove.png";
 	public static final String IMG_SAVE = "document-save.png";
 	public static final String IMG_SELECTALL = "ok.png";
@@ -83,7 +89,14 @@ public class MM {
 	public static final String IMG_TESTMSG = "mail_forward.png";
 	public static final String IMG_TREELEAF = "tree_leaf_32x32.png";
 	public static final String IMG_DOLLAR = "coins_32x32.png";
+	public static final String IMG_BSV_LOGO = "bai-icon-small.png";
+	public static final String IMG_TEST_QR = "qrTstImg.png";
+	public static final String IMG_WALLET = "accessories-dictionary.png";
+	public static final String IMG_KEY = "dialog-password.png";
+	public static final String IMG_FOLDER_DOWNLOAD = "folder-download.png";
+	public static final String IMG_MESSAGE_DEFAULT = "hwinfo.png";
 	
+	public static final String ACT_TYPE_BANK = "Bank";
 	public static final String ACT_TYPE_EXPENSE = "Expense";
 	public static final String ACT_TYPE_LIABILITY = "Liability";
 	public static final String ACT_TYPE_INCOME = "Income";
@@ -161,9 +174,10 @@ public class MM {
 	public static final int MENU_REPORTS_MONTHLY_BALANCE = 100;
 	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 101;
 	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 102;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 103;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 104;
-	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 105;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 103;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 104;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 105;
+	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 106;
 	
 	public static final int MENU_BUDGET_SAVE = 120;
 	
@@ -210,6 +224,22 @@ public class MM {
 	public static String bitcoinPwd = null;
 	public static String importFile = null;
 	public static String csvConfig = null;
+	
+	// Report Settings
+	public static Configuration templateConfig = null;
+	public static final String PIE_CHART_BASE = "piechartBase.js";
+	public static final String PIE_CHART_1 ="piechart1.js";
+	public static final String PIE_CHART_2 ="piechart2.js";
+	public static final String BAR_CHART_BASE = "barChartBase.js";
+	public static final String BAR_CHART_1 = "barchart1.js";
+	public static final String LINE_CHART_1 = "linechart1.js";
+	public static final String LINE_CHART_BASE = "linechartBase.js";
+	public static final String JS_LIB = "jquery.js";
+	public static final String GRAPH_LIB = "raphael-min.js";
+	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
+	public static final String RPT_MONTHLY_BALANCES = "MonthlyBalances.ftl";
+	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";
+	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
 	
 	public static Options options = null;
 	

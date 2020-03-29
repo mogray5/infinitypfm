@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -19,6 +19,10 @@
 
 package org.infinitypfm.graphics;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,7 +52,28 @@ public class ImageMap {
 
 		return new Image(shMain.getDisplay(), item);
 	}
+	
+	/**
+	 * Get image from file system
+	 * 
+	 * @param file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public Image getTransparentImage(File file) throws FileNotFoundException {
+		InputStream stream = new FileInputStream(file);
+		ImageData item = new ImageData(stream);
+		int whitePixel = item.palette.getPixel(new RGB(255, 255, 255));
+		item.transparentPixel = whitePixel;
+		return new Image(shMain.getDisplay(), item);
+	}
 
+	/**
+	 * Get image from classpath
+	 * 
+	 * @param sName
+	 * @return
+	 */
 	public Image getTransparentImage(String sName) {
 		ImageData item = getImageData(sName);
 		int whitePixel = item.palette.getPixel(new RGB(255, 255, 255));

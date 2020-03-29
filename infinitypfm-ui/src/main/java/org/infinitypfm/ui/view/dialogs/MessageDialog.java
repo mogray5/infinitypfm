@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -21,14 +21,19 @@ package org.infinitypfm.ui.view.dialogs;
 
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 
 public class MessageDialog extends BaseDialog {
@@ -39,6 +44,10 @@ public class MessageDialog extends BaseDialog {
 	private int iReturn = MM.CANCEL;
 	private int width = 400;
 	private int height = 175;
+	private Image imgContext = null;
+	private Canvas cvContext = null;
+	private String sImage = null;
+	//private Color color = null;
 	
 	/*
 	 * Widgets
@@ -62,6 +71,13 @@ public class MessageDialog extends BaseDialog {
 		
 		return iReturn;
 	}
+	
+	public int Open (int w, int h, String image) {
+		width = w;
+		height = h;
+		sImage = image;
+		return iReturn;
+	}
 
 	public MessageDialog(int iType, String sTitle, String sMsg) {
 		super();
@@ -76,6 +92,10 @@ public class MessageDialog extends BaseDialog {
 		height = h;
 	}
 
+	public void setImage(String image) {
+		sImage = image;
+	}
+	
 	protected void LoadUI(Shell sh) {
 		lblMsg = new Label(sh, SWT.WRAP);
 		lblMsg.setText(sDMsg);
@@ -92,24 +112,47 @@ public class MessageDialog extends BaseDialog {
 			cmdOne.setVisible(false);
 			cmdTwo.setText(MM.PHRASES.getPhrase("5"));
 			cmdThree.setVisible(false);
+			
+			if (sImage == null)
+				imgContext = InfinityPfm.imMain.getTransparentImage(MM.IMG_MESSAGE_DEFAULT);
+			
 		} else {
 			cmdOne.setVisible(true);
 			cmdTwo.setText(MM.PHRASES.getPhrase("13"));
 			cmdThree.setVisible(true);
+			
+			if (sImage == null)
+				imgContext = InfinityPfm.imMain.getTransparentImage(MM.IMG_HELP);
 		}
+		
+		if (sImage != null)
+			imgContext = InfinityPfm.imMain.getTransparentImage(sImage);
+		
+		cvContext = new Canvas(sh, SWT.NONE);
+		//color = new Color(InfinityPfm.shMain.getDisplay(), 255,255,255);
+		//cvContext.setBackground(color);
+		cvContext.addPaintListener(logo_OnPaint);
 
 	}
 
 	protected void LoadLayout() {
+
+		FormData cvcontextdata = new FormData();
+		cvcontextdata.top = new FormAttachment(25, 0);
+		cvcontextdata.left = new FormAttachment(10, 0);
+		cvcontextdata.right = new FormAttachment(10,20);
+		cvcontextdata.bottom = new FormAttachment(25,30);
+		cvContext.setLayoutData(cvcontextdata);
+
 		FormData lblmsgdata = new FormData();
 		lblmsgdata.top = new FormAttachment(25,0);
-		lblmsgdata.left = new FormAttachment(10,0);
+		lblmsgdata.left = new FormAttachment(cvContext,5);
 		lblmsgdata.right = new FormAttachment(90,0);
 		lblmsgdata.bottom = new FormAttachment(100,-50);
 		lblMsg.setLayoutData(lblmsgdata);
-
+		
 		FormData cmdonedata = new FormData();
-		cmdonedata.top = new FormAttachment(100, -40);
+		cmdonedata.top = new FormAttachment(100, -45);
 		cmdonedata.left = new FormAttachment(20,0);
 		cmdonedata.right = new FormAttachment(40,0);
 		cmdOne.setLayoutData(cmdonedata);
@@ -117,17 +160,17 @@ public class MessageDialog extends BaseDialog {
 		if (iDType == MM.DIALOG_QUESTION){
 		
 			FormData cmdtwodata = new FormData();
-			cmdtwodata.top = new FormAttachment(100, -40);
+			cmdtwodata.top = new FormAttachment(100, -45);
 			cmdtwodata.left = new FormAttachment(cmdOne, 10);
 			cmdtwodata.right = new FormAttachment(60,10);
 			cmdTwo.setLayoutData(cmdtwodata);
 
 			FormData cmdthreedata = new FormData();
-			cmdthreedata.top = new FormAttachment(100, -40);
+			cmdthreedata.top = new FormAttachment(100, -45);
 			cmdthreedata.left = new FormAttachment(cmdTwo, 10);
 			cmdthreedata.right = new FormAttachment(80,10);
 			cmdThree.setLayoutData(cmdthreedata);
-		
+			
 		} else {
 
 			FormData cmdtwodata = new FormData();
@@ -142,6 +185,7 @@ public class MessageDialog extends BaseDialog {
 			cmdthreedata.right = new FormAttachment(70,10);
 			cmdThree.setLayoutData(cmdthreedata);
 		}
+		
 	}
 
 	/*
@@ -167,6 +211,10 @@ public class MessageDialog extends BaseDialog {
 			shell.dispose();
 		}
 	};
-
-
+	
+	PaintListener logo_OnPaint = new PaintListener() {
+        public void paintControl(PaintEvent e) {
+         e.gc.drawImage(imgContext,0,0);
+        }
+    };
 }

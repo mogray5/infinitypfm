@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -37,7 +37,6 @@ public abstract class BaseReport {
 	public static final String CHART_TYPE_LINE = "line";
 	
 	private File outFile = null;
-	//private FileWriter fileWriter = null;
 	private BufferedWriter out = null;
 	private static final String FILE_HEADER_START = "<html><head>";
 	private static final String FILE_HEADER_END = "</head><body>";
@@ -45,40 +44,39 @@ public abstract class BaseReport {
 	private static final String TABLE_HEADER_END = "</table>";
 	
 	private static final String FILE_FOOTER = "</body></html>";
-	private static final String PIE_CHART_BASE = "piechartBase.js";
-	private static final String PIE_CHART_1 ="piechart1.js";
-	private static final String PIE_CHART_2 ="piechart2.js";
-	private static final String BAR_CHART_BASE = "barChartBase.js";
-	private static final String BAR_CHART_1 = "barchart1.js";
-	private static final String LINE_CHART_1 = "linechart1.js";
-	private static final String LINE_CHART_BASE = "linechartBase.js";
-	
+	public static final String PIE_CHART_BASE = "piechartBase.js";
+	public static final String PIE_CHART_1 ="piechart1.js";
+	public static final String PIE_CHART_2 ="piechart2.js";
+	public static final String BAR_CHART_BASE = "barChartBase.js";
+	public static final String BAR_CHART_1 = "barchart1.js";
+	public static final String LINE_CHART_1 = "linechart1.js";
+	public static final String LINE_CHART_SINGLE_1 = "linechartSingle1.js";
+	public static final String LINE_CHART_BASE = "linechartBase.js";
+	public static final String LINE_CHART_BASE_SINGLE = "linechartBaseSingle.js";
+	public static final String REPORT_CSS = "reports.css";
 	
 	private ScriptLoader scriptLoader = null;
 	protected HashMap<String, String> reportParams = null;
 	protected HashMap<String, String> rowColors = null; 
 	protected DataFormatUtil formatter = null;
 	
-	
-	public BaseReport() throws IOException {
-		
-//		try {
-			
-			formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
-	        outFile = File.createTempFile("infinitypfm", ".html");
-	        out = new BufferedWriter(new FileWriter(outFile));
-	        scriptLoader = new ScriptLoader();
-	        reportParams = new HashMap<String, String>();
-			
-//			MM.LogMessage(outFile.getPath());
-//		} catch (IOException e) {
-//			MM.LogMessage(e.getMessage());
-//		}
-		
+	public BaseReport() throws IOException {		
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+        outFile = File.createTempFile("infinitypfm", ".html");
+        out = new BufferedWriter(new FileWriter(outFile));
+        scriptLoader = new ScriptLoader();
+        reportParams = new HashMap<String, String>();
 	}
-	
+		
 	public abstract File execute(ReportData reportData);
 	
+	/**
+	 * Write needed chart libraries to file.
+	 * 
+	 * @param numCharts count of charts in report
+	 * @param chartType type of charts in the report
+	 * @throws IOException
+	 */
 	public void addDocHeader(int numCharts, String chartType) throws IOException{
 		out.write(FILE_HEADER_START);
 		if (numCharts > 0){
@@ -86,21 +84,30 @@ public abstract class BaseReport {
 			out.write(scriptLoader.getJsLib());
 			
 			if (chartType.equalsIgnoreCase(CHART_TYPE_PIE)){
-				out.write(scriptLoader.getScript(PIE_CHART_BASE));
+				out.write(scriptLoader.getScript(PIE_CHART_BASE, false));
 				if (numCharts == 2) {
-					out.write(scriptLoader.getScript(PIE_CHART_2));
+					out.write(scriptLoader.getScript(PIE_CHART_2, false));
 				} else {
-					out.write(scriptLoader.getScript(PIE_CHART_1));
+					out.write(scriptLoader.getScript(PIE_CHART_1, false));
 				}
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_BAR)){
-				out.write(scriptLoader.getScript(BAR_CHART_BASE));
-				out.write(scriptLoader.getScript(BAR_CHART_1));
+				out.write(scriptLoader.getScript(BAR_CHART_BASE, false));
+				out.write(scriptLoader.getScript(BAR_CHART_1, false));
 			} else if (chartType.equalsIgnoreCase(CHART_TYPE_LINE)){
-				out.write(scriptLoader.getScript(LINE_CHART_BASE));
-				out.write(scriptLoader.getScript(LINE_CHART_1));
+				out.write(scriptLoader.getScript(LINE_CHART_BASE, false));
+				out.write(scriptLoader.getScript(LINE_CHART_1, false));
 			}
 		}
 		out.write(FILE_HEADER_END);
+	}
+	
+	/**
+	 * Add necessary script libraries  to the report object
+	 * 
+	 * @param data
+	 */
+	public void addDocHeader(ReportData data) {
+		data.set_scriptLoader(scriptLoader);
 	}
 	
 	public void addChartTestData() throws IOException{
@@ -206,12 +213,14 @@ public abstract class BaseReport {
 		out.write("<td><b>" + val + "</b></td>");
 	}
 	
-	public void Close() throws IOException {
-		out.write(FILE_FOOTER);
+	public void Close(boolean writeFooter) throws IOException {
+		
+		if (writeFooter) {
+			out.write(FILE_FOOTER);
+		}
 		try {out.close();} catch (Exception e1){}
-		//MM.LogMessage("file close");
 	}
-
+	
 	public File getOutFile() {
 		return outFile;
 	}
@@ -227,5 +236,13 @@ public abstract class BaseReport {
 		
 		reportParams.put(name, val);
 	}
-	
+
+	/**
+	 * Used for template results
+	 * @return BufferedWriter to results file
+	 */
+	public BufferedWriter getOutBuffer() {
+		return out;
+	}
+
 }

@@ -68,7 +68,7 @@ public class MainFrame {
 		InfinityPfm.shMain.setText(MM.APPTITLE + " - "
 				+ MM.PHRASES.getPhrase("63"));
 		InfinityPfm.shMain.setImage(InfinityPfm.imMain
-				.getImage(MM.IMG_QUEZEN_ICON));
+				.getImage(MM.IMG_LOGO_ICON));
 
 		/*
 		 * Load Status Box

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2019 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -45,18 +45,26 @@ public class PasswordDialog extends BaseDialog {
 	
 	private String user = null;
 	private String password = null;
+	private boolean bDisplayUser = true;
+	
+	public PasswordDialog() {}
+	
+	public PasswordDialog(boolean passwordOnly) {
+		bDisplayUser  = passwordOnly;
+	}
 	
 	@Override
 	protected void LoadUI(Shell sh) {
 		
-		lblUser = new Label(sh, SWT.WRAP);
-		lblUser.setText(MM.PHRASES.getPhrase("80"));
+		if (bDisplayUser) {
+			lblUser = new Label(sh, SWT.WRAP);
+			lblUser.setText(MM.PHRASES.getPhrase("80"));
+			txtUser = new Text(sh, SWT.BORDER);
+			txtUser.setFocus();
+		}
 		
 		lblPwd = new Label(sh, SWT.WRAP);
 		lblPwd.setText(MM.PHRASES.getPhrase("81"));
-		
-		txtUser = new Text(sh, SWT.BORDER);
-		txtUser.setFocus();
 		
 		txtPwd = new Text(sh, SWT.BORDER);
 		txtPwd.setEchoChar('*');
@@ -69,7 +77,6 @@ public class PasswordDialog extends BaseDialog {
 		cmdOk.addSelectionListener(cmdOk_OnClick);
 		cmdOk.setText(MM.PHRASES.getPhrase("5"));
 		
-		
 		this.CenterWindow();
 
 	}
@@ -77,33 +84,41 @@ public class PasswordDialog extends BaseDialog {
 	@Override
 	protected void LoadLayout() {
 		
-		FormData lbluserdata = new FormData();
-		lbluserdata.top = new FormAttachment(30,0);
-		lbluserdata.left = new FormAttachment(10,0);
-		//lbluserdata.right = new FormAttachment(90,0);
-		//lbluserdata.bottom = new FormAttachment(40,0);
-		lblUser.setLayoutData(lbluserdata);
-		
-		FormData txtuserdata = new FormData();
-		txtuserdata.top = new FormAttachment(30,0);
-		txtuserdata.left = new FormAttachment(lblUser,20);
-		txtuserdata.right = new FormAttachment(90,0);
-		//txtuserdata.bottom = new FormAttachment(40,0);
-		txtUser.setLayoutData(txtuserdata);
-		
+		if (bDisplayUser) {
+			FormData lbluserdata = new FormData();
+			lbluserdata.top = new FormAttachment(20,0);
+			lbluserdata.left = new FormAttachment(10,0);
+			lblUser.setLayoutData(lbluserdata);
+			
+			FormData txtuserdata = new FormData();
+			txtuserdata.top = new FormAttachment(30,0);
+			txtuserdata.left = new FormAttachment(lblUser,20);
+			txtuserdata.right = new FormAttachment(90,0);
+			txtUser.setLayoutData(txtuserdata);
+		}
 		
 		FormData lblpwddata = new FormData();
-		lblpwddata.top = new FormAttachment(txtUser,10);
-		lblpwddata.left = new FormAttachment(10,0);
-		//lblpwddata.right = new FormAttachment(90,0);
-		//lblpwddata.bottom = new FormAttachment(40,0);
+		
+		if (bDisplayUser) {
+			lblpwddata.top = new FormAttachment(txtUser,10);
+			lblpwddata.left = new FormAttachment(10,0);
+		} else {
+			lblpwddata.top = new FormAttachment(20,10);
+			lblpwddata.left = new FormAttachment(10,0);
+		}
+		
 		lblPwd.setLayoutData(lblpwddata);
 		
 		FormData txtpwddata = new FormData();
-		txtpwddata.top = new FormAttachment(txtUser,0);
-		txtpwddata.left = new FormAttachment(lblUser,20);
+		
+		if (bDisplayUser) {
+			txtpwddata.top = new FormAttachment(txtUser,0);
+			txtpwddata.left = new FormAttachment(lblUser,20);
+		} else {
+			txtpwddata.top = new FormAttachment(20,0);
+			txtpwddata.left = new FormAttachment(lblPwd,5);
+		}
 		txtpwddata.right = new FormAttachment(90,0);
-		//txtpwddata.bottom = new FormAttachment(40,0);
 		txtPwd.setLayoutData(txtpwddata);
 
 		FormData cmdokdata = new FormData();
@@ -152,7 +167,9 @@ public class PasswordDialog extends BaseDialog {
 	SelectionAdapter cmdOk_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e){
 			
-			user = txtUser.getText();
+			if (bDisplayUser)
+				user = txtUser.getText();
+			
 			password = txtPwd.getText();
 			
 			shell.dispose();

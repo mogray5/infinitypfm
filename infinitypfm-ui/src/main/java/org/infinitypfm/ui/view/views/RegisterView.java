@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -137,13 +137,13 @@ public class RegisterView extends BaseView {
 		lblStartDate.setLayoutData(lblstartdatedata);
 
 		FormData txtstartdatedata = new FormData();
-		txtstartdatedata.top = new FormAttachment(lblStartDate, -23);
+		txtstartdatedata.top = new FormAttachment(lblStartDate, -33);
 		txtstartdatedata.left = new FormAttachment(lblStartDate, 5);
 		txtstartdatedata.right = new FormAttachment(lblStartDate, 160);
 		txtStartDate.setLayoutData(txtstartdatedata);
 
 		FormData cmdstartdatedata = new FormData();
-		cmdstartdatedata.top = new FormAttachment(lblStartDate, -27);
+		cmdstartdatedata.top = new FormAttachment(lblStartDate, -37);
 		cmdstartdatedata.left = new FormAttachment(txtStartDate, 2);
 		cmdStartDate.setLayoutData(cmdstartdatedata);
 
@@ -153,13 +153,13 @@ public class RegisterView extends BaseView {
 		lblEndDate.setLayoutData(lblenddatedata);
 
 		FormData txtenddatedata = new FormData();
-		txtenddatedata.top = new FormAttachment(lblEndDate, -23);
+		txtenddatedata.top = new FormAttachment(lblEndDate, -33);
 		txtenddatedata.left = new FormAttachment(lblEndDate, 5);
 		txtenddatedata.right = new FormAttachment(lblEndDate, 150);
 		txtEndDate.setLayoutData(txtenddatedata);
 
 		FormData cmdenddatedata = new FormData();
-		cmdenddatedata.top = new FormAttachment(lblEndDate, -27);
+		cmdenddatedata.top = new FormAttachment(lblEndDate, -37);
 		cmdenddatedata.left = new FormAttachment(txtEndDate, 2);
 		cmdEndDate.setLayoutData(cmdenddatedata);
 

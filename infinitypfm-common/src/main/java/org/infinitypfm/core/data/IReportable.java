@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -22,5 +22,6 @@ public interface IReportable {
 
 	public String getHeaderRow();
 	public String toReportRow();
+	public void setFormatter(DataFormatUtil _formatter);
 	
 }

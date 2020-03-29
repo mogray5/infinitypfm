@@ -10,6 +10,7 @@
     <delete>
 	<fileset  dir=".">
 	 <include name="infinitypfm-*.AppImage" />
+	 <include name="infinitypfm*.snap" />
 	<include name="infinitypfm-*.zip" />
 	<include name="TEST*.txt" />
 	<include name="TEST*.xml" />
@@ -18,11 +19,16 @@
     <delete dir="infinitypfm-flatpak" />
     <delete dir="infinitypfm-0.8.0" />
     <delete dir="infinitypfm.archive" />
+    <delete dir="target" />
 </target>
 
 <target name="compile" depends="compileUI" />
 
-<target name="compileCommon">
+<target name="init">
+	<mkdir dir="target"/>
+</target>
+
+<target name="compileCommon" depends="init">
     <ant antfile="infinitypfm-common/build.xml" target="junit" />
 </target>
 <target name="compileBTC" depends="compileCommon">

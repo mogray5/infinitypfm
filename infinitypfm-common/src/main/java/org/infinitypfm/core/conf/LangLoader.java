@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -268,7 +268,7 @@ public class LangLoader {
 		hmPhrases.put("222", i18n.tr("Start Date"));
 		hmPhrases.put("223", i18n.tr("End Date"));
 		hmPhrases.put("224", i18n.tr("Currencies"));
-		hmPhrases.put("225", i18n.tr("Currency Precision"));
+		hmPhrases.put("225", i18n.tr("Precision"));
 		hmPhrases.put("226", i18n.tr("Method Name"));
 		hmPhrases.put("227", i18n.tr("Service URL"));
 		hmPhrases.put("228", i18n.tr("Search Path"));
@@ -295,7 +295,7 @@ public class LangLoader {
 		hmPhrases.put("249",  i18n.tr("Open reports externally in web browser."));
 		hmPhrases.put("250",  i18n.tr("General"));
 		hmPhrases.put("251",  i18n.tr("Open console on start."));
-		hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
+		//hmPhrases.put("251",  i18n.tr("Invalid Credentials"));
 		hmPhrases.put("252",  i18n.tr("Mail"));
 		hmPhrases.put("253",  i18n.tr("CSV"));
 		hmPhrases.put("254",  i18n.tr("Import Name"));
@@ -306,6 +306,19 @@ public class LangLoader {
 		hmPhrases.put("259",  i18n.tr("None"));
 		hmPhrases.put("260",  i18n.tr("Date Format"));
 		hmPhrases.put("261",  i18n.tr("Continue"));
+		hmPhrases.put("262",  i18n.tr("Income Total"));
+		hmPhrases.put("263",  i18n.tr("Expense Total"));
+		hmPhrases.put("264",  i18n.tr("Liability Total"));
+		hmPhrases.put("265",  i18n.tr("Year-Month"));
+		hmPhrases.put("266",  i18n.tr("Account Balance"));
+		hmPhrases.put("267",  i18n.tr("Expense Balance"));
+		hmPhrases.put("268",  i18n.tr("Budget Balance"));
+		hmPhrases.put("269",  i18n.tr("Budget Name"));
+		hmPhrases.put("270",  i18n.tr("Income Balance"));
+		hmPhrases.put("271",  i18n.tr("Liability Balance"));
+		hmPhrases.put("272",  i18n.tr("Account Type"));
+		hmPhrases.put("273", i18n.tr("Account History All Time"));
+		hmPhrases.put("274", i18n.tr("Apache FreeMarker (https://freemarker.apache.org/) "));
 	}
 	
 	

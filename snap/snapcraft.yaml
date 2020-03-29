@@ -23,6 +23,7 @@ parts:
             - libjson-java
             - libswt-webkit-gtk-3-jni
             - libswt-cairo-gtk-3-jni
+            - libfreemarker-java
     wrapper:
         plugin: make
         source: .

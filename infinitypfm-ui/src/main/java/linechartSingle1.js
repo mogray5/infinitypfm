@@ -20,14 +20,12 @@
     $(function () {
         
     	var values1 = [],
-    		values2 = [],
             labels = [];
         
     	guideLineLbl = $("#chart1").attr("guideLineLbl");
     	
         $("#chart1 tr").each(function () {
             values1.push(parseInt($("td.barVal1", this).text(), 10));
-            values2.push(parseInt($("td.barVal2", this).text(), 10));
             labels.push($("th", this).text());
             
         });
@@ -35,7 +33,7 @@
               
         var chart1Title = $("#chart1Title").val();
         
-        raphael("holder1", 650, 400).lineChart(100,75,550,250,values1, values2, labels, chart1Title);
+        raphael("holder1", 650, 400).lineChart(75,50,550,250,values1, labels, chart1Title);
          
 
     });

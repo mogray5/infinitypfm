@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -121,7 +121,7 @@ public class GridReport  extends BaseReport implements ChartProvider, TableProvi
 			
 			this.endTableData();
 			
-			this.Close();
+			this.Close(true);
 		} catch (IOException ioe){}
 		return this.getOutFile();
 	}

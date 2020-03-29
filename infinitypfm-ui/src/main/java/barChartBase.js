@@ -22,12 +22,13 @@ Raphael.fn.barChart = function(posX, posY, w, h, values, labels, title, guidelin
 		pathSeg = "";
 	chart = this.set();
 
-	var txtTitle = paper.text(80, 15, title).attr( {
-		fill : "rgb(27,95,138)",
-		"font-family" : 'Fontin-Sans, Arial',
-		"font-size" : "18px"
-	});
-
+	if (title != undefined) {
+		var txtTitle = paper.text(80, 15, title).attr( {
+			fill : "rgb(27,95,138)",
+			"font-family" : 'Fontin-Sans, Arial',
+			"font-size" : "18px"
+		});
+	}
 	paper.rect(chartX, posY, 0.5, chartH);
 	paper.rect(chartX, chartY, chartW, 0.5);
 

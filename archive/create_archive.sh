@@ -19,7 +19,7 @@ rm infinitypfm-$response.zip
 
 if [[ "${doinstall}" == *"y"* ]]
 then
-	sudo apt install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java
+	sudo apt install libibatis-java libcommons-io-java libcommons-compress-java libhsqldb-java libgettext-commons-java libcommons-httpclient-java libjson-java libmail-java libcommons-csv-java libfreemarker-java liblog4j1.2-java
 	sudo apt install libswt-gtk-3-java libswt-webkit-gtk-3-jni libswt-cairo-gtk-3-jni	
 	sudo apt install ant default-jdk
 fi
@@ -34,7 +34,7 @@ cp archive/infinitypfm.sh infinitypfm.archive/bin;
 chmod a+x infinitypfm.archive/bin;
 #cp infinitypfm-ui/infinitypfm.desktop infinitypfm.archive/;
 #cp infinitypfm-ui/infinitypfm.xpm infinitypfm.archive/;
-cp *.jar infinitypfm.archive/lib/;
+cp target/*.jar infinitypfm.archive/lib/;
 cp -L /usr/share/java/swt.jar infinitypfm.archive/lib/;
 cp -L $WIN_SWT_LOCAL/swt.jar infinitypfm.archive/lib/swt_win.jar;
 cp -L /usr/share/java/ibatis.jar infinitypfm.archive/lib/;
@@ -60,6 +60,8 @@ cp -L /usr/lib/jni/libswt-pi-gtk-3836.so infinitypfm.archive/lib/;
 cp -L /usr/lib/jni/libswt-webkit-gtk-3836.so infinitypfm.archive/lib/;
 cp -L /usr/share/java/mailapi.jar infinitypfm.archive/lib/;
 cp -L /usr/share/java/commons-csv.jar infinitypfm.archive/lib/;
+cp -L /usr/share/java/freemarker.jar infinitypfm.archive/lib/;
+cp -L /usr/share/java/log4j-1.2.jar infinitypfm.archive/lib/;
 #cp -L -R /usr/lib/jvm/java-1.8.0-openjdk-amd64 infinitypfm.archive/lib/;
 
 #cp infinitypfm.run infinitypfm.archive/usr/bin/infinitypfm

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2020 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -56,10 +56,7 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.BudgetToolbar;
 
 /**
- * @author Wayne Gray
- * 
- *         TODO To change the template for this generated type comment go to
- *         Window - Preferences - Java - Code Style - Code Templates
+ * View to show budget performance
  */
 public class BudgetView extends BaseView {
 
@@ -102,7 +99,6 @@ public class BudgetView extends BaseView {
 		LoadLayout();
 
 	}
-
 
 	protected void LoadUI() {
 
@@ -203,18 +199,19 @@ public class BudgetView extends BaseView {
 		cmbMonth.setLayoutData(cmbmonthdata);
 
 		FormData lblestimatedata = new FormData();
-		lblestimatedata.top = new FormAttachment(lblBudget, 10);
+		lblestimatedata.top = new FormAttachment(lblBudget, 0);
 		lblestimatedata.left = new FormAttachment(cmbMonth, 25);
 		lblEstimate.setLayoutData(lblestimatedata);
 
 		FormData txtestimatedata = new FormData();
-		txtestimatedata.top = new FormAttachment(lblBudget, 30);
+		txtestimatedata.top = new FormAttachment(lblBudget, 25);
+		txtestimatedata.bottom = new FormAttachment(lblBudget, 70);
 		txtestimatedata.left = new FormAttachment(cmbMonth, 25);
 		txtEstimate.setLayoutData(txtestimatedata);
 
 		FormData cmdestimatedata = new FormData();
-		cmdestimatedata.top = new FormAttachment(lblBudget, 28);
-		// cmdestimatedata.bottom = new FormAttachment(txtEstimate, 65);
+		cmdestimatedata.top = new FormAttachment(lblBudget, 25);
+		cmdestimatedata.bottom = new FormAttachment(lblBudget, 70);
 		cmdestimatedata.left = new FormAttachment(txtEstimate, 0);
 		cmdEstimate.setLayoutData(cmdestimatedata);
 
@@ -369,6 +366,9 @@ public class BudgetView extends BaseView {
 				currentMonth = now.get(Calendar.MONTH) + 1;
 
 				Color cRed = display.getSystemColor(SWT.COLOR_RED);
+				Color cBlack = display.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+
+				tblTrans.clearAll();
 				
 				for (int i = 0; i < detailList.size(); i++) {
 
@@ -433,6 +433,7 @@ public class BudgetView extends BaseView {
 
 						if (detail.getAmount() < monthlyBalance.getActBalance())
 							ti.setForeground(cRed);
+						else ti.setForeground(cBlack);
 						
 						detail.setActBalance(monthlyBalance.getActBalance());
 

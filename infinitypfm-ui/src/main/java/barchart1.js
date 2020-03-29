@@ -39,7 +39,7 @@
               
         var chart1Title = $("#chart1Title").val();
         
-        raphael("holder1", 650, 400).barChart(100,100,550,250,values1, labels1, chart1Title, guideLineLbl, guideLineVals);
+        raphael("holder1", 650, 350).barChart(100,50,550,250,values1, labels1, chart1Title, guideLineLbl, guideLineVals);
          
 
     });
