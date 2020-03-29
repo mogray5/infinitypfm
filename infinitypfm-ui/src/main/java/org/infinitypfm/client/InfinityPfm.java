@@ -217,6 +217,8 @@ public class InfinityPfm {
 
 		 if (!canContinue) 
 			throw new ConfigurationException(CONFIG_ERROR_ENG + homeDirectory.getPath()); 
+
+		extractFile(MM.PROPS_FILE, "", homeDirectory.getPath());
 		 
 		 /*TODO: may not need this
 		 
