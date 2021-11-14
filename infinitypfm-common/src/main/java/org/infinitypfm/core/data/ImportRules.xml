@@ -10,14 +10,12 @@
 	of the GNU General Public License along with Infinity PFM. If not, see <http://www.gnu.org/licenses/>. -->
 
 
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="ImportRules">
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ImportRules">
 
-	<typeAlias alias="importRule" type="org.infinitypfm.core.data.ImportRule" />
-
-	<insert id="insertImportRule" parameterClass="importRule">
+	<insert id="insertImportRule" parameterType="importRule">
 
 		INSERT INTO ImportRules
 		(
@@ -35,7 +33,7 @@
 	</insert>
 
 	<select id="getImportRules"  
-		resultClass="importRule">
+		resultType="importRule">
 
 		 SELECT
            ActId as actId,
@@ -49,8 +47,8 @@
 	</select>
 
 	<select id="getImportRule"
-		parameterClass="importRule"  
-		resultClass="importRule">
+		parameterType="importRule"  
+		resultType="importRule">
 
 		 SELECT
            ActId as actId,
@@ -63,7 +61,7 @@
 	</select>
 	
 	<delete id="deleteImportrule"
-		parameterClass="importRule">
+		parameterType="importRule">
 	
 		DELETE FROM ImportRules
 		WHERE ActId = #actId#
@@ -71,4 +69,4 @@
 		
 	</delete>
 
-</sqlMap>
+</mapper>

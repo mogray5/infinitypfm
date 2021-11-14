@@ -320,7 +320,7 @@ public class RecurrenceView extends BaseView {
 		try {
 			Account act = null;
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList(
+			java.util.List list = MM.sqlMap.selectList(
 					"getAllAccountsByType", null);
 
 			cmbAccount.removeAll();
@@ -335,7 +335,7 @@ public class RecurrenceView extends BaseView {
 
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}
@@ -396,7 +396,7 @@ public class RecurrenceView extends BaseView {
 	private void LoadRecurringTransactions() throws SQLException {
 
 		@SuppressWarnings("rawtypes")
-		List recurList = MM.sqlMap.queryForList("getRecurringTransactions",
+		List recurList = MM.sqlMap.selectList("getRecurringTransactions",
 				null);
 
 		tblSaved.removeAll();
@@ -438,7 +438,7 @@ public class RecurrenceView extends BaseView {
 	private void LoadPendingTransactions() throws SQLException {
 
 		@SuppressWarnings("rawtypes")
-		List trans = MM.sqlMap.queryForList("getPendingTransactions", null);
+		List trans = MM.sqlMap.selectList("getPendingTransactions", null);
 		DataFormatUtil format = new DataFormatUtil(MM.options.getCurrencyPrecision());
 
 		tblPending.removeAll();

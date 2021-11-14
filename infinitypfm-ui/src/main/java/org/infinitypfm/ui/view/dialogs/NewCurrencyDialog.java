@@ -149,7 +149,7 @@ public class NewCurrencyDialog extends BaseDialog {
 				
 				try {
 					MM.sqlMap.insert("addCurrency", currency);
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					InfinityPfm.LogMessage(e1.getMessage());
 				}
 			}

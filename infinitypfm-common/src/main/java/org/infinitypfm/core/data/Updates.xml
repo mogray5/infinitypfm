@@ -21,10 +21,10 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
 -->
 
 
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Updates">
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Updates">
 
    <insert id="v0_0_2_a">
 	   CREATE CACHED TABLE AppSettings
@@ -44,7 +44,7 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
 	VALUES ('Liability')
    </insert>
    
-   <update id="bumpVersion" parameterClass="java.lang.String">
+   <update id="bumpVersion" parameterType="java.lang.String">
  	UPDATE AppSettings
  	 SET AppVersion= #value#
    </update>
@@ -89,82 +89,82 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
 	 FOREIGN KEY (RecurID) REFERENCES RecurHeader (RecurID);
    </insert>
          
-   <statement id="v0_5_0_b">
+   <update id="v0_5_0_b">
  	ALTER TABLE AppSettings ADD COLUMN DefaultCurrencyID INT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_e">
+   </update>
+   <update id="v0_5_0_e">
    		ALTER TABLE ACCOUNTS ADD COLUMN ACTBALANCE2 BIGINT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_f">
+   </update>
+   <update id="v0_5_0_f">
    		UPDATE ACCOUNTS SET ACTBALANCE2 = convert(actbalance *100, bigint);
-   </statement>
-   <statement id="v0_5_0_g">
+   </update>
+   <update id="v0_5_0_g">
    		ALTER TABLE ACCOUNTS DROP COLUMN ACTBALANCE;
-   </statement>
-   <statement id="v0_5_0_h">
+   </update>
+   <update id="v0_5_0_h">
 		ALTER TABLE ACCOUNTS ALTER COLUMN ACTBALANCE2 RENAME TO ACTBALANCE;
-   </statement>
-   <statement id="v0_5_0_i">
+   </update>
+   <update id="v0_5_0_i">
    		ALTER TABLE BUDGETDETAIL ADD COLUMN AMOUNT2 BIGINT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_j">
+   </update>
+   <update id="v0_5_0_j">
    		UPDATE BUDGETDETAIL SET AMOUNT2 = convert(AMOUNT *100, bigint);
-   </statement>
-   <statement id="v0_5_0_k">
+   </update>
+   <update id="v0_5_0_k">
    		ALTER TABLE BUDGETDETAIL DROP COLUMN AMOUNT;
-   </statement>
-   <statement id="v0_5_0_l">
+   </update>
+   <update id="v0_5_0_l">
    		ALTER TABLE BUDGETDETAIL ALTER COLUMN AMOUNT2 RENAME TO AMOUNT;
-   </statement>
-   <statement id="v0_5_0_m">
+   </update>
+   <update id="v0_5_0_m">
    		ALTER TABLE MONTHLYBALANCE ADD COLUMN ACTBALANCE2 BIGINT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_n">
+   </update>
+   <update id="v0_5_0_n">
    		UPDATE MONTHLYBALANCE SET ACTBALANCE2 = convert(ACTBALANCE *100, bigint);
-   </statement>
-   <statement id="v0_5_0_o">
+   </update>
+   <update id="v0_5_0_o">
    		ALTER TABLE MONTHLYBALANCE DROP COLUMN ACTBALANCE;
-   </statement>
-   <statement id="v0_5_0_p">
+   </update>
+   <update id="v0_5_0_p">
    		ALTER TABLE MONTHLYBALANCE ALTER COLUMN ACTBALANCE2 RENAME TO ACTBALANCE;
-   </statement>
-   <statement id="v0_5_0_q">
+   </update>
+   <update id="v0_5_0_q">
    		ALTER TABLE RECURHEADER ADD COLUMN AMOUNT2 BIGINT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_r">
+   </update>
+   <update id="v0_5_0_r">
    		UPDATE RECURHEADER SET AMOUNT2 = convert(AMOUNT *100, bigint);
-   </statement>
-   <statement id="v0_5_0_s">
+   </update>
+   <update id="v0_5_0_s">
    		ALTER TABLE RECURHEADER DROP COLUMN AMOUNT;
-   </statement>
-   <statement id="v0_5_0_t">
+   </update>
+   <update id="v0_5_0_t">
    		ALTER TABLE RECURHEADER ALTER COLUMN AMOUNT2 RENAME TO AMOUNT;
-   </statement>
-   <statement id="v0_5_0_u">
+   </update>
+   <update id="v0_5_0_u">
    		ALTER TABLE TRANSACTIONS ADD COLUMN TRANAMOUNT2 BIGINT DEFAULT 0;
-   </statement>
-   <statement id="v0_5_0_v">
+   </update>
+   <update id="v0_5_0_v">
    		UPDATE TRANSACTIONS SET TRANAMOUNT2 = convert(TRANAMOUNT *100, bigint);
-   </statement>
-   <statement id="v0_5_0_w">
+   </update>
+   <update id="v0_5_0_w">
    		ALTER TABLE TRANSACTIONS DROP COLUMN TRANAMOUNT;
-   </statement>
-   <statement id="v0_5_0_x">
+   </update>
+   <update id="v0_5_0_x">
    		ALTER TABLE TRANSACTIONS ALTER COLUMN TRANAMOUNT2 RENAME TO TRANAMOUNT;
-   </statement>
-    <statement id="v0_5_0_y">
+   </update>
+    <update id="v0_5_0_y">
    		ALTER TABLE ACCOUNTS ADD COLUMN CURRENCYID INT DEFAULT NULL;
-   </statement>
+   </update>
    <update id="v0_5_0_z">
    		UPDATE ACCOUNTS SET CURRENCYID = 0;
    </update>
-   <statement id="v0_5_0_za">
+   <update id="v0_5_0_za">
    		ALTER TABLE TRANSACTIONS ADD COLUMN TranKey VARCHAR(255) NULL;
-   </statement>
+   </update>
 
-   <statement id="v0_6_0_a">
+   <update id="v0_6_0_a">
  		ALTER TABLE AppSettings ADD COLUMN CurrencyPrecision INT DEFAULT 2;
-   </statement>
+   </update>
    <update id="v0_6_0_b">
    		UPDATE TRANSACTIONS SET TRANAMOUNT = TRANAMOUNT * 1000000;
    </update>
@@ -186,18 +186,18 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
    <delete id="v0_6_0_h">
    		DELETE FROM CURRENCYMETHODS; 
    </delete>
-   <statement id="v0_6_0_i">
+   <update id="v0_6_0_i">
    		ALTER TABLE CURRENCYMETHODS DROP COLUMN METHODCLASS;
-   </statement>
-   <statement id="v0_6_0_j">
+   </update>
+   <update id="v0_6_0_j">
    		ALTER TABLE CURRENCYMETHODS ADD COLUMN MethodUrl VARCHAR(500);
-   </statement>
-   <statement id="v0_6_0_k">
+   </update>
+   <update id="v0_6_0_k">
    		ALTER TABLE CURRENCYMETHODS ADD COLUMN MethodPath VARCHAR(500);
-   </statement>
-   <statement id="v0_7_0_a">
+   </update>
+   <update id="v0_7_0_a">
    		ALTER TABLE APPSETTINGS ADD COLUMN ReportsInBrowswer INT;
-   </statement>
+   </update>
    <update id="v0_7_0_b">
    		UPDATE APPSETTINGS SET ReportsInBrowswer = 0;
    </update>
@@ -212,9 +212,9 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
    		INSERT INTO CURRENCYMETHODS (CURRENCYID, METHODNAME, METHODURL, METHODPATH)
    		VALUES (1, 'Bitstamp', 'https://www.bitstamp.net/api/ticker/', '$$.last');
    </insert>
-   <statement id="v0_7_0_f">
+   <update id="v0_7_0_f">
    		ALTER TABLE APPSETTINGS ADD COLUMN ConsoleDefaultOpen INT;
-   </statement>
+   </update>
    <update id="v0_7_0_g">
    		UPDATE APPSETTINGS SET ConsoleDefaultOpen = 0;
    </update>
@@ -227,4 +227,4 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
    <update id="v0_7_7_c">
    		ALTER TABLE RecurHeader ALTER COLUMN Memo VARCHAR(500);
    </update>
-</sqlMap>
+</mapper>

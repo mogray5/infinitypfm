@@ -113,7 +113,7 @@ public class MoneyTree {
 			// add bank accounts
 			@SuppressWarnings("rawtypes")
 			List bankList = MM.sqlMap
-					.queryForList("getAccountsForType", "Bank");
+					.selectList("getAccountsForType", "Bank");
 
 			if (bankList != null) {
 
@@ -132,7 +132,7 @@ public class MoneyTree {
 
 			// add liability accounts
 			@SuppressWarnings("rawtypes")
-			List liabilityList = MM.sqlMap.queryForList("getAccountsForType",
+			List liabilityList = MM.sqlMap.selectList("getAccountsForType",
 					"Liability");
 
 			if (liabilityList != null) {
@@ -152,7 +152,7 @@ public class MoneyTree {
 
 			// add expense accounts
 			@SuppressWarnings("rawtypes")
-			List expenseList = MM.sqlMap.queryForList("getAccountsForType",
+			List expenseList = MM.sqlMap.selectList("getAccountsForType",
 					"Expense");
 
 			if (expenseList != null) {
@@ -169,7 +169,7 @@ public class MoneyTree {
 
 			// add income accounts
 			@SuppressWarnings("rawtypes")
-			List incomeList = MM.sqlMap.queryForList("getAccountsForType",
+			List incomeList = MM.sqlMap.selectList("getAccountsForType",
 					"Income");
 
 			if (incomeList != null) {
@@ -186,7 +186,7 @@ public class MoneyTree {
 
 			// add budgets
 			@SuppressWarnings("rawtypes")
-			List budgetList = MM.sqlMap.queryForList("getAllBudgets", null);
+			List budgetList = MM.sqlMap.selectList("getAllBudgets", null);
 
 			if (budgetList != null) {
 				Budget budget = null;
@@ -199,7 +199,7 @@ public class MoneyTree {
 				}
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 

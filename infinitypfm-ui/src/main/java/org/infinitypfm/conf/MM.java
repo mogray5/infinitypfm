@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
+import org.apache.ibatis.session.SqlSession;
 
 import freemarker.template.Configuration;
 
@@ -215,7 +215,8 @@ public class MM {
 	public static String REPORTFOLDER = MM.APPPATH + 
  	"reports" + File.separator;
 	//iBatis SQL Map reference
-	public static SqlMapClient sqlMap = null;
+	public static SqlSession sqlMap = null;
+	public static SqlSession sqlTransactionMap = null;
 	
 	//Load language - use default for now
 	public static LangLoader PHRASES = null;

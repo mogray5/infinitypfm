@@ -19,17 +19,13 @@
  along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Account">
 
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Account">
-
-   <typeAlias alias="act" type="org.infinitypfm.core.data.Account"/>
-   <typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
-  
-   <select id="getAccountsForType" parameterClass="java.lang.String"
-                           resultClass="act">
+   <select id="getAccountsForType" parameterType="java.lang.String"
+                           resultType="act">
       SELECT
            ActId as actId,
            ActName as actName,
@@ -49,8 +45,8 @@
         Order By ActName;
    </select>
    
-     <select id="getAccountForName" parameterClass="java.lang.String"
-                           resultClass="act">
+     <select id="getAccountForName" parameterType="java.lang.String"
+                           resultType="act">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -69,8 +65,8 @@
         WHERE ActName = #value#
    </select>
    
-   <select id="getAccountForOffset" parameterClass="tran"
-                           resultClass="act">
+   <select id="getAccountForOffset" parameterType="tran"
+                           resultType="act">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -89,8 +85,8 @@
         WHERE ActId = #actOffset#
    </select>
    
-   <select id="getAccountById" parameterClass="tran"
-                           resultClass="act">
+   <select id="getAccountById" parameterType="tran"
+                           resultType="act">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -109,8 +105,8 @@
         WHERE ActId = #actId#
    </select>
    
-   <select id="getAccountByActId" parameterClass="act"
-                           resultClass="act">
+   <select id="getAccountByActId" parameterType="act"
+                           resultType="act">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -129,7 +125,7 @@
         WHERE ActId = #actId#
    </select>
    
-     <select id="getAllAccountsByType" resultClass="act">
+     <select id="getAllAccountsByType" resultType="act">
         SELECT
            ActId as actId,
            ActName as actName,
@@ -148,19 +144,19 @@
         Order By ActTypeName,ActName;
    </select>
    
-   <select id="getAccountsTypes" resultClass="java.lang.String">
+   <select id="getAccountsTypes" resultType="java.lang.String">
      SELECT ActTypeName
         FROM AccountTypes
    </select>
    
-   <select id="getAccountTypeIdForName" parameterClass="java.lang.String" 
-     					resultClass="java.lang.Integer">
+   <select id="getAccountTypeIdForName" parameterType="java.lang.String" 
+     					resultType="java.lang.Integer">
       SELECT ActTypeId
         FROM AccountTypes
        WHERE ActTypeName=#value#
    </select>
    
-   <select id="getAccountTemplates" resultClass="act">
+   <select id="getAccountTemplates" resultType="act">
    		SELECT ActTypeName,
    			AccountTypes.ActTypeId, 
    			ActName
@@ -177,8 +173,8 @@
    			ActName
    </select>
    
-   <select id="getSavedMemo" parameterClass="tran"
-   						resultClass="tran">
+   <select id="getSavedMemo" parameterType="tran"
+   						resultType="tran">
    		SELECT ActId as actId,
    			Memo as tranMemo
    		FROM ImportHistory
@@ -187,8 +183,8 @@
    
    </select>
    
-   <select id="getAccountsForMemo" parameterClass="tran"
-   					resultClass="act">
+   <select id="getAccountsForMemo" parameterType="tran"
+   					resultType="act">
    		
    		SELECT 
            Accounts.ActId as actId,
@@ -210,7 +206,7 @@
    
    </select>
    
-   <insert id="insertAccount" parameterClass="act">
+   <insert id="insertAccount" parameterType="act">
 	    INSERT INTO Accounts
 	     (
 	      ActName,
@@ -229,7 +225,7 @@
     	 )
    </insert>
    
-   <insert id="insertMemo" parameterClass="tran">
+   <insert id="insertMemo" parameterType="tran">
    
    		INSERT INTO ImportHistory
    		(
@@ -244,22 +240,22 @@
    
    </insert>
     
-    <delete id="deleteAccount" parameterClass="act">
+    <delete id="deleteAccount" parameterType="act">
 	    DELETE FROM Accounts
     	  WHERE ActName = #actName#
    </delete>
    
-   <update id="updateAccountBalance" parameterClass="tran">
+   <update id="updateAccountBalance" parameterType="tran">
         UPDATE Accounts
         	SET ActBalance = ActBalance + #tranAmount#
         WHERE ActId = #actId#
    </update>
    
-   <update id="updateAccountName" parameterClass="act">
+   <update id="updateAccountName" parameterType="act">
      UPDATE Accounts
      	SET ActName = #actName#
      WHERE ActId = #actId#
    </update>
    
-</sqlMap>
+</mapper>
  

@@ -18,7 +18,6 @@
  */
 package org.infinitypfm.ui.view.views;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -270,7 +269,7 @@ public class CurrencyView extends BaseView {
 
 		try {
 			@SuppressWarnings("rawtypes")
-			List currList = MM.sqlMap.queryForList("getCurrencies", null);
+			List currList = MM.sqlMap.selectList("getCurrencies", null);
 
 			if (currList != null && currList.size() > 0) {
 
@@ -296,7 +295,7 @@ public class CurrencyView extends BaseView {
 			cmbCurrencies.removeAll();
 
 			@SuppressWarnings("rawtypes")
-			List lstCurrencies = MM.sqlMap.queryForList("getCurrencies");
+			List lstCurrencies = MM.sqlMap.selectList("getCurrencies");
 
 			if (!lstCurrencies.isEmpty()) {
 				for (Object o : lstCurrencies) {
@@ -307,7 +306,7 @@ public class CurrencyView extends BaseView {
 				}
 			}
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
@@ -327,7 +326,7 @@ public class CurrencyView extends BaseView {
 				return;
 
 			@SuppressWarnings("rawtypes")
-			List methods = MM.sqlMap.queryForList("getCurrencyMethods", curr);
+			List methods = MM.sqlMap.selectList("getCurrencyMethods", curr);
 			CurrencyMethod method = null;
 
 			if (methods == null || methods.size() == 0)
@@ -372,7 +371,7 @@ public class CurrencyView extends BaseView {
 			combos.add(cmbMethod);
 			buttons.add(button);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
@@ -387,7 +386,7 @@ public class CurrencyView extends BaseView {
 		method.setMethodName(selection.getCmbMethod().getText());
 
 		try {
-			method = (CurrencyMethod) MM.sqlMap.queryForObject(
+			method = (CurrencyMethod) MM.sqlMap.selectOne(
 					"getCurrencyMethod", method);
 
 			String newRate = RateParser.getRate(method);
@@ -470,7 +469,7 @@ public class CurrencyView extends BaseView {
 				method.setMethodName(txtMethod.getText());
 
 				try {
-					Currency currency = (Currency) MM.sqlMap.queryForObject(
+					Currency currency = (Currency) MM.sqlMap.selectOne(
 							"getCurrencyByName", cmbCurrencies.getText());
 					
 					if (currency != null) {
@@ -479,7 +478,7 @@ public class CurrencyView extends BaseView {
 						LoadData();
 					}
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					InfinityPfm.LogMessage(e.toString());
 				}
 
@@ -508,9 +507,9 @@ public class CurrencyView extends BaseView {
 			Currency currency = null;
 
 			try {
-				currency = (Currency) MM.sqlMap.queryForObject(
+				currency = (Currency) MM.sqlMap.selectOne(
 						"getCurrencyByName", cmbCurrencies.getText());
-			} catch (SQLException e1) {
+			} catch (Exception e1) {
 				InfinityPfm.LogMessage(e1.toString());
 			}
 
@@ -519,7 +518,7 @@ public class CurrencyView extends BaseView {
 
 			try {
 				MM.sqlMap.insert("insertCurrencyMethod", method);
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				InfinityPfm.LogMessage(e.toString());
 			}
 
@@ -544,14 +543,14 @@ public class CurrencyView extends BaseView {
 					txtUrl.setText(method.getMethodUrl());
 					txtPath.setText(method.getMethodPath());
 
-					Currency currency = (Currency) MM.sqlMap.queryForObject(
+					Currency currency = (Currency) MM.sqlMap.selectOne(
 							"getCurrencyById", method.getCurrencyID());
 
 					if (currency != null) {
 						cmbCurrencies.setText(currency.getCurrencyName());
 					}
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					InfinityPfm.LogMessage(e.toString());
 				}
 			}

@@ -90,8 +90,8 @@ public class OptionsDialog extends BaseDialog {
 		Options options = null;
 
 		try {
-			options = (Options) MM.sqlMap.queryForObject("getOptions", null);
-		} catch (SQLException e) {
+			options = (Options) MM.sqlMap.selectOne("getOptions", null);
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
@@ -116,7 +116,7 @@ public class OptionsDialog extends BaseDialog {
 
 			String defaultCurrency = null;
 			@SuppressWarnings("rawtypes")
-			List lstCurrencies = MM.sqlMap.queryForList("getCurrencies");
+			List lstCurrencies = MM.sqlMap.selectList("getCurrencies");
 			if (lstCurrencies != null) {
 
 				for (int i = 0; i < lstCurrencies.size(); i++) {
@@ -135,7 +135,7 @@ public class OptionsDialog extends BaseDialog {
 
 			}
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.toString());
 		}
 
@@ -257,11 +257,11 @@ public class OptionsDialog extends BaseDialog {
 			try {
 
 				options = (Options) MM.sqlMap
-						.queryForObject("getOptions", null);
+						.selectOne("getOptions", null);
 				options.setCurrencyPrecision(Integer.parseInt(txtPrecision
 						.getText()));
 
-				Currency currency = (Currency) MM.sqlMap.queryForObject(
+				Currency currency = (Currency) MM.sqlMap.selectOne(
 						"getCurrencyByName", cmbBaseCurrency.getText());
 
 				if (currency == null) {
@@ -276,10 +276,10 @@ public class OptionsDialog extends BaseDialog {
 				
 				MM.sqlMap.update("updateOptions", options);
 
-				MM.options = (Options) MM.sqlMap.queryForObject("getOptions",
+				MM.options = (Options) MM.sqlMap.selectOne("getOptions",
 						null);
 
-			} catch (SQLException e1) {
+			} catch (Exception e1) {
 				InfinityPfm.LogMessage(e1.getMessage());
 			}
 

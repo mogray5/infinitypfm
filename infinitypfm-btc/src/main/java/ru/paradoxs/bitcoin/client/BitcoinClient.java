@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
+//import org.apache.http.auth.Credentials;
+//import org.apache.http.auth.UsernamePasswordCredentials;
 
 import ru.paradoxs.bitcoin.client.exceptions.BitcoinClientException;
 import ru.paradoxs.bitcoin.http.HttpSession;

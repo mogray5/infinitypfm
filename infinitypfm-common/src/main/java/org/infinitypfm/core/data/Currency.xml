@@ -19,17 +19,12 @@
  along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Currency">
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Currency">
    
-	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
-	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
-	
-	
-	  <select id="getCurrencies" resultClass="currency">
+	  <select id="getCurrencies" resultType="currency">
    		
    		SELECT 
            CurrencyID as currencyId,
@@ -48,8 +43,8 @@
    
    </select>
    
-   <select id="getCurrencyByIsoCode" parameterClass="java.lang.String" 
-   						resultClass="currency">
+   <select id="getCurrencyByIsoCode" parameterType="java.lang.String" 
+   						resultType="currency">
    		
    		SELECT 
            CurrencyID as currencyId,
@@ -63,8 +58,8 @@
    
    </select>
 
-   <select id="getCurrencyById" parameterClass="java.lang.Long" 
-   						resultClass="currency">
+   <select id="getCurrencyById" parameterType="java.lang.Long" 
+   						resultType="currency">
    		
    		SELECT 
            CurrencyID as currencyId,
@@ -78,8 +73,8 @@
    
    </select>
 
-   <select id="getCurrencyByName" parameterClass="java.lang.String" 
-   						resultClass="currency">
+   <select id="getCurrencyByName" parameterType="java.lang.String" 
+   						resultType="currency">
    		
    		SELECT 
            CurrencyID as currencyId,
@@ -93,8 +88,8 @@
    
    </select>
       
-   <select id="getCurrencyMethods" parameterClass="currency" 
-   						resultClass="currencyMethod">
+   <select id="getCurrencyMethods" parameterType="currency" 
+   						resultType="currencyMethod">
    		
    		SELECT 
            CurrencyID as currencyID,
@@ -107,7 +102,7 @@
    
    </select>
    
-   <select id="getAllCurrencyMethods" resultClass="currencyMethod">
+   <select id="getAllCurrencyMethods" resultType="currencyMethod">
    		
    		SELECT 
            CurrencyID as currencyID,
@@ -118,8 +113,8 @@
    
    </select>
    
-    <select id="getCurrencyMethod" parameterClass="currencyMethod" 
-   						resultClass="currencyMethod">
+    <select id="getCurrencyMethod" parameterType="currencyMethod" 
+   						resultType="currencyMethod">
    		
    		SELECT 
            CurrencyID as currencyID,
@@ -133,7 +128,7 @@
    
     </select>
    
-   <insert id="insertCurrencyMethod" parameterClass="currencyMethod">
+   <insert id="insertCurrencyMethod" parameterType="currencyMethod">
 	    INSERT INTO CurrencyMethods
 	     (
 	      CurrencyID,
@@ -150,7 +145,7 @@
     	 )
    </insert>
    
-   <update id="updateExchangeRate" parameterClass="currency">
+   <update id="updateExchangeRate" parameterType="currency">
    
    		UPDATE Currencies 
    		SET EXCHRATE = #exchangeRate#,
@@ -159,10 +154,10 @@
    
    </update>
    
-    <delete id="deleteUpdateMethod" parameterClass="currencyMethod">
+    <delete id="deleteUpdateMethod" parameterType="currencyMethod">
    		DELETE FROM CURRENCYMETHODS WHERE MethodName = #methodName#
    			AND CurrencyID = #currencyID#; 
    </delete>
    
-</sqlMap>
+</mapper>
  

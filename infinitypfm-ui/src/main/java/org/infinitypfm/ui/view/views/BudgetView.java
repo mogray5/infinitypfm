@@ -18,7 +18,6 @@
  */
 package org.infinitypfm.ui.view.views;
 
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -304,7 +303,7 @@ public class BudgetView extends BaseView {
 			// TODO: Clean this section up more. Perhaps call a generic method
 			// to populate these text field.
 
-			String sOverUnder = (String) MM.sqlMap.queryForObject(
+			String sOverUnder = (String) MM.sqlMap.selectOne(
 					"getOverUnderForMonth", detail);
 
 			if (sOverUnder == null) {
@@ -314,7 +313,7 @@ public class BudgetView extends BaseView {
 						.parseLong(sOverUnder)));
 			}
 
-			String sIncomeTotal = (String) MM.sqlMap.queryForObject(
+			String sIncomeTotal = (String) MM.sqlMap.selectOne(
 					"getIncomeTotalForMonth", detail);
 
 			if (sIncomeTotal == null) {
@@ -325,7 +324,7 @@ public class BudgetView extends BaseView {
 						.getAmountFormatted(totalBalance));
 			}
 
-			String sLiabTotal = (String) MM.sqlMap.queryForObject(
+			String sLiabTotal = (String) MM.sqlMap.selectOne(
 					"getLiabilityTotalForMonth", detail);
 
 			if (sLiabTotal == null) {
@@ -336,7 +335,7 @@ public class BudgetView extends BaseView {
 						.parseLong(sLiabTotal)));
 			}
 
-			String sExpenseTotal = (String) MM.sqlMap.queryForObject(
+			String sExpenseTotal = (String) MM.sqlMap.selectOne(
 					"getExpenseTotalForMonth", detail);
 
 			if (sExpenseTotal == null) {
@@ -355,7 +354,7 @@ public class BudgetView extends BaseView {
 
 			// if (detailList == null || detailList.size()==0){
 			// try without monthly transactions
-			detailList = MM.sqlMap.queryForList("getBudgetDetailForMonth",
+			detailList = MM.sqlMap.selectList("getBudgetDetailForMonth",
 					detail);
 			// }
 
@@ -391,7 +390,7 @@ public class BudgetView extends BaseView {
 					transaction.setActId(detail.getActId());
 					transaction.setTranDate(format.getDate());
 
-					monthlyBalance = (MonthlyBalance) MM.sqlMap.queryForObject(
+					monthlyBalance = (MonthlyBalance) MM.sqlMap.selectOne(
 							"getMonthlyBalance", transaction);
 
 					if (month == currentMonth) {
@@ -444,9 +443,9 @@ public class BudgetView extends BaseView {
 								format.getAmountFormatted(detail.getAmount()));
 					}
 
-					yearBalance = (String) MM.sqlMap.queryForObject(
+					yearBalance = (String) MM.sqlMap.selectOne(
 							"getYearlyBalance", transaction);
-					yearBudgetBalance = (String) MM.sqlMap.queryForObject(
+					yearBudgetBalance = (String) MM.sqlMap.selectOne(
 							"getYearBudgetBalance", detail);
 
 					if (yearBalance == null) {
@@ -489,7 +488,7 @@ public class BudgetView extends BaseView {
 				} // next detail
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
 					se.getMessage());
 			show.Open();
@@ -593,9 +592,9 @@ public class BudgetView extends BaseView {
 		if (lEstimate > 0) {
 
 			try {
-				budgetBalance = (String) MM.sqlMap.queryForObject(
+				budgetBalance = (String) MM.sqlMap.selectOne(
 						"getBudgetTotalForMonth", detail);
-			} catch (SQLException se) {
+			} catch (Exception se) {
 				InfinityPfm.LogMessage(se.getMessage());
 			}
 
@@ -672,7 +671,7 @@ public class BudgetView extends BaseView {
 
 						try {
 							MM.sqlMap.update("updateBudgetDetail", detail);
-						} catch (SQLException se) {
+						} catch (Exception se) {
 							InfinityPfm.LogMessage(se.getMessage());
 						}
 

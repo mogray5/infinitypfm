@@ -205,7 +205,7 @@ public class Database {
 						sdf.format(c1.getTime()) + ".tar.gz";
 			    
 				
-			    conn = MM.sqlMap.getDataSource().getConnection();
+			    conn = MM.sqlMap.getConnection();
 				st = conn.createStatement();
 				st.executeUpdate("BACKUP DATABASE TO '" + dir + backupFile + "' BLOCKING");
 				

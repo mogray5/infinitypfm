@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.infinitypfm</groupId>
+    <artifactId>infinitypfm-client</artifactId>
+    <version>0.9.5</version>
+  </parent>
+  <groupId>org.infinitypfm.btc</groupId>
+  <artifactId>infinitypfm-btc</artifactId>
+  <packaging>jar</packaging>
+  <name>infinitypfm-btc</name>
+  <url>http://infinitypfm.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+	<dependency>
+	    <groupId>commons-httpclient</groupId>
+	    <artifactId>commons-httpclient</artifactId>
+	    <version>3.1</version>
+	</dependency>
+  </dependencies>
+  
+ <build>
+	<plugins>
+	    <plugin>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <version>3.8.1</version>
+	        <configuration>
+	            <source>1.8</source>
+	            <target>1.8</target>
+	        </configuration>
+	    </plugin>
+	</plugins>
+ </build>
+   
+</project>

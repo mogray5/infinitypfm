@@ -305,7 +305,7 @@ public class MainAction {
 
 		String acctName = dlg.getAccountName();
 		try {
-			Account account = (Account) MM.sqlMap.queryForObject(
+			Account account = (Account) MM.sqlMap.selectOne(
 					"getAccountForName", acctName);
 			if (account != null) {
 				BudgetDetail detail = new BudgetDetail();
@@ -315,7 +315,7 @@ public class MainAction {
 				if (budget != null) {
 					detail.setBudgetId(budget.getBudgetId());
 
-					List result = (List) MM.sqlMap.queryForList(
+					List result = (List) MM.sqlMap.selectList(
 							"getBudgetDetailByName", detail);
 					if (result.size() == 0) {
 						DataHandler dataHandler = new DataHandler();
@@ -339,7 +339,7 @@ public class MainAction {
 		dlg.Open();
 		String acctName = dlg.getAccountName();
 		try {
-			Account account = (Account) MM.sqlMap.queryForObject(
+			Account account = (Account) MM.sqlMap.selectOne(
 					"getAccountForName", acctName);
 			if (account != null) {
 				BudgetDetail detail = new BudgetDetail();
@@ -349,7 +349,7 @@ public class MainAction {
 				if (budget != null) {
 					detail.setBudgetId(budget.getBudgetId());
 					detail.setActId(account.getActId());
-					List result = (List) MM.sqlMap.queryForList(
+					List result = (List) MM.sqlMap.selectList(
 							"getBudgetDetailByName", detail);
 					if (result.size() > 0) {
 						DataHandler dataHandler = new DataHandler();

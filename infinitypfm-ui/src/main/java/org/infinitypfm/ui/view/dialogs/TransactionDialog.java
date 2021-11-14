@@ -177,7 +177,7 @@ public class TransactionDialog extends BaseDialog {
 		//load offset accounts
 		try {
 			Account act = null;
-			java.util.List actList = MM.sqlMap.queryForList("getAllAccountsByType", null);
+			java.util.List actList = MM.sqlMap.selectList("getAllAccountsByType", null);
 			actHash = new AccountHash(actList);
 			
 			if (actList !=null){
@@ -205,7 +205,7 @@ public class TransactionDialog extends BaseDialog {
 					//Offset has the ID but is missing the name.  Go get it.
 					Transaction param = new Transaction();
 					param.setActId(offset.getOffsetId());
-					Account offsetAccount = (Account) MM.sqlMap.queryForObject("getAccountById", param);
+					Account offsetAccount = (Account) MM.sqlMap.selectOne("getAccountById", param);
 					
 					if (offsetAccount != null){
 						
@@ -230,7 +230,7 @@ public class TransactionDialog extends BaseDialog {
 		cmpOffset.setTabList(new Control[] {cmbOffset, txtOffset, cmdAddOffset, cmdClearOffset, cmdDeleteOffsetLine});
 		
 			
-		} catch (SQLException se){
+		} catch (Exception se){
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}
@@ -570,7 +570,7 @@ private void LoadColumns() {
 		public void widgetSelected(SelectionEvent e){
 			
 			try {
-				Account act = (Account)MM.sqlMap.queryForObject("getAccountForName", cmbOffset.getText());
+				Account act = (Account)MM.sqlMap.selectOne("getAccountForName", cmbOffset.getText());
 				
 				if (!act.getIsoCode().equals(account.getIsoCode())){
 					

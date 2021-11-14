@@ -339,7 +339,7 @@ public class ImportDefSelector extends BaseDialog {
 		
 		tblImportDefs.removeAll();
 		
-		List<ImportDef> defList = MM.sqlMap.queryForList("getImportDefs");
+		List<ImportDef> defList = MM.sqlMap.selectList("getImportDefs");
 		
 		if (defList != null && defList.size() > 0) {
 			
@@ -391,8 +391,8 @@ public class ImportDefSelector extends BaseDialog {
 				
 				// Check if name not already in use
 				try {
-					ImportDef txt = (ImportDef) MM.sqlMap.queryForObject("getImportDef", def);
-				} catch (SQLException e1) {
+					ImportDef txt = (ImportDef) MM.sqlMap.selectList("getImportDef", def);
+				} catch (Exception e1) {
 					noErrors = false;
 					InfinityPfm.LogMessage(e1.getMessage(), true);
 				}

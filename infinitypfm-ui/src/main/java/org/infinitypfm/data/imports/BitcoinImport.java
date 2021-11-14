@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,7 +18,6 @@
  */
 package org.infinitypfm.data.imports;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +73,7 @@ public class BitcoinImport extends BaseImport {
 							tran = trans.get(j);
 
 							try {
-								transInSystem = MM.sqlMap.queryForList(
+								transInSystem = MM.sqlMap.selectList(
 										"getTransactionsByKey", tran.getTxId());
 
 								if (transInSystem == null
@@ -90,7 +89,7 @@ public class BitcoinImport extends BaseImport {
 
 								}
 
-							} catch (SQLException e) {
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 

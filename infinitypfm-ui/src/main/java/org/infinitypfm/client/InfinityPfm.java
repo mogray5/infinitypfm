@@ -55,8 +55,9 @@ import org.infinitypfm.ui.MainFrame;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.util.FileHandler;
 
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapClientBuilder;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -129,11 +130,7 @@ public class InfinityPfm {
 		}
 		
 		//Load app options
-		try {
-			MM.options = (Options) MM.sqlMap.queryForObject("getOptions");
-		} catch (SQLException e) {
-			InfinityPfm.LogMessage(e.getMessage());
-		}
+		MM.options = (Options) MM.sqlMap.selectOne("getOptions");
 		
 		//Load main form		
 		MainFrame frmMain = new MainFrame();
@@ -297,12 +294,16 @@ public class InfinityPfm {
 			PropertiesConfiguration propsConfig = new PropertiesConfiguration(propsFile);
 			Properties props = propsConfig.getProperties("db.source");
 			reader = Resources.getResourceAsReader (MM.MAPFILE);
-						
-			MM.sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
-	
+			
+			SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader, props);
+			
+			MM.sqlMap = sessionFactory.openSession(false);
+			MM.sqlTransactionMap = sessionFactory.openSession(true);
+			
 			// See if we can get a connection	
-			MM.sqlMap.getDataSource().setLoginTimeout(2);
-			MM.sqlMap.getDataSource().getConnection();
+			//MM.sqlMap.
+			//MM.sqlMap.getConnection().set.setLoginTimeout(2);
+			//MM.sqlMap.getDataSource().getConnection();
 			
 			
 		} catch (Exception se){
@@ -314,7 +315,7 @@ public class InfinityPfm {
 			 //check tables
 			 try {
 				  
-				 Connection conn = MM.sqlMap.getDataSource().getConnection();
+				 Connection conn = MM.sqlMap.getConnection();
 				 DatabaseMetaData metadata = conn.getMetaData();
 				  
 				 ResultSet result = metadata.getTables(null, null, "ACCOUNTS", null);

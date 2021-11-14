@@ -9,14 +9,12 @@
 	GNU General Public License for more details. You should have received a copy 
 	of the GNU General Public License along with Infinity PFM. If not, see <http://www.gnu.org/licenses/>. -->
 
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Options">
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Options">
 
-	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
-
-	<select id="getAppVersion" resultClass="java.lang.String">
+	<select id="getAppVersion" resultType="java.lang.String">
    <![CDATA[
     SELECT
        AppVersion
@@ -24,7 +22,7 @@
     ]]>
 	</select>
 
-	<select id="getOptions" resultClass="opt">
+	<select id="getOptions" resultType="opt">
    <![CDATA[
     SELECT
        AppVersion,
@@ -36,7 +34,7 @@
     ]]>
 	</select>
 
-	<update id="updateOptions" parameterClass="opt">
+	<update id="updateOptions" parameterType="opt">
 		UPDATE AppSettings
 		SET
 		AppVersion = #appVersion#,
@@ -46,4 +44,4 @@
 		ConsoleDefaultOpen = #consoleDefaultOpen#
 	</update>
 
-</sqlMap>
+</mapper>

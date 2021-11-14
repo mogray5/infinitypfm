@@ -139,7 +139,7 @@ public class ImportRulesDialog extends BaseDialog {
 		try {
 			Account act = null;
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList(
+			java.util.List list = MM.sqlMap.selectList(
 					"getAllAccountsByType", null);
 
 			cmbAccounts.removeAll();
@@ -151,7 +151,7 @@ public class ImportRulesDialog extends BaseDialog {
 
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -176,7 +176,7 @@ public class ImportRulesDialog extends BaseDialog {
 		try {
 			@SuppressWarnings("rawtypes")
 			java.util.List rules = (java.util.List) MM.sqlMap
-					.queryForList("getImportRules");
+					.selectList("getImportRules");
 
 			for (int i = 0; i < rules.size(); i++) {
 				rule = (ImportRule) rules.get(i);
@@ -187,7 +187,7 @@ public class ImportRulesDialog extends BaseDialog {
 				lstRules.setData(ruleLabel, rule);
 			}
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
@@ -231,7 +231,7 @@ public class ImportRulesDialog extends BaseDialog {
 					// Make sure rule doesn't already exist
 					try {
 						ImportRule ruleCheck = (ImportRule) MM.sqlMap
-								.queryForObject("getImportRule", rule);
+								.selectOne("getImportRule", rule);
 
 						if (ruleCheck == null) {
 
@@ -239,7 +239,7 @@ public class ImportRulesDialog extends BaseDialog {
 							LoadImportRules();
 						}
 
-					} catch (SQLException e1) {
+					} catch (Exception e1) {
 						InfinityPfm.LogMessage(e1.getMessage(), true);
 					}
 
@@ -261,7 +261,7 @@ public class ImportRulesDialog extends BaseDialog {
 				rule = (ImportRule) lstRules.getData(selectedRules[i]);
 				try {
 					MM.sqlMap.delete("deleteImportrule", rule);
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					InfinityPfm.LogMessage(e1.getMessage(), true);
 				}
 			}

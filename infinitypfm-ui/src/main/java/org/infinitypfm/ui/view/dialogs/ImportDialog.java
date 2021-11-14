@@ -96,8 +96,8 @@ public class ImportDialog extends BaseDialog {
 		importAccount = -1;
 
 		try {
-			allActList = MM.sqlMap.queryForList("getAllAccountsByType", null);
-		} catch (SQLException se) {
+			allActList = MM.sqlMap.selectList("getAllAccountsByType", null);
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}
@@ -110,9 +110,9 @@ public class ImportDialog extends BaseDialog {
 		importAccount = importAcct;
 
 		try {
-			allActList = MM.sqlMap.queryForList("getAllAccountsByType", null);
+			allActList = MM.sqlMap.selectList("getAllAccountsByType", null);
 			actHash = new AccountHash(allActList);
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -221,8 +221,8 @@ public class ImportDialog extends BaseDialog {
 
 		// Load all defined import rules
 		try {
-			importRules = MM.sqlMap.queryForList("getImportRules");
-		} catch (SQLException e1) {
+			importRules = MM.sqlMap.selectList("getImportRules");
+		} catch (Exception e1) {
 			InfinityPfm.LogMessage("Error loading import rules:  "
 					+ e1.getMessage());
 		}
@@ -291,7 +291,7 @@ public class ImportDialog extends BaseDialog {
 
 						// Found a rule match. Add mapped offset to the
 						// transactions
-						offset = (Account) MM.sqlMap.queryForObject(
+						offset = (Account) MM.sqlMap.selectList(
 								"getAccountByActId", offset);
 						if (offset != null) {
 							tran.setActOffset(offset.getActId());
@@ -305,7 +305,7 @@ public class ImportDialog extends BaseDialog {
 					} else {
 
 						// Try to use last saved offset for this transactions
-						accountList = MM.sqlMap.queryForList(
+						accountList = MM.sqlMap.selectList(
 								"getAccountsForMemo", tran);
 
 						if (accountList != null) {
@@ -319,7 +319,7 @@ public class ImportDialog extends BaseDialog {
 						}
 					}
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					InfinityPfm.LogMessage(e.getMessage());
 				}
 
@@ -389,7 +389,7 @@ public class ImportDialog extends BaseDialog {
 
 		try {
 			Account act = null;
-			java.util.List<Account> list = MM.sqlMap.queryForList(
+			java.util.List<Account> list = MM.sqlMap.selectList(
 					"getAccountsForType", AccountTypes.BANK);
 
 			if (list.size() == 0) {
@@ -416,7 +416,7 @@ public class ImportDialog extends BaseDialog {
 
 			cmbAct.select(showIndex);
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}

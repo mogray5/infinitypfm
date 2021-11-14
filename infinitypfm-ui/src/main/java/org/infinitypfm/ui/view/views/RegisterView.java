@@ -269,7 +269,7 @@ public class RegisterView extends BaseView {
 			try {
 				
 				// get a fresh account in case balance changed
-				Account account = (Account) MM.sqlMap.queryForObject(
+				Account account = (Account) MM.sqlMap.selectOne(
 						"getAccountForName", act.getActName());
 				// set act balance and name
 				lblBalance
@@ -286,7 +286,7 @@ public class RegisterView extends BaseView {
 				params.setStartDate(new Timestamp(formatter.getDate().getTime()));
 				formatter.setDate(txtEndDate.getText());
 				params.setEndDate(new Timestamp(formatter.getDate().getTime()));
-				java.util.List tranList = MM.sqlMap.queryForList(
+				java.util.List tranList = MM.sqlMap.selectList(
 						"getTransactionsForRangeAndAccount", params);
 				if (tranList != null) {
 
@@ -311,7 +311,7 @@ public class RegisterView extends BaseView {
 
 				tblRegister.setLinesVisible(true);
 
-			} catch (SQLException se) {
+			} catch (Exception se) {
 				InfinityPfm.LogMessage(se.getMessage());
 			}
 

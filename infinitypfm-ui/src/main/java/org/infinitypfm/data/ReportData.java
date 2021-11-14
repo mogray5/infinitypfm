@@ -276,14 +276,14 @@ public class ReportData {
 
 		try {
 
-			incomeTotal = (String) MM.sqlMap.queryForObject(
+			incomeTotal = (String) MM.sqlMap.selectOne(
 					"getIncomeTotalForMonth", budgetDetail);
-			expenseTotal = (String) MM.sqlMap.queryForObject(
+			expenseTotal = (String) MM.sqlMap.selectOne(
 					"getExpenseTotalForMonth", budgetDetail);
-			liabilityTotal = (String) MM.sqlMap.queryForObject(
+			liabilityTotal = (String) MM.sqlMap.selectOne(
 					"getLiabilityTotalForMonth", budgetDetail);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
@@ -303,7 +303,7 @@ public class ReportData {
 
 		try {
 
-			reportData = MM.sqlMap.queryForList(reportName, args);
+			reportData = MM.sqlMap.selectList(reportName, args);
 
 			for (Object row : reportData) {
 				if (row != null)
@@ -311,7 +311,7 @@ public class ReportData {
 			}
 			
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 

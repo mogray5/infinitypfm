@@ -19,19 +19,12 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
  along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-
-
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Reports">
-
-  <typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
-  <typeAlias alias="dateParams" type="org.infinitypfm.core.data.ParamDateRange"/>
-  <typeAlias alias="budgetBalance" type="org.infinitypfm.core.data.BudgetBalance"/>
-  <typeAlias alias="balanceByType" type="org.infinitypfm.core.data.MonthlyBalanceByType"/>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Reports">
   
-   <select id="getReportMonthlyBalances" resultClass="monthBalance" parameterClass="dateParams">
+   <select id="getReportMonthlyBalances" resultType="monthBalance" parameterType="dateParams">
       <![CDATA[
        SELECT az.ACTTYPENAME,
    	a.ACTNAME,
@@ -50,7 +43,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	ORDER BY az.ACTTYPEID, a.ACTNAME;
        ]]>
   </select>
-  <select id="getReportAccountHistory" resultClass="monthBalance" parameterClass="monthBalance">
+  <select id="getReportAccountHistory" resultType="monthBalance" parameterType="monthBalance">
       <![CDATA[
 	  SELECT a.ACTNAME, 
 	  		mb.YR, 
@@ -68,7 +61,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 ORDER BY mb.YR, mb.MTH;
        ]]>
   </select>
-  <select id="getBudgetVsExpenseByMonth" resultClass="budgetBalance" parameterClass="budgetBalance">
+  <select id="getBudgetVsExpenseByMonth" resultType="budgetBalance" parameterType="budgetBalance">
      <![CDATA[
     
       SELECT *
@@ -105,7 +98,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 		ORDER BY exp.YR, exp.MTH;
 	 ]]>
   </select>
-  <select id="getBudgetVsExpenseByMonthAndAccount" resultClass="budgetBalance" parameterClass="budgetBalance">
+  <select id="getBudgetVsExpenseByMonthAndAccount" resultType="budgetBalance" parameterType="budgetBalance">
      <![CDATA[
     
       SELECT *
@@ -146,7 +139,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 		ORDER BY exp.YR, exp.MTH;
 	 ]]>
   </select>
-    <select id="getIncomeVsExpense" resultClass="balanceByType" parameterClass="dateParams">
+    <select id="getIncomeVsExpense" resultType="balanceByType" parameterType="dateParams">
       <![CDATA[
        SELECT 
    			mb.YR,
@@ -167,4 +160,4 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
        ]]>
   </select>
   
-</sqlMap>
+</mapper>

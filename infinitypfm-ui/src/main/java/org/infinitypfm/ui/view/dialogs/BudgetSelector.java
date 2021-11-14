@@ -65,7 +65,7 @@ public class BudgetSelector extends BaseDialog {
 		try {
 			Budget budget = null;
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList("getAllBudgets", null);
+			java.util.List list = MM.sqlMap.selectList("getAllBudgets", null);
 			
 			cmbBudget.removeAll();
 			
@@ -77,7 +77,7 @@ public class BudgetSelector extends BaseDialog {
 			
 			cmbBudget.select(0);
 			
-		} catch (SQLException se){
+		} catch (Exception se){
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 

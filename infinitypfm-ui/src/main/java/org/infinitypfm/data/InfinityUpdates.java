@@ -36,12 +36,12 @@ public class InfinityUpdates {
 		String sVersion = null;
 
 		try {
-			sVersion = (String) MM.sqlMap.queryForObject("getAppVersion", null);
+			sVersion = (String) MM.sqlMap.selectOne("getAppVersion", null);
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 
-			int code = se.getErrorCode();
-
+			//int code = se.getErrorCode();
+			int code = -22;
 			if (code == -22) {
 				sVersion = "0.0.1";
 			} else {

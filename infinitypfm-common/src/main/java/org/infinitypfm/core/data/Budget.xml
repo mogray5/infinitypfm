@@ -20,28 +20,22 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 
 -->
 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Budget">
 
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Budget">
-
-	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
-	<typeAlias alias="budget" type="org.infinitypfm.core.data.Budget"/>
-	<typeAlias alias="budgetDetail" type="org.infinitypfm.core.data.BudgetDetail"/>
-	<typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
-
-  <resultMap id="budgetDetailMap" class="budgetDetail">
+  <resultMap id="budgetDetailMap" type="budgetDetail">
   	<result property="budgetId"  column="BudgetId"/>
   	<result property="actId"  column="ActId"/>
 	<result property="actName"  column="ActName"/>
 	<result property="mth"  column="Mth"/>
 	<result property="amount"  column="Amount"/>
-	<result property="actBalance"  column="ActBalance" nullValue="0"/>
-	<result property="yr"  column="Yr" nullValue="0"/>
+	<result property="actBalance"  column="ActBalance"/>
+	<result property="yr"  column="Yr"/>
   </resultMap>
   	   
-   <insert id="insertMonthlyBalance" parameterClass="tran">
+   <insert id="insertMonthlyBalance" parameterType="tran">
 	    INSERT INTO MonthlyBalance
 	     (
 	      ActId,
@@ -58,7 +52,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
     	 )
    </insert>
    
-   <update id="updateMonthlyBalance" parameterClass="tran">
+   <update id="updateMonthlyBalance" parameterType="tran">
 	    UPDATE MonthlyBalance
 	     SET ActBalance = ActBalance + #tranAmount#
 	    WHERE ActId = #actId#
@@ -66,8 +60,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	     AND Mth=#tranMonth#
    </update>
    
-    <select id="getMonthlyBalance" parameterClass="tran"
-                          resultClass="monthBalance">
+    <select id="getMonthlyBalance" parameterType="tran"
+                          resultType="monthBalance">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -81,8 +75,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getYearlyBalance" parameterClass="tran"
-                          resultClass="java.lang.String">
+   <select id="getYearlyBalance" parameterType="tran"
+                          resultType="java.lang.String">
        <![CDATA[
         SELECT
            SUM(ActBalance) as actBalance
@@ -93,7 +87,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getAllBudgets" resultClass="budget">
+   <select id="getAllBudgets" resultType="budget">
        <![CDATA[
         SELECT
            BudgetID,
@@ -103,7 +97,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-    <select id="getBudget" resultClass="budget">
+    <select id="getBudget" resultType="budget">
        <![CDATA[
         SELECT
            BudgetID,
@@ -113,7 +107,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <insert id="insertBudget" parameterClass="budget">
+   <insert id="insertBudget" parameterType="budget">
 	    INSERT INTO Budget
 	     (
 	      BudgetName
@@ -124,12 +118,12 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
     	 )
    </insert>
 
-  <insert id="insertBudgetDetail" parameterClass="budgetDetail">
+  <insert id="insertBudgetDetail" parameterType="budgetDetail">
   	INSERT INTO BudgetDetail (BudgetID, ActID, Mth, Amount)
 	 VALUES(#budgetId#, #actId#, #mth#, #amount#)
    </insert>
 
-   <!-- select id="getBudgetDetailForMonthWithCompare" parameterClass="budgetDetail"
+   <!-- select id="getBudgetDetailForMonthWithCompare" parameterType="budgetDetail"
                                        resultMap="budgetDetailMap">
 	   SELECT BudgetId, 
 	  ActId as actId,
@@ -152,8 +146,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    
    
-    <select id="getBudgetDetailForMonth" parameterClass="budgetDetail"
-                                       resultClass="budgetDetail">
+    <select id="getBudgetDetailForMonth" parameterType="budgetDetail"
+                                       resultType="budgetDetail">
 	   SELECT BudgetID as budgetId, 
 	  ActId as actId,
 	  ActName as actName,
@@ -167,7 +161,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ORDER BY ActName;
    </select>
    
-   <select id="getYearBudgetBalance" parameterClass="budgetDetail" resultClass="java.lang.String">
+   <select id="getYearBudgetBalance" parameterType="budgetDetail" resultType="java.lang.String">
      
      <![CDATA[                                  
 	 SELECT 
@@ -185,8 +179,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    
    
-  <select id="getOverUnderForMonth" parameterClass="budgetDetail"
-                                       resultClass="java.lang.String">  
+  <select id="getOverUnderForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String">  
    SELECT Budget.BudgetAmount - Actual.ActualAmount as MonthOverUnder
 	FROM 
 	(
@@ -212,8 +206,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	ON Budget.Mth = Actual.Mth
     </select>
   
-  <select id="getLiabilityTotalForMonth" parameterClass="budgetDetail"
-                                       resultClass="java.lang.String">    
+  <select id="getLiabilityTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -226,8 +220,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 AND AccountTypes.ActTypeName='Liability'
    </select>
    
-    <select id="getIncomeTotalForMonth" parameterClass="budgetDetail"
-                                       resultClass="java.lang.String">    
+    <select id="getIncomeTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -240,8 +234,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 AND AccountTypes.ActTypeName='Income'
    </select>
    
-     <select id="getExpenseTotalForMonth" parameterClass="budgetDetail"
-                                       resultClass="java.lang.String">    
+     <select id="getExpenseTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -254,7 +248,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 AND AccountTypes.ActTypeName='Expense'
    </select>
    
-   <update id="updateBudgetDetail" parameterClass="budgetDetail">
+   <update id="updateBudgetDetail" parameterType="budgetDetail">
   	UPDATE BudgetDetail 
   	 SET Amount=#amount#
 	 WHERE BudgetId=#budgetId#
@@ -263,8 +257,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </update>
    
    
-    <select id="getBudgetDetail" parameterClass="budgetDetail"
-                                       resultClass="budgetDetail">    
+    <select id="getBudgetDetail" parameterType="budgetDetail"
+                                       resultType="budgetDetail">    
     
       SELECT BudgetID as budgetId, 
 	  ActId as actId,
@@ -280,8 +274,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ORDER BY ActName;
    </select>
    
-   <select id="getBudgetDetailByName" parameterClass="budgetDetail"
-                                       resultClass="budgetDetail">    
+   <select id="getBudgetDetailByName" parameterType="budgetDetail"
+                                       resultType="budgetDetail">    
       SELECT BudgetID as budgetId, 
 	  ActId as actId,
 	  ActName as actName,
@@ -296,15 +290,15 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ORDER BY ActName;
    </select>
    
-    <update id="updateAccountForBudget" parameterClass="budgetDetail">
+    <update id="updateAccountForBudget" parameterType="budgetDetail">
   	UPDATE BudgetDetail 
   	 SET Amount= #amount#
   	  WHERE BudgetId=#budgetId#
   	   AND ActId = #actId#
    </update>
    
-   <select id="getBudgetTotalForMonth" parameterClass="budgetDetail"
-                                       resultClass="java.lang.String">        
+   <select id="getBudgetTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String">        
       SELECT 
 	  	SUM(Amount)
 	 FROM BudgetDetail
@@ -312,9 +306,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	   BudgetDetail.BudgetId = #budgetId#
    </select>
    
-    <delete id="deleteAccountFromBudget" parameterClass="budgetDetail">
+    <delete id="deleteAccountFromBudget" parameterType="budgetDetail">
 	    DELETE FROM BudgetDetail
     	  WHERE ActId = #actId#
     	  	AND BudgetId = #budgetId#
    </delete>
-</sqlMap>
+</mapper>

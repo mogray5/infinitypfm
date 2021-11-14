@@ -19,19 +19,12 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
  along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<!DOCTYPE sqlMap PUBLIC
-  "-//iBATIS.com//DTD SQL Map 2.0//EN"
-  "http://www.ibatis.com/dtd/sql-map-2.dtd">
-<sqlMap namespace="Transaction">
-
-   <typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
-   <typeAlias alias="dateRange" type="org.infinitypfm.core.data.ParamDateRange"/>
-   <typeAlias alias="dateRangeAccount" type="org.infinitypfm.core.data.ParamDateRangeAccount"/>
-   <typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
-   
-   
-     <select id="getTransactionsForRange" parameterClass="dateRange"
-                          resultClass="tran">
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Transaction">
+     <select id="getTransactionsForRange" parameterType="dateRange"
+                          resultType="tran">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -53,8 +46,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getTransactionsForRangeAndAccount" parameterClass="dateRangeAccount"
-                          resultClass="tran">
+   <select id="getTransactionsForRangeAndAccount" parameterType="dateRangeAccount"
+                          resultType="tran">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -77,8 +70,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getTransactionsForAccount" parameterClass="java.lang.String"
-                          resultClass="tran">
+   <select id="getTransactionsForAccount" parameterType="java.lang.String"
+                          resultType="tran">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -99,8 +92,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getTransactionsByKey" parameterClass="java.lang.String"
-                          resultClass="tran">
+   <select id="getTransactionsByKey" parameterType="java.lang.String"
+                          resultType="tran">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -121,8 +114,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getLastTransactionByAccount" parameterClass="java.lang.Integer"
-                          resultClass="tran">
+   <select id="getLastTransactionByAccount" parameterType="java.lang.Integer"
+                          resultType="tran">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -143,7 +136,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <insert id="insertTransaction" parameterClass="tran">
+   <insert id="insertTransaction" parameterType="tran">
 	    INSERT INTO Transactions
 	     (
 	      ActId,
@@ -162,7 +155,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
     	 )
    </insert>
    
-   <insert id="insertTrade" parameterClass="trade">
+   <insert id="insertTrade" parameterType="trade">
 	    INSERT INTO Trades
 	     (
 	      TranID,
@@ -179,11 +172,11 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
     	 )
    </insert>
    
-   <insert id="shutdown" parameterClass="java.lang.String">
+   <insert id="shutdown" parameterType="java.lang.String">
      SHUTDOWN;
    </insert>
    
-   <select id="getRecurringTransactions" resultClass="org.infinitypfm.core.data.RecurHeader">
+   <select id="getRecurringTransactions" resultType="org.infinitypfm.core.data.RecurHeader">
    	SELECT 
    		rh.RecurId,
    		rh.FrequencyId,
@@ -204,8 +197,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    </select>
    
    <select id="getPastDueRecurringTransactions" 
-   			resultClass="org.infinitypfm.core.data.RecurHeader"
-   			parameterClass="java.util.Date">
+   			resultType="org.infinitypfm.core.data.RecurHeader"
+   			parameterType="java.util.Date">
 		<![CDATA[
 	   	SELECT 
 	   		rh.RecurId,
@@ -227,7 +220,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 		  ]]>
    </select>
    
-   <select id="getPendingTransactions" resultClass="org.infinitypfm.core.data.Transaction">
+   <select id="getPendingTransactions" resultType="org.infinitypfm.core.data.Transaction">
    	SELECT rd.RecurTranId,
    		rh.ActID as ActId,
    		a.ActName,
@@ -248,7 +241,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 			ON a.ActTypeId = az.ActTypeId 
    </select>
    
-   <insert id="insertRecurringTransaction" parameterClass="org.infinitypfm.core.data.RecurHeader">
+   <insert id="insertRecurringTransaction" parameterType="org.infinitypfm.core.data.RecurHeader">
    		INSERT INTO RecurHeader
    			(
    				FrequencyId,
@@ -269,15 +262,15 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    			);
    </insert>
   
-  <delete id="deleteRecurringTransaction" parameterClass="java.lang.Integer">
+  <delete id="deleteRecurringTransaction" parameterType="java.lang.Integer">
   	DELETE FROM RecurHeader WHERE RecurID = #value#
   </delete>
   
-  <delete id="deletePendingTransactionsByRecurId" parameterClass="java.lang.Integer">
+  <delete id="deletePendingTransactionsByRecurId" parameterType="java.lang.Integer">
   	DELETE FROM RecurDetail WHERE RecurID = #value#
   </delete>
   
-   <insert id="insertPendingTransaction" parameterClass="org.infinitypfm.core.data.RecurDetail">
+   <insert id="insertPendingTransaction" parameterType="org.infinitypfm.core.data.RecurDetail">
    		INSERT INTO RecurDetail
    			(
    				RecurId,
@@ -290,12 +283,12 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    			);
    </insert>
    
-   <delete id="deletePendingTransaction" parameterClass="java.lang.Long">
+   <delete id="deletePendingTransaction" parameterType="java.lang.Long">
    	DELETE FROM RecurDetail WHERE RecurTranId=#value#;
    </delete>
    
-   <update id="setNextRunDate" parameterClass="org.infinitypfm.core.data.RecurHeader">
+   <update id="setNextRunDate" parameterType="org.infinitypfm.core.data.RecurHeader">
      UPDATE RecurHeader SET NextRunDate = #nextRunDate# WHERE RecurId = #recurId#;
    </update>
    
-</sqlMap>
+</mapper>

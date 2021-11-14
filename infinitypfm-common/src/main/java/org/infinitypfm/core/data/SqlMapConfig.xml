@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
- Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ Copyright (c) 2005-2021 Wayne Gray All rights reserved
   
  This file is part of Infinity PFM.
   
@@ -20,26 +20,34 @@
 
 -->
 <!DOCTYPE sqlMapConfig
-   PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
-   "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
-<!-- Always ensure to use the correct XML header as above! -->
-<sqlMapConfig>
+   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
  
- <!-- These settings control SqlMapClient configuration details, primarily to do with transaction
-      management. They are all optional (more detail later in this document). -->
- <settings
-   cacheModelsEnabled="true"
-   enhancementEnabled="true"
-   lazyLoadingEnabled="true"
-   maxRequests="128"
-   maxSessions="10"
-   maxTransactions="5"
-   useStatementNamespaces="false"
- />
- <!-- Type aliases allow you to use a shorter name for long fully qualified class names. -->
-  <!-- Configure a datasource to use with this SQL Map using SimpleDataSource.
-      Notice the use of the properties from the above resource -->
- <transactionManager type="JDBC" >
+ <typeAliases>   
+	<typeAlias alias="act" type="org.infinitypfm.core.data.Account"/>
+	<typeAlias alias="balanceByType" type="org.infinitypfm.core.data.MonthlyBalanceByType"/>
+	<typeAlias alias="budgetBalance" type="org.infinitypfm.core.data.BudgetBalance"/>
+	<typeAlias alias="budgetDetail" type="org.infinitypfm.core.data.BudgetDetail"/>
+	<typeAlias alias="budget" type="org.infinitypfm.core.data.Budget"/>
+	<typeAlias alias="connector" type="org.infinitypfm.core.data.Connector"/>
+	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
+	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
+	<typeAlias alias="dateParams" type="org.infinitypfm.core.data.ParamDateRange"/>
+	<typeAlias alias="dateRangeAccount" type="org.infinitypfm.core.data.ParamDateRangeAccount"/>
+	<typeAlias alias="dateRange" type="org.infinitypfm.core.data.ParamDateRange"/>
+	<typeAlias alias="importDef" type="org.infinitypfm.core.data.ImportDef"/>
+	<typeAlias alias="importRule" type="org.infinitypfm.core.data.ImportRule" />
+	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
+	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
+	<typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
+	<typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
+ </typeAliases>
+ 
+ <environments default="dev">
+ <environment id="dev">
+ 
+ <transactionManager type="JDBC" />
    <dataSource type="SIMPLE">
      <property name="JDBC.Driver" value="org.hsqldb.jdbcDriver"/>
      <property name="JDBC.ConnectionURL" value="${url}"/>
@@ -55,18 +63,23 @@
      <property name="Pool.PingConnectionsOlderThan" value="1"/>
      <property name="Pool.PingConnectionsNotUsedFor" value="1"/>
    </dataSource>
- </transactionManager>
+ 
+   </environment>
+</environments>
+ 
  <!-- Identify all SQL Map XML files to be loaded by this SQL map. Notice the paths
       are relative to the classpath. For now, we only have one... -->
-  <sqlMap resource="org/infinitypfm/core/data/Account.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Transaction.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Budget.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Updates.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Reports.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Manage.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Options.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Currency.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/ImportRules.xml" />
-  <sqlMap resource="org/infinitypfm/core/data/Connectors.xml" />
+<mappers>
+  <mapper resource="org/infinitypfm/core/data/Account.xml" />
+  <mapper resource="org/infinitypfm/core/data/Transaction.xml" />
+  <mapper resource="org/infinitypfm/core/data/Budget.xml" />
+  <mapper resource="org/infinitypfm/core/data/Updates.xml" />
+  <mapper resource="org/infinitypfm/core/data/Reports.xml" />
+  <mapper resource="org/infinitypfm/core/data/Manage.xml" />
+  <mapper resource="org/infinitypfm/core/data/Options.xml" />
+  <mapper resource="org/infinitypfm/core/data/Currency.xml" />
+  <mapper resource="org/infinitypfm/core/data/ImportRules.xml" />
+  <mapper resource="org/infinitypfm/core/data/Connectors.xml" />
+</mappers>
 
-</sqlMapConfig>
+</configuration>
