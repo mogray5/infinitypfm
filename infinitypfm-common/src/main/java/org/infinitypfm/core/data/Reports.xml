@@ -39,7 +39,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
      		ON a.ACTTYPEID = az.ACTTYPEID
      	INNER JOIN CURRENCIES c
      		ON a.CURRENCYID = c.CURRENCYID
-	WHERE mb.YR = #yr# AND mb.MTH = #mth#
+	WHERE mb.YR = #{yr} AND mb.MTH = #{mth}
 	ORDER BY az.ACTTYPEID, a.ACTNAME;
        ]]>
   </select>
@@ -55,9 +55,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	    		ON mb.ACTID = a.ACTID
 	    	INNER JOIN CURRENCIES c
      			ON a.CURRENCYID = c.CURRENCYID
-		WHERE ((mb.YR>#yr#) 
-	    OR (mb.YR=#yr# AND mb.MTH >= #mth#))
-	   AND a.ACTNAME = #actName#
+		WHERE ((mb.YR>#{yr}) 
+	    OR (mb.YR=#{yr} AND mb.MTH >= #{mth}))
+	   AND a.ACTNAME = #{actName}
 	 ORDER BY mb.YR, mb.MTH;
        ]]>
   </select>
@@ -80,8 +80,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 			AND mb.MTH = bd.MTH
 		INNER JOIN BUDGET b
 			ON bd.BUDGETID = b.BUDGETID
-		WHERE mb.YR =#yr#
-			AND b.BUDGETNAME = #budgetName#
+		WHERE mb.YR =#{yr}
+			AND b.BUDGETNAME = #{budgetName}
 		GROUP BY mb.YR, mb.MTH) exp
 		INNER JOIN
 		(
@@ -92,7 +92,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 			FROM BUDGET b
 		    	INNER JOIN BUDGETDETAIL bd
 				ON b.budgetid = bd.budgetid
-		    WHERE b.budgetname = #budgetName#
+		    WHERE b.budgetname = #{budgetName}
 			GROUP BY b.BUDGETID, b.budgetname, bd.mth) bud
 		ON exp.mth = bud.bdgmth
 		ORDER BY exp.YR, exp.MTH;
@@ -117,9 +117,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 			AND mb.MTH = bd.MTH
 		INNER JOIN BUDGET b
 			ON bd.BUDGETID = b.BUDGETID
-		WHERE mb.YR =#yr#
-			AND b.BUDGETNAME = #budgetName#
-			AND a.ACTNAME = #actName#
+		WHERE mb.YR =#{yr}
+			AND b.BUDGETNAME = #{budgetName}
+			AND a.ACTNAME = #{actName}
 		GROUP BY mb.YR, mb.MTH) exp
 		INNER JOIN
 		(
@@ -132,8 +132,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 				ON b.budgetid = bd.budgetid
 				INNER JOIN ACCOUNTS a
 					ON bd.ACTID = a.ACTID
-		    WHERE b.budgetname = #budgetName#
-		    	AND a.ACTNAME = #actName#
+		    WHERE b.budgetname = #{budgetName}
+		    	AND a.ACTNAME = #{actName}
 			GROUP BY b.BUDGETID, b.budgetname, bd.mth) bud
 		ON exp.mth = bud.bdgmth
 		ORDER BY exp.YR, exp.MTH;
@@ -154,7 +154,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 		     		ON a.ACTTYPEID = az.ACTTYPEID
 		     	INNER JOIN CURRENCIES c
 		     		ON a.CURRENCYID = c.CURRENCYID
-			WHERE mb.YR >= #yr#-1
+			WHERE mb.YR >= #{yr}-1
 			GROUP BY mb.YR, mb.MTH
 			ORDER BY mb.YR, mb.MTH;
        ]]>

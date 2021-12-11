@@ -41,7 +41,7 @@
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
          INNER JOIN Currencies curr
 			ON Accounts.CurrencyID = curr.CurrencyID
-        WHERE ActTypeName = #value#
+        WHERE ActTypeName = #{value}
         Order By ActName;
    </select>
    
@@ -62,7 +62,7 @@
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
 	      INNER JOIN Currencies curr
 			ON Accounts.CurrencyID = curr.CurrencyID
-        WHERE ActName = #value#
+        WHERE ActName = #{value}
    </select>
    
    <select id="getAccountForOffset" parameterType="tran"
@@ -82,7 +82,7 @@
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
 	      INNER JOIN Currencies curr
 			ON Accounts.CurrencyID = curr.CurrencyID
-        WHERE ActId = #actOffset#
+        WHERE ActId = #{actOffset}
    </select>
    
    <select id="getAccountById" parameterType="tran"
@@ -102,7 +102,7 @@
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
 	      INNER JOIN Currencies curr
 			ON Accounts.CurrencyID = curr.CurrencyID
-        WHERE ActId = #actId#
+        WHERE ActId = #{actId}
    </select>
    
    <select id="getAccountByActId" parameterType="act"
@@ -122,7 +122,7 @@
 	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
 	      INNER JOIN Currencies curr
 			ON Accounts.CurrencyID = curr.CurrencyID
-        WHERE ActId = #actId#
+        WHERE ActId = #{actId}
    </select>
    
      <select id="getAllAccountsByType" resultType="act">
@@ -153,7 +153,7 @@
      					resultType="java.lang.Integer">
       SELECT ActTypeId
         FROM AccountTypes
-       WHERE ActTypeName=#value#
+       WHERE ActTypeName=#{value}
    </select>
    
    <select id="getAccountTemplates" resultType="act">
@@ -178,8 +178,8 @@
    		SELECT ActId as actId,
    			Memo as tranMemo
    		FROM ImportHistory
-   		WHERE ActId = #actId#
-   			AND Memo = #tranMemo#
+   		WHERE ActId = #{actId}
+   			AND Memo = #{tranMemo}
    
    </select>
    
@@ -201,7 +201,7 @@
          		Accounts.ActId = ImportHistory.ActId
          	INNER JOIN Currencies curr
 				ON Accounts.CurrencyID = curr.CurrencyID
-         WHERE ImportHistory.Memo = #tranMemo#
+         WHERE ImportHistory.Memo = #{tranMemo}
          
    
    </select>
@@ -217,11 +217,11 @@
 	     )
     	VALUES 
     	 (
-    	  #actName#,
-    	  #actTypeId#,
-    	  #actNumber#,
-    	  #actBalance#,
-    	  #currencyID#
+    	  #{actName},
+    	  #{actTypeId},
+    	  #{actNumber},
+    	  #{actBalance},
+    	  #{currencyID}
     	 )
    </insert>
    
@@ -234,27 +234,27 @@
    		)
    		VALUES
    		(
-   			#actId#,
-   			#tranMemo#
+   			#{actId},
+   			#{tranMemo}
    		)
    
    </insert>
     
     <delete id="deleteAccount" parameterType="act">
 	    DELETE FROM Accounts
-    	  WHERE ActName = #actName#
+    	  WHERE ActName = #{actName}
    </delete>
    
    <update id="updateAccountBalance" parameterType="tran">
         UPDATE Accounts
         	SET ActBalance = ActBalance + #tranAmount#
-        WHERE ActId = #actId#
+        WHERE ActId = #{actId}
    </update>
    
    <update id="updateAccountName" parameterType="act">
      UPDATE Accounts
-     	SET ActName = #actName#
-     WHERE ActId = #actId#
+     	SET ActName = #{actName}
+     WHERE ActId = #{actId}
    </update>
    
 </mapper>

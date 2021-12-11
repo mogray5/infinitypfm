@@ -19,9 +19,10 @@
  along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<!DOCTYPE sqlMapConfig
+<!DOCTYPE configuration
    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ 
 <configuration>
  
  <typeAliases>   
@@ -48,20 +49,20 @@
  <environment id="dev">
  
  <transactionManager type="JDBC" />
-   <dataSource type="SIMPLE">
-     <property name="JDBC.Driver" value="org.hsqldb.jdbcDriver"/>
-     <property name="JDBC.ConnectionURL" value="${url}"/>
-     <property name="JDBC.Username" value="${user}"/>
-     <property name="JDBC.Password" value="${password}"/>
-     <property name="JDBC.DefaultAutoCommit" value="true" />
-     <property name="Pool.MaximumActiveConnections" value="10"/>
+   <dataSource type="POOLED">
+     <property name="driver" value="org.hsqldb.jdbcDriver"/>
+     <property name="url" value="${url}"/>
+     <property name="username" value="${user}"/>
+     <property name="password" value="${password}"/>
+     <!-- 
+     property name="JDBC.DefaultAutoCommit" value="true" />
+     property name="Pool.MaximumActiveConnections" value="10"/>
      <property name="Pool.MaximumIdleConnections" value="5"/>
      <property name="Pool.MaximumCheckoutTime" value="120000"/>
      <property name="Pool.TimeToWait" value="500"/>
      <property name="Pool.PingQuery" value="select 1 from ACCOUNTS;"/>
      <property name="Pool.PingEnabled" value="false"/>
-     <property name="Pool.PingConnectionsOlderThan" value="1"/>
-     <property name="Pool.PingConnectionsNotUsedFor" value="1"/>
+     -->
    </dataSource>
  
    </environment>

@@ -53,7 +53,7 @@
            ExchRate as exchangeRate,
            LastUpdate as lastUpdate
          FROM Currencies
-         	WHERE IsoCode = #value#
+         	WHERE IsoCode = #{value}
          	
    
    </select>
@@ -68,7 +68,7 @@
            ExchRate as exchangeRate,
            LastUpdate as lastUpdate
          FROM Currencies
-         	WHERE CurrencyID = #value#
+         	WHERE CurrencyID = #{value}
          	
    
    </select>
@@ -83,7 +83,7 @@
            ExchRate as exchangeRate,
            LastUpdate as lastUpdate
          FROM Currencies
-         	WHERE Name = #value#
+         	WHERE Name = #{value}
          	
    
    </select>
@@ -97,7 +97,7 @@
            MethodUrl as methodUrl,
            MethodPath as methodPath
          FROM CurrencyMethods
-         	WHERE CurrencyID = #currencyID#
+         	WHERE CurrencyID = #{currencyID}
          	
    
    </select>
@@ -122,8 +122,8 @@
            MethodUrl as methodUrl,
            MethodPath as methodPath
          FROM CurrencyMethods
-         	WHERE CurrencyID = #currencyID#
-         		and MethodName = #methodName#
+         	WHERE CurrencyID = #{currencyID}
+         		and MethodName = #{methodName}
          	
    
     </select>
@@ -138,25 +138,25 @@
 	     )
     	VALUES 
     	 (
-    	  #currencyID#,
-    	  #methodName#,
-    	  #methodUrl#,
-    	  #methodPath#
+    	  #{currencyID},
+    	  #{methodName},
+    	  #{methodUrl},
+    	  #{methodPath}
     	 )
    </insert>
    
    <update id="updateExchangeRate" parameterType="currency">
    
    		UPDATE Currencies 
-   		SET EXCHRATE = #exchangeRate#,
-   			LASTUPDATE = #lastUpdate# 
-   		WHERE CurrencyID = #currencyID#
+   		SET EXCHRATE = #{exchangeRate},
+   			LASTUPDATE = #{lastUpdate} 
+   		WHERE CurrencyID = #{currencyID}
    
    </update>
    
     <delete id="deleteUpdateMethod" parameterType="currencyMethod">
-   		DELETE FROM CURRENCYMETHODS WHERE MethodName = #methodName#
-   			AND CurrencyID = #currencyID#; 
+   		DELETE FROM CURRENCYMETHODS WHERE MethodName = #{methodName}
+   			AND CurrencyID = #{currencyID}; 
    </delete>
    
 </mapper>

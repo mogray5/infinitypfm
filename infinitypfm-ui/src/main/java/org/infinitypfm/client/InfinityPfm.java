@@ -36,11 +36,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.conf.MM;
@@ -54,6 +50,8 @@ import org.infinitypfm.graphics.ImageMap;
 import org.infinitypfm.ui.MainFrame;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.util.FileHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -66,8 +64,7 @@ public class InfinityPfm {
 
 	private static final String CONFIG_ERROR_ENG = "Error setting up home directory for: ";
 	private static File homeDirectory = new File(System.getProperty("user.home") + File.separator + ".infinitypfm");
-	final static Logger LOG = Logger.getLogger(InfinityPfm.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(InfinityPfm.class);
 	
 	public static void main(String[] args) {
 		Display display = new Display();
@@ -85,7 +82,7 @@ public class InfinityPfm {
 		}
 		
 		//configure logging
-		configureLogging();
+		//configureLogging();
 		
 		//load language
 		getLanguage();
@@ -360,7 +357,7 @@ public class InfinityPfm {
 	}
 	
 	public static void LogMessage(String sMsg){
-		LOG.info(sMsg);
+		logger.info(sMsg);
 		if (qzMain.getMsgMain()==null) return;
 		qzMain.getMsgMain().AppendMsg(sMsg);
 	}
@@ -377,6 +374,7 @@ public class InfinityPfm {
 		}
 	}
 	
+	/*
 	private static void configureLogging() {
 		
 		String logFile = null;
@@ -413,7 +411,7 @@ public class InfinityPfm {
 			Logger.getRootLogger().addAppender(fa);
 		}
 	}
-	
+	*/
 	public static MainFrame qzMain;	
 	public static Shell shMain;
 	public static ImageMap imMain;

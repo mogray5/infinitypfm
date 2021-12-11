@@ -17,7 +17,7 @@
 
 	<insert id="BackupDatabase" parameterType="java.lang.String">
 		BACKUP DATABASE TO
-		#value# BLOCKING
+		#{value} BLOCKING
    </insert>
 
 	<update id="createTableAccountTypes">
@@ -317,8 +317,7 @@
 		INSERT INTO
 		AccountTypes (ActTypeName) VALUES(#value#)
  	</insert>
-
-
+ 	
 	<insert id="addAccountTemplate" parameterType="org.infinitypfm.core.data.Account">
 		INSERT INTO
 		AccountTemplates(ActName, ActTypeID) SELECT #actName# AS ActName,

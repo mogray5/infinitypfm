@@ -37,11 +37,11 @@
 	<update id="updateOptions" parameterType="opt">
 		UPDATE AppSettings
 		SET
-		AppVersion = #appVersion#,
-		DefaultCurrencyID = #defaultCurrencyID#,
-		CurrencyPrecision = #currencyPrecision#,
-		ReportsInBrowswer = #reportsInBrowswer#,
-		ConsoleDefaultOpen = #consoleDefaultOpen#
+		AppVersion = #{appVersion},
+		DefaultCurrencyID = #{defaultCurrencyID},
+		CurrencyPrecision = #{currencyPrecision},
+		ReportsInBrowswer = #{reportsInBrowswer},
+		ConsoleDefaultOpen = #{consoleDefaultOpen}
 	</update>
 
 </mapper>

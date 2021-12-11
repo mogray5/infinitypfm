@@ -58,7 +58,7 @@
 		MemoField as memoField,
 		AmountField as amountField
 		FROM importdef
-		WHERE importid = #importID#
+		WHERE importid = #{importID}
     </select>
   
    <insert id="insertImportDef" parameterType="importDef">
@@ -74,29 +74,29 @@
    		)
    		VALUES
    		(
-   			#importName#,
-   			#importType#,
-   			#dateField#,
-   			#dateFormat#,
-   			#memoField#,
-   			#amountField#
+   			#{importName},
+   			#{importType},
+   			#{dateField},
+   			#{dateFormat},
+   			#{memoField}
+   			#{amountField}
    		)
    
    </insert>
    
    <update id="updateImportDef" parameterType="importDef">
    		UPDATE ImportDef 
-   		SET ImportType = #importType#,
-   			 DateField = #dateField#,
-   			 DateFormat = #dateFormat#,
-   			 MemoField = #memoField#,
-   			 AmountField  = #amountField#
-   		WHERE ImportID = #importID#
+   		SET ImportType = #{importType},
+   			 DateField = #{dateField},
+   			 DateFormat = #{dateFormat},
+   			 MemoField = #{memoField},
+   			 AmountField  = #{amountField}
+   		WHERE ImportID = #{importID}
    
    </update>
      
    <delete id="deleteImportDef" parameterType="importDef">
-   		DELETE FROM IMPORTDEF WHERE ImportID = #importID#; 
+   		DELETE FROM IMPORTDEF WHERE ImportID = #{importID}; 
    </delete>
    
 </mapper>

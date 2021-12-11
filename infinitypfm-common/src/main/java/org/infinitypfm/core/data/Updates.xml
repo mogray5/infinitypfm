@@ -46,7 +46,7 @@ Copyright (c) 2005-2013 Wayne Gray All rights reserved
    
    <update id="bumpVersion" parameterType="java.lang.String">
  	UPDATE AppSettings
- 	 SET AppVersion= #value#
+ 	 SET AppVersion= #{value}
    </update>
    
    <insert id="v0_3_0_a">

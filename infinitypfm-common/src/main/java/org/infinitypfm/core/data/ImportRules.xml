@@ -25,9 +25,9 @@
 		)
 		VALUES
 		(
-		#actId#,
-		#keyword#,
-		#ruleName#
+		#{actId},
+		#{keyword},
+		#{ruleName}
 		)
 
 	</insert>
@@ -55,8 +55,8 @@
            Keyword as keyword,
            RuleName as ruleName
         FROM ImportRules
-        WHERE ActId = #actId#
-        	AND Keyword = #keyword#
+        WHERE ActId = #{actId}
+        	AND Keyword = #{keyword}
 
 	</select>
 	
@@ -64,8 +64,8 @@
 		parameterType="importRule">
 	
 		DELETE FROM ImportRules
-		WHERE ActId = #actId#
-			AND Keyword = #keyword#	
+		WHERE ActId = #{actId}
+			AND Keyword = #{keyword}	
 		
 	</delete>
 

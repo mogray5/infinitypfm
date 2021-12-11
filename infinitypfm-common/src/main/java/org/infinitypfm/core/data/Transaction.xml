@@ -40,8 +40,8 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
           ON Transactions.ActId = Accounts.ActId
          INNER JOIN AccountTypes
           ON Accounts.ActTypeId = AccountTypes.ActTypeId
-        WHERE TranDate >= #startDate#
-         AND TranDate <=#endDate#
+        WHERE TranDate >= #{startDate}
+         AND TranDate <=#{endDate}
         Order By TranDate, ActName;
         ]]>
    </select>
@@ -63,9 +63,9 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
           ON Transactions.ActId = Accounts.ActId
          INNER JOIN AccountTypes
           ON Accounts.ActTypeId = AccountTypes.ActTypeId
-        WHERE ActId = #actId# 
-         AND TranDate >= #startDate#
-         AND TranDate < #endDate# + INTERVAL '1' DAY
+        WHERE ActId = #{actId} 
+         AND TranDate >= #{startDate}
+         AND TranDate < #{endDate} + INTERVAL '1' DAY
         Order By TranDate, ActName;
         ]]>
    </select>
@@ -87,7 +87,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
           ON Transactions.ActId = Accounts.ActId
          INNER JOIN AccountTypes
           ON Accounts.ActTypeId = AccountTypes.ActTypeId
-        WHERE ActName = #value#
+        WHERE ActName = #{value}
         Order By TranDate, ActName;
         ]]>
    </select>
@@ -109,7 +109,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
           ON Transactions.ActId = Accounts.ActId
          INNER JOIN AccountTypes
           ON Accounts.ActTypeId = AccountTypes.ActTypeId
-        WHERE TranKey = #value#
+        WHERE TranKey = #{value}
         Order By TranDate, ActName;
         ]]>
    </select>
@@ -131,7 +131,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
           ON Transactions.ActId = Accounts.ActId
          INNER JOIN AccountTypes
           ON Accounts.ActTypeId = AccountTypes.ActTypeId
-        WHERE TranId = (select max(tranid) as lastTransaction from transactions where actid = #actId#);
+        WHERE TranId = (select max(tranid) as lastTransaction from transactions where actid = #{actId});
         
         ]]>
    </select>
@@ -147,11 +147,11 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 	     )
     	VALUES 
     	 (
-    	  #actId#,
-    	  #tranDate#,
-    	  #tranMemo#,
-     	  #tranAmount#,
-     	  #transactionKey#
+    	  #{actId},
+    	  #{tranDate},
+    	  #{tranMemo},
+     	  #{tranAmount},
+     	  #{transactionKey}
     	 )
    </insert>
    
@@ -165,10 +165,10 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 	     )
     	VALUES 
     	 (
-    	  #tranId#,
-    	  #currencyID#,
-    	  #tranDate#,
-    	  #amount#
+    	  #{tranId},
+    	  #{currencyID},
+    	  #{tranDate},
+    	  #{amount}
     	 )
    </insert>
    
@@ -215,7 +215,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 		 		ON rh.ActId = a.ActId
 		 	INNER JOIN Accounts a1
 		 		ON rh.OffsetId = a1.ActId
-		 WHERE rh.NextRunDate <= #value#
+		 WHERE rh.NextRunDate <= #{value}
 		 ORDER BY RecurId;
 		  ]]>
    </select>
@@ -253,21 +253,21 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    			)
    		VALUES
    			(
-   				#frequencyId#,
-   				#memo#,
-   				#actId#,
-   				#offsetId#,
-   				#nextRunDate#,
-   				#amount#
+   				#{frequencyId},
+   				#{memo},
+   				#{actId},
+   				#{offsetId},
+   				#{nextRunDate},
+   				#{amount}
    			);
    </insert>
   
   <delete id="deleteRecurringTransaction" parameterType="java.lang.Integer">
-  	DELETE FROM RecurHeader WHERE RecurID = #value#
+  	DELETE FROM RecurHeader WHERE RecurID = #{value}
   </delete>
   
   <delete id="deletePendingTransactionsByRecurId" parameterType="java.lang.Integer">
-  	DELETE FROM RecurDetail WHERE RecurID = #value#
+  	DELETE FROM RecurDetail WHERE RecurID = #{value}
   </delete>
   
    <insert id="insertPendingTransaction" parameterType="org.infinitypfm.core.data.RecurDetail">
@@ -278,17 +278,17 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    			)
    		VALUES
    			(
-   				#recurId#,
-   				#tranDate#
+   				#{recurId},
+   				#{tranDate}
    			);
    </insert>
    
    <delete id="deletePendingTransaction" parameterType="java.lang.Long">
-   	DELETE FROM RecurDetail WHERE RecurTranId=#value#;
+   	DELETE FROM RecurDetail WHERE RecurTranId=#{value};
    </delete>
    
    <update id="setNextRunDate" parameterType="org.infinitypfm.core.data.RecurHeader">
-     UPDATE RecurHeader SET NextRunDate = #nextRunDate# WHERE RecurId = #recurId#;
+     UPDATE RecurHeader SET NextRunDate = #nextRunDate# WHERE RecurId = #{recurId};
    </update>
    
 </mapper>

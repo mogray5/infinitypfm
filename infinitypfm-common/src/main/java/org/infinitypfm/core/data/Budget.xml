@@ -45,19 +45,19 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	     )
     	VALUES 
     	 (
-    	  #actId#,
-    	  #tranYear#,
-    	  #tranMonth#,
-     	  #tranAmount#
+    	  #{actId},
+    	  #{tranYear},
+    	  #{tranMonth},
+     	  #{tranAmount}
     	 )
    </insert>
    
    <update id="updateMonthlyBalance" parameterType="tran">
 	    UPDATE MonthlyBalance
 	     SET ActBalance = ActBalance + #tranAmount#
-	    WHERE ActId = #actId#
-	     AND Yr=#tranYear#
-	     AND Mth=#tranMonth#
+	    WHERE ActId = #{actId}
+	     AND Yr=#{tranYear}
+	     AND Mth=#{tranMonth}
    </update>
    
     <select id="getMonthlyBalance" parameterType="tran"
@@ -69,9 +69,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
            Mth as mth,
            ActBalance as actBalance
         FROM MonthlyBalance
-         WHERE ActId = #actId#
-         AND Yr =#tranYear#
-         AND Mth=#tranMonth#;
+         WHERE ActId = #{actId}
+         AND Yr =#{tranYear}
+         AND Mth=#{tranMonth};
         ]]>
    </select>
    
@@ -81,9 +81,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         SELECT
            SUM(ActBalance) as actBalance
         FROM MonthlyBalance
-         WHERE ActId = #actId#
-         AND Yr = #tranYear#
-         AND Mth <= #tranMonth#;
+         WHERE ActId = #{actId}
+         AND Yr = #{tranYear}
+         AND Mth <= #{tranMonth};
         ]]>
    </select>
    
@@ -103,7 +103,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
            BudgetID,
            BudgetName
         FROM Budget
-         WHERE BudgetName=#value#;
+         WHERE BudgetName=#{value};
         ]]>
    </select>
    
@@ -114,13 +114,13 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	     )
     	VALUES 
     	 (
-    	  #budgetName#
+    	  #{budgetName}
     	 )
    </insert>
 
   <insert id="insertBudgetDetail" parameterType="budgetDetail">
   	INSERT INTO BudgetDetail (BudgetID, ActID, Mth, Amount)
-	 VALUES(#budgetId#, #actId#, #mth#, #amount#)
+	 VALUES(#{budgetId}, #{actId}, #{mth}, #{amount})
    </insert>
 
    <!-- select id="getBudgetDetailForMonthWithCompare" parameterType="budgetDetail"
@@ -156,8 +156,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 FROM BudgetDetail
 	  INNER JOIN Accounts
 	   ON BudgetDetail.ActId = Accounts.ActId
-	  WHERE BudgetDetail.Mth=#mth# AND
-	   BudgetDetail.BudgetId = #budgetId# 
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId} 
 	  ORDER BY ActName;
    </select>
    
@@ -169,9 +169,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 FROM BudgetDetail
 	  INNER JOIN Accounts
 	   ON BudgetDetail.ActId = Accounts.ActId
-	 WHERE BudgetDetail.Mth<=#mth# AND
-      BudgetDetail.BudgetId = #budgetId# AND
-      BudgetDetail.ActId = #actId#;
+	 WHERE BudgetDetail.Mth<=#{mth} AND
+      BudgetDetail.BudgetId = #{budgetId} AND
+      BudgetDetail.ActId = #{actId};
      
 	  ]]>
 	  
@@ -186,8 +186,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	(
 	SELECT BudgetDetail.Mth, SUM(BudgetDetail.Amount) as BudgetAmount
 	FROM BudgetDetail
-	WHERE  BudgetDetail.Mth=#mth# AND
-	BudgetDetail.BudgetId = #budgetId#
+	WHERE  BudgetDetail.Mth=#{mth} AND
+	BudgetDetail.BudgetId = #{budgetId}
 	GROUP BY BudgetDetail.Mth) Budget
 	INNER JOIN 
 	( 
@@ -197,11 +197,11 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	ON MonthlyBalance.ActID = Accounts.ActID
 	INNER JOIN AccountTypes
 	ON Accounts.ActTypeID = AccountTypes.ActTypeID
-	WHERE  MonthlyBalance.Mth =#mth# AND
-	MonthlyBalance.Yr = #yr# 
+	WHERE  MonthlyBalance.Mth =#{mth} AND
+	MonthlyBalance.Yr = #{yr} 
 	 AND MonthlyBalance.ActID IN (SELECT 
-	 BudgetDetail.ActID FROM BudgetDetail WHERE BudgetDetail.Mth=#mth# AND
-	BudgetDetail.BudgetId = #budgetId#)
+	 BudgetDetail.ActID FROM BudgetDetail WHERE BudgetDetail.Mth=#{mth} AND
+	BudgetDetail.BudgetId = #{budgetId})
 	GROUP BY MonthlyBalance.Mth) Actual
 	ON Budget.Mth = Actual.Mth
     </select>
@@ -215,8 +215,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ON MonthlyBalance.ActID = Accounts.ActID
 	 INNER JOIN AccountTypes
 	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
-	WHERE Yr=#yr#
-	 AND Mth=#mth#
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
 	 AND AccountTypes.ActTypeName='Liability'
    </select>
    
@@ -229,8 +229,8 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ON MonthlyBalance.ActID = Accounts.ActID
 	 INNER JOIN AccountTypes
 	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
-	WHERE Yr=#yr#
-	 AND Mth=#mth#
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
 	 AND AccountTypes.ActTypeName='Income'
    </select>
    
@@ -243,17 +243,17 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ON MonthlyBalance.ActID = Accounts.ActID
 	 INNER JOIN AccountTypes
 	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
-	WHERE Yr=#yr#
-	 AND Mth=#mth#
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
 	 AND AccountTypes.ActTypeName='Expense'
    </select>
    
    <update id="updateBudgetDetail" parameterType="budgetDetail">
   	UPDATE BudgetDetail 
-  	 SET Amount=#amount#
-	 WHERE BudgetId=#budgetId#
-	  AND ActId=#actId#
-	  AND Mth=#mth#
+  	 SET Amount=#{amount}
+	 WHERE BudgetId=#{budgetId}
+	  AND ActId=#{actId}
+	  AND Mth=#{mth}
    </update>
    
    
@@ -268,9 +268,9 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 FROM BudgetDetail
 	  INNER JOIN Accounts
 	   ON BudgetDetail.ActId = Accounts.ActId
-	  WHERE BudgetDetail.Mth=#mth# AND
-	   BudgetDetail.BudgetId = #budgetId#  AND
-	     BudgetDetail.ActID = #actId#
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId}  AND
+	     BudgetDetail.ActID = #{actId}
 	  ORDER BY ActName;
    </select>
    
@@ -285,16 +285,16 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  INNER JOIN Accounts
 	   ON BudgetDetail.ActId = Accounts.ActId
 	  WHERE
-	   BudgetDetail.BudgetId = #budgetId#  AND
-	     Accounts.ActName = #actName#
+	   BudgetDetail.BudgetId = #{budgetId}  AND
+	     Accounts.ActName = #{actName}
 	  ORDER BY ActName;
    </select>
    
     <update id="updateAccountForBudget" parameterType="budgetDetail">
   	UPDATE BudgetDetail 
-  	 SET Amount= #amount#
-  	  WHERE BudgetId=#budgetId#
-  	   AND ActId = #actId#
+  	 SET Amount= #{amount}
+  	  WHERE BudgetId=#{budgetId}
+  	   AND ActId = #{actId}
    </update>
    
    <select id="getBudgetTotalForMonth" parameterType="budgetDetail"
@@ -302,13 +302,13 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
       SELECT 
 	  	SUM(Amount)
 	 FROM BudgetDetail
-	  WHERE BudgetDetail.Mth=#mth# AND
-	   BudgetDetail.BudgetId = #budgetId#
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId}
    </select>
    
     <delete id="deleteAccountFromBudget" parameterType="budgetDetail">
 	    DELETE FROM BudgetDetail
-    	  WHERE ActId = #actId#
-    	  	AND BudgetId = #budgetId#
+    	  WHERE ActId = #{actId}
+    	  	AND BudgetId = #{budgetId}
    </delete>
 </mapper>
