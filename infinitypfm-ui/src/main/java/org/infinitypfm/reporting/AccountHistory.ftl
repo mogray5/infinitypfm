@@ -25,7 +25,12 @@
 </head>
 	<body>
 		<h2>${account}</h2>
-	
+
+	<div>
+		<span class="totals">${wordAccountTotal}:</span>
+		<span class="totals-dat">${accountTotal!"0"}</span>
+	</div>
+			
 <table id="chart1">
 	<#list reportData as row>
 		<tr>

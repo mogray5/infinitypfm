@@ -21,7 +21,6 @@ package org.infinitypfm.data;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -36,26 +35,34 @@ import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.RecurDetail;
 import org.infinitypfm.core.data.RecurHeader;
-import org.infinitypfm.core.data.Trade;
 import org.infinitypfm.core.data.Transaction;
-import org.infinitypfm.core.data.TransactionOffset;
+import org.infinitypfm.core.exception.TransactionException;
+import org.infinitypfm.core.processor.BaseProcessor;
+import org.infinitypfm.core.processor.ProcessorCallback;
+import org.infinitypfm.core.processor.TransactionProcessor;
 import org.infinitypfm.exception.AccountException;
-import org.infinitypfm.exception.TransactionException;
 
 /**
  * 
  * Collection of common data manipulation functions.
  * 
  */
-public class DataHandler {
+public class DataHandler implements ProcessorCallback {
 
 	DataFormatUtil formatter = null;
+	TransactionProcessor _processor = null;
 	
 	/**
 	 * 
 	 */
 	public DataHandler() {
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		// Configure a processor
+		_processor = new BaseProcessor(MM.options.getCurrencyPrecision());
+		_processor.setLanguage(MM.PHRASES);
+		_processor.setMessageCallback(this);
+		_processor.setSession(MM.sqlMap);
+	
 	}
 
 	public void AddAccount(Account act) throws AccountException, SQLException {
@@ -128,110 +135,12 @@ public class DataHandler {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void AddTransaction(Transaction tran, boolean saveMemo)
 			throws SQLException, TransactionException {
 
-		Transaction tranOffset = null;
-		Trade trade = null;
-		BigDecimal newAmount = null;
-		TransactionOffset offset = null;
-
-		try {
-			
-			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("79") + " " + tran.getTranMemo());
-			
-			boolean isExchange = tran.getExchangeRate() != null && !tran.getExchangeRate().equals("1");
-			
-			if (!offsetsValid(tran.getOffsets(), tran.getTranAmount())) {
-				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("234"));
-				return;
-			}
-			
-			// use MM.sqlTransactionMap
-			
-			try {
-			
-				for (int i=0; i<tran.getOffsets().size(); i++){
-					offset = (TransactionOffset)tran.getOffsets().get(i);
-					tranOffset = new Transaction();
-					tranOffset.setActId(offset.getOffsetId());
-					
-					if (isExchange){
-						
-						newAmount = formatter.strictMultiply(tran.getExchangeRate(), Long.toString(offset.getOffsetAmount()));
-						
-						tranOffset.setTranAmount(newAmount.longValue());
-					
-					} else {
-						tranOffset.setTranAmount(offset.getOffsetAmount());
-					}
-					
-					tranOffset.setTranMemo(tran.getTranMemo());
-					tranOffset.setTranDate(tran.getTranDate());
-					tranOffset.setTransactionKey(tran.getTransactionKey());
-					
-					MM.sqlTransactionMap.insert("insertTransaction", tranOffset);
-					MM.sqlTransactionMap.insert("updateAccountBalance", tranOffset);
-					
-					UpdateMonthlyBalance(tranOffset);
-					
-				}
-				
-				MM.sqlTransactionMap.insert("insertTransaction", tran);
-				MM.sqlTransactionMap.insert("updateAccountBalance", tran);
-				UpdateMonthlyBalance(tran);
-				
-				Transaction memoResult = null;
-	
-				if (saveMemo) {
-	
-					memoResult = (Transaction) MM.sqlMap.selectOne(
-							"getSavedMemo", tranOffset);
-					if (memoResult == null) {
-						MM.sqlTransactionMap.insert("insertMemo", tranOffset);
-					}
-				}
-				
-				MM.sqlTransactionMap.commit();
+		_processor.AddTransaction(tran, saveMemo);
 		
-			} catch (Exception e) {
-				try {MM.sqlTransactionMap.rollback();} catch (Exception er) {}
-			}
-			
-			if (isExchange){
-				try {
-					Account account = (Account)MM.sqlMap.selectOne("getAccountById", tran);
-					Account offsetAccount = (Account)MM.sqlMap.selectOne("getAccountForOffset", tran);
-					
-					tran = (Transaction)MM.sqlMap.selectOne("getLastTransactionByAccount", account.getActId());
-					
-					trade = new Trade();
-					trade.setTranId(tran.getTranId());
-					trade.setTranDate(tran.getTranDate());
-					trade.setAmount(tran.getTranAmount());
-					trade.setCurrencyID(account.getCurrencyID());
-					
-					MM.sqlTransactionMap.insert("insertTrade", trade);
-					
-					trade.setCurrencyID(offsetAccount.getCurrencyID());
-					trade.setAmount(newAmount.longValue());
-					
-					MM.sqlTransactionMap.insert("insertTrade", trade);
-					
-					MM.sqlTransactionMap.commit();
-				
-				} catch (Exception e) {
-					try {MM.sqlTransactionMap.rollback();} catch (Exception er) {}
-				}
-				
-			}
-
-			
-
-		} finally {
-			try {MM.sqlTransactionMap.commit();} catch (Exception se) {}
-		}
+		
 	}
 
 	public void AddTransactionBatch(Object tran[]) throws SQLException, TransactionException {
@@ -425,43 +334,9 @@ public class DataHandler {
 		return result;
 		
 	}
-	
-	
-	private boolean offsetsValid(ArrayList<TransactionOffset> offsets, long transactionAmount){
-		
-		TransactionOffset offset = null;
-		
-		if (offsets == null) {
-			return false;
-		} else {
-			
-			long compareAmount = 0;
-			
-			for (int i=0; i<offsets.size(); i++){
-				
-				offset = (TransactionOffset)offsets.get(i);
-				compareAmount += offset.getOffsetAmount();
-				
-			}
-			
-			if ((compareAmount + transactionAmount) == 0) {
-				return true;
-			}
-			
-			// If a offset id is specified but offset amount is zero then use 
-			// -Transaction amount as the offset, otherwise return false (invalid)
-			
-			if (offsets.size()==1){
-				
-				offset = (TransactionOffset)offsets.get(0);
-				if (offset.getOffsetId()>0 && offset.getOffsetAmount()==0){
-					offset.setOffsetAmount(-transactionAmount);
-					return true;
-				}
-			}
-		}
-		
-		return false;
-		
+
+	@Override
+	public void LogMessage(String msg) {
+		InfinityPfm.LogMessage(msg);
 	}
 }

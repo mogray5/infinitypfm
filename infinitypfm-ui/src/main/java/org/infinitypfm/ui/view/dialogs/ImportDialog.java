@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -52,8 +52,8 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.AccountHash;
 import org.infinitypfm.core.data.ImportRule;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.exception.TransactionException;
 import org.infinitypfm.data.DataHandler;
-import org.infinitypfm.exception.TransactionException;
 import org.infinitypfm.types.AccountTypes;
 import org.infinitypfm.types.ImportRuleNames;
 
@@ -89,7 +89,6 @@ public class ImportDialog extends BaseDialog {
 	private static final String SPLIT = "**" + MM.PHRASES.getPhrase("235")
 			+ "**";
 
-	@SuppressWarnings("unchecked")
 	public ImportDialog() {
 		super();
 
@@ -102,7 +101,6 @@ public class ImportDialog extends BaseDialog {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ImportDialog(java.util.List<Transaction> tList, int importAcct) {
 		super();
 
@@ -203,7 +201,6 @@ public class ImportDialog extends BaseDialog {
 		return 1;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void LoadAccounts() {
 
 		TableEditor rateEditor = null;
@@ -384,7 +381,6 @@ public class ImportDialog extends BaseDialog {
 		tblTrans.setHeaderVisible(true);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void LoadAccountCombo() {
 
 		try {

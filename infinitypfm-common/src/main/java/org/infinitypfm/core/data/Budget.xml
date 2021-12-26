@@ -75,6 +75,22 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
+       <select id="getMonthlyTotalByAccountName" parameterType="tran"
+                          resultType="java.lang.String" flushCache="true">
+       <![CDATA[
+
+         SELECT
+           SUM(mb.ActBalance) as actBalance
+        FROM MonthlyBalance mb
+		  INNER JOIN ACCOUNTS act
+	  		ON mb.actid = act.actid
+         WHERE act.ACTNAME = #{actName}
+         AND mb.Yr =#{tranYear}
+         AND mb.Mth=#{tranMonth};
+         
+        ]]>
+   </select>
+   
    <select id="getYearlyBalance" parameterType="tran"
                           resultType="java.lang.String" flushCache="true">
        <![CDATA[

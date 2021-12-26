@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -15,15 +15,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
+package org.infinitypfm.core.processor;
 
-package org.infinitypfm.exception;
+/**
+ * 
+ * Callback to pass logging messages from core module to UI
+ *
+ */
+public interface ProcessorCallback {
 
-public class TransactionException extends Exception {
-
-	private static final long serialVersionUID = -3443459609666093704L;
-
-	public TransactionException(String arg0) {
-		super(arg0);
-	}
+	public void LogMessage(String msg);
+	
 }

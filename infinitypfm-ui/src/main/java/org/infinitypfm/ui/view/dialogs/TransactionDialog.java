@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -49,8 +49,8 @@ import org.infinitypfm.core.data.AccountHash;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
+import org.infinitypfm.core.exception.TransactionException;
 import org.infinitypfm.data.DataHandler;
-import org.infinitypfm.exception.TransactionException;
 import org.infinitypfm.types.NumberFormat;
 
 /**

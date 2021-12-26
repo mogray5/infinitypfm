@@ -80,7 +80,7 @@ StringBuilder sb = new StringBuilder();
 	}
 
 	public String getIncomeBalanceFmt() {
-		return _formatter.getAmountFormatted(-incomeBalance, "##0.00");
+		return _formatter.getAmountFormatted(-incomeBalance, "#,##0.00;(#,##0.00)");
 	}
 	
 	public void setIncomeBalance(long incomeBalance) {
@@ -92,7 +92,7 @@ StringBuilder sb = new StringBuilder();
 	}
 	
 	public String getExpenseBalanceFmt() {
-		return _formatter.getAmountFormatted(expenseBalance, "##0.00");
+		return _formatter.getAmountFormatted(expenseBalance, "#,##0.00;(#,##0.00)");
 	}
 
 	public void setExpenseBalance(long expenseBalance) {
@@ -104,11 +104,11 @@ StringBuilder sb = new StringBuilder();
 	}
 
 	public String getLiabilityBalanceFmt() {
-		return _formatter.getAmountFormatted(liabilityBalance, "##0.00");
+		return _formatter.getAmountFormatted(liabilityBalance, "#,##0.00;(#,##0.00)");
 	}
 	
 	public String getLiabilityPlusExpenseBalanceFmt() {
-		return _formatter.getAmountFormatted(liabilityBalance+expenseBalance, "##0.00");
+		return _formatter.getAmountFormatted(liabilityBalance+expenseBalance, "#,##0.00;(#,##0.00)");
 	}
 
 	public long getLiabilityPlusExpenseBalance() {

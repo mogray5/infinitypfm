@@ -319,6 +319,7 @@ public class LangLoader {
 		hmPhrases.put("272",  i18n.tr("Account Type"));
 		hmPhrases.put("273", i18n.tr("Account History All Time"));
 		hmPhrases.put("274", i18n.tr("Apache FreeMarker (https://freemarker.apache.org/) "));
+		hmPhrases.put("275",  i18n.tr("Account Total"));
 	}
 	
 	

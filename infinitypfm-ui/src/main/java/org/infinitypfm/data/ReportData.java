@@ -34,6 +34,7 @@ import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.IReportable;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
+import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.reporting.BaseReport;
 import org.infinitypfm.reporting.ScriptLoader;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
@@ -60,6 +61,7 @@ public class ReportData {
 	private String incomeTotal;
 	private String expenseTotal;
 	private String liabilityTotal;
+	private String accountTotal;
 	private String title;
 	private String budget;
 	private String account;
@@ -119,7 +121,7 @@ public class ReportData {
 			account = promptForAccount(true); //Include income accounts
 
 			if (account != null) {
-
+				initTotalsAccount();
 				monthlyBalance.setActName(account);
 				monthlyBalance.setMth(dateUtil.getMonth());
 				monthlyBalance.setYr(dateUtil.getYear() - 1);
@@ -137,7 +139,7 @@ public class ReportData {
 			account = promptForAccount(true); //Include income accounts
 
 			if (account != null) {
-
+				initTotalsAccount();
 				monthlyBalance.setActName(account);
 				monthlyBalance.setMth(dateUtil.getMonth());
 				monthlyBalance.setYr(dateUtil.getYear() - 50);
@@ -234,6 +236,10 @@ public class ReportData {
 		return Long.parseLong(liabilityTotal);
 	}
 	
+	public String getAccountTotal() {
+		return formatLongString(accountTotal);
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -289,6 +295,23 @@ public class ReportData {
 
 	}
 
+	private void initTotalsAccount() {
+
+		Transaction tran = new Transaction();
+		tran.setTranDate(dateUtil.getDate());
+		tran.setActName(account);
+		
+		try {
+
+			accountTotal = (String) MM.sqlMap.selectOne(
+					"getMonthlyTotalByAccountName", tran);
+
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+
+	}
+	
 	private void promptForMonthYr() {
 
 		MonthYearDialog monthPicker = new MonthYearDialog();
@@ -557,6 +580,9 @@ public class ReportData {
   }
   public String getWordAccountName() {
 	  return MM.PHRASES.getPhrase("93");
+  }
+  public String getWordAccountTotal() {
+	  return MM.PHRASES.getPhrase("275");
   }
 }
 

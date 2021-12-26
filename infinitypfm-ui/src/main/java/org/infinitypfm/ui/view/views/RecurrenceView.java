@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -45,8 +45,8 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.RecurHeader;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.exception.TransactionException;
 import org.infinitypfm.data.DataHandler;
-import org.infinitypfm.exception.TransactionException;
 import org.infinitypfm.ui.view.dialogs.DateDialog;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.RecurrenceToolbar;
