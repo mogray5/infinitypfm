@@ -33,7 +33,7 @@
 	</insert>
 
 	<select id="getImportRules"  
-		resultType="importRule">
+		resultType="importRule" flushCache="true">
 
 		 SELECT
            ActId as actId,
@@ -48,7 +48,7 @@
 
 	<select id="getImportRule"
 		parameterType="importRule"  
-		resultType="importRule">
+		resultType="importRule" flushCache="true">
 
 		 SELECT
            ActId as actId,

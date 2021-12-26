@@ -25,7 +25,7 @@
 <mapper namespace="Account">
 
    <select id="getAccountsForType" parameterType="java.lang.String"
-                           resultType="act">
+                           resultType="act" flushCache="true">
       SELECT
            ActId as actId,
            ActName as actName,
@@ -46,7 +46,7 @@
    </select>
    
      <select id="getAccountForName" parameterType="java.lang.String"
-                           resultType="act">
+                           resultType="act" flushCache="true">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -66,7 +66,7 @@
    </select>
    
    <select id="getAccountForOffset" parameterType="tran"
-                           resultType="act">
+                           resultType="act" flushCache="true">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -86,7 +86,7 @@
    </select>
    
    <select id="getAccountById" parameterType="tran"
-                           resultType="act">
+                           resultType="act" flushCache="true">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -106,7 +106,7 @@
    </select>
    
    <select id="getAccountByActId" parameterType="act"
-                           resultType="act">
+                           resultType="act" flushCache="true">
      SELECT
            ActId as actId,
            ActName as actName,
@@ -125,7 +125,7 @@
         WHERE ActId = #{actId}
    </select>
    
-     <select id="getAllAccountsByType" resultType="act">
+     <select id="getAllAccountsByType" resultType="act" flushCache="true">
         SELECT
            ActId as actId,
            ActName as actName,
@@ -144,19 +144,19 @@
         Order By ActTypeName,ActName;
    </select>
    
-   <select id="getAccountsTypes" resultType="java.lang.String">
+   <select id="getAccountsTypes" resultType="java.lang.String" flushCache="true">
      SELECT ActTypeName
         FROM AccountTypes
    </select>
    
    <select id="getAccountTypeIdForName" parameterType="java.lang.String" 
-     					resultType="java.lang.Integer">
+     					resultType="java.lang.Integer" flushCache="true">
       SELECT ActTypeId
         FROM AccountTypes
        WHERE ActTypeName=#{value}
    </select>
    
-   <select id="getAccountTemplates" resultType="act">
+   <select id="getAccountTemplates" resultType="act" flushCache="true">
    		SELECT ActTypeName,
    			AccountTypes.ActTypeId, 
    			ActName
@@ -174,7 +174,7 @@
    </select>
    
    <select id="getSavedMemo" parameterType="tran"
-   						resultType="tran">
+   						resultType="tran" flushCache="true">
    		SELECT ActId as actId,
    			Memo as tranMemo
    		FROM ImportHistory
@@ -184,7 +184,7 @@
    </select>
    
    <select id="getAccountsForMemo" parameterType="tran"
-   					resultType="act">
+   					resultType="act" flushCache="true">
    		
    		SELECT 
            Accounts.ActId as actId,
@@ -247,7 +247,7 @@
    
    <update id="updateAccountBalance" parameterType="tran">
         UPDATE Accounts
-        	SET ActBalance = ActBalance + #tranAmount#
+        	SET ActBalance = ActBalance + #{tranAmount}
         WHERE ActId = #{actId}
    </update>
    

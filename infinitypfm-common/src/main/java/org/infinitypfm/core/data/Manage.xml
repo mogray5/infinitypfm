@@ -331,7 +331,7 @@
  	</insert>
 
 	<select id="tableExists" parameterType="java.lang.String"
-		resultType="java.lang.Integer">
+		resultType="java.lang.Integer" flushCache="true">
 		SELECT count(*) AS foundCount FROM SYSTEM_TABLES WHERE
 		TABLE_NAME = #value#
 	</select>

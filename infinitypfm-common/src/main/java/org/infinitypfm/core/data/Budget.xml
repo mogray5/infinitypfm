@@ -54,14 +54,14 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    <update id="updateMonthlyBalance" parameterType="tran">
 	    UPDATE MonthlyBalance
-	     SET ActBalance = ActBalance + #tranAmount#
+	     SET ActBalance = ActBalance + #{tranAmount}
 	    WHERE ActId = #{actId}
 	     AND Yr=#{tranYear}
 	     AND Mth=#{tranMonth}
    </update>
    
     <select id="getMonthlyBalance" parameterType="tran"
-                          resultType="monthBalance">
+                          resultType="monthBalance" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -76,7 +76,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </select>
    
    <select id="getYearlyBalance" parameterType="tran"
-                          resultType="java.lang.String">
+                          resultType="java.lang.String" flushCache="true">
        <![CDATA[
         SELECT
            SUM(ActBalance) as actBalance
@@ -87,7 +87,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-   <select id="getAllBudgets" resultType="budget">
+   <select id="getAllBudgets" resultType="budget" flushCache="true">
        <![CDATA[
         SELECT
            BudgetID,
@@ -97,7 +97,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
         ]]>
    </select>
    
-    <select id="getBudget" resultType="budget">
+    <select id="getBudget" resultType="budget" flushCache="true">
        <![CDATA[
         SELECT
            BudgetID,
@@ -147,7 +147,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    
     <select id="getBudgetDetailForMonth" parameterType="budgetDetail"
-                                       resultType="budgetDetail">
+                                       resultType="budgetDetail" flushCache="true">
 	   SELECT BudgetID as budgetId, 
 	  ActId as actId,
 	  ActName as actName,
@@ -161,7 +161,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ORDER BY ActName;
    </select>
    
-   <select id="getYearBudgetBalance" parameterType="budgetDetail" resultType="java.lang.String">
+   <select id="getYearBudgetBalance" parameterType="budgetDetail" resultType="java.lang.String" flushCache="true">
      
      <![CDATA[                                  
 	 SELECT 
@@ -180,7 +180,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    
   <select id="getOverUnderForMonth" parameterType="budgetDetail"
-                                       resultType="java.lang.String">  
+                                       resultType="java.lang.String" flushCache="true">  
    SELECT Budget.BudgetAmount - Actual.ActualAmount as MonthOverUnder
 	FROM 
 	(
@@ -207,7 +207,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
     </select>
   
   <select id="getLiabilityTotalForMonth" parameterType="budgetDetail"
-                                       resultType="java.lang.String">    
+                                       resultType="java.lang.String" flushCache="true">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -221,7 +221,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </select>
    
     <select id="getIncomeTotalForMonth" parameterType="budgetDetail"
-                                       resultType="java.lang.String">    
+                                       resultType="java.lang.String" flushCache="true">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -235,7 +235,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </select>
    
      <select id="getExpenseTotalForMonth" parameterType="budgetDetail"
-                                       resultType="java.lang.String">    
+                                       resultType="java.lang.String" flushCache="true">    
     
     SELECT SUM(MonthlyBalance.ActBalance)
 	FROM MonthlyBalance
@@ -258,7 +258,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    
    
     <select id="getBudgetDetail" parameterType="budgetDetail"
-                                       resultType="budgetDetail">    
+                                       resultType="budgetDetail" flushCache="true">    
     
       SELECT BudgetID as budgetId, 
 	  ActId as actId,
@@ -275,7 +275,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </select>
    
    <select id="getBudgetDetailByName" parameterType="budgetDetail"
-                                       resultType="budgetDetail">    
+                                       resultType="budgetDetail" flushCache="true">    
       SELECT BudgetID as budgetId, 
 	  ActId as actId,
 	  ActName as actName,
@@ -298,7 +298,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    </update>
    
    <select id="getBudgetTotalForMonth" parameterType="budgetDetail"
-                                       resultType="java.lang.String">        
+                                       resultType="java.lang.String" flushCache="true">        
       SELECT 
 	  	SUM(Amount)
 	 FROM BudgetDetail

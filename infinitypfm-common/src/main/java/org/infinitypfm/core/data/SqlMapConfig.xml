@@ -47,7 +47,7 @@
  
  <environments default="dev">
  <environment id="dev">
- 
+  
  <transactionManager type="JDBC" />
    <dataSource type="POOLED">
      <property name="driver" value="org.hsqldb.jdbcDriver"/>
@@ -64,7 +64,7 @@
      <property name="Pool.PingEnabled" value="false"/>
      -->
    </dataSource>
- 
+
    </environment>
 </environments>
  

@@ -24,7 +24,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Transaction">
      <select id="getTransactionsForRange" parameterType="dateRange"
-                          resultType="tran">
+                          resultType="tran" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -47,7 +47,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    </select>
    
    <select id="getTransactionsForRangeAndAccount" parameterType="dateRangeAccount"
-                          resultType="tran">
+                          resultType="tran" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -71,7 +71,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    </select>
    
    <select id="getTransactionsForAccount" parameterType="java.lang.String"
-                          resultType="tran">
+                          resultType="tran" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -93,7 +93,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    </select>
    
    <select id="getTransactionsByKey" parameterType="java.lang.String"
-                          resultType="tran">
+                          resultType="tran" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -115,7 +115,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    </select>
    
    <select id="getLastTransactionByAccount" parameterType="java.lang.Integer"
-                          resultType="tran">
+                          resultType="tran" flushCache="true">
        <![CDATA[
         SELECT
            ActId as actId,
@@ -176,7 +176,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
      SHUTDOWN;
    </insert>
    
-   <select id="getRecurringTransactions" resultType="org.infinitypfm.core.data.RecurHeader">
+   <select id="getRecurringTransactions" resultType="org.infinitypfm.core.data.RecurHeader" flushCache="true">
    	SELECT 
    		rh.RecurId,
    		rh.FrequencyId,
@@ -198,7 +198,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
    
    <select id="getPastDueRecurringTransactions" 
    			resultType="org.infinitypfm.core.data.RecurHeader"
-   			parameterType="java.util.Date">
+   			parameterType="java.util.Date" flushCache="true">
 		<![CDATA[
 	   	SELECT 
 	   		rh.RecurId,
@@ -220,7 +220,7 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
 		  ]]>
    </select>
    
-   <select id="getPendingTransactions" resultType="org.infinitypfm.core.data.Transaction">
+   <select id="getPendingTransactions" resultType="org.infinitypfm.core.data.Transaction" flushCache="true">
    	SELECT rd.RecurTranId,
    		rh.ActID as ActId,
    		a.ActName,

@@ -267,7 +267,7 @@ public class DataHandler {
 			AddBudgetDetailBatch(budget.getBudgetId(), actList);
 
 		}
-
+		
 	}
 
 	@SuppressWarnings("rawtypes")

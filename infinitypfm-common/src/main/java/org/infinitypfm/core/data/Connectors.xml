@@ -24,7 +24,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Currency">
    		
-	<select id="getConnectors" resultType="connector">
+	<select id="getConnectors" resultType="connector" flushCache="true">
 		
 	  SELECT connectorid,
 		connectorname as connectorName,
@@ -37,7 +37,7 @@
 		ORDER BY connectorname
     </select>
 
-	<select id="getImportDefs" resultType="importDef">
+	<select id="getImportDefs" resultType="importDef" flushCache="true">
 	  SELECT importid,
 		importname as importName,
 		ImportType as importType,
@@ -49,7 +49,7 @@
 		ORDER BY importname
     </select>
   
-  	<select id="getImportDef" parameterType="importDef" resultType="importDef">
+  	<select id="getImportDef" parameterType="importDef" resultType="importDef" flushCache="true">
 	  SELECT importid,
 		importname as importName,
 		ImportType as importType,

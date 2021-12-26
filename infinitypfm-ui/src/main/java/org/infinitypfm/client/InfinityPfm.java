@@ -294,8 +294,8 @@ public class InfinityPfm {
 			
 			SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader, props);
 			
-			MM.sqlMap = sessionFactory.openSession(false);
-			MM.sqlTransactionMap = sessionFactory.openSession(true);
+			MM.sqlMap = sessionFactory.openSession(true);
+			MM.sqlTransactionMap = sessionFactory.openSession(false);
 			
 			// See if we can get a connection	
 			//MM.sqlMap.

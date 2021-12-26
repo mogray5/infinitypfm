@@ -14,7 +14,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Options">
 
-	<select id="getAppVersion" resultType="java.lang.String">
+	<select id="getAppVersion" resultType="java.lang.String" flushCache="true">
    <![CDATA[
     SELECT
        AppVersion
@@ -22,7 +22,7 @@
     ]]>
 	</select>
 
-	<select id="getOptions" resultType="opt">
+	<select id="getOptions" resultType="opt" flushCache="true">
    <![CDATA[
     SELECT
        AppVersion,
