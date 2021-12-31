@@ -25,9 +25,10 @@
  
 <configuration>
  
- <typeAliases>   
+ <typeAliases>    
 	<typeAlias alias="act" type="org.infinitypfm.core.data.Account"/>
 	<typeAlias alias="balanceByType" type="org.infinitypfm.core.data.MonthlyBalanceByType"/>
+	<typeAlias alias="basis" type="org.infinitypfm.core.data.Basis"/>
 	<typeAlias alias="budgetBalance" type="org.infinitypfm.core.data.BudgetBalance"/>
 	<typeAlias alias="budgetDetail" type="org.infinitypfm.core.data.BudgetDetail"/>
 	<typeAlias alias="budget" type="org.infinitypfm.core.data.Budget"/>
@@ -42,6 +43,7 @@
 	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
 	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
 	<typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
+	<typeAlias alias="trade2" type="org.infinitypfm.core.data.Trade2"/>
 	<typeAlias alias="tran" type="org.infinitypfm.core.data.Transaction"/>
  </typeAliases>
  
@@ -81,6 +83,7 @@
   <mapper resource="org/infinitypfm/core/data/Currency.xml" />
   <mapper resource="org/infinitypfm/core/data/ImportRules.xml" />
   <mapper resource="org/infinitypfm/core/data/Connectors.xml" />
+  <mapper resource="org/infinitypfm/core/data/Trades.xml" />
 </mappers>
 
 </configuration>

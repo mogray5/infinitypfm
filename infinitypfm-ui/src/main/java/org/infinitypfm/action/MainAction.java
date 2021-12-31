@@ -29,7 +29,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.naming.AuthenticationException;
+
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.bitcoinj.moved.wallet.UnreadableWalletException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
@@ -70,6 +73,7 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
+import org.infinitypfm.ui.view.dialogs.PasswordDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
 import org.infinitypfm.ui.view.views.ReportView;
@@ -81,6 +85,8 @@ import org.infinitypfm.util.FileHandler;
  */
 public class MainAction {
 
+	private String _walletPassword = null;
+	
 	public MainAction() {
 		super();
 	}
@@ -244,10 +250,62 @@ public class MainAction {
 			break;
 		case MM.MENU_FILE_RESTORE:
 			break;
-
+		case MM.VIEW_WALLET:
+			this.LoadView(MM.VIEW_WALLET);
+			break;
+		case MM.MENU_WALLET_SHOW_MNEMONIC:
+			this.WalletShowMnemonic();
+			break;
+		case MM.MENU_WALLET_BACKUP:
+			break;
+		case MM.MENU_WALLET_RESTORE:
+			this.WalletRestore();
+			break;
+		case MM.MENU_WALLET_REFRESH:
+			break;
 		}
 	}
 
+	public void WalletRestore() {
+		
+		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("293"), 
+				MM.PHRASES.getPhrase("293"));
+		String seedCode = infoDialog.getInput();
+		
+		if (seedCode == null || seedCode.length() ==0 ) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("294"), true);
+			return;
+		}
+	
+		try {
+			MM.wallet.restoreFromSeed(seedCode, walletPassword(), null);
+		} catch (AuthenticationException e) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
+			_walletPassword = null;
+		} catch (UnreadableWalletException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		}
+		
+		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("295"), true);
+	}
+	
+	public void WalletShowMnemonic() {
+		
+		try {
+			
+			String mnemonic = MM.wallet.getMnemonicCode(walletPassword());
+			InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("292"), 
+					mnemonic, true);
+			InfinityPfm.LogMessage(mnemonic);
+			infoDialog.Open();
+			
+		} catch (AuthenticationException e) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
+			_walletPassword = null;
+		}
+		
+	}
+	
 	public void LoadView(int iViewID) {
 
 		BaseView vw = InfinityPfm.qzMain.getVwMain().getView(iViewID);
@@ -650,4 +708,23 @@ public class MainAction {
 
 	}
 
+	/**
+	 * Show Password prompt dialog if user has set
+	 * a spending password in options
+	 * 
+	 * @return true/false user authorized
+	 */
+	private String walletPassword() {
+		
+		if (_walletPassword != null) return _walletPassword;
+		
+		if (MM.options.getSpendPassword() != null) {
+			PasswordDialog password = new PasswordDialog(false);
+			String[] answer = password.getCredentials();
+			_walletPassword = answer[1];
+		}
+		
+		return _walletPassword;
+	}
+	
 }

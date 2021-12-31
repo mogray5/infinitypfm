@@ -38,7 +38,7 @@
 			LEFT OUTER JOIN
 			AppSettings
 			ON Currencies.CurrencyId = AppSettings.DefaultCurrencyId
-		         	ORDER BY IsoCode
+		 ORDER BY IsoCode
          
    
    </select>
@@ -51,7 +51,8 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE IsoCode = #{value}
          	
@@ -66,7 +67,8 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE CurrencyID = #{value}
          	
@@ -81,11 +83,27 @@
            Name as currencyName,
            IsoCode as isoName,
            ExchRate as exchangeRate,
-           LastUpdate as lastUpdate
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
          FROM Currencies
          	WHERE Name = #{value}
          	
    
+   </select>
+   
+   <select id="getCurrencyDefault" resultType="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
+         FROM Currencies c
+		INNER JOIN AppSettings a
+			on c.currencyid = a.defaultcurrencyid
+         	
    </select>
       
    <select id="getCurrencyMethods" parameterType="currency" 

@@ -29,7 +29,11 @@
        DefaultCurrencyID,
        CurrencyPrecision,
        ReportsInBrowswer,
-       ConsoleDefaultOpen
+       ConsoleDefaultOpen,
+       WalletEnabled as EnableWallet,
+       SpendPassword,
+       DefaultBsvCurrencyMethod,
+       DefaultBsvCurrencyID
     FROM AppSettings;
     ]]>
 	</select>
@@ -41,7 +45,11 @@
 		DefaultCurrencyID = #{defaultCurrencyID},
 		CurrencyPrecision = #{currencyPrecision},
 		ReportsInBrowswer = #{reportsInBrowswer},
-		ConsoleDefaultOpen = #{consoleDefaultOpen}
+		ConsoleDefaultOpen = #{consoleDefaultOpen},
+		WalletEnabled = #{enableWallet},
+		SpendPassword = #{spendPassword},
+		DefaultBsvCurrencyMethod = #{defaultBsvCurrencyMethod},
+		DefaultBsvCurrencyID = #{defaultBsvCurrencyID}
 	</update>
 
 </mapper>

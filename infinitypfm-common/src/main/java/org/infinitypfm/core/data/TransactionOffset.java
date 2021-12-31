@@ -28,6 +28,8 @@ public class TransactionOffset implements Serializable {
 	private int offsetId = -1;
 	private String offsetName = null; 
 	private long offsetAmount = 0;
+	private boolean needsConversion = true;
+	
 	public int getOffsetId() {
 		return offsetId;
 	}
@@ -46,7 +48,11 @@ public class TransactionOffset implements Serializable {
 	public void setOffsetAmount(long offsetAmount) {
 		this.offsetAmount = offsetAmount;
 	}
-	
-	
+	public boolean needsConversion() {
+		return needsConversion;
+	}
+	public void setNeedsConversion(boolean needsConversion) {
+		this.needsConversion = needsConversion;
+	}
 	
 }

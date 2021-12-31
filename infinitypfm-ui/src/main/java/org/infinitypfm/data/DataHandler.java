@@ -37,7 +37,7 @@ import org.infinitypfm.core.data.RecurDetail;
 import org.infinitypfm.core.data.RecurHeader;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.exception.TransactionException;
-import org.infinitypfm.core.processor.BaseProcessor;
+import org.infinitypfm.core.processor.SimpleProcessor;
 import org.infinitypfm.core.processor.ProcessorCallback;
 import org.infinitypfm.core.processor.TransactionProcessor;
 import org.infinitypfm.exception.AccountException;
@@ -58,7 +58,7 @@ public class DataHandler implements ProcessorCallback {
 	public DataHandler() {
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 		// Configure a processor
-		_processor = new BaseProcessor(MM.options.getCurrencyPrecision());
+		_processor = new SimpleProcessor(MM.options.getCurrencyPrecision());
 		_processor.setLanguage(MM.PHRASES);
 		_processor.setMessageCallback(this);
 		_processor.setSession(MM.sqlMap);

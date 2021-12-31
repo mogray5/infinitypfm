@@ -20,12 +20,15 @@ package org.infinitypfm.core.data;
 
 import java.util.Date;
 
-public class Trade {
+public class Basis {
 
 	private long tranId; 
-	private long currencyID = 0;
-	private Date tranDate;
-	private long amount=0;
+	private long aquireCurrencyID = 0;
+	private long costCurrencyID = 0;
+	private Date aquireDate;
+	private long qtyFifo;
+	private long qtyLifo;
+	private long cost=0;
 	
 	public long getTranId() {
 		return tranId;
@@ -33,23 +36,40 @@ public class Trade {
 	public void setTranId(long tranId) {
 		this.tranId = tranId;
 	}
-	public long getCurrencyID() {
-		return currencyID;
+	public long getAquireCurrencyID() {
+		return aquireCurrencyID;
 	}
-	public void setCurrencyID(long currencyID) {
-		this.currencyID = currencyID;
+	public void setAquireCurrencyID(long aquireCurrencyID) {
+		this.aquireCurrencyID = aquireCurrencyID;
 	}
-	public Date getTranDate() {
-		return tranDate;
+	public long getCostCurrencyID() {
+		return costCurrencyID;
 	}
-	public void setTranDate(Date tranDate) {
-		this.tranDate = tranDate;
+	public void setCostCurrencyID(long costCurrencyID) {
+		this.costCurrencyID = costCurrencyID;
 	}
-	public long getAmount() {
-		return amount;
+	public Date getAquireDate() {
+		return aquireDate;
 	}
-	public void setAmount(long amount) {
-		this.amount = amount;
+	public void setAquireDate(Date aquireDate) {
+		this.aquireDate = aquireDate;
 	}
-	
+	public long getQtyFifo() {
+		return qtyFifo;
+	}
+	public void setQtyFifo(long qtyFifo) {
+		this.qtyFifo = qtyFifo;
+	}
+	public long getQtyLifo() {
+		return qtyLifo;
+	}
+	public void setQtyLifo(long qtyLifo) {
+		this.qtyLifo = qtyLifo;
+	}
+	public long getCost() {
+		return cost;
+	}
+	public void setCost(long cost) {
+		this.cost = cost;
+	}
 }

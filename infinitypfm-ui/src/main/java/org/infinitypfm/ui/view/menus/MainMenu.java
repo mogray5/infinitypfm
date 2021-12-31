@@ -146,7 +146,17 @@ public class MainMenu implements Widget {
 		mi = addSelection(mnuView, SWT.PUSH, MM.MENU_OPTIONS_CONFIG,
 				MM.PHRASES.getPhrase("67"), 'O');
 
+		if (MM.options.isEnableWallet()) {
+		
+			mi = new MenuItem(mnuView, SWT.SEPARATOR);
+			
+			mi = addSelection(mnuView, SWT.PUSH, MM.VIEW_WALLET,
+				MM.PHRASES.getPhrase("276"), 'O');
+		
+		}
+		
 		mi = new MenuItem(mnuView, SWT.SEPARATOR);
+		
 		miConsole = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_CONSOLE,
 				MM.PHRASES.getPhrase("65"), ' ');
 

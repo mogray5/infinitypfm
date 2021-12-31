@@ -62,6 +62,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.0.2")) {
 			ApplyVersion010();
 			ApplyVersion030();
@@ -74,6 +75,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.1.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -85,6 +87,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.2.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -96,6 +99,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.2.1")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -107,6 +111,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.3.0")) {
 			ApplyVersion035();
 			ApplyVersion040();
@@ -117,6 +122,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.3.5")) {
 			ApplyVersion040();
 			ApplyVersion050();
@@ -126,6 +132,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.4.0")) {
 			ApplyVersion050();
 			ApplyVersion060();
@@ -134,6 +141,7 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
+			ApplyVersion090();
 		} else if (sVersion.equals("0.5.0")) {
 			ApplyVersion060();
 			ApplyVersion070();
@@ -141,28 +149,36 @@ public class InfinityUpdates {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
-		} else if (sVersion.equalsIgnoreCase("0.6.0")){
+			ApplyVersion090();
+		} else if (sVersion.equals("0.6.0")){
 			ApplyVersion070();
 			ApplyVersion075();
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
-		} else if (sVersion.equalsIgnoreCase("0.7.0")){
+			ApplyVersion090();
+		} else if (sVersion.equals("0.7.0")){
 			ApplyVersion075();
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
-		} else if (sVersion.equalsIgnoreCase("0.7.5")) {
+			ApplyVersion090();
+		} else if (sVersion.equals("0.7.5")) {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
-		} else if (sVersion.equalsIgnoreCase("0.7.6")) {
+			ApplyVersion090();
+		} else if (sVersion.equals("0.7.6")) {
 			ApplyVersion077();
 			ApplyVersion078();
-		} else if (sVersion.equalsIgnoreCase("0.7.7")) {
+			ApplyVersion090();
+		} else if (sVersion.equals("0.7.7")) {
 			ApplyVersion078();
 		 } else if (sVersion.equalsIgnoreCase("0.7.8")) {
 			ApplyVersion085();
+			ApplyVersion090();
+		} else if (sVersion.equalsIgnoreCase("0.8.5")) {
+			ApplyVersion090();
 		}
 
 	}
@@ -312,5 +328,24 @@ public class InfinityUpdates {
 		
 		MM.sqlMap.update("bumpVersion", "0.8.5");
 	}
-	
+
+	private void ApplyVersion090() throws SQLException {
+		MM.sqlMap.update("v0_9_0_a");
+		MM.sqlMap.update("v0_9_0_b");
+		MM.sqlMap.update("v0_9_0_c");
+		MM.sqlMap.update("v0_9_0_d");
+		MM.sqlMap.update("v0_9_0_e");
+		MM.sqlMap.update("v0_9_0_f");
+		
+		MM.sqlMap.insert("createTableTrades2");
+		MM.sqlMap.insert("createTableBasis");
+		MM.sqlMap.insert("createFKTrades21");
+		MM.sqlMap.insert("createFKTrades22");
+		MM.sqlMap.insert("createFKTrades23");
+		MM.sqlMap.insert("createFKBasis1");
+		MM.sqlMap.insert("createFKBasis2");
+		
+		MM.sqlMap.update("bumpVersion", "0.9.0");
+	}
+
 }

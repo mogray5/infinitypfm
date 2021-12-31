@@ -320,6 +320,34 @@ public class LangLoader {
 		hmPhrases.put("273", i18n.tr("Account History All Time"));
 		hmPhrases.put("274", i18n.tr("Apache FreeMarker (https://freemarker.apache.org/) "));
 		hmPhrases.put("275",  i18n.tr("Account Total"));
+		hmPhrases.put("276",  i18n.tr("Wallet"));
+		hmPhrases.put("277",  i18n.tr("Send"));
+		hmPhrases.put("278",  i18n.tr("Receive"));
+		hmPhrases.put("279",  i18n.tr("To"));
+		hmPhrases.put("280",  i18n.tr("Amount Local"));
+		hmPhrases.put("281",  i18n.tr("Amount BSV"));
+		hmPhrases.put("282",  i18n.tr("From"));
+		hmPhrases.put("283",  i18n.tr("Enable Bitcoin SV Wallet"));
+		hmPhrases.put("284",  i18n.tr("Spending Password"));
+		hmPhrases.put("285",  i18n.tr("Problem Saving Options"));
+		hmPhrases.put("286",  i18n.tr("Are you sure you do not want to set a spending password?"));
+		hmPhrases.put("286",  i18n.tr("Offset"));
+		hmPhrases.put("288",  i18n.tr("Send address and send amount required."));
+		hmPhrases.put("289",  i18n.tr("address"));
+		hmPhrases.put("290",  i18n.tr("Confirm"));
+		hmPhrases.put("291",  i18n.tr("Show mnemonic phrase"));
+		hmPhrases.put("292",  i18n.tr("Invalid wallet password"));
+		hmPhrases.put("293",  i18n.tr("Enter mnemonic phrase"));
+		hmPhrases.put("294",  i18n.tr("Mnemonic phrase required"));
+		hmPhrases.put("295",  i18n.tr("Wallet restored"));
+		hmPhrases.put("296",  i18n.tr("Coins Received"));
+		hmPhrases.put("297",  i18n.tr("Detail"));
+		hmPhrases.put("298",  i18n.tr("Aquire Currency"));
+		hmPhrases.put("299",  i18n.tr("Cost Currency"));
+		hmPhrases.put("300",  i18n.tr("Aquire Date"));
+		hmPhrases.put("301",  i18n.tr("Qty Lifo"));
+		hmPhrases.put("302",  i18n.tr("Qty Fifo"));
+		hmPhrases.put("303",  i18n.tr("Cost"));
 	}
 	
 	

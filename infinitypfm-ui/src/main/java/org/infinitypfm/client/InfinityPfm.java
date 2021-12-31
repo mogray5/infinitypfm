@@ -20,6 +20,7 @@
 package org.infinitypfm.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +40,13 @@ import org.apache.commons.io.IOUtils;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.infinitypfm.bitcoin.wallet.BsvKit;
+import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
+import org.infinitypfm.core.data.Password;
+import org.infinitypfm.core.util.EncryptUtil;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.InfinityUpdates;
@@ -127,7 +132,39 @@ public class InfinityPfm {
 		}
 		
 		//Load app options
-		MM.options = (Options) MM.sqlMap.selectOne("getOptions");
+		try {
+			MM.options = (Options) MM.sqlMap.selectOne("getOptions");
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		//Load BsvWallet in background if enabled
+		if (MM.options.isEnableWallet()) {
+			
+			InputStream input = null;
+			String peer = null;
+			
+			try {
+				input = new FileInputStream(homeDirectory.getPath() + File.separator + MM.PROPS_FILE);
+				Properties props = new Properties ();
+				props.load(input);
+				peer = props.getProperty("wallet.peer");
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			} finally {
+				try {input.close();} catch (Exception e1) {}
+			}
+			
+			try {
+				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath(), peer);
+				Thread walletThread = new Thread(kit);
+				walletThread.start();
+				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
+				MM.wallet = new BsvWallet(kit, spendPassword); 
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
+		}
 		
 		//Load main form		
 		MainFrame frmMain = new MainFrame();
@@ -151,21 +188,28 @@ public class InfinityPfm {
 		}
 		
 		qzMain.getTrMain().Reload();
-			
-		//while (!sleak.shell.isDisposed())
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() 
+	    { 
+	      public void run() 
+	      { 
+	        if (MM.wallet != null) {
+	        	MM.wallet.stop();
+	        
+	        	while (MM.wallet.isRunning()) {
+	        		try {Thread.sleep(1000);} catch (InterruptedException e) {}
+	        	}
+	        }
+	      } 
+	    }); 
+		
 		while (!shMain.isDisposed())
 		{
 		  if (!display.readAndDispatch())
 			display.sleep();
 		}
 		
-	   
 		//clean up		
-		/*
-		try {
-			MM.sqlMap.insert("shutdown", null);
-		} catch (SQLException se){}
-		*/
 		qzMain.QZDispose();
 		
 		display.dispose();

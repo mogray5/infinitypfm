@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-Copyright (c) 2005-2012 Wayne Gray All rights reserved
+Copyright (c) 2005-2021 Wayne Gray All rights reserved
   
  This file is part of Infinity PFM.
   
@@ -69,6 +69,30 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         Order By TranDate, ActName;
         ]]>
    </select>
+  
+     <select id="getTransactionsForRangeAndAccountReverseSort" parameterType="dateRangeAccount"
+                          resultType="tran" flushCache="true">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE ActId = #{actId} 
+         AND TranDate >= #{startDate}
+         AND TranDate < #{endDate} + INTERVAL '1' DAY
+        Order By TranDate desc, ActName;
+        ]]>
+   </select>
    
    <select id="getTransactionsForAccount" parameterType="java.lang.String"
                           resultType="tran" flushCache="true">
@@ -113,7 +137,30 @@ Copyright (c) 2005-2012 Wayne Gray All rights reserved
         Order By TranDate, ActName;
         ]]>
    </select>
-   
+
+   <select id="getTransactionsByKeyBSVOnly" parameterType="java.lang.String"
+                          resultType="tran" flushCache="true">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranKey = #{value}
+        	AND Accounts.ActName = 'Bitcoin SV Wallet'
+        Order By TranDate, ActName;
+        ]]>
+   </select>
+
    <select id="getLastTransactionByAccount" parameterType="java.lang.Integer"
                           resultType="tran" flushCache="true">
        <![CDATA[

@@ -103,7 +103,11 @@
 		DefaultCurrencyID INT DEFAULT 0,
 		CurrencyPrecision INT DEFAULT 2,
 		ReportsInBrowswer INT DEFAULT 0,
-		ConsoleDefaultOpen INT DEFAULT 0
+		ConsoleDefaultOpen INT DEFAULT 0,
+		WalletEnabled INT DEFAUULT 0,
+		SpendPassword VARCHAR(100),
+		DefaultBsvCurrencyMethod VARCHAR(5),
+		DefaultBsvCurrencyID INT DEFAULT 0
 		) 
 	</update>
 
@@ -167,6 +171,7 @@
 		IsoCode VARCHAR(5),
 		ExchRate VARCHAR(25),
 		LastUpdate DATETIME,
+		CurrencyPrecision INT DEFAULT 2,
 		UNIQUE (IsoCode),
 		UNIQUE (CurrencyID)
 		)
@@ -191,6 +196,33 @@
 		TranDate DATETIME,
 		Amount BIGINT,
 		UNIQUE (TranID, CurrencyID, TranDate)
+		)
+	</update>
+
+	<update id="createTableTrades2">
+		CREATE CACHED TABLE Trades2
+		(
+		TranID BIGINT,
+		FromCurrencyID INT,
+		ToCurrencyID INT,
+		TranDate DATETIME,
+		FromAmount BIGINT,
+		ToAmount BIGINT,
+		BasisFifo BIGINT,
+		BasisLifo BIGINT,
+		UNIQUE (TranID)
+		)
+	</update>
+
+	<update id="createTableBasis">
+		CREATE CACHED TABLE Basis
+		(
+		AquireCurrencyID INT,
+		AquireDate DATETIME,
+		QtyFifo BIGINT,
+		QtyLifo BIGINT,
+		Cost BIGINT,
+		CostCurrencyId INT
 		)
 	</update>
 
@@ -261,6 +293,41 @@
 		FOREIGN KEY (TranID) REFERENCES Transactions (TranID)
 	 </update>
 
+	<update id="createFKTrades21">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Currencies_1
+		FOREIGN KEY (FromCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </update>
+
+	<update id="createFKTrades22">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Currencies_2
+		FOREIGN KEY (ToCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </update>
+	 
+	 <update id="createFKTrades23">
+		ALTER TABLE Trades2 ADD
+		CONSTRAINT
+		FK_Trades2_Transactions
+		FOREIGN KEY (TranID) REFERENCES Transactions (TranID)
+	 </update>
+
+	<update id="createFKBasis1">
+		ALTER TABLE Basis ADD
+		CONSTRAINT
+		FK_Basis_Currencies_1
+		FOREIGN KEY (AquireCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </update>
+
+	<update id="createFKBasis2">
+		ALTER TABLE Basis ADD
+		CONSTRAINT
+		FK_Basis_Currencies_2
+		FOREIGN KEY (CostCurrencyID) REFERENCES Currencies (CurrencyID)
+	 </update>
+
 	<update id="createFKBudgetDetail">
 		ALTER TABLE BudgetDetail ADD
 		CONSTRAINT
@@ -310,34 +377,39 @@
 
 	<insert id="addAppSetting" parameterType="java.lang.String">
 		INSERT INTO
-		AppSettings (AppVersion) VALUES (#value#)
+		AppSettings (AppVersion) VALUES (#{value})
  	</insert>
 
 	<insert id="addAccountType" parameterType="java.lang.String">
 		INSERT INTO
-		AccountTypes (ActTypeName) VALUES(#value#)
+		AccountTypes (ActTypeName) VALUES(#{value})
  	</insert>
  	
 	<insert id="addAccountTemplate" parameterType="org.infinitypfm.core.data.Account">
 		INSERT INTO
-		AccountTemplates(ActName, ActTypeID) SELECT #actName# AS ActName,
+		AccountTemplates(ActName, ActTypeID) SELECT #{actName} AS ActName,
 		AccountTYpes.ACTTYPEID FROM AccountTypes WHERE ACTTYPENAME =
-		#actTypeName#
+		#{actTypeName}
  	</insert>
 
 	<insert id="addCurrency" parameterType="org.infinitypfm.core.data.Currency">
 		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate)
-		VALUES (#currencyName#, #isoName#, #exchangeRate#, CURTIME ());
+		VALUES (#{currencyName}, #{isoName}, #{exchangeRate}, CURTIME ());
  	</insert>
 
 	<select id="tableExists" parameterType="java.lang.String"
 		resultType="java.lang.Integer" flushCache="true">
 		SELECT count(*) AS foundCount FROM SYSTEM_TABLES WHERE
-		TABLE_NAME = #value#
+		TABLE_NAME = #{value}
 	</select>
 
 	<update id="akTransactions">
 	 CREATE UNIQUE INDEX ak_transactions ON transactions (ACTID,TRANDATE,TRANMEMO,TRANAMOUNT)
 	</update>
+	
+	<insert id="shutdown" parameterType="java.lang.String">
+     SHUTDOWN;
+   </insert>
+   
 </mapper>
  

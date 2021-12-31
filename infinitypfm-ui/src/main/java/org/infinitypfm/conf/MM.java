@@ -22,6 +22,7 @@ package org.infinitypfm.conf;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
 
@@ -38,7 +39,7 @@ public class MM {
 	public static final String APPVERSION = "0.8.5"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2020 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2021 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -121,6 +122,8 @@ public class MM {
 	public static final int NODETYPE_INCOME_ACCOUNT = 4;
 	public static final int NODETYPE_ROOT = 5;
 	
+	public static final int MAX_PRECISION = 8;
+	
 	public static final int MENU_DEFAULT = -1;
 	
 	public static final int MENU_VIEW_CONSOLE = 10;
@@ -181,6 +184,11 @@ public class MM {
 	
 	public static final int MENU_BUDGET_SAVE = 120;
 	
+	public static final int MENU_WALLET_SHOW_MNEMONIC = 150;
+	public static final int MENU_WALLET_BACKUP = 151;
+	public static final int MENU_WALLET_RESTORE = 152;
+	public static final int MENU_WALLET_REFRESH = 153;
+	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;
 	public static final int TAB_SERVER_TOPICS = 18;
@@ -194,6 +202,7 @@ public class MM {
 	public static final int VIEW_REPORT=406;
 	public static final int VIEW_RECURRENCE=407;
 	public static final int VIEW_CURRENCY=408;
+	public static final int VIEW_WALLET=409;
 	
 	public static final int QS_REFRESH_QUEUE = 0;
 	public static final int QS_REFRESH_TOPIC = 1;
@@ -243,7 +252,9 @@ public class MM {
 	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
 	
 	public static Options options = null;
-	
+	public static BsvWallet wallet = null;
+	public static final String BSV_WALLET_ACCOUNT = "Bitcoin SV Wallet";
+	public static final String BSV_WALLET_RECEIVING_ACCOUNT = "Coins Received";
 	public static final String NUM_FORMAT_USE_PARENS = "#,##0.00;(#,##0.00)";
 	
 }

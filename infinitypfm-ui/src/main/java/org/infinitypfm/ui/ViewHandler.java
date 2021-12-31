@@ -41,6 +41,7 @@ import org.infinitypfm.ui.view.views.CurrencyView;
 import org.infinitypfm.ui.view.views.RecurrenceView;
 import org.infinitypfm.ui.view.views.RegisterView;
 import org.infinitypfm.ui.view.views.ReportView;
+import org.infinitypfm.ui.view.views.WalletView;
 
 /**
  * @author Wayne Gray
@@ -180,8 +181,9 @@ public class ViewHandler {
 			vw = new RecurrenceView(cmpWin, SWT.NONE);
 		} else if (iViewID == MM.VIEW_CURRENCY) {
 			vw = new CurrencyView(cmpWin, SWT.NONE);
+		} else if (iViewID == MM.VIEW_WALLET) {
+			vw = new WalletView(cmpWin, SWT.NONE);
 		} else {
-
 			return null;
 		}
 

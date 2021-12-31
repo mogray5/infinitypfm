@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (c) 2005-2021 Wayne Gray All rights reserved This file is 
+	part of Infinity PFM. Infinity PFM is free software: you can redistribute 
+	it and/or modify it under the terms of the GNU General Public License as 
+	published by the Free Software Foundation, either version 3 of the License, 
+	or (at your option) any later version. Infinity PFM is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU General Public License for more details. You should have received a copy 
+	of the GNU General Public License along with Infinity PFM. If not, see <http://www.gnu.org/licenses/>. -->
+
+
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Trades">
+
+
+
+   <insert id="insertTrade2" parameterType="trade2">
+		INSERT INTO TRADES2
+		( 
+			TRANID, 
+			FROMCURRENCYID, 
+			TOCURRENCYID, 
+			TRANDATE, 
+			FROMAMOUNT, 
+			TOAMOUNT, 
+			BASISFIFO, 
+			BASISLIFO 
+		)
+		VALUES 
+		( 
+			#{tranId}, 
+			#{fromCurrencyID}, 
+			#{toCurrencyID}, 
+			#{tranDate}, 
+			#{fromAmount}, 
+			#{toAmount}, 
+			#{basisFifo},
+			#{basisLifo} 
+		)
+   </insert>
+
+	<select id="getLifoBasis" parameterType="currency" resultType="basis" flushCache="true">
+		SELECT * 
+		FROM BASIS b
+		WHERE b.AquireCurrencyId = #{currencyID}
+		  AND b.QtyLifo > 0
+		  AND b.AquireDate = (
+		
+		  SELECT max(b2.AquireDate)
+		  FROM BASIS b2
+		  WHERE b2.AquireCurrencyId = #{currencyID}
+		  AND b2.QtyLifo > 0
+		)
+		LIMIT 1
+	</select>
+
+	<select id="getFifoBasis" parameterType="currency" resultType="Basis" flushCache="true">
+		SELECT * 
+		FROM BASIS b
+		WHERE b.AquireCurrencyId = #{currencyID}
+		  AND b.QtyFifo > 0
+		  AND b.AquireDate = (
+		
+		  SELECT min(b2.AquireDate)
+		  FROM BASIS b2
+		  WHERE b2.AquireCurrencyId = #{currencyID}
+		  AND b2.QtyFifo > 0
+		)
+		LIMIT 1
+		ORDER BY b.QtyLifo DESC
+	</select>
+
+   <insert id="insertTrade" parameterType="trade">
+	    INSERT INTO Trades
+	     (
+	      TranID,
+		  CurrencyID,
+		  TranDate,
+		  Amount
+	     )
+    	VALUES 
+    	 (
+    	  #{tranId},
+    	  #{currencyID},
+    	  #{tranDate},
+    	  #{amount}
+    	 )
+   </insert>
+
+<insert id="insertBasis" parameterType="basis">
+	INSERT INTO BASIS
+	( 
+		AQUIRECURRENCYID, 
+		AQUIREDATE, 
+		QTYFIFO, 
+		QTYLIFO, 
+		COST, 
+		COSTCURRENCYID 
+	)
+	VALUES 
+	( 
+		#{aquireCurrencyID}, 
+		#{aquireDate},
+		#{qtyFifo}, 
+		#{qtyLifo}, 
+		#{cost},
+		#{costCurrencyID} 
+	)
+</insert>
+
+<update id="updateFifo" parameterType="basis">
+	UPDATE basis SET QtyFifo = #{qtyFifo}
+	WHERE CostCurrencyID = #{costCurrencyID}
+		AND AquireCurrencyID = #{aquireCurrencyID}
+		AND AquireDate = #{aquireDate}
+</update>
+
+<update id="updateLifo" parameterType="basis">
+	UPDATE basis SET QtyLifo = #{qtyLifo}
+	WHERE CostCurrencyID = #{costCurrencyID}
+		AND AquireCurrencyID = #{aquireCurrencyID}
+		AND AquireDate = #{aquireDate}
+</update>
+
+</mapper>

@@ -38,14 +38,14 @@ import org.infinitypfm.core.exception.TransactionException;
  * to fall back to or extend if needed.
  *
  */
-public class BaseProcessor implements TransactionProcessor {
+public class SimpleProcessor implements TransactionProcessor {
 
-	private ProcessorCallback _callback;
-	private LangLoader _language;
-	private SqlSession _session;
-	private DataFormatUtil _formatter = null;
+	protected ProcessorCallback _callback;
+	protected LangLoader _language;
+	protected SqlSession _session;
+	protected DataFormatUtil _formatter = null;
 	
-	public BaseProcessor(int precision)
+	public SimpleProcessor(int precision)
 	{
 		_formatter = new DataFormatUtil(precision);
 	}
