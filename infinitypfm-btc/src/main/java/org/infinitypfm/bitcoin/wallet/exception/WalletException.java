@@ -15,15 +15,27 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.infinitypfm.core.exception;
+ */
+package org.infinitypfm.bitcoin.wallet.exception;
 
-public class AccountException extends Exception {
+public class WalletException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6855345318889950774L;
 
-	public AccountException(String arg0) {
-		super(arg0);
+	public WalletException() {
+		super();
+	}
+
+	public WalletException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public WalletException(String message) {
+		super(message);
+	}
+
+	public WalletException(Throwable cause) {
+		super(cause);
 	}
 
 }

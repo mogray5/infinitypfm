@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2019 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -61,7 +61,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.infinitypfm.bitcoin.wallet.BsvWallet.WalletFunction;
 import org.infinitypfm.bitcoin.wallet.WalletEvents;
+import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
@@ -74,11 +76,6 @@ import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
-
-import io.bitcoinsv.bitcoinjsv.core.Coin;
-import io.bitcoinsv.bitcoinjsv.core.InsufficientMoneyException;
-import io.bitcoinsv.bitcoinjsv.exception.AddressFormatException;
-import io.bitcoinsv.bitcoinjsv.msg.protocol.Transaction;
 
 public class WalletView extends BaseView implements WalletEvents {
 
@@ -127,8 +124,10 @@ public class WalletView extends BaseView implements WalletEvents {
 		_links = new ArrayList<Link>();
 		
 		if (MM.wallet != null) {
-			MM.wallet.registerForEvents(this);
-			_receiveAddress = MM.wallet.getCurrentReceivingAddress();
+			if (MM.wallet.isImplemented(WalletFunction.REGISTERFOREVENTS))
+				MM.wallet.registerForEvents(this);
+			if (MM.wallet.isImplemented(WalletFunction.CURRENTRECEIVINGADDRESS))
+				_receiveAddress = MM.wallet.getCurrentReceivingAddress();
 		}
 		_format = new DataFormatUtil();
 		refreshExchangeRate();
@@ -154,7 +153,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	protected void LoadUI() {
 		
 		color = new Color(InfinityPfm.shMain.getDisplay(), 255,255,255);
-		colorFont = new Color(InfinityPfm.shMain.getDisplay(), 21,100,1);
+		colorFont = new Color(InfinityPfm.shMain.getDisplay(), 21,86,21);
 		tbMain = new WalletToolbar(this);
 		cmpHeader = new Composite(this, SWT.BORDER);
 		cmpHeader.setLayout(new FormLayout());
@@ -171,7 +170,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		this.setFiatAndBsvBalance();
 		
 		FontData[] fD = lblAmount.getFont().getFontData();
-		fD[0].setHeight(70);
+		fD[0].setHeight(60);
 		lblAmount.setFont( new Font(InfinityPfm.shMain.getDisplay(),fD[0]));
 		
 		FontData[] fe = lblAmountBsv.getFont().getFontData();
@@ -210,7 +209,13 @@ public class WalletView extends BaseView implements WalletEvents {
 
 		cmdSend = new Button(sendGroup, SWT.PUSH);
 		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_BSV));
-		cmdSend.addSelectionListener(cmdSend_OnClick);
+		
+		if (MM.wallet.isImplemented(WalletFunction.SENDCOINS)) {
+			cmdSend.addSelectionListener(cmdSend_OnClick);
+		} else {
+			cmdSend.setEnabled(false);
+		}
+		
 		cmdSend.setToolTipText(MM.PHRASES.getPhrase("277"));
 		
 		lblOffset = new Label(sendGroup, SWT.NONE);
@@ -454,7 +459,6 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected void LoadTransactionHistory() {
 		
 		tblHistory.removeAll();
@@ -487,7 +491,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				_links.clear();
 				
 				//Loop through list and calculate account balance
-				ListIterator li = tranList.listIterator(0);
+				ListIterator<org.infinitypfm.core.data.Transaction> li = tranList.listIterator(0);
 				
 				long newBalance = 0;
 				
@@ -631,7 +635,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	 * pass it to overload for formatting.
 	 */
 	private void setFiatAndBsvBalance() {
-		if (MM.wallet != null) 
+		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV)) 
 			setFiatAndBsvBalance( MM.wallet.getBsvBalance());
 	}
 	
@@ -713,7 +717,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		public void widgetSelected(SelectionEvent e) {
 			
 			String sendTo = txtSendTo.getText();
-			String memo = txtMemo.getText();
+			//String memo = txtMemo.getText();
 			String sAmount = txtSendAmount.getText();
 			
 			boolean canSend = true;
@@ -728,15 +732,15 @@ public class WalletView extends BaseView implements WalletEvents {
 			
 			long selectedCurrency = (long) cmbSendAmountIso.getData(cmbSendAmountIso.getText());
 			
-			Coin amount = null;
+			String sendAmount = null;
 			
 			if (selectedCurrency == MM.options.getDefaultBsvCurrencyID()) 
-				amount = Coin.parseCoin(txtSendAmount.getText());
+				sendAmount = txtSendAmount.getText();
 			else {
-				// Convert from Fiat to BSV before sending
+				// Convert from fiat to BSV before sending
 				refreshExchangeRate();
 				BigDecimal amountToSend = _format.strictDivide(sAmount, _bsvCurrency.getExchangeRate(), MM.MAX_PRECISION);
-				amount = Coin.parseCoin(amountToSend.toString());
+				sendAmount = amountToSend.toString();
 			}
 			
 			if (confirmSend(sAmount, cmbSendAmountIso.getText(), sendTo)) {
@@ -744,10 +748,8 @@ public class WalletView extends BaseView implements WalletEvents {
 				// Send it!!
 				try {
 					_inSend = true;
-					MM.wallet.sendCoins(sendTo, amount);
-				} catch (AddressFormatException e1) {
-					InfinityPfm.LogMessage(e1.getMessage(), true);
-				} catch (InsufficientMoneyException e1) {
+					MM.wallet.sendCoins(sendTo, sendAmount);
+				} catch (SendException e1) {
 					InfinityPfm.LogMessage(e1.getMessage(), true);
 				}
 			}
@@ -758,7 +760,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	SelectionAdapter linkView_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 	
-			String s = "stop";
+			//String s = "stop";
 			
 			org.infinitypfm.core.data.Transaction t = 
 					(org.infinitypfm.core.data.Transaction) e.widget.getData();
@@ -775,7 +777,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	/*****************/
 
 	@Override
-	public void coinsReceived(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
+	public void coinsReceived(String transactionHash, String memo, String value, String prevBalance, String newBalance) {
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
@@ -787,7 +789,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				
 			if (bsvAccount != null && bsvCoinsReceived != null) {
 				
-				long amount = DataFormatUtil.moneyToLong(new BigDecimal(value.toPlainString()));
+				long amount = DataFormatUtil.moneyToLong(new BigDecimal(value));
 				
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
 				t.setTranAmount(amount);
@@ -808,8 +810,8 @@ public class WalletView extends BaseView implements WalletEvents {
 				
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				t.setTranDate(new Date());
-				if (tx.getMemo() != null && tx.getMemo().length() > 0)
-					t.setTranMemo(tx.getMemo());
+				if (memo != null && memo.length() > 0)
+					t.setTranMemo(memo);
 				else
 					t.setTranMemo(MM.PHRASES.getPhrase("282"));
 				
@@ -820,7 +822,8 @@ public class WalletView extends BaseView implements WalletEvents {
 					InfinityPfm.LogMessage(e.getMessage());
 				} 
 			}
-				setFiatAndBsvBalance(newBalance.toPlainString());
+				if (MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV))
+					setFiatAndBsvBalance(newBalance);
 				LoadTransactionHistoryAsync();
 			}
 			
@@ -828,7 +831,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	}
 
 	@Override
-	public void coinsSent(Transaction tx, Coin value, Coin prevBalance, Coin newBalance) {
+	public void coinsSent(String transactionHash, String memo, String value, String prevBalance, String newBalance) {
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
@@ -837,12 +840,12 @@ public class WalletView extends BaseView implements WalletEvents {
 			
 			if (bsvAccount != null && offset != null) {
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
-				t.setTranAmount(DataFormatUtil.moneyToLong(value.toPlainString()));
+				t.setTranAmount(DataFormatUtil.moneyToLong(value));
 				t.setActId(bsvAccount.getActId());
 				t.setActOffset(offset.getActId());
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				t.setTranMemo(txtMemo.getText());
-				t.setTransactionKey(tx.getHashAsString());
+				t.setTransactionKey(transactionHash);
 				t.setTranDate(new Date());
 				
 				DataHandler handler = new DataHandler();
@@ -853,7 +856,7 @@ public class WalletView extends BaseView implements WalletEvents {
 					InfinityPfm.LogMessage(e.getMessage());
 				} 
 			}
-				setFiatAndBsvBalance(newBalance.toPlainString());
+				setFiatAndBsvBalance(newBalance);
 				LoadTransactionHistoryAsync();
 			}
 		});

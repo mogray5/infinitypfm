@@ -21,6 +21,7 @@ package org.infinitypfm.ui.view.toolbars;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
+import org.infinitypfm.bitcoin.wallet.BsvWallet.WalletFunction;
 import org.infinitypfm.conf.MM;
 
 public class WalletToolbar extends BaseToolbar {
@@ -37,17 +38,25 @@ public class WalletToolbar extends BaseToolbar {
 	@Override
 	protected void LoadButtons() {
 
+		boolean featureEnabled = MM.wallet != null;
+		 
 		addButton(MM.IMG_REFRESH2, MM.PHRASES.getPhrase("47"),
-				MM.MENU_WALLET_REFRESH, true);
+				MM.MENU_WALLET_REFRESH, featureEnabled);
+		
+		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.RESTOREFROMSEED);
 		
 		addButton(MM.IMG_REFRESH, MM.PHRASES.getPhrase("159"),
-				MM.MENU_WALLET_RESTORE, true);
+				MM.MENU_WALLET_RESTORE, featureEnabled);
+		
+		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETMNEUMONIC);
 		
 		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("277"),
-				MM.MENU_WALLET_SHOW_MNEMONIC, true);
+				MM.MENU_WALLET_SHOW_MNEMONIC, featureEnabled);
 	
+		featureEnabled = MM.wallet != null;
+		
 		addButton(MM.IMG_FOLDER_DOWNLOAD, MM.PHRASES.getPhrase("158"),
-				MM.MENU_WALLET_BACKUP, true);
+				MM.MENU_WALLET_BACKUP, featureEnabled);
 		
 		addButton(MM.IMG_CLOSE_SMALL, MM.PHRASES.getPhrase("54"),
 				MM.MENU_TREE_CLOSEVIEW, true);

@@ -41,7 +41,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.bitcoin.wallet.BsvKit;
-import org.infinitypfm.bitcoin.wallet.BsvWallet;
+import org.infinitypfm.bitcoin.wallet.BitcoinJWallet;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
@@ -160,7 +160,7 @@ public class InfinityPfm {
 				Thread walletThread = new Thread(kit);
 				walletThread.start();
 				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
-				MM.wallet = new BsvWallet(kit, spendPassword); 
+				MM.wallet = new BitcoinJWallet(kit, spendPassword); 
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage());
 			}

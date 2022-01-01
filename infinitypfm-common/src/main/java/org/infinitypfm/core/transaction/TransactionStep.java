@@ -15,15 +15,35 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.infinitypfm.core.exception;
+ */
+package org.infinitypfm.core.transaction;
 
-public class AccountException extends Exception {
+import java.math.BigDecimal;
+import java.sql.SQLException;
 
-	private static final long serialVersionUID = 1L;
+import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.data.TransactionOffset;
 
-	public AccountException(String arg0) {
-		super(arg0);
-	}
+public interface TransactionStep {
+
+	public void process() throws SQLException ;
+	
+	public boolean fromBsv();
+	
+	public boolean isBSV(long actId) throws SQLException;
+	
+	public boolean isDefault(long actId) throws SQLException;
+	
+	public boolean fromDefault();
+		
+	public boolean isValid();
+	
+	public void setTransaction (Transaction t)  throws SQLException ;
+	
+	public Transaction getTransaction();
+	
+	public BigDecimal convert(long amount, long actId) throws SQLException;
+	
+	public void checkAndConvert(TransactionOffset offset) throws SQLException;
 
 }

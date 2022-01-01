@@ -21,8 +21,49 @@
 	    <artifactId>commons-httpclient</artifactId>
 	    <version>3.1</version>
 	</dependency>
-  </dependencies>
-  
+	<dependency>
+	    <groupId>net.glxn</groupId>
+	    <artifactId>qrgen</artifactId>
+	    <version>1.4</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.infinitypfm.common</groupId>
+	    <artifactId>infinitypfm-common</artifactId>
+	    <version>0.9.5</version>
+	</dependency>
+
+	<!-- TODO:  Do something other than bitcoinj-sv compiled locally -->
+	<dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-wallet-and-tests</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/wayne/projects/myjava/bitcoinj-sv/wallet-and-tests/target/bitcoinj-wallet-and-tests-1.0.1.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-base</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/wayne/projects/myjava/bitcoinj-sv/base/target/bitcoinj-base-1.0.1-bundled.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-legacy</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/wayne/projects/myjava/bitcoinj-sv/legacy/target/bitcoinj-legacy-1.0.1.jar</systemPath>
+	</dependency>
+
+	<!-- Additional BitcoinJ deps -->
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>21.0</version>
+    </dependency>
+
+</dependencies> 
  <build>
 	<plugins>
 	    <plugin>

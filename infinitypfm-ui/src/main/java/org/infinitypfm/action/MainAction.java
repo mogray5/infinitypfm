@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -32,10 +32,10 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.bitcoinj.moved.wallet.UnreadableWalletException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
@@ -279,11 +279,9 @@ public class MainAction {
 	
 		try {
 			MM.wallet.restoreFromSeed(seedCode, walletPassword(), null);
-		} catch (AuthenticationException e) {
+		} catch (WalletException e) {
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
 			_walletPassword = null;
-		} catch (UnreadableWalletException e) {
-			InfinityPfm.LogMessage(e.getMessage(), true);
 		}
 		
 		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("295"), true);
