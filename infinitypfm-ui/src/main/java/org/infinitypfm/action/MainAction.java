@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2021 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -39,6 +39,7 @@ import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
+import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.Transaction;
@@ -46,8 +47,6 @@ import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
 import org.infinitypfm.data.imports.BaseImport;
-import org.infinitypfm.data.imports.BitcoinImport;
-import org.infinitypfm.data.imports.BitcoinImportConfig;
 import org.infinitypfm.data.imports.CsvImport;
 import org.infinitypfm.data.imports.CsvImportConfig;
 import org.infinitypfm.data.imports.FileImportConfig;
@@ -108,7 +107,6 @@ public class MainAction {
 		case MM.MENU_FILE_IMPORT_QFX:
 		case MM.MENU_FILE_IMPORT_OFX:
 		case MM.MENU_FILE_IMPORT_QIF:
-		case MM.MENU_FILE_IMPORT_BTC:
 		case MM.MENU_FILE_IMPORT_MAIL:
 		case MM.MENU_FILE_IMPORT_CSV:
 			this.LoadImportDialog(item, selectedAccount);
@@ -263,6 +261,9 @@ public class MainAction {
 			break;
 		case MM.MENU_WALLET_REFRESH:
 			break;
+		case MM.MENU_WALLET_SIGNIN:
+			this.WalletSignIn();
+			break;
 		}
 	}
 
@@ -285,6 +286,14 @@ public class MainAction {
 		}
 		
 		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("295"), true);
+	}
+	
+	public void WalletSignIn() {
+		
+		String password = walletPassword();
+		AuthData auth = MM.wallet.getAuthData();
+		auth.setPassword(password);
+		MM.wallet.isRunning();
 	}
 	
 	public void WalletShowMnemonic() {
@@ -436,9 +445,6 @@ public class MainAction {
 		} else if (importType == MM.MENU_FILE_IMPORT_QIF) {
 			config = new FileImportConfig();
 			importer = new QifImport();
-		} else if (importType == MM.MENU_FILE_IMPORT_BTC) {
-			config = new BitcoinImportConfig();
-			importer = new BitcoinImport();
 		} else if (importType == MM.MENU_FILE_IMPORT_CSV) {
 			config = new CsvImportConfig();
 			importer = new CsvImport();

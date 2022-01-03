@@ -15,40 +15,26 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.infinitypfm.core.data;
+ */
+package org.infinitypfm.bitcoin.relysia.api.v1;
 
-import org.apache.commons.lang3.StringUtils;
+public class CoinBalance {
 
-public class NumberFormat {
-	
-	public static final String getDefault(int precision){
-		
-		String fmt = null;
-		
-		
-			fmt = "#,##0." + StringUtils.rightPad("", 
-					precision, '0');
-
-		return fmt + ";(" + fmt + ")"; 
+	private String protocol = null;
+	private double balance;
+	public String getProtocol() {
+		return protocol;
+	}
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+	public double getBalance() {
+		return balance;
+	}
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 	
-	public static final String getDefault(){
-		
-		String fmt = "#,##0.0";
-		
-		return fmt + ";(" + fmt + ")"; 
-	}
 	
-	public static final String getNoParens(int precision){
-		String fmt = "#,##0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
 	
-	public static final String getNoCommaNoParems(int precision){
-		String fmt = "###0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
 }

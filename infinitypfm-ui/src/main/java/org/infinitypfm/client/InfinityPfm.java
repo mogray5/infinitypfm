@@ -41,9 +41,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.bitcoin.wallet.BsvKit;
+import org.infinitypfm.bitcoin.wallet.RelysiaWallet;
 import org.infinitypfm.bitcoin.wallet.BitcoinJWallet;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.conf.LangLoader;
+import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Options;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.util.EncryptUtil;
@@ -142,13 +144,15 @@ public class InfinityPfm {
 		if (MM.options.isEnableWallet()) {
 			
 			InputStream input = null;
-			String peer = null;
+			String baseUrl = null;
+			String walletId = null;
 			
 			try {
 				input = new FileInputStream(homeDirectory.getPath() + File.separator + MM.PROPS_FILE);
 				Properties props = new Properties ();
 				props.load(input);
-				peer = props.getProperty("wallet.peer");
+				baseUrl = props.getProperty("wallet.base.url");
+				walletId = props.getProperty("wallet.id");
 			} catch (Exception e) {
 				InfinityPfm.LogMessage(e.getMessage());
 			} finally {
@@ -156,12 +160,17 @@ public class InfinityPfm {
 			}
 			
 			try {
-				BsvKit kit = new BsvKit(homeDirectory.getCanonicalPath(), peer);
-				Thread walletThread = new Thread(kit);
-				walletThread.start();
+				AuthData authData = new AuthData();
+				authData.setEmailAddress(MM.options.getEmailAddress());
+				authData.setAuthToken(MM.options.getWalletToken());
+				authData.setAccountId(walletId);
 				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
-				MM.wallet = new BitcoinJWallet(kit, spendPassword); 
-			} catch (IOException e) {
+				authData.setPassword(spendPassword.getPlainPassword());
+				RelysiaWallet kit = new RelysiaWallet(baseUrl, authData);
+				MM.wallet = kit;
+				
+				
+			} catch (Exception e) {
 				InfinityPfm.LogMessage(e.getMessage());
 			}
 		}
@@ -402,7 +411,7 @@ public class InfinityPfm {
 	
 	public static void LogMessage(String sMsg){
 		logger.info(sMsg);
-		if (qzMain.getMsgMain()==null) return;
+		if (qzMain == null || qzMain.getMsgMain()==null) return;
 		qzMain.getMsgMain().AppendMsg(sMsg);
 	}
 	

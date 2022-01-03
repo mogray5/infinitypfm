@@ -15,40 +15,39 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.infinitypfm.core.data;
+ */
+package org.infinitypfm.bitcoin.relysia.api.v1;
 
-import org.apache.commons.lang3.StringUtils;
+public class AuthData {
 
-public class NumberFormat {
+	private String status = null;
+	private String msg = null;
+	private String token = null;
+	private String userId = null;
 	
-	public static final String getDefault(int precision){
-		
-		String fmt = null;
-		
-		
-			fmt = "#,##0." + StringUtils.rightPad("", 
-					precision, '0');
-
-		return fmt + ";(" + fmt + ")"; 
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
-	public static final String getDefault(){
-		
-		String fmt = "#,##0.0";
-		
-		return fmt + ";(" + fmt + ")"; 
-	}
-	
-	public static final String getNoParens(int precision){
-		String fmt = "#,##0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
-	
-	public static final String getNoCommaNoParems(int precision){
-		String fmt = "###0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
 }

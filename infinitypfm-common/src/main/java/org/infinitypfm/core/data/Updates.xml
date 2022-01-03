@@ -245,4 +245,13 @@ Copyright (c) 2005-2021 Wayne Gray All rights reserved
    <update id="v0_9_0_f">
  	ALTER TABLE Currencies ADD COLUMN CurrencyPrecision INT DEFAULT 2;
    </update>
+   <update id="v0_9_5_a">
+ 	ALTER TABLE AppSettings ADD COLUMN EmailAddress VARCHAR(50);
+   </update>
+   <update id="v0_9_5_b">
+ 	ALTER TABLE AppSettings ADD COLUMN WalletUser VARCHAR(50);
+   </update>
+   <update id="v0_9_5_c">
+ 	ALTER TABLE AppSettings ADD COLUMN WalletToken VARCHAR(500);
+   </update>
 </mapper>

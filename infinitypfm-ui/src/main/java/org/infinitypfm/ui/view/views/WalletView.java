@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.bitcoin.wallet.BsvWallet.WalletFunction;
 import org.infinitypfm.bitcoin.wallet.WalletEvents;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
+import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
@@ -117,6 +118,8 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private boolean _inSend = false;
 	private List<Link> _links = null;
+	private boolean _signedIn = false;
+	
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -635,7 +638,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	 * pass it to overload for formatting.
 	 */
 	private void setFiatAndBsvBalance() {
-		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV)) 
+		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV) && _signedIn) 
 			setFiatAndBsvBalance( MM.wallet.getBsvBalance());
 	}
 	
@@ -860,6 +863,28 @@ public class WalletView extends BaseView implements WalletEvents {
 				LoadTransactionHistoryAsync();
 			}
 		});
+	}
+
+	@Override
+	public void walletMessage(String message, WalletException e) {
+		InfinityPfm.LogMessage(message, false);
+		e.printStackTrace();
+	}
+
+	@Override
+	public void signIn(boolean success, String message, WalletException e) {
+		_signedIn = success;
+		
+		if (_signedIn) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("306"), true);
+			setFiatAndBsvBalance();
+		}
+		
+		if (message != null) {
+			InfinityPfm.LogMessage(message, true);
+			e.printStackTrace();
+		}
+		
 	}
 
 }

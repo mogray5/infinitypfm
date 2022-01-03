@@ -38,7 +38,12 @@ public class WalletToolbar extends BaseToolbar {
 	@Override
 	protected void LoadButtons() {
 
-		boolean featureEnabled = MM.wallet != null;
+		boolean featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.SIGNIN);
+		
+		addButton(MM.IMG_INTERNET, MM.PHRASES.getPhrase("305"),
+				MM.MENU_WALLET_SIGNIN, featureEnabled);
+		
+		featureEnabled = MM.wallet != null;
 		 
 		addButton(MM.IMG_REFRESH2, MM.PHRASES.getPhrase("47"),
 				MM.MENU_WALLET_REFRESH, featureEnabled);

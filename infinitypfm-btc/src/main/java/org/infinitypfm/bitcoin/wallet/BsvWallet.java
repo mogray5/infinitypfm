@@ -25,6 +25,7 @@ import javax.naming.AuthenticationException;
 
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
+import org.infinitypfm.core.data.AuthData;
 
 public interface BsvWallet {
 
@@ -32,6 +33,14 @@ public interface BsvWallet {
 	/* Public API with common methods for implementing Bitcoin Wallets */
 	/*******************************************************************/
 
+	/**
+	 * 
+	 * Get and set AuthData containing information to access 3rd
+	 * party services if required by the wallet.
+	 */
+	AuthData getAuthData();
+	void setAuthData(AuthData authData);
+	
 	boolean isRunning();
 
 	/**
@@ -118,7 +127,7 @@ public interface BsvWallet {
 		REGISTERFOREVENTS, UNREGISTERFOREVENTS,
 		CURRENTRECEIVINGADDRESS, GETMNEUMONIC,
 		RESTOREFROMSEED, GETQRCODE,
-		SENDCOINS
+		SENDCOINS, SIGNIN
 	}
 	
 	boolean isImplemented(WalletFunction function);

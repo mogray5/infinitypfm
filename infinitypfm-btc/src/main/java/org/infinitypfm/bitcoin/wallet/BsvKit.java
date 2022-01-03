@@ -21,32 +21,26 @@ package org.infinitypfm.bitcoin.wallet;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.bitcoinj.moved.wallet.UnreadableWalletException;
-import org.bitcoinj.moved.wallet.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//import io.bitcoinsv.bitcoinjsv.params.MainNetParams;
-import io.bitcoinsv.bitcoinjsv.params.NetworkParameters;
-import io.bitcoinsv.bitcoinjsv.params.TestNet2Params;
-import io.bitcoinsv.bitcoinjsv.protos.Protos.PeerAddress;
 
 
 /**
  * Wrapper class to initialize a wallet kit.  Kit
  * will be injected into BsvWallet class to make
  * it easier to test.
+ * 
+ * 2022-01-02:  WGG - Not able to get this working with:  https://github.com/bitcoin-sv/bitcoinj-sv
  */
 public class BsvKit implements Runnable {
 
 	private final static Logger LOG = LoggerFactory.getLogger(BsvKit.class);
-	private Wallet _kit;
+	//private Wallet _kit;
 	private final String _walletDir;
 	private final String _nodeIp;
-	private NetworkParameters _params;
+	//private NetworkParameters _params;
 	private boolean _running;
 	
 	public static final String WALLET_PREFIX = "infinitypfm_bsv";
@@ -57,25 +51,26 @@ public class BsvKit implements Runnable {
 		
 		_nodeIp = nodeIp;
 		_walletDir = walletDir;
-		_params= TestNet2Params.get();
+		//_params= TestNet2Params.get();
 		//_kit = new Wallet(_params);
-		//_kit.setAutoSave(false);
+		//_kit.setAutoSave(false);new File(_walletDir + File.pathSeparator + BsvKit.WALLET_PREFIX + ".wallet");
 		_running = false;
 	}
 
-	public Wallet get() {
-		return _kit;
+	public Object get() {
+		return null;
+		//return _kit;
 	}
 	
-	public void restoreFromSeed(String seedCode, String passphrase) throws UnreadableWalletException {
+	public void restoreFromSeed(String seedCode, String passphrase) { //throws UnreadableWalletException {
 		
 		//_kit.stopAsync();
         //_kit.awaitTerminated();
         
-        this.removeChainFile();
-        this.backupWalletFile();
+        //this.removeChainFile();
+        //this.backupWalletFile();
         
-		Long creationtime = new Date().getTime();
+		//Long creationtime = new Date().getTime();
 		//DeterministicSeed seed = new DeterministicSeed(seedCode, null, passphrase, creationtime);
 		//_kit.restoreWalletFromSeed(seed);
         		
@@ -102,25 +97,27 @@ public class BsvKit implements Runnable {
 
 	@Override
 	public void run() {
-
-		if (_nodeIp != null && _nodeIp.length()>0) {
-			PeerAddress address =  null;
-			//try {
-			//	address = new PeerAddress(InetAddress.getByName(_nodeIp), _params.getPort());
-//			} catch (UnknownHostException e) {
-				//e.printStackTrace();
-			//}
-			//_kit.setPeerNodes(address);
-			//_kit.startAsync();
-			//_kit.awaitRunning();
-			//_kit.peerGroup().setMaxConnections(1);
-			
-		//} else {
-			//_kit.startAsync();
-			//_kit.awaitRunning();
-		//_kit.peerGroup().setMaxConnections(5);
-		}
 		
+		File walletFile = new File(_walletDir + File.separator + BsvKit.WALLET_PREFIX + ".wallet");
+		if (walletFile.exists()) {
+			/*
+			try {
+				_kit = Wallet.loadFromFile(walletFile);
+				System.out.println(_kit.toString());
+			} catch (UnreadableWalletException e) {
+				e.printStackTrace();
+			}
+		} else {
+			NetworkParameters params = TestNet3Params.get();
+			_kit = new Wallet(params);
+			try {
+				_kit.saveToFile(walletFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			*/
+		}
+     
 		_running = true;
 		
 	}

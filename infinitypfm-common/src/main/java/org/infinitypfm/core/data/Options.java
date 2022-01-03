@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -33,6 +33,9 @@ public class Options implements Serializable {
 	private String spendPassword = null;
 	private String defaultBsvCurrencyMethod = null;
 	private long defaultBsvCurrencyID = 0;
+	private String emailAddress = null;
+	private String walletUser = null;
+	private String walletToken = null;
 	
 	public String getAppVersion() {
 		return appVersion;
@@ -87,6 +90,24 @@ public class Options implements Serializable {
 	}
 	public void setDefaultBsvCurrencyID(long defaultBsvCurrencyID) {
 		this.defaultBsvCurrencyID = defaultBsvCurrencyID;
+	}
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+	public String getWalletUser() {
+		return walletUser;
+	}
+	public void setWalletUser(String walletUser) {
+		this.walletUser = walletUser;
+	}
+	public String getWalletToken() {
+		return walletToken;
+	}
+	public void setWalletToken(String walletToken) {
+		this.walletToken = walletToken;
 	}
 	
 

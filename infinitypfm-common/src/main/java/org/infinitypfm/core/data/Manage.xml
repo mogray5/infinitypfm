@@ -104,10 +104,13 @@
 		CurrencyPrecision INT DEFAULT 2,
 		ReportsInBrowswer INT DEFAULT 0,
 		ConsoleDefaultOpen INT DEFAULT 0,
-		WalletEnabled INT DEFAUULT 0,
+		WalletEnabled INT DEFAULT 0,
 		SpendPassword VARCHAR(100),
-		DefaultBsvCurrencyMethod VARCHAR(5),
-		DefaultBsvCurrencyID INT DEFAULT 0
+		DefaultBsvCurrencyMethod VARCHAR(50),
+		DefaultBsvCurrencyID INT DEFAULT 0,
+		EmailAddress VARCHAR(50),
+		WalletUser VARCHAR(50),
+		WalletToken VARCHAR(500)
 		) 
 	</update>
 

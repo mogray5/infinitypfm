@@ -17,7 +17,6 @@ public class Password implements Comparable<Password> {
 	
 	public Password(String origPlainPwd, String origHashPwd, EncryptUtil util) {
 		
-
 		_origHashedPassword = origHashPwd;
 		_hashedPassword = origHashPwd;
 		_encryptUtil = util;

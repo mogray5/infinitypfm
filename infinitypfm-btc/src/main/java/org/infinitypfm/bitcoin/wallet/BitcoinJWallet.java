@@ -23,31 +23,21 @@ import java.io.IOException;
 
 import javax.naming.AuthenticationException;
 
-import org.bitcoinj.moved.wallet.UnreadableWalletException;
-import org.bitcoinj.moved.wallet.Wallet;
-import org.bitcoinj.moved.wallet.listeners.WalletCoinsSentEventListener;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
+import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.util.EncryptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.bitcoinsv.bitcoinjsv.core.Coin;
-import io.bitcoinsv.bitcoinjsv.core.InsufficientMoneyException;
-import io.bitcoinsv.bitcoinjsv.core.listeners.DownloadProgressTracker;
-import io.bitcoinsv.bitcoinjsv.exception.AddressFormatException;
-import io.bitcoinsv.bitcoinjsv.msg.protocol.Transaction;
-import io.bitcoinsv.bitcoinjsv.temp.TransactionBag;
-import io.bitcoinsv.bitcoinjsv.temp.listener.WalletCoinsReceivedEventListener;
-import io.bitcoinsv.bitcoinjsv.utils.BriefLogFormatter;
 import net.glxn.qrgen.QRCode;
 
 public class BitcoinJWallet implements BsvWallet {
 
 	private final static Logger LOG = LoggerFactory.getLogger(BitcoinJWallet.class);
 	private BsvKit _bsvKit;
-	private Wallet _kit;
+	//private Wallet _kit;
 	private final Password _spendingPassword;
 	private WalletEvents _walletEvents;
 	private final EncryptUtil _encryptUtil;
@@ -188,6 +178,8 @@ public class BitcoinJWallet implements BsvWallet {
 	@Override
 	public void restoreFromSeed(String seedCode, String password, String passphrase) throws WalletException{
 		if (_firstUse) init();
+		
+		/*
 		try {
 			if (authorized(password)) {
 				_bsvKit.restoreFromSeed(seedCode, passphrase);
@@ -196,6 +188,7 @@ public class BitcoinJWallet implements BsvWallet {
 		} catch (AuthenticationException | UnreadableWalletException e) {
 			throw new WalletException(e.getMessage(), e);
 		}
+		*/
 	}
 	
 	@Override
@@ -236,8 +229,8 @@ public class BitcoinJWallet implements BsvWallet {
 	/*******************/
 
 	private void init() {
-		BriefLogFormatter.init();
-		_kit = _bsvKit.get();
+		//BriefLogFormatter.init();
+		//_kit = _bsvKit.get();
 		
 		/*
 		
@@ -270,10 +263,11 @@ public class BitcoinJWallet implements BsvWallet {
 	/* Listeners */
 	/*************/
 
+	/*
 	WalletCoinsReceivedEventListener onCoinsReceived = new WalletCoinsReceivedEventListener() {
 
 
-
+		
 		@Override
 		public void onCoinsReceived(TransactionBag wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
 			LOG.info("Coins received");
@@ -283,7 +277,9 @@ public class BitcoinJWallet implements BsvWallet {
             //	_walletEvents.coinsReceived(tx, value, prevBalance, newBalance);
 			
 		}
+		
 	};
+	
 	
 	WalletCoinsSentEventListener onCoinsSent = new WalletCoinsSentEventListener() {
 
@@ -306,7 +302,8 @@ public class BitcoinJWallet implements BsvWallet {
          }
      };
 
-
+*/
+	
 	@Override
 	public boolean isImplemented(WalletFunction function) {
 
@@ -321,9 +318,22 @@ public class BitcoinJWallet implements BsvWallet {
 		case RESTOREFROMSEED:
 		case GETQRCODE:
 		case SENDCOINS:
+		case SIGNIN:
 			return false;
 		}
 		
 		return false;
+	}
+
+	@Override
+	public AuthData getAuthData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setAuthData(AuthData authData) {
+		// TODO Auto-generated method stub
+		
 	}
 }

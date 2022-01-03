@@ -15,40 +15,25 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package org.infinitypfm.core.data;
+ */
+package org.infinitypfm.bitcoin.relysia.api.v1;
 
-import org.apache.commons.lang3.StringUtils;
+public class AuthResponse {
 
-public class NumberFormat {
+	private int statusCode = 0;
+	private AuthData data = null;
 	
-	public static final String getDefault(int precision){
-		
-		String fmt = null;
-		
-		
-			fmt = "#,##0." + StringUtils.rightPad("", 
-					precision, '0');
-
-		return fmt + ";(" + fmt + ")"; 
+	public int getStatusCode() {
+		return statusCode;
+	}
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+	public AuthData getData() {
+		return data;
+	}
+	public void setData(AuthData data) {
+		this.data = data;
 	}
 	
-	public static final String getDefault(){
-		
-		String fmt = "#,##0.0";
-		
-		return fmt + ";(" + fmt + ")"; 
-	}
-	
-	public static final String getNoParens(int precision){
-		String fmt = "#,##0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
-	
-	public static final String getNoCommaNoParems(int precision){
-		String fmt = "###0." + StringUtils.rightPad("", 
-				precision, '0');
-		return fmt; 
-	}
 }

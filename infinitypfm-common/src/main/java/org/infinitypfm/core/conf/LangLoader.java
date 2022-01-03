@@ -348,6 +348,9 @@ public class LangLoader {
 		hmPhrases.put("301",  i18n.tr("Qty Lifo"));
 		hmPhrases.put("302",  i18n.tr("Qty Fifo"));
 		hmPhrases.put("303",  i18n.tr("Cost"));
+		hmPhrases.put("304",  i18n.tr("Email Address"));
+		hmPhrases.put("305",  i18n.tr("Sign In"));
+		hmPhrases.put("306",  i18n.tr("Sign In Successfull"));
 	}
 	
 	

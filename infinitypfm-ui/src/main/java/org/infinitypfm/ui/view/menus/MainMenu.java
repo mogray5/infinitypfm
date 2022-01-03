@@ -95,8 +95,6 @@ public class MainMenu implements Widget {
 				' ');
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_QIF, "QIF",
 				' ');
-		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_BTC,
-				MM.PHRASES.getPhrase("217"), ' ');
 		
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_CSV,
 				MM.PHRASES.getPhrase("253"), ' ');

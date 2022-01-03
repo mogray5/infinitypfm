@@ -61,8 +61,11 @@ public class OptionsDialog extends BaseDialog {
 	private Label lblPrecision = null;
 	private Label lblBaseCurrency = null;
 	private Label lblSpendingPassword = null;
+	private Label lblEmail = null;
 	private Text txtPrecision = null;
 	private Text txtSpendingPassword = null;
+	private Text txtEmail = null;
+	
 	private Combo cmbBaseCurrency = null;
 	private Button cmdOk = null;
 	private Button cmdCancel = null;
@@ -174,8 +177,14 @@ public class OptionsDialog extends BaseDialog {
 		lblSpendingPassword.setText(MM.PHRASES.getPhrase("284") + ":");
 
 		txtSpendingPassword = new Text(reportGroup, SWT.BORDER);
-		txtSpendingPassword.setEnabled(options.isEnableWallet());
+		txtSpendingPassword.setEnabled(options.isEnableWallet());		
 		txtSpendingPassword.setEchoChar('*');
+		
+		lblEmail = new Label(reportGroup, SWT.NONE);
+		lblEmail.setText(MM.PHRASES.getPhrase("304") + ":");
+		txtEmail = new Text(reportGroup, SWT.BORDER);
+		txtEmail.setEnabled(options.isEnableWallet());
+
 		
 		lblBsvRefresh = new Label(reportGroup, SWT.NONE);
 		lblBsvRefresh.setText(MM.PHRASES.getPhrase("216") + ":");
@@ -187,6 +196,10 @@ public class OptionsDialog extends BaseDialog {
 			// Need to set password to something initially so the box visually shows as populated
 			if (_walletPassword.getHashedPassword() != null && _walletPassword.getHashedPassword().length()>0)
 				txtSpendingPassword.setText(_walletPassword.getHashedPassword());
+
+			txtEmail.setText(options.getEmailAddress());
+			
+			cmbBsvRefresh.setText(options.getDefaultBsvCurrencyMethod());
 			
 			InfinityPfm.LogMessage("Password starting hash is = " + _walletPassword.getHashedPassword());
 			
@@ -280,6 +293,17 @@ public class OptionsDialog extends BaseDialog {
 		cmbbsvrefreshdata.right = new FormAttachment(lblBsvRefresh, 300);
 		cmbBsvRefresh.setLayoutData(cmbbsvrefreshdata);
 		
+		FormData lblemaildata = new FormData();
+		lblemaildata.top = new FormAttachment(cmbBsvRefresh, 10);
+		lblemaildata.left = new FormAttachment(0, 60);
+		lblEmail.setLayoutData(lblemaildata);
+		
+		FormData txtemaildata = new FormData();
+		txtemaildata.top = new FormAttachment(cmbBsvRefresh, 8);
+		txtemaildata.left = new FormAttachment(lblEmail, 38);
+		txtemaildata.right = new FormAttachment(lblEmail, 300);
+		txtEmail.setLayoutData(txtemaildata);
+		
 		FormData cmdokdata = new FormData();
 		cmdokdata.top = new FormAttachment(tabFolder, 5);
 		cmdokdata.left = new FormAttachment(30, 0);
@@ -351,13 +375,14 @@ public class OptionsDialog extends BaseDialog {
 				//http://bitcoinsv-rates.com/api/rates/
 				//https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=usd
 				//https://api.cryptonator.com/api/ticker/bsv-usd
+				//https://api.whatsonchain.com/v1/bsv/main/exchangerate
 				
-				String tickerUrl = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=" + defaultCurrency.getIsoName().toLowerCase();
+				String tickerUrl = "https://api.whatsonchain.com/v1/bsv/main/exchangerate";
 				
 				CurrencyMethod newMethod = new CurrencyMethod();
 				newMethod.setCurrencyID(bsv.getCurrencyID());
-				newMethod.setMethodName("coingecko_sv");
-				newMethod.setMethodPath("$.bitcoin-cash-sv.usd");
+				newMethod.setMethodName("whatsonchain_sv");
+				newMethod.setMethodPath("$.rate");
 				newMethod.setMethodUrl(tickerUrl);
 				
 				MM.sqlMap.insert("insertCurrencyMethod", newMethod);
@@ -465,6 +490,7 @@ public class OptionsDialog extends BaseDialog {
 			
 			txtSpendingPassword.setEnabled(walletEnabled);
 			cmbBsvRefresh.setEnabled(walletEnabled);
+			txtEmail.setEnabled(walletEnabled);
 			
 			if (walletEnabled) {
 				
@@ -515,6 +541,8 @@ public class OptionsDialog extends BaseDialog {
 					Object id = cmbBsvRefresh.getData(cmbBsvRefresh.getText());
 					if (id != null)
 						options.setDefaultBsvCurrencyID(((Long)id).longValue());
+					
+					options.setEmailAddress(txtEmail.getText());
 					
 					restartRequiredNotice();
 				

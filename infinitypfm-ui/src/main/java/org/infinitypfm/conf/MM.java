@@ -36,10 +36,10 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.8.5"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.9.5"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2021 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2022 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -70,6 +70,7 @@ public class MM {
 	public static final String IMG_HELPBACK = "go-previous.png";
 	public static final String IMG_HELPFORWARD = "go-previous-rtl.png";
 	public static final String IMG_FILE = "file_obj.gif";
+	public static final String IMG_INTERNET = "applications-internet.png";
 	public static final String IMG_LOGASSOC = "log.gif";
 	public static final String IMG_LOGTREE = "document.png";
 	public static final String IMG_NEWOBJECT = "x-office-spreadsheet.png";
@@ -144,7 +145,6 @@ public class MM {
 	public static final int MENU_FILE_IMPORT_OFX = 32;
 	public static final int MENU_FILE_IMPORT_QFX = 33;
 	public static final int MENU_FILE_IMPORT_QIF = 34;
-	public static final int MENU_FILE_IMPORT_BTC = 35;
 	public static final int MENU_FILE_IMPORT_RULES = 36;
 	public static final int MENU_FILE_BACKUP = 37;
 	public static final int MENU_FILE_RESTORE = 38;
@@ -188,6 +188,7 @@ public class MM {
 	public static final int MENU_WALLET_BACKUP = 151;
 	public static final int MENU_WALLET_RESTORE = 152;
 	public static final int MENU_WALLET_REFRESH = 153;
+	public static final int MENU_WALLET_SIGNIN = 154;
 	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;
@@ -230,8 +231,6 @@ public class MM {
 	//Load language - use default for now
 	public static LangLoader PHRASES = null;
 	
-	public static String bitcoinUser = null;
-	public static String bitcoinPwd = null;
 	public static String importFile = null;
 	public static String csvConfig = null;
 	
