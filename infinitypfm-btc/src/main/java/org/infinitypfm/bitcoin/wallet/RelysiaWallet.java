@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2021 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -23,15 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.AuthenticationException;
-
 import org.apache.commons.lang3.tuple.Pair;
+import org.infinitypfm.bitcoin.relysia.api.v1.AddressResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.Auth;
 import org.infinitypfm.bitcoin.relysia.api.v1.AuthResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.BalanceResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.MnemonicResponse;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
+import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.RestResponse;
 import org.infinitypfm.core.util.RestClient;
 
@@ -39,6 +40,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.glxn.qrgen.QRCode;
 
 public class RelysiaWallet implements BsvWallet {
 
@@ -71,12 +74,17 @@ public class RelysiaWallet implements BsvWallet {
 	
 	@Override
 	public boolean isRunning() {
+		return isRunning(false);
+	}
+	
+	@Override
+	public boolean isRunning(boolean TriggerEventOnSignInSuccess) {
 		
 		if (!_signedIn) {
 			try {
 				signIn();
 				
-				if (_events != null)
+				if (_events != null && TriggerEventOnSignInSuccess)
 					_events.signIn(true, null, null);
 				
 			} catch (WalletException e) {
@@ -93,14 +101,16 @@ public class RelysiaWallet implements BsvWallet {
 
 	@Override
 	public String getFiatBalance() {
-		// TODO Auto-generated method stub
+		
+		if (!isRunning()) return null;
+		
 		return null;
 	}
 
 	@Override
 	public String getBsvBalance() {
 		
-		if (!_signedIn) return null;
+		if (!isRunning()) return null;
 		
 		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
 		headers.add(Pair.of("authToken", _auth.getAuthToken()));
@@ -115,11 +125,11 @@ public class RelysiaWallet implements BsvWallet {
 		try {
 			response = _mapper.readValue(restResult.getBody(), BalanceResponse.class);
 		} catch (JsonParseException e) {
-			_events.walletMessage("Erro in getBsvBalance", new WalletException(e));
+			_events.walletMessage("Error in getBsvBalance", new WalletException(e));
 		} catch (JsonMappingException e) {
-			_events.walletMessage("Erro in getBsvBalance", new WalletException(e));
+			_events.walletMessage("Error in getBsvBalance", new WalletException(e));
 		} catch (IOException e) {
-			_events.walletMessage("Erro in getBsvBalance", new WalletException(e));
+			_events.walletMessage("Error in getBsvBalance", new WalletException(e));
 		}
 		
 		if (response != null && response.getStatusCode() == 200) {
@@ -143,27 +153,81 @@ public class RelysiaWallet implements BsvWallet {
 	}
 
 	@Override
-	public String getCurrentReceivingAddress() {
-		// TODO Auto-generated method stub
+	public ReceivingAddress getCurrentReceivingAddress() {
+
+		if (!isRunning()) return null;
+		
+		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+		headers.add(Pair.of("authToken", _auth.getAuthToken()));
+		headers.add(Pair.of("walletID", _auth.getAccountId()));
+		
+		RestResponse restResult = _client.get("/v1/address", headers);
+		
+		AddressResponse response = null;
+		
+		try {
+			response = _mapper.readValue(restResult.getBody(), AddressResponse.class);
+		} catch (JsonParseException e) {
+			_events.walletMessage("Error in getCurrentReceivingAddress", new WalletException(e));
+		} catch (JsonMappingException e) {
+			_events.walletMessage("Error in getCurrentReceivingAddress", new WalletException(e));
+		} catch (IOException e) {
+			_events.walletMessage("Error in getCurrentReceivingAddress", new WalletException(e));
+		}
+		
+		if (response != null && response.getStatusCode() == 200) {
+			ReceivingAddress result = new ReceivingAddress(response.getData().getAddress(),
+					response.getData().getPaymail());
+			return result;
+		}
+		
 		return null;
 	}
 
 	@Override
-	public String getMnemonicCode(String password) throws AuthenticationException {
-		// TODO Auto-generated method stub
-		return null;
+	public String getMnemonicCode() {
+
+		if (!isRunning()) return null;
+		
+		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+		headers.add(Pair.of("authToken", _auth.getAuthToken()));
+		headers.add(Pair.of("walletID", _auth.getAccountId()));
+		
+		RestResponse restResult = _client.get("/v1/mnemonic", headers);
+		
+		MnemonicResponse response = null;
+		
+		try {
+			response = _mapper.readValue(restResult.getBody(), MnemonicResponse.class);
+		} catch (JsonParseException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		} catch (JsonMappingException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		} catch (IOException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		}
+		
+		if (response != null && response.getStatusCode() == 200) {
+			return response.getData().getMnemonic();
+		}
+		
+		return restResult.getBody();
+		
 	}
 
 	@Override
-	public void restoreFromSeed(String seedCode, String password, String passphrase) throws WalletException {
+	public void restoreFromSeed(String seedCode, String passphrase) throws WalletException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public File getQrCode(String address) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		File newFile = QRCode.from(address)
+		.withSize(250, 250).file();
+		
+		return newFile;
 	}
 
 	@Override
@@ -180,14 +244,15 @@ public class RelysiaWallet implements BsvWallet {
 		case GETSETBALANCEFIAT:
 			return false;
 		case GETSETBALANCEBSV:
-			return true;
 		case REGISTERFOREVENTS:
 		case UNREGISTERFOREVENTS:
-			return true;
 		case CURRENTRECEIVINGADDRESS:
 		case GETMNEUMONIC:
+			return true;
 		case RESTOREFROMSEED:
+			return false;
 		case GETQRCODE:
+			return true;
 		case SENDCOINS:
 			return false;
 		case SIGNIN:
@@ -220,7 +285,7 @@ public class RelysiaWallet implements BsvWallet {
 		
 		if (!_signedIn) {
 		
-			Auth auth = new Auth(_auth.getEmailAddress(), _auth.getPassword());
+			Auth auth = new Auth(_auth.getEmailAddress(), _auth.getPlainPassword());
 			try {
 				String json = _mapper.writeValueAsString(auth);
 				RestResponse restResult = _client.post("v1/auth", null, json);

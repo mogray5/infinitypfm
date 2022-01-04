@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2021 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -21,11 +21,10 @@ package org.infinitypfm.bitcoin.wallet;
 import java.io.File;
 import java.io.IOException;
 
-import javax.naming.AuthenticationException;
-
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
+import org.infinitypfm.core.data.ReceivingAddress;
 
 public interface BsvWallet {
 
@@ -41,7 +40,13 @@ public interface BsvWallet {
 	AuthData getAuthData();
 	void setAuthData(AuthData authData);
 	
+	/**
+	 * Return running status of wallet.  Will return true if operational and can handle
+	 * wallet requests.
+	 * @return
+	 */
 	boolean isRunning();
+	boolean isRunning(boolean TriggerEventOnSignInSuccess);
 
 	/**
 	 * Shut down the wallet
@@ -82,18 +87,17 @@ public interface BsvWallet {
 	 * Returns current public address in base58
 	 * for receiving coins
 	 * 
-	 * @return base58 receiving address
+	 * @return ReceivingAddress opbject containing
+	 * base58 receiving address and paymail (if available)
 	 */
-	String getCurrentReceivingAddress();
+	ReceivingAddress getCurrentReceivingAddress();
 
 	/**
 	 * Return 12 word mnemonic seed.  Requires password.
 	 * 
-	 * @param password Password required
-	 * @return String seed phrase
-	 * @throws AuthenticationException 
+	 * @return String seed phrase 
 	 */
-	String getMnemonicCode(String password) throws AuthenticationException;
+	String getMnemonicCode();
 
 	/**
 	 * Restore a wallet from a mnuemonic seed.
@@ -103,7 +107,7 @@ public interface BsvWallet {
 	 * @param passphrase seed passphrase
 	 * @throws WalletEception thrown if resore failes
 	 */
-	void restoreFromSeed(String seedCode, String password, String passphrase)
+	void restoreFromSeed(String seedCode, String passphrase)
 			throws WalletException;
 
 	File getQrCode(String address) throws IOException;

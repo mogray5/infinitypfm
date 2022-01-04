@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2021 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -27,6 +27,7 @@ import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Password;
+import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.util.EncryptUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,11 @@ public class BitcoinJWallet implements BsvWallet {
 	
 	@Override
 	public boolean isRunning() {
+		return isRunning(false);
+	}
+	
+	@Override
+	public boolean isRunning(boolean TriggerEventOnSignInSuccess) {
 		return _bsvKit.isRunning();
 	}
 	
@@ -138,7 +144,7 @@ public class BitcoinJWallet implements BsvWallet {
 	 * @return base58 receiving address
 	 */
 	@Override
-	public String getCurrentReceivingAddress() {
+	public ReceivingAddress getCurrentReceivingAddress() {
 		if (_firstUse) init();
 		//Address a = _kit.wallet().currentReceiveAddress();
 		//return a.toBase58();
@@ -153,7 +159,7 @@ public class BitcoinJWallet implements BsvWallet {
 	 * @throws AuthenticationException 
 	 */
 	@Override
-	public String getMnemonicCode(String password) throws AuthenticationException {
+	public String getMnemonicCode() {
 		if (_firstUse) init();
 		
 		/*
@@ -176,7 +182,7 @@ public class BitcoinJWallet implements BsvWallet {
 	 * @throws UnreadableWalletException thrown if wallet seed can not be used
 	 */
 	@Override
-	public void restoreFromSeed(String seedCode, String password, String passphrase) throws WalletException{
+	public void restoreFromSeed(String seedCode, String passphrase) throws WalletException{
 		if (_firstUse) init();
 		
 		/*

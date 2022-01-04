@@ -18,22 +18,28 @@
  */
 package org.infinitypfm.bitcoin.relysia.api.v1;
 
-public class AuthResponse {
+public class MnemonicData {
 
-	private int statusCode = 0;
-	private AuthData data = null;
-	
-	public int getStatusCode() {
-		return statusCode;
+	private String status = null;
+	private String msg = null;
+	private String mnemonic = null;
+	public String getStatus() {
+		return status;
 	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	public AuthData getData() {
-		return data;
+	public String getMsg() {
+		return msg;
 	}
-	public void setData(AuthData data) {
-		this.data = data;
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public String getMnemonic() {
+		return mnemonic;
+	}
+	public void setMnemonic(String mnemonic) {
+		this.mnemonic = mnemonic;
 	}
 	
 }

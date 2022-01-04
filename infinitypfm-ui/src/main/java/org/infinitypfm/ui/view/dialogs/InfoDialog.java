@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -101,7 +101,8 @@ public class InfoDialog extends BaseDialog {
 
 		txtInfo = new Text(sh, SWT.BORDER);
 		txtInfo.setFocus();
-		if (bValueInText) txtInfo.setText(sDMsg);
+		
+		if (bValueInText && sDMsg != null) txtInfo.setText(sDMsg);
 		
 		this.CenterWindow();
 	}

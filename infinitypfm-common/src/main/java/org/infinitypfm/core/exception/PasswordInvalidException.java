@@ -15,25 +15,17 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
- */
-package org.infinitypfm.bitcoin.relysia.api.v1;
+*/
+package org.infinitypfm.core.exception;
 
-public class AuthResponse {
+public class PasswordInvalidException extends Exception {
 
-	private int statusCode = 0;
-	private AuthData data = null;
-	
-	public int getStatusCode() {
-		return statusCode;
+	private static final long serialVersionUID = -8311570570084267285L;
+
+	public PasswordInvalidException() {
 	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+
+	public PasswordInvalidException(String message) {
+		super(message);
 	}
-	public AuthData getData() {
-		return data;
-	}
-	public void setData(AuthData data) {
-		this.data = data;
-	}
-	
 }

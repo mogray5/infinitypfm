@@ -67,12 +67,15 @@ import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.conf.WalletAuth;
 import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.ParamDateRangeAccount;
+import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.TransactionOffset;
+import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
@@ -84,8 +87,9 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Composite cmpHeader = null;
 	private Canvas bcCanvas = null;
 	private Image bcLogo = null;
-	private Color color = null;
+	private Color colorWhite = null;
 	private Color colorFont = null;
+	private Color addressFont = null;
 	private Label lblAmount = null;
 	private Label lblAmountBsv = null;
 	private TabFolder tabFolder = null;
@@ -97,8 +101,10 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private Image imgRcvQrCode = null;
 	private Label lblRcvAddress =  null;
+	private Label lblRcvPaymail = null;
 	private Canvas qrCanvas = null;
-	private Button cmdClipBoard = null;
+	private Button cmdClipBoardAdr = null;
+	private Button cmdClipBoardPaymail = null;
 	
 	private Label lblOffset = null;
 	private Combo cmbOffset = null;
@@ -110,7 +116,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	private Text txtSendAmount = null;
 	private Combo cmbSendAmountIso = null;
 	
-	private String _receiveAddress;
+	private ReceivingAddress _receiveAddress;
 	private Account bsvAccount = null;
 	private Account bsvCoinsReceived = null;
 	private Currency _bsvCurrency;
@@ -118,8 +124,6 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private boolean _inSend = false;
 	private List<Link> _links = null;
-	private boolean _signedIn = false;
-	
 	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -129,8 +133,17 @@ public class WalletView extends BaseView implements WalletEvents {
 		if (MM.wallet != null) {
 			if (MM.wallet.isImplemented(WalletFunction.REGISTERFOREVENTS))
 				MM.wallet.registerForEvents(this);
-			if (MM.wallet.isImplemented(WalletFunction.CURRENTRECEIVINGADDRESS))
-				_receiveAddress = MM.wallet.getCurrentReceivingAddress();
+			if (MM.wallet.isImplemented(WalletFunction.CURRENTRECEIVINGADDRESS)) {
+				
+				try {
+					// This will prompt user to log in the first time
+					WalletAuth.getInstance().walletPassword();
+					_receiveAddress = MM.wallet.getCurrentReceivingAddress();
+				} catch (PasswordInvalidException e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}
+				
+			}
 		}
 		_format = new DataFormatUtil();
 		refreshExchangeRate();
@@ -155,19 +168,21 @@ public class WalletView extends BaseView implements WalletEvents {
 	@Override
 	protected void LoadUI() {
 		
-		color = new Color(InfinityPfm.shMain.getDisplay(), 255,255,255);
-		colorFont = new Color(InfinityPfm.shMain.getDisplay(), 21,86,21);
+		colorWhite = new Color(InfinityPfm.shMain.getDisplay(), 255,255,255);
+		colorFont = new Color(InfinityPfm.shMain.getDisplay(), 14,46,6);
+		addressFont = new Color(InfinityPfm.shMain.getDisplay(), 30,30,36);
+		
 		tbMain = new WalletToolbar(this);
 		cmpHeader = new Composite(this, SWT.BORDER);
 		cmpHeader.setLayout(new FormLayout());
-		cmpHeader.setBackground(color);
+		cmpHeader.setBackground(colorWhite);
 		bcLogo = InfinityPfm.imMain.getTransparentImage(MM.IMG_BSV_LOGO);
 		bcCanvas = new Canvas(cmpHeader, SWT.NONE);
-		bcCanvas.setBackground(color);
+		bcCanvas.setBackground(colorWhite);
 		bcCanvas.addPaintListener(logo_OnPaint);
 		
 		lblAmount = new Label(cmpHeader, SWT.NONE);
-		lblAmount.setBackground(color);
+		lblAmount.setBackground(colorWhite);
 		lblAmount.setForeground(colorFont);
 		lblAmountBsv = new Label(this, SWT.NONE);
 		this.setFiatAndBsvBalance();
@@ -235,9 +250,19 @@ public class WalletView extends BaseView implements WalletEvents {
 		FontData[] fD4 = lblRcvAddress.getFont().getFontData();
 		fD4[0].setHeight(15);
 		lblRcvAddress.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD4[0]));
+		lblRcvAddress.setBackground(colorWhite);
+		lblRcvAddress.setForeground(addressFont);
 		
-		if (_receiveAddress != null)
-			lblRcvAddress.setText(_receiveAddress);
+		lblRcvPaymail = new Label(receiveGroup, SWT.NONE);
+		lblRcvPaymail.setFont(new Font(InfinityPfm.shMain.getDisplay(),fD4[0]));
+		lblRcvPaymail.setBackground(colorWhite);
+		lblRcvPaymail.setForeground(addressFont);
+		
+		if (_receiveAddress != null) {
+			lblRcvAddress.setText(_receiveAddress.getAddress());
+			lblRcvPaymail.setText(_receiveAddress.getPaymail());
+		}
+		
 		
 		lblSendAmount = new Label(sendGroup, SWT.NONE);
 		lblSendAmount.setText(MM.PHRASES.getPhrase("55") + ":");
@@ -245,17 +270,23 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmbSendAmountIso = new Combo(sendGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
 		this.loadSendIsoCombo();
 		
-		cmdClipBoard = new Button(receiveGroup, SWT.PUSH);
-		cmdClipBoard.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
-		cmdClipBoard.addSelectionListener(cmdClipBoard_OnClick);
+		cmdClipBoardAdr = new Button(receiveGroup, SWT.PUSH);
+		cmdClipBoardAdr.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
+		cmdClipBoardAdr.setBackground(colorWhite);
+		cmdClipBoardAdr.addSelectionListener(cmdClipBoardAdr_OnClick);
+		
+		cmdClipBoardPaymail = new Button(receiveGroup, SWT.PUSH);
+		cmdClipBoardPaymail.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
+		cmdClipBoardPaymail.setBackground(colorWhite);
+		cmdClipBoardPaymail.addSelectionListener(cmdClipBoardPaymail_OnClick);
 		
 		try {
-			if (_receiveAddress != null) {
-				File qrImage = MM.wallet.getQrCode(_receiveAddress);
+			if (_receiveAddress != null && MM.wallet.isImplemented(WalletFunction.GETQRCODE)) {
+				File qrImage = MM.wallet.getQrCode(_receiveAddress.getAddress());
 				if (qrImage.exists()) {
 					imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(qrImage);
 					qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
-					qrCanvas.setBackground(color);
+					qrCanvas.setBackground(colorWhite);
 					qrCanvas.addPaintListener(logo_OnPaintQr);
 				}
 			}
@@ -265,7 +296,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 		// Set tab order
 		sendGroup.setTabList(new Control[] {txtSendTo, cmdSend, txtSendAmount, cmbSendAmountIso, txtMemo, cmbOffset});
-		receiveGroup.setTabList(new Control[] {cmdClipBoard});
+		receiveGroup.setTabList(new Control[] {cmdClipBoardAdr, cmdClipBoardPaymail});
 		tabFolder.setTabList(new Control[] {sendGroup, receiveGroup});
 		this.setTabList(new Control[] {tabFolder});
 		
@@ -415,7 +446,22 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmdclipboarddata.left = new FormAttachment(lblRcvAddress, 10);
 		//cmdclipboarddata.right = new FormAttachment(100, 0);
 		//cmdclipboarddata.bottom = new FormAttachment(100, 0);
-		cmdClipBoard.setLayoutData(cmdclipboarddata);
+		cmdClipBoardAdr.setLayoutData(cmdclipboarddata);
+		
+		FormData lblrcvpaymaildata = new FormData();
+		lblrcvpaymaildata.top = new FormAttachment(lblRcvAddress, 10);
+		lblrcvpaymaildata.left = new FormAttachment(0, 250);
+		//lblrcvaddressdata.right = new FormAttachment(100, 0);
+		//lblrcvaddressdata.bottom = new FormAttachment(100, 0);
+		lblRcvPaymail.setLayoutData(lblrcvpaymaildata);
+		
+		FormData cmdclipboardpaymaildata = new FormData();
+		cmdclipboardpaymaildata.top = new FormAttachment(lblRcvAddress, 8);
+		cmdclipboardpaymaildata.left = new FormAttachment(lblRcvPaymail, 10);
+		//cmdclipboardpaymaildata.right = new FormAttachment(100, 0);
+		//cmdclipboardpaymaildata.bottom = new FormAttachment(100, 0);
+		cmdClipBoardPaymail.setLayoutData(cmdclipboardpaymaildata);
+		
 
 	}
 	
@@ -638,8 +684,14 @@ public class WalletView extends BaseView implements WalletEvents {
 	 * pass it to overload for formatting.
 	 */
 	private void setFiatAndBsvBalance() {
-		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV) && _signedIn) 
-			setFiatAndBsvBalance( MM.wallet.getBsvBalance());
+		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV)) { 
+			try {
+				WalletAuth.getInstance().walletPassword();
+				setFiatAndBsvBalance( MM.wallet.getBsvBalance());
+			} catch (PasswordInvalidException e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
+		}
 	}
 	
 	private void loadSendIsoCombo() {
@@ -688,7 +740,6 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 	}
 	
-	
 	/*
 	 * Listeners
 	 */
@@ -704,11 +755,23 @@ public class WalletView extends BaseView implements WalletEvents {
         }
     };
     
-	SelectionAdapter cmdClipBoard_OnClick = new SelectionAdapter() {
+	SelectionAdapter cmdClipBoardAdr_OnClick = new SelectionAdapter() {
 
 		public void widgetSelected(SelectionEvent event) {
 			
 			String str = lblRcvAddress.getText();
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Clipboard clipboard = toolkit.getSystemClipboard();
+			StringSelection strSel = new StringSelection(str);
+			clipboard.setContents(strSel, null);
+		}
+	};
+	
+	SelectionAdapter cmdClipBoardPaymail_OnClick = new SelectionAdapter() {
+
+		public void widgetSelected(SelectionEvent event) {
+			
+			String str = lblRcvPaymail.getText();
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 			Clipboard clipboard = toolkit.getSystemClipboard();
 			StringSelection strSel = new StringSelection(str);
@@ -873,9 +936,8 @@ public class WalletView extends BaseView implements WalletEvents {
 
 	@Override
 	public void signIn(boolean success, String message, WalletException e) {
-		_signedIn = success;
 		
-		if (_signedIn) {
+		if (success) {
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("306"), true);
 			setFiatAndBsvBalance();
 		}

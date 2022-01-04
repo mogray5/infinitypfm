@@ -18,22 +18,35 @@
  */
 package org.infinitypfm.bitcoin.relysia.api.v1;
 
-public class AuthResponse {
+public class AddressData {
 
-	private int statusCode = 0;
-	private AuthData data = null;
-	
-	public int getStatusCode() {
-		return statusCode;
+	private String status = null;
+	private String msg = null;
+	private String address = null;
+	private String paymail = null;
+	public String getStatus() {
+		return status;
 	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	public AuthData getData() {
-		return data;
+	public String getMsg() {
+		return msg;
 	}
-	public void setData(AuthData data) {
-		this.data = data;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
-	
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPaymail() {
+		return paymail;
+	}
+	public void setPaymail(String paymail) {
+		this.paymail = paymail;
+	}
+
 }

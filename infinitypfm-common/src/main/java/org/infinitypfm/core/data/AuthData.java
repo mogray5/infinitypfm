@@ -26,9 +26,10 @@ public class AuthData {
 
 	private String emailAddress = null;
 	private String authToken = null;
-	private String password = null;
+	private String plainPassword = null;
 	private String user = null;
 	private String accountId = null;
+	private Password password = null;
 	
 	public String getEmailAddress() {
 		return emailAddress;
@@ -42,11 +43,11 @@ public class AuthData {
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
-	public String getPassword() {
-		return password;
+	public String getPlainPassword() {
+		return plainPassword;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPlainPassword(String plainPassword) {
+		this.plainPassword = plainPassword;
 	}
 	public String getUser() {
 		return user;
@@ -59,6 +60,12 @@ public class AuthData {
 	}
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
+	}
+	public Password getPassword() {
+		return password;
+	}
+	public void setPassword(Password password) {
+		this.password = password;
 	}
 	
 }

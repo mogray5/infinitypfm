@@ -55,7 +55,7 @@ public class WalletToolbar extends BaseToolbar {
 		
 		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETMNEUMONIC);
 		
-		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("277"),
+		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("291"),
 				MM.MENU_WALLET_SHOW_MNEMONIC, featureEnabled);
 	
 		featureEnabled = MM.wallet != null;

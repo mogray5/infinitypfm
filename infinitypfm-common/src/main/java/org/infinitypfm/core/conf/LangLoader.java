@@ -351,6 +351,9 @@ public class LangLoader {
 		hmPhrases.put("304",  i18n.tr("Email Address"));
 		hmPhrases.put("305",  i18n.tr("Sign In"));
 		hmPhrases.put("306",  i18n.tr("Sign In Successfull"));
+		hmPhrases.put("307",  i18n.tr("Mnemonic phrase"));
+		hmPhrases.put("308",  i18n.tr("Please keep this in a secure location."));
+		
 	}
 	
 	

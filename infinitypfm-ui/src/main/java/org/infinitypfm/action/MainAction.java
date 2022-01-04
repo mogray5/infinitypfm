@@ -29,8 +29,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.naming.AuthenticationException;
-
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -38,11 +36,12 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.conf.WalletAuth;
 import org.infinitypfm.core.data.Account;
-import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
@@ -72,7 +71,6 @@ import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
-import org.infinitypfm.ui.view.dialogs.PasswordDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
 import org.infinitypfm.ui.view.views.ReportView;
@@ -84,8 +82,6 @@ import org.infinitypfm.util.FileHandler;
  */
 public class MainAction {
 
-	private String _walletPassword = null;
-	
 	public MainAction() {
 		super();
 	}
@@ -269,6 +265,13 @@ public class MainAction {
 
 	public void WalletRestore() {
 		
+		try {
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+			return;
+		}
+		
 		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("293"), 
 				MM.PHRASES.getPhrase("293"));
 		String seedCode = infoDialog.getInput();
@@ -279,10 +282,9 @@ public class MainAction {
 		}
 	
 		try {
-			MM.wallet.restoreFromSeed(seedCode, walletPassword(), null);
+			MM.wallet.restoreFromSeed(seedCode, null);
 		} catch (WalletException e) {
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
-			_walletPassword = null;
 		}
 		
 		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("295"), true);
@@ -290,26 +292,31 @@ public class MainAction {
 	
 	public void WalletSignIn() {
 		
-		String password = walletPassword();
-		AuthData auth = MM.wallet.getAuthData();
-		auth.setPassword(password);
-		MM.wallet.isRunning();
+		try {
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+			return;
+		}
+		
+		// Pass true to trigger success event callback on sign-in
+		MM.wallet.isRunning(true);
 	}
 	
 	public void WalletShowMnemonic() {
 		
 		try {
-			
-			String mnemonic = MM.wallet.getMnemonicCode(walletPassword());
-			InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("292"), 
-					mnemonic, true);
-			InfinityPfm.LogMessage(mnemonic);
-			infoDialog.Open();
-			
-		} catch (AuthenticationException e) {
-			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
-			_walletPassword = null;
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+			return;
 		}
+		
+		String mnemonic = MM.wallet.getMnemonicCode();
+		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("307"), 
+				mnemonic, true);
+		InfinityPfm.LogMessage(mnemonic);
+		infoDialog.Open();
 		
 	}
 	
@@ -710,25 +717,6 @@ public class MainAction {
 
 		}
 
-	}
-
-	/**
-	 * Show Password prompt dialog if user has set
-	 * a spending password in options
-	 * 
-	 * @return true/false user authorized
-	 */
-	private String walletPassword() {
-		
-		if (_walletPassword != null) return _walletPassword;
-		
-		if (MM.options.getSpendPassword() != null) {
-			PasswordDialog password = new PasswordDialog(false);
-			String[] answer = password.getCredentials();
-			_walletPassword = answer[1];
-		}
-		
-		return _walletPassword;
 	}
 	
 }

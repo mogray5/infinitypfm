@@ -16,24 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.infinitypfm.bitcoin.relysia.api.v1;
+package org.infinitypfm.core.data;
 
-public class AuthResponse {
+/**
+ * 
+ * Storage for BSV address and paymail 
+ *
+ */
+public class ReceivingAddress {
+	
+	private String address = null;
+	private String paymail = null;
+	
+	
+	public ReceivingAddress(String address, String paymail) {
+		super();
+		this.address = address;
+		this.paymail = paymail;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPaymail() {
+		return paymail;
+	}
+	public void setPaymail(String paymail) {
+		this.paymail = paymail;
+	}
 
-	private int statusCode = 0;
-	private AuthData data = null;
-	
-	public int getStatusCode() {
-		return statusCode;
-	}
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-	public AuthData getData() {
-		return data;
-	}
-	public void setData(AuthData data) {
-		this.data = data;
-	}
-	
 }

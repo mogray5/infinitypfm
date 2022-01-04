@@ -23,7 +23,7 @@ public class TestBsvWallet {
 		String result = null;
 		
 		try {
-			result = wallet.getMnemonicCode("mypassword");
+			result = wallet.getMnemonicCode();
 		} catch (Exception e) {
 			error = e;
 		}
