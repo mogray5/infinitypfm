@@ -37,7 +37,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
-
+import org.eclipse.swt.graphics.DeviceData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.bitcoin.wallet.BsvKit;
@@ -57,6 +57,7 @@ import org.infinitypfm.graphics.ImageMap;
 import org.infinitypfm.ui.MainFrame;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.util.FileHandler;
+import org.infinitypfm.util.Sleak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +75,13 @@ public class InfinityPfm {
 	private static final Logger logger = LoggerFactory.getLogger(InfinityPfm.class);
 	
 	public static void main(String[] args) {
-		Display display = new Display();
+		
+		 DeviceData data = new DeviceData();
+		  data.tracking = true;
+		Display display = null;
+		 display = new Display(data);
+		  Sleak sleak = new Sleak();
+		  sleak.open();
 		
 		if (System.getenv(MM.ENVAPPHOME) != null) {
 			homeDirectory = new File(System.getenv(MM.ENVAPPHOME));
@@ -109,15 +116,6 @@ public class InfinityPfm {
 			System.exit(0);
 		}
 		
-		/* Sleak Startup code
-		 * 
-		 * DeviceData data = new DeviceData();
-		 * data.tracking = true;
-		 * display = new Display(data);
-		 * Sleak sleak = new Sleak();
-		 * sleak.open();
-		 */
-
 		shMain = new Shell(display);
 
 		//Load icons

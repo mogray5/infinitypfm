@@ -193,6 +193,18 @@ public class DataFormatUtil implements Serializable {
 		return formatter.format(amtD);
 
 	}
+	
+	/**
+	 * Format a double using to specified precision
+	 * @param amount as double
+	 * @return Formatted amount as string
+	 */
+	public String getAmountFormatted(double amount) {
+		
+		formatter.applyPattern(NumberFormat.getDefault(_precision));
+		return formatter.format(amount);
+
+	}
 
 	/**
 	 * Format a number using passed format with passed
@@ -210,6 +222,19 @@ public class DataFormatUtil implements Serializable {
 				_precision);
 
 		return formatter.format(amtD);
+	}
+	
+	/**
+	 * Format a number using passed format with passed
+	 * precision.
+	 * @param amount as double type
+	 * @param format format to use
+	 * @return Formatted amount as a string
+	 */
+	public String getAmountFormatted(double amount, String format) {
+		
+		formatter.applyPattern(format);
+		return formatter.format(amount);
 	}
 
 	/**

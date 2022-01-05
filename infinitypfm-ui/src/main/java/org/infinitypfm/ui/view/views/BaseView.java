@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -32,10 +32,8 @@ import org.infinitypfm.ui.Widget;
 import org.infinitypfm.ui.view.toolbars.BaseToolbar;
 
 /**
- * @author Wayne Gray
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * Common functions for views 
+ *
  */
 public abstract class BaseView extends Composite implements Widget {
 
@@ -92,9 +90,7 @@ public abstract class BaseView extends Composite implements Widget {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.mogray.quezen.ui.QZWidget#QZDispose()
+	 * SWT object cleanup
 	 */
 	public void QZDispose() {
 		if (!fontBold.isDisposed()) {
@@ -102,6 +98,7 @@ public abstract class BaseView extends Composite implements Widget {
 		}
 
 		toolbar.QZDispose();
+		
 	}
 
 	protected void LoadLayout() {

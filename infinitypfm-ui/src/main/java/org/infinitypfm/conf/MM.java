@@ -188,7 +188,6 @@ public class MM {
 	public static final int MENU_WALLET_BACKUP = 151;
 	public static final int MENU_WALLET_RESTORE = 152;
 	public static final int MENU_WALLET_REFRESH = 153;
-	public static final int MENU_WALLET_SIGNIN = 154;
 	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;

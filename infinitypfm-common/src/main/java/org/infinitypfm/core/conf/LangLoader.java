@@ -353,6 +353,7 @@ public class LangLoader {
 		hmPhrases.put("306",  i18n.tr("Sign In Successfull"));
 		hmPhrases.put("307",  i18n.tr("Mnemonic phrase"));
 		hmPhrases.put("308",  i18n.tr("Please keep this in a secure location."));
+		hmPhrases.put("309",  i18n.tr("Copy to clipboard"));
 		
 	}
 	

@@ -256,8 +256,6 @@ public class MainAction {
 			this.WalletRestore();
 			break;
 		case MM.MENU_WALLET_REFRESH:
-			break;
-		case MM.MENU_WALLET_SIGNIN:
 			this.WalletSignIn();
 			break;
 		}

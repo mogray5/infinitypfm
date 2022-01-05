@@ -21,13 +21,22 @@ package org.infinitypfm.bitcoin.relysia.api.v1;
 public class TotalBalance {
 
 	private String currency = null;
-
+	private double balance = 0D;
+	
 	public String getCurrency() {
 		return currency;
 	}
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 	
 	

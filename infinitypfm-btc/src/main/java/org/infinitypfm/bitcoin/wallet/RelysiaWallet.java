@@ -32,6 +32,7 @@ import org.infinitypfm.bitcoin.relysia.api.v1.MnemonicResponse;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
+import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.RestResponse;
 import org.infinitypfm.core.util.RestClient;
@@ -50,6 +51,7 @@ public class RelysiaWallet implements BsvWallet {
 	private RestClient _client = null;
 	private ObjectMapper _mapper = null;
 	private WalletEvents _events = null;
+	private DataFormatUtil _formatter = null;
 	
 	/**********/
 	/* cTor's */
@@ -58,6 +60,7 @@ public class RelysiaWallet implements BsvWallet {
 	public RelysiaWallet(String baseUrl) {
 		_client = new RestClient(baseUrl);
 		_mapper = new ObjectMapper();
+		_formatter = new DataFormatUtil(8);
 	}
 	
 	public RelysiaWallet(String baseUrl, AuthData auth) {
@@ -65,7 +68,7 @@ public class RelysiaWallet implements BsvWallet {
 		_auth = auth;
 		_client = new RestClient(baseUrl);
 		_mapper = new ObjectMapper();
-		
+		_formatter = new DataFormatUtil(8);
 	}
 	
 	/******************/
@@ -133,8 +136,8 @@ public class RelysiaWallet implements BsvWallet {
 		}
 		
 		if (response != null && response.getStatusCode() == 200) {
-			double amount = response.getData().getCoins()[0].getBalance();
-			return String.valueOf(amount);
+			double amount = response.getData().getTotalBalance().getBalance();
+			return _formatter.getAmountFormatted(amount);
 		}
 		
 		return "0";
@@ -241,6 +244,7 @@ public class RelysiaWallet implements BsvWallet {
 
 		switch (function) {
 		
+		case BACKUP:
 		case GETSETBALANCEFIAT:
 			return false;
 		case GETSETBALANCEBSV:

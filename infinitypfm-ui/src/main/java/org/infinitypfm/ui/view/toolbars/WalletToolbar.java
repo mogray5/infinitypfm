@@ -39,11 +39,6 @@ public class WalletToolbar extends BaseToolbar {
 	protected void LoadButtons() {
 
 		boolean featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.SIGNIN);
-		
-		addButton(MM.IMG_INTERNET, MM.PHRASES.getPhrase("305"),
-				MM.MENU_WALLET_SIGNIN, featureEnabled);
-		
-		featureEnabled = MM.wallet != null;
 		 
 		addButton(MM.IMG_REFRESH2, MM.PHRASES.getPhrase("47"),
 				MM.MENU_WALLET_REFRESH, featureEnabled);
@@ -58,7 +53,7 @@ public class WalletToolbar extends BaseToolbar {
 		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("291"),
 				MM.MENU_WALLET_SHOW_MNEMONIC, featureEnabled);
 	
-		featureEnabled = MM.wallet != null;
+		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.BACKUP);
 		
 		addButton(MM.IMG_FOLDER_DOWNLOAD, MM.PHRASES.getPhrase("158"),
 				MM.MENU_WALLET_BACKUP, featureEnabled);

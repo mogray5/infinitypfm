@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2021 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -274,11 +274,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmdClipBoardAdr.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
 		cmdClipBoardAdr.setBackground(colorWhite);
 		cmdClipBoardAdr.addSelectionListener(cmdClipBoardAdr_OnClick);
+		cmdClipBoardAdr.setToolTipText(MM.PHRASES.getPhrase("309"));
 		
 		cmdClipBoardPaymail = new Button(receiveGroup, SWT.PUSH);
 		cmdClipBoardPaymail.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
 		cmdClipBoardPaymail.setBackground(colorWhite);
 		cmdClipBoardPaymail.addSelectionListener(cmdClipBoardPaymail_OnClick);
+		cmdClipBoardPaymail.setToolTipText(MM.PHRASES.getPhrase("309"));
 		
 		try {
 			if (_receiveAddress != null && MM.wallet.isImplemented(WalletFunction.GETQRCODE)) {
@@ -288,6 +290,7 @@ public class WalletView extends BaseView implements WalletEvents {
 					qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
 					qrCanvas.setBackground(colorWhite);
 					qrCanvas.addPaintListener(logo_OnPaintQr);
+					
 				}
 			}
 		} catch (IOException e) {
@@ -755,6 +758,7 @@ public class WalletView extends BaseView implements WalletEvents {
         }
     };
     
+   
 	SelectionAdapter cmdClipBoardAdr_OnClick = new SelectionAdapter() {
 
 		public void widgetSelected(SelectionEvent event) {
@@ -837,6 +841,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			}
 		}
 	};
+	
 	
 	/*****************/
 	/* Wallet Events */
@@ -946,6 +951,25 @@ public class WalletView extends BaseView implements WalletEvents {
 			InfinityPfm.LogMessage(message, true);
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	public void QZDispose() {
+		
+		// SWT object cleanup
+		
+		try { colorFont.dispose();} catch (Exception e) {}
+		try { colorWhite.dispose();} catch (Exception e) {}
+		try { addressFont.dispose();} catch (Exception e) {}
+		try { qrCanvas.dispose();} catch (Exception e){}
+		try { bcCanvas.dispose();} catch (Exception e) {}
+		
+		try {
+			for (Link link : _links) {
+				link.dispose();
+			}
+		} catch (Exception e) {}
 		
 	}
 

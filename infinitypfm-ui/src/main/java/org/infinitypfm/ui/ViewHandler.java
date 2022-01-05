@@ -127,6 +127,11 @@ public class ViewHandler {
 
 	public void UnloadCurrentView() {
 		if (!cmpMain.isDisposed()) {
+			
+			try {
+				((BaseView)cmpMain).QZDispose();
+			} catch (Exception e) {}
+			
 			cmpMain.dispose();
 		}
 		cmpMain = getDefaultView();
