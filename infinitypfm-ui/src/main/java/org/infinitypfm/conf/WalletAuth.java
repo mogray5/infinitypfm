@@ -50,5 +50,12 @@ public class WalletAuth {
 		
 		return _walletPassword;
 	}
+	
+	/**
+	 * Allow clearing of password so client can re initiate password challenge as needed.
+	 */
+	public void clearPassword() {
+		_walletPassword = null;
+	}
 
 }

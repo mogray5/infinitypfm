@@ -12,7 +12,7 @@ public interface WalletEvents {
 	 * @param prevBalance
 	 * @param newBalance
 	 */
-	public void coinsReceived(String transactionHash, String memo, String value, String prevBalance, String newBalance);
+	public void coinsReceived(String transactionHash, String memo, String value, String prevBalance, String newBalance, String transactionTime);
 	
 	/**
 	 * Event callback for sent coins
@@ -22,7 +22,7 @@ public interface WalletEvents {
 	 * @param prevBalance
 	 * @param newBalance
 	 */
-	public void coinsSent(String transactionHash, String memo, String value, String prevBalance, String newBalance);
+	public void coinsSent(String transactionHash, String memo, String value, String prevBalance, String newBalance, String transactionTime);
 	
 	/**
 	 * Sign in event.  Triggered on sign in for wallets that require sign-in

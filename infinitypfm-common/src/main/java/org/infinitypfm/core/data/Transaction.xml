@@ -161,6 +161,30 @@ Copyright (c) 2005-2021 Wayne Gray All rights reserved
         ]]>
    </select>
 
+   <select id="getLastBsvTransaction"
+                          resultType="tran" flushCache="true">
+       <![CDATA[
+        SELECT
+           Top 1
+           ActId as actId,
+           ActName as actName,
+           ActTypeName as actTypeName,
+           TranDate as tranDate,
+           TranAmount as tranAmount,
+           TranId as tranId,
+           TranMemo as tranMemo,
+           TranKey as transactionKey
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE TranKey IS NOT NULL
+        	AND Accounts.ActName = 'Bitcoin SV Wallet'
+        Order By TranDate DESC;
+        ]]>
+   </select>
+
    <select id="getLastTransactionByAccount" parameterType="java.lang.Integer"
                           resultType="tran" flushCache="true">
        <![CDATA[

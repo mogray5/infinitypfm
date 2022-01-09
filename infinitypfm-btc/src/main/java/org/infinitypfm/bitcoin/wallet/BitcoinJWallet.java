@@ -20,12 +20,14 @@ package org.infinitypfm.bitcoin.wallet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.naming.AuthenticationException;
 
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
+import org.infinitypfm.core.data.DigitalAssetTransaction;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.util.EncryptUtil;
@@ -314,9 +316,10 @@ public class BitcoinJWallet implements BsvWallet {
 	public boolean isImplemented(WalletFunction function) {
 
 		switch (function) {
-		
+		case GETHISTORY:
 		case GETSETBALANCEFIAT:
 		case GETSETBALANCEBSV:
+		case RECIEVEREALTIME:
 		case REGISTERFOREVENTS:
 		case UNREGISTERFOREVENTS:
 		case CURRENTRECEIVINGADDRESS:
@@ -341,5 +344,11 @@ public class BitcoinJWallet implements BsvWallet {
 	public void setAuthData(AuthData authData) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<DigitalAssetTransaction> getHistory(String sinceTransaction) throws WalletException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

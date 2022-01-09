@@ -28,11 +28,18 @@ import org.infinitypfm.bitcoin.relysia.api.v1.AddressResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.Auth;
 import org.infinitypfm.bitcoin.relysia.api.v1.AuthResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.BalanceResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.HistoryResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.HistoryRow;
 import org.infinitypfm.bitcoin.relysia.api.v1.MnemonicResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.SendData;
+import org.infinitypfm.bitcoin.relysia.api.v1.SendRequest;
+import org.infinitypfm.bitcoin.relysia.api.v1.SendResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.SendResponseData;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.DigitalAssetTransaction;
 import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.RestResponse;
 import org.infinitypfm.core.util.RestClient;
@@ -235,19 +242,130 @@ public class RelysiaWallet implements BsvWallet {
 
 	@Override
 	public void sendCoins(String toAddress, String amount) throws SendException {
-		// TODO Auto-generated method stub
 
+		if (!isRunning()) return;
+		
+		SendData data = new SendData(toAddress,
+				Float.valueOf(amount), "BSV", 
+				"infinitypfm.org", "string", 0);
+		SendData[] sendList = new SendData [] { data };
+		SendRequest sendRequest = new SendRequest(sendList); 
+		
+		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+		headers.add(Pair.of("authToken", _auth.getAuthToken()));
+		headers.add(Pair.of("walletID", _auth.getAccountId()));
+		String json = null;
+		
+		try {
+			json = _mapper.writeValueAsString(sendRequest);
+		} catch (JsonProcessingException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+			return;
+		}
+		RestResponse restResult = _client.post("/v1/send", headers, json);
+		
+		SendResponse response = null;
+		
+		try {
+			response = _mapper.readValue(restResult.getBody(), SendResponse.class);
+		} catch (JsonParseException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		} catch (JsonMappingException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		} catch (IOException e) {
+			_events.walletMessage("Error in getMnemonicCode", new WalletException(e));
+		}
+		
+		
+		if (response != null && response.getStatusCode() == 200 
+				&& response.getData().getTxIds().length>0) {
+			
+			_events.coinsSent(response.getData().getTxIds()[0], 
+					null, toAddress, amount, null, null);
+			
+		} else 
+			_events.walletMessage("Relysia returned code: " + response.getStatusCode() +
+					" and message: " + response.getData().getMsg(), null);
+		
+		
 	}
 
+	@Override
+	public List<DigitalAssetTransaction> getHistory(String sinceTransaction) throws WalletException {
+		if (!isRunning()) return null;
+		
+		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+		headers.add(Pair.of("authToken", _auth.getAuthToken()));
+		headers.add(Pair.of("walletID", _auth.getAccountId()));
+		
+		RestResponse restResult = _client.get("/v1/history", headers);
+		
+		HistoryResponse response = null;
+		
+		try {
+			response = _mapper.readValue(restResult.getBody(), HistoryResponse.class);
+		} catch (JsonParseException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		} catch (JsonMappingException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		} catch (IOException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		}
+		
+		if (response != null && response.getStatusCode() == 200) {
+			if (response.getData().getHistories() != null && 
+					response.getData().getHistories().length >0) {
+				
+				// Convert results into more generic object to return
+				// to keep it generic and allow more wallet integrations 
+				List<DigitalAssetTransaction> result = new ArrayList<DigitalAssetTransaction>();
+				
+				// Relyia results will be in reverse order with latest transaction
+				// at the top.
+				// Stop adding to the result once sinceTransaction is found
+				
+				for (HistoryRow row : response.getData().getHistories()) {
+					
+					// Only take up to sinceTransaction
+					if (row.getTxId().equals(sinceTransaction)) break;
+					
+					DigitalAssetTransaction returnRow = new DigitalAssetTransaction();
+					returnRow.setProtocol(row.getProtocol());
+					returnRow.setFrom(row.getFrom());
+					returnRow.setTimestamp(row.getTimestamp());
+					returnRow.setNotes(row.getNotes());
+					returnRow.setTxId(row.getTxId());
+					returnRow.setType(row.getType());
+					returnRow.setTo(row.getTo());
+					returnRow.setBalance_change(row.getBalance_change());
+					returnRow.setDocId(row.getDocId());
+					result.add(returnRow);
+					
+					
+				}
+				
+				return result;
+			}
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public boolean isImplemented(WalletFunction function) {
 
 		switch (function) {
 		
 		case BACKUP:
+			return false;
+		case GETHISTORY:
+			return true;
 		case GETSETBALANCEFIAT:
 			return false;
 		case GETSETBALANCEBSV:
+			return true;
+		case RECIEVEREALTIME:
+			return false;
 		case REGISTERFOREVENTS:
 		case UNREGISTERFOREVENTS:
 		case CURRENTRECEIVINGADDRESS:
@@ -256,9 +374,7 @@ public class RelysiaWallet implements BsvWallet {
 		case RESTOREFROMSEED:
 			return false;
 		case GETQRCODE:
-			return true;
 		case SENDCOINS:
-			return false;
 		case SIGNIN:
 			return true;
 		}
@@ -276,7 +392,7 @@ public class RelysiaWallet implements BsvWallet {
 		_auth = authData;
 		isRunning();
 	}
-
+	
 	/*******************/
 	/* Private Methods */
 	/*******************/
@@ -317,5 +433,6 @@ public class RelysiaWallet implements BsvWallet {
 		}
 		
 	}
+	
 	
 }

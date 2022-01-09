@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,7 +18,6 @@
  */
 package org.infinitypfm.ui.view.views;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ListIterator;
 
@@ -51,7 +50,7 @@ import org.infinitypfm.ui.view.dialogs.DateDialog;
 import org.infinitypfm.ui.view.toolbars.RegisterToolbar;
 
 /**
- * @author Wayne Gray
+ * Dialog to allow transaction import and setting of offsets before import.
  * 
  */
 public class RegisterView extends BaseView {
@@ -70,14 +69,16 @@ public class RegisterView extends BaseView {
 	private Account act = null;
 	private boolean columnsLoaded = false;
 	private DateDialog dateDialog = null;
-	DataFormatUtil formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+	DataFormatUtil formatter = null;
 	TableColumn tc3 = null;
 	TableColumn tc4 = null;
 	TableColumn tc5 = null;
 
 	public RegisterView(Composite arg0, int arg1) {
 		super(arg0, arg1);
-
+		
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		
 		// init console
 		LoadUI();
 		LoadLayout();
@@ -192,6 +193,9 @@ public class RegisterView extends BaseView {
 		TableItem ti = null;
 		Transaction tran = null;
 
+		if (act.getIsoCode().equalsIgnoreCase(MM.BSV))
+			formatter.setPrecision(8);
+		
 		tblRegister.removeAll();
 
 		final Display display = InfinityPfm.shMain.getDisplay();
@@ -272,7 +276,11 @@ public class RegisterView extends BaseView {
 				Account account = (Account) MM.sqlMap.selectOne(
 						"getAccountForName", act.getActName());
 				// set act balance and name
-				formatter.setPrecision(account.getCurrencyPrecision());
+				if (act.getIsoCode().equalsIgnoreCase(MM.BSV))
+					formatter.setPrecision(8);
+				else
+					formatter.setPrecision(account.getCurrencyPrecision());
+				
 				lblBalance
 						.setText(MM.PHRASES.getPhrase("2")
 								+ ": "

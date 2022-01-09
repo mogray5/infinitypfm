@@ -20,10 +20,12 @@ package org.infinitypfm.bitcoin.wallet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
+import org.infinitypfm.core.data.DigitalAssetTransaction;
 import org.infinitypfm.core.data.ReceivingAddress;
 
 public interface BsvWallet {
@@ -87,7 +89,7 @@ public interface BsvWallet {
 	 * Returns current public address in base58
 	 * for receiving coins
 	 * 
-	 * @return ReceivingAddress opbject containing
+	 * @return ReceivingAddress object containing
 	 * base58 receiving address and paymail (if available)
 	 */
 	ReceivingAddress getCurrentReceivingAddress();
@@ -105,13 +107,23 @@ public interface BsvWallet {
 	 * @param seedCode BIP 39 passphrase: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki
 	 * @param password InfinityPfm passphrase
 	 * @param passphrase seed passphrase
-	 * @throws WalletEception thrown if resore failes
+	 * @throws WalletEception thrown if restore fails
 	 */
 	void restoreFromSeed(String seedCode, String passphrase)
 			throws WalletException;
 
 	File getQrCode(String address) throws IOException;
 
+	/**
+	 * Return a history of transactions for the wallet that happened since passed
+	 * transaction.
+	 * @param sinceTransaction Transaction watermark
+	 * @return List of DigitalAssetTransaction
+	 * @throws WalletException thrown if fetch fails
+	 */
+	List<DigitalAssetTransaction> getHistory(String sinceTransaction)
+			throws WalletException;;
+	
 	/**
 	 * Send BSV to passed address
 	 * 
@@ -121,17 +133,27 @@ public interface BsvWallet {
 	 */
 	void sendCoins(String toAddress, String amount) throws SendException;
 
+	
+	
 	/**
 	 * 
 	 * Allow wallet implementation to specify which features are available.
 	 *
 	 */
 	public enum WalletFunction {
-		BACKUP, GETSETBALANCEFIAT, GETSETBALANCEBSV,
-		REGISTERFOREVENTS, UNREGISTERFOREVENTS,
-		CURRENTRECEIVINGADDRESS, GETMNEUMONIC,
-		RESTOREFROMSEED, GETQRCODE,
-		SENDCOINS, SIGNIN
+		BACKUP,
+		CURRENTRECEIVINGADDRESS,
+		GETHISTORY,
+		GETMNEUMONIC,
+		GETQRCODE,
+		GETSETBALANCEBSV,
+		GETSETBALANCEFIAT,
+		RECIEVEREALTIME,
+		REGISTERFOREVENTS,
+		RESTOREFROMSEED,
+		SENDCOINS,
+		SIGNIN,
+		UNREGISTERFOREVENTS
 	}
 	
 	boolean isImplemented(WalletFunction function);

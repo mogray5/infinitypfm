@@ -251,6 +251,7 @@ public class MM {
 	
 	public static Options options = null;
 	public static BsvWallet wallet = null;
+	public static final String BSV = "BSV";
 	public static final String BSV_WALLET_ACCOUNT = "Bitcoin SV Wallet";
 	public static final String BSV_WALLET_RECEIVING_ACCOUNT = "Coins Received";
 	public static final String NUM_FORMAT_USE_PARENS = "#,##0.00;(#,##0.00)";

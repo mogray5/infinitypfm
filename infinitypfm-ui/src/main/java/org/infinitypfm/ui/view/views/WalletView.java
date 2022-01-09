@@ -72,12 +72,15 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
 import org.infinitypfm.core.data.CurrencyMethod;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.DigitalAssetTransaction;
 import org.infinitypfm.core.data.ParamDateRangeAccount;
 import org.infinitypfm.core.data.ReceivingAddress;
+import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
 import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
+import org.infinitypfm.ui.view.dialogs.ImportDialog;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
 
@@ -125,6 +128,8 @@ public class WalletView extends BaseView implements WalletEvents {
 	private boolean _inSend = false;
 	private List<Link> _links = null;
 	
+	private DataFormatUtil _formatter = null;
+	
 	public WalletView(Composite arg0, int arg1) {
 		super(arg0, arg1);
 	
@@ -160,6 +165,8 @@ public class WalletView extends BaseView implements WalletEvents {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 		
+		_formatter = new DataFormatUtil();
+		
 		LoadUI();
 		LoadLayout();
 		LoadColumns();
@@ -188,7 +195,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		this.setFiatAndBsvBalance();
 		
 		FontData[] fD = lblAmount.getFont().getFontData();
-		fD[0].setHeight(60);
+		fD[0].setHeight(45);
 		lblAmount.setFont( new Font(InfinityPfm.shMain.getDisplay(),fD[0]));
 		
 		FontData[] fe = lblAmountBsv.getFont().getFontData();
@@ -341,7 +348,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		bcCanvas.setLayoutData(logodata);
 	
 		FormData lblamountdata = new FormData();
-		lblamountdata.top = new FormAttachment(10, 0);
+		lblamountdata.top = new FormAttachment(0, 30);
 		lblamountdata.left = new FormAttachment(5, 0);
 		lblamountdata.right = new FormAttachment(60, 0);
 		lblamountdata.bottom = new FormAttachment(100, 0);
@@ -358,7 +365,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		tabfolderdata.top = new FormAttachment(cmpHeader, 10);
 		tabfolderdata.left = new FormAttachment(0, 20);
 		tabfolderdata.right = new FormAttachment(100, -10);
-		tabfolderdata.bottom = new FormAttachment(cmpHeader, 450);
+		tabfolderdata.bottom = new FormAttachment(cmpHeader, 385);
 		tabFolder.setLayoutData(tabfolderdata);
 		
 		FormData tblhistorydata = new FormData();
@@ -369,21 +376,21 @@ public class WalletView extends BaseView implements WalletEvents {
 		tblHistory.setLayoutData(tblhistorydata);
 		
 		FormData lblsentodata = new FormData();
-		lblsentodata.top = new FormAttachment(0, 35);
+		lblsentodata.top = new FormAttachment(0, 25);
 		lblsentodata.left = new FormAttachment(0, 40);
 		//lblsentodata.right = new FormAttachment(100, -10);
 		//lblsentodata.bottom = new FormAttachment(100, -20);
 		lblSendTo.setLayoutData(lblsentodata);
 
 		FormData txtsendtodata = new FormData();
-		txtsendtodata.top = new FormAttachment(0, 50);
+		txtsendtodata.top = new FormAttachment(0, 35);
 		txtsendtodata.left = new FormAttachment(lblSendTo, 20);
 		txtsendtodata.right = new FormAttachment(lblSendTo, 550);
 		//txtsendtodata.bottom = new FormAttachment(100, -20);
 		txtSendTo.setLayoutData(txtsendtodata);
 		
 		FormData cmdsenddata = new FormData();
-		cmdsenddata.top = new FormAttachment(0, 48);
+		cmdsenddata.top = new FormAttachment(0, 38);
 		cmdsenddata.left = new FormAttachment(txtSendTo, 5);
 		//cmdsenddata.right = new FormAttachment(lblSendTo, 150);
 		//cmdsenddata.bottom = new FormAttachment(100, -20);
@@ -429,7 +436,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmbOffset.setLayoutData(cmboffsetdata);
 		
 		FormData qrcanvasdata = new FormData();
-		qrcanvasdata.top = new FormAttachment(0, 0);
+		qrcanvasdata.top = new FormAttachment(0, -10);
 		qrcanvasdata.left = new FormAttachment(0, 0);
 		qrcanvasdata.right = new FormAttachment(100, 0);
 		qrcanvasdata.bottom = new FormAttachment(100, 0);
@@ -514,6 +521,14 @@ public class WalletView extends BaseView implements WalletEvents {
 	protected void LoadTransactionHistory() {
 		
 		tblHistory.removeAll();
+
+		if (MM.wallet.isImplemented(WalletFunction.GETHISTORY)) {
+			// Wallet implementation allows fetching history.
+			// Get history and compare with what is in the DB 
+			// and make necessary additions / corrections
+			LoadWalletHistory();
+		}
+		
 		ParamDateRangeAccount range = new ParamDateRangeAccount();
 		LocalDateTime today = LocalDateTime.now();
 		range.setEndDate(Timestamp.valueOf(today));
@@ -551,6 +566,8 @@ public class WalletView extends BaseView implements WalletEvents {
 					newBalance = bsvAccount.getActBalance();
 				org.infinitypfm.core.data.Transaction tran = null;
 				
+				_format.setPrecision(8);
+				
 				while(li.hasNext()) {
 				  tran = (org.infinitypfm.core.data.Transaction)li.next();
 				  tran.setActBalance(newBalance);
@@ -579,7 +596,7 @@ public class WalletView extends BaseView implements WalletEvents {
 					if (t.getTransactionKey()!=null) {
 						TableEditor editor = new TableEditor(tblHistory);
 						Link link = new Link(tblHistory, SWT.NONE);
-						link.setText("<a href=\"https://eclipse.org\">" + MM.PHRASES.getPhrase("283") + "</a>");
+						link.setText("<a href=\"https://eclipse.org\">" + MM.PHRASES.getPhrase("86") + "</a>");
 						//link.setText(MM.PHRASES.getPhrase("86"));
 						link.addSelectionListener(linkView_OnClick);
 						link.setEnabled(true);
@@ -597,6 +614,60 @@ public class WalletView extends BaseView implements WalletEvents {
 				
 		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
+		}
+	}
+	
+	private void LoadWalletHistory() {
+		
+		if (bsvAccount ==  null) return;
+		
+		// Find last transaction having a transaction key
+		//getLastBsvTransaction
+		org.infinitypfm.core.data.Transaction lastTran = MM.sqlMap.selectOne("getLastBsvTransaction");
+			
+		try {
+
+			String param = null;
+			if (lastTran != null) param = lastTran.getTransactionKey();
+			List<DigitalAssetTransaction> result =  MM.wallet.getHistory(param);
+			List<org.infinitypfm.core.data.Transaction> updates = new ArrayList<org.infinitypfm.core.data.Transaction>();
+			
+			if (result != null) {
+				for (DigitalAssetTransaction tran : result) {
+					// Make sure transaction not already in DB, for coins sent
+					// from InfinityPfm directly, this will be the case
+					List<org.infinitypfm.core.data.Transaction> tranSearch = MM.sqlMap.selectList("getTransactionsByKeyBSVOnly", tran.getTxId());
+					if (tranSearch == null || tranSearch.size()==0) {
+						
+						String memo = "BSV transaction";
+						// Not found, add it
+						if (tran.getNotes() != null) memo = tran.getNotes();
+						else if (tran.getDocId() != null) memo = memo + " " + tran.getDocId();
+						
+						double dAmount = tran.getBalance_change() / 1727405D;
+						
+						//_formatter.getAmountFormatted(dAmount,  "###.#########")
+						
+						org.infinitypfm.core.data.Transaction newTran = new org.infinitypfm.core.data.Transaction();
+						newTran.setActId(bsvAccount.getActId());
+						newTran.setTranAmount(DataFormatUtil.moneyToLong(Double.toString(dAmount)));
+						newTran.setTranDate(this.getTransactionDateFromString(tran.getTimestamp()));
+						newTran.setTranMemo(memo);
+						newTran.setTransactionKey(tran.getTxId());
+						updates.add(newTran);
+					}
+				}
+				
+				if (updates.size() > 0) {
+					//Load import dialog to get the offsets for new transactions
+					ImportDialog importDialog = new ImportDialog(updates, bsvAccount.getActId());
+					importDialog.Open();
+				}
+				
+			}
+			
+		} catch (WalletException e) {
+			InfinityPfm.LogMessage(e.getMessage(), false);
 		}
 	}
 	
@@ -743,6 +814,25 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 	}
 	
+	private void clearSendForm() {
+		
+		txtSendTo.setText("");
+		txtSendAmount.setText("");
+		
+	}
+	
+	private Date getTransactionDateFromString (String sDate) {
+		
+		if (sDate == null) return new Date();
+		
+		//2022-01-07 01:22:41
+		_formatter.setDate(sDate, "yyyy-MM-dd HH:mm:ss");
+		return _formatter.getDate();
+		
+	}
+	
+	
+	
 	/*
 	 * Listeners
 	 */
@@ -785,6 +875,15 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	SelectionAdapter cmdSend_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
+			
+			// Always get a new password from user to send
+			WalletAuth.getInstance().clearPassword();
+			try {
+				WalletAuth.getInstance().walletPassword();
+			} catch (PasswordInvalidException e2) {
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("292"), _inSend);
+				return;
+			}
 			
 			String sendTo = txtSendTo.getText();
 			//String memo = txtMemo.getText();
@@ -848,7 +947,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	/*****************/
 
 	@Override
-	public void coinsReceived(String transactionHash, String memo, String value, String prevBalance, String newBalance) {
+	public void coinsReceived(String transactionHash, String memo, String value, String prevBalance, String newBalance, String transactionTime) {
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
@@ -865,6 +964,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
 				t.setTranAmount(amount);
 				t.setActId(bsvAccount.getActId());
+				t.setTransactionKey(transactionHash);
 				
 				TransactionOffset offset = new TransactionOffset();
 				offset.setOffsetId(bsvCoinsReceived.getActId());
@@ -872,7 +972,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				offset.setOffsetAmount(-amount);
 				
 				offset.setOffsetName("Coins received");
-				offset.setNeedsConversion(true); 
+				offset.setNeedsConversion(true);
 				
 				ArrayList<TransactionOffset> offsets = new ArrayList<TransactionOffset>();
 				offsets.add(offset);
@@ -880,7 +980,10 @@ public class WalletView extends BaseView implements WalletEvents {
 				t.setOffsets(offsets);
 				
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
-				t.setTranDate(new Date());
+				
+				
+				t.setTranDate(getTransactionDateFromString(transactionTime));
+				
 				if (memo != null && memo.length() > 0)
 					t.setTranMemo(memo);
 				else
@@ -893,16 +996,23 @@ public class WalletView extends BaseView implements WalletEvents {
 					InfinityPfm.LogMessage(e.getMessage());
 				} 
 			}
-				if (MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV))
-					setFiatAndBsvBalance(newBalance);
-				LoadTransactionHistoryAsync();
+			
+				// Reload the wallet balance and history if wallet implementation can dynamically 
+				// receive coins vs polling for them
+				if (MM.wallet.isImplemented(WalletFunction.RECIEVEREALTIME)) {
+				
+					if (MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV))
+						setFiatAndBsvBalance(newBalance);
+					LoadTransactionHistoryAsync();
+					
+				}
 			}
 			
 		});
 	}
 
 	@Override
-	public void coinsSent(String transactionHash, String memo, String value, String prevBalance, String newBalance) {
+	public void coinsSent(String transactionHash, String memo, String value, String prevBalance, String newBalance, String transactionTime) {
 		
 		Display.getDefault().syncExec(new Runnable(){
 			public void run(){
@@ -917,7 +1027,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				t.setTranMemo(txtMemo.getText());
 				t.setTransactionKey(transactionHash);
-				t.setTranDate(new Date());
+				t.setTranDate(getTransactionDateFromString(transactionTime));
 				
 				DataHandler handler = new DataHandler();
 				try {
@@ -927,9 +1037,12 @@ public class WalletView extends BaseView implements WalletEvents {
 					InfinityPfm.LogMessage(e.getMessage());
 				} 
 			}
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("310"), true);
+				clearSendForm();
 				setFiatAndBsvBalance(newBalance);
 				LoadTransactionHistoryAsync();
 			}
+			
 		});
 	}
 

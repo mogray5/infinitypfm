@@ -81,6 +81,7 @@ public class ImportDialog extends BaseDialog {
 	private DataHandler data = new DataHandler();
 
 	private String importCurrency = null;
+	private int importPrecision = 2;
 	private final int importAccount;
 
 	private static final int EDITABLECOLUMN = 2;
@@ -321,6 +322,7 @@ public class ImportDialog extends BaseDialog {
 				}
 
 				ti.setData(TRAN, tran);
+				
 				ti.setText(3,
 						formatter.getAmountFormatted(tran.getTranAmount()));
 
@@ -404,6 +406,11 @@ public class ImportDialog extends BaseDialog {
 				if (act.getActId() == importAccount) {
 					showIndex = i;
 					importCurrency = act.getIsoCode();
+					if (act.getIsoCode().equalsIgnoreCase(MM.BSV)) {
+						importPrecision = 8;
+						formatter.setPrecision(importPrecision);
+					}
+					
 					lblAct.setText(MM.PHRASES.getPhrase("15") + " ("
 							+ importCurrency + ")");
 				}
