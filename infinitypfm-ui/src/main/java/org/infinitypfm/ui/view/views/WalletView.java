@@ -75,7 +75,6 @@ import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.DigitalAssetTransaction;
 import org.infinitypfm.core.data.ParamDateRangeAccount;
 import org.infinitypfm.core.data.ReceivingAddress;
-import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
 import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.currency.RateParser;
@@ -130,7 +129,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private DataFormatUtil _formatter = null;
 	
-	public WalletView(Composite arg0, int arg1) {
+	public WalletView(Composite arg0, int arg1) throws PasswordInvalidException {
 		super(arg0, arg1);
 	
 		_links = new ArrayList<Link>();
@@ -146,6 +145,7 @@ public class WalletView extends BaseView implements WalletEvents {
 					_receiveAddress = MM.wallet.getCurrentReceivingAddress();
 				} catch (PasswordInvalidException e) {
 					InfinityPfm.LogMessage(e.getMessage());
+					throw e;
 				}
 				
 			}
@@ -601,6 +601,7 @@ public class WalletView extends BaseView implements WalletEvents {
 						link.addSelectionListener(linkView_OnClick);
 						link.setEnabled(true);
 						link.setData(t);
+						link.setForeground(colorWhite);
 						_links.add(link);
 						editor.minimumWidth = 50;
 						editor.horizontalAlignment = SWT.CENTER;
@@ -651,7 +652,7 @@ public class WalletView extends BaseView implements WalletEvents {
 						org.infinitypfm.core.data.Transaction newTran = new org.infinitypfm.core.data.Transaction();
 						newTran.setActId(bsvAccount.getActId());
 						newTran.setTranAmount(DataFormatUtil.moneyToLong(Double.toString(dAmount)));
-						newTran.setTranDate(this.getTransactionDateFromString(tran.getTimestamp()));
+						newTran.setTranDate(this.getTransactionDateFromString(tran.getTimestamp(), false));
 						newTran.setTranMemo(memo);
 						newTran.setTransactionKey(tran.getTxId());
 						updates.add(newTran);
@@ -821,13 +822,17 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 	}
 	
-	private Date getTransactionDateFromString (String sDate) {
+	private Date getTransactionDateFromString (String sDate, boolean isUTC) {
 		
 		if (sDate == null) return new Date();
 		
 		//2022-01-07 01:22:41
 		_formatter.setDate(sDate, "yyyy-MM-dd HH:mm:ss");
-		return _formatter.getDate();
+		
+		if (isUTC)
+			return _formatter.convertUTCToLocal();
+		else
+			return _formatter.getDate();
 		
 	}
 	
@@ -886,7 +891,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			}
 			
 			String sendTo = txtSendTo.getText();
-			//String memo = txtMemo.getText();
+			String memo = txtMemo.getText();
 			String sAmount = txtSendAmount.getText();
 			
 			boolean canSend = true;
@@ -917,7 +922,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				// Send it!!
 				try {
 					_inSend = true;
-					MM.wallet.sendCoins(sendTo, sendAmount);
+					MM.wallet.sendCoins(sendTo, sendAmount, memo);
 				} catch (SendException e1) {
 					InfinityPfm.LogMessage(e1.getMessage(), true);
 				}
@@ -982,7 +987,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				
 				
-				t.setTranDate(getTransactionDateFromString(transactionTime));
+				t.setTranDate(getTransactionDateFromString(transactionTime, true));
 				
 				if (memo != null && memo.length() > 0)
 					t.setTranMemo(memo);
@@ -1027,7 +1032,7 @@ public class WalletView extends BaseView implements WalletEvents {
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());
 				t.setTranMemo(txtMemo.getText());
 				t.setTransactionKey(transactionHash);
-				t.setTranDate(getTransactionDateFromString(transactionTime));
+				t.setTranDate(getTransactionDateFromString(transactionTime, false));
 				
 				DataHandler handler = new DataHandler();
 				try {

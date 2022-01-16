@@ -99,7 +99,7 @@ public class InfoDialog extends BaseDialog {
 		cmdTwo.addSelectionListener(cmdTwo_OnClick);
 		cmdTwo.setText(MM.PHRASES.getPhrase("4"));
 
-		txtInfo = new Text(sh, SWT.BORDER);
+		txtInfo = new Text(sh, SWT.BORDER | SWT.WRAP);
 		txtInfo.setFocus();
 		
 		if (bValueInText && sDMsg != null) txtInfo.setText(sDMsg);
@@ -108,30 +108,41 @@ public class InfoDialog extends BaseDialog {
 	}
 
 	protected void LoadLayout() {
+		
+		FormAttachment displayTop = new FormAttachment(30, 0);
+		FormAttachment displayLeft = new FormAttachment(10, 0);
+		FormAttachment displayRight = new FormAttachment(90, 0);
+		FormAttachment displayBottom = new FormAttachment(50, 0);
+		
 		FormData lblinfodata = new FormData();
-		lblinfodata.top = new FormAttachment(30, 0);
-		lblinfodata.left = new FormAttachment(10, 0);
-		lblinfodata.right = new FormAttachment(90, 0);
-		lblinfodata.bottom = new FormAttachment(40, 0);
-		lblInfo.setLayoutData(lblinfodata);
+		FormData txtinfodata = new FormData();
+		
+		if (!bValueInText) {
+			lblinfodata.top = displayTop;
+			lblinfodata.left = displayLeft;
+			lblinfodata.right = displayRight;
+			lblinfodata.bottom = displayBottom;
+			lblInfo.setLayoutData(lblinfodata);
+		} else {
+
+			txtinfodata.top = displayTop;
+			txtinfodata.left = displayLeft;
+			txtinfodata.right = displayRight;
+			txtinfodata.bottom = displayBottom;
+			txtInfo.setLayoutData(txtinfodata);
+		}
 
 		FormData cmdonedata = new FormData();
-		cmdonedata.top = new FormAttachment(80, 0);
+		cmdonedata.top = new FormAttachment(70, 0);
 		cmdonedata.left = new FormAttachment(30, 0);
 		cmdonedata.right = new FormAttachment(50, 0);
 		cmdOne.setLayoutData(cmdonedata);
 
 		FormData cmdtwodata = new FormData();
-		cmdtwodata.top = new FormAttachment(80, 0);
+		cmdtwodata.top = new FormAttachment(70, 0);
 		cmdtwodata.left = new FormAttachment(cmdOne, 10);
 		cmdtwodata.right = new FormAttachment(70, 10);
 		cmdTwo.setLayoutData(cmdtwodata);
-
-		FormData txtinfodata = new FormData();
-		txtinfodata.top = new FormAttachment(lblInfo, 15);
-		txtinfodata.left = new FormAttachment(10, 0);
-		txtinfodata.right = new FormAttachment(80, 0);
-		txtInfo.setLayoutData(txtinfodata);
 
 	}
 

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.infinitypfm.bitcoin.relysia.api.v1.AddressResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.Auth;
@@ -34,7 +35,6 @@ import org.infinitypfm.bitcoin.relysia.api.v1.MnemonicResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendData;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendRequest;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendResponse;
-import org.infinitypfm.bitcoin.relysia.api.v1.SendResponseData;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
@@ -241,13 +241,15 @@ public class RelysiaWallet implements BsvWallet {
 	}
 
 	@Override
-	public void sendCoins(String toAddress, String amount) throws SendException {
+	public void sendCoins(String toAddress, String amount, String memo) throws SendException {
 
 		if (!isRunning()) return;
 		
+		
+		
 		SendData data = new SendData(toAddress,
 				Float.valueOf(amount), "BSV", 
-				"infinitypfm.org", "string", 0);
+				memo == null ? "infinitypfm.org" : memo, "string", 0);
 		SendData[] sendList = new SendData [] { data };
 		SendRequest sendRequest = new SendRequest(sendList); 
 		
@@ -280,8 +282,11 @@ public class RelysiaWallet implements BsvWallet {
 		if (response != null && response.getStatusCode() == 200 
 				&& response.getData().getTxIds().length>0) {
 			
+			//String transactionHash, String memo, String value, 
+			//String prevBalance, String newBalance, String transactionTime
+			
 			_events.coinsSent(response.getData().getTxIds()[0], 
-					null, toAddress, amount, null, null);
+					memo, amount, null, null, null);
 			
 		} else 
 			_events.walletMessage("Relysia returned code: " + response.getStatusCode() +
@@ -405,6 +410,8 @@ public class RelysiaWallet implements BsvWallet {
 		
 		if (!_signedIn) {
 		
+			if (_auth == null || StringUtils.isEmpty(_auth.getPlainPassword())) return;
+			
 			Auth auth = new Auth(_auth.getEmailAddress(), _auth.getPlainPassword());
 			try {
 				String json = _mapper.writeValueAsString(auth);

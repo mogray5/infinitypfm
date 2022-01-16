@@ -257,6 +257,7 @@ public class MainAction {
 			break;
 		case MM.MENU_WALLET_REFRESH:
 			this.WalletSignIn();
+			this.LoadView(MM.VIEW_WALLET);
 			break;
 		}
 	}
@@ -303,10 +304,12 @@ public class MainAction {
 	
 	public void WalletShowMnemonic() {
 		
+		// Always challenge before showing the mnemonic
+		WalletAuth.getInstance().clearPassword();
 		try {
 			WalletAuth.getInstance().walletPassword();
-		} catch (PasswordInvalidException e) {
-			InfinityPfm.LogMessage(e.getMessage(), true);
+		} catch (PasswordInvalidException e2) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("292"), true);
 			return;
 		}
 		
@@ -320,8 +323,12 @@ public class MainAction {
 	
 	public void LoadView(int iViewID) {
 
+		try {
 		BaseView vw = InfinityPfm.qzMain.getVwMain().getView(iViewID);
 		InfinityPfm.qzMain.getVwMain().LoadView(vw);
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
 	}
 
 	public void CloseCurrentView() {

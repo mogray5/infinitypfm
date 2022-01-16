@@ -122,13 +122,13 @@ public class PasswordDialog extends BaseDialog {
 		txtPwd.setLayoutData(txtpwddata);
 
 		FormData cmdokdata = new FormData();
-		cmdokdata.top = new FormAttachment(80, 0);
+		cmdokdata.top = new FormAttachment(70, 0);
 		cmdokdata.left = new FormAttachment(30, 0);
 		cmdokdata.right = new FormAttachment(50,0);
 		cmdOk.setLayoutData(cmdokdata);
 		
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(80, 0);
+		cmdcanceldata.top = new FormAttachment(70, 0);
 		cmdcanceldata.left = new FormAttachment(cmdOk,10);
 		cmdcanceldata.right = new FormAttachment(70,10);
 		cmdCancel.setLayoutData(cmdcanceldata);

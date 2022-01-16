@@ -131,7 +131,7 @@ public interface BsvWallet {
 	 * @param amount amount, in Bitcoin, to send
 	 * @throws SendException thrown when sending error occurs
 	 */
-	void sendCoins(String toAddress, String amount) throws SendException;
+	void sendCoins(String toAddress, String amount, String memo) throws SendException;
 
 	
 	

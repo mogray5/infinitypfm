@@ -223,7 +223,7 @@ public class BitcoinJWallet implements BsvWallet {
 	 * @throws InsufficientMoneyException
 	 */
 	@Override
-	public void sendCoins(String toAddress, String amount) throws SendException {
+	public void sendCoins(String toAddress, String amount, String memo) throws SendException {
 		
 		if (_firstUse) init();
 		

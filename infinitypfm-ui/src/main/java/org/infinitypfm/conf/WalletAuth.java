@@ -43,8 +43,10 @@ public class WalletAuth {
 				AuthData auth = MM.wallet.getAuthData();
 				auth.setPlainPassword(_walletPassword);
 			}
-			else
+			else {
+				_walletPassword = null;
 				throw new PasswordInvalidException(MM.PHRASES.getPhrase("292"));
+			}
 			
 		}
 		
