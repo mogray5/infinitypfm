@@ -179,6 +179,13 @@ public class MainMenu implements Widget {
 				MM.PHRASES.getPhrase("123") + " " + MM.PHRASES.getPhrase("126"),
 				' ');
 
+		mi = addSelection(
+				mnuReports,
+				SWT.PUSH,
+				MM.MENU_REPORTS_YEARLY_BALANCE,
+				MM.PHRASES.getPhrase("311"),
+				' ');
+		
 		mi = addSelection(mnuReports, SWT.PUSH,
 				MM.MENU_REPORTS_ACCOUNT_HISTORY, MM.PHRASES.getPhrase("136"),
 				' ');

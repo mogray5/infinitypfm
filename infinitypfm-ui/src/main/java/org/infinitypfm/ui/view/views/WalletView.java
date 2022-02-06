@@ -129,6 +129,11 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private DataFormatUtil _formatter = null;
 	
+	// Use to control when a history lookup is needed.
+	// No need to fetch history again if the balance has not
+	// changed.
+	private String lastBsvBalance = null;
+	
 	public WalletView(Composite arg0, int arg1) throws PasswordInvalidException {
 		super(arg0, arg1);
 	
@@ -520,6 +525,15 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	protected void LoadTransactionHistory() {
 		
+		// First get the latest balance
+		this.setFiatAndBsvBalance();
+		
+		// Compare latest balance with last saved
+		// balance to see if a history update is actually needed.
+		
+		if (lblAmountBsv.getText().equals(lastBsvBalance)) 
+			return;
+		
 		tblHistory.removeAll();
 
 		if (MM.wallet.isImplemented(WalletFunction.GETHISTORY)) {
@@ -611,6 +625,9 @@ public class WalletView extends BaseView implements WalletEvents {
 					rowCount++;
 					tblHistory.redraw();
 				}
+				
+				lastBsvBalance = lblAmountBsv.getText(); 
+				
 			}
 				
 		} catch (Exception e) {
@@ -645,7 +662,7 @@ public class WalletView extends BaseView implements WalletEvents {
 						if (tran.getNotes() != null) memo = tran.getNotes();
 						else if (tran.getDocId() != null) memo = memo + " " + tran.getDocId();
 						
-						double dAmount = tran.getBalance_change() / 1727405D;
+						double dAmount = tran.getBalance_change() * 0.00000001D;
 						
 						//_formatter.getAmountFormatted(dAmount,  "###.#########")
 						

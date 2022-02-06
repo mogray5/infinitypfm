@@ -60,6 +60,7 @@ public class RelysiaWallet implements BsvWallet {
 	private WalletEvents _events = null;
 	private DataFormatUtil _formatter = null;
 	
+	
 	/**********/
 	/* cTor's */
 	/**********/
@@ -298,62 +299,90 @@ public class RelysiaWallet implements BsvWallet {
 	@Override
 	public List<DigitalAssetTransaction> getHistory(String sinceTransaction) throws WalletException {
 		if (!isRunning()) return null;
+	
+		// Convert results into more generic object to return
+		// to keep it generic and allow more wallet integrations 
+		List<DigitalAssetTransaction> result = new ArrayList<DigitalAssetTransaction>();
+		String oldNextPageToken = null;
+		String nextPageToken = null;
 		
-		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
-		headers.add(Pair.of("authToken", _auth.getAuthToken()));
-		headers.add(Pair.of("walletID", _auth.getAccountId()));
+		do {
 		
-		RestResponse restResult = _client.get("/v1/history", headers);
 		
-		HistoryResponse response = null;
-		
-		try {
-			response = _mapper.readValue(restResult.getBody(), HistoryResponse.class);
-		} catch (JsonParseException e) {
-			_events.walletMessage("Error in getHistory", new WalletException(e));
-		} catch (JsonMappingException e) {
-			_events.walletMessage("Error in getHistory", new WalletException(e));
-		} catch (IOException e) {
-			_events.walletMessage("Error in getHistory", new WalletException(e));
-		}
-		
-		if (response != null && response.getStatusCode() == 200) {
-			if (response.getData().getHistories() != null && 
-					response.getData().getHistories().length >0) {
-				
-				// Convert results into more generic object to return
-				// to keep it generic and allow more wallet integrations 
-				List<DigitalAssetTransaction> result = new ArrayList<DigitalAssetTransaction>();
-				
-				// Relyia results will be in reverse order with latest transaction
-				// at the top.
-				// Stop adding to the result once sinceTransaction is found
-				
-				for (HistoryRow row : response.getData().getHistories()) {
-					
-					// Only take up to sinceTransaction
-					if (row.getTxId().equals(sinceTransaction)) break;
-					
-					DigitalAssetTransaction returnRow = new DigitalAssetTransaction();
-					returnRow.setProtocol(row.getProtocol());
-					returnRow.setFrom(row.getFrom());
-					returnRow.setTimestamp(row.getTimestamp());
-					returnRow.setNotes(row.getNotes());
-					returnRow.setTxId(row.getTxId());
-					returnRow.setType(row.getType());
-					returnRow.setTo(row.getTo());
-					returnRow.setBalance_change(row.getBalance_change());
-					returnRow.setDocId(row.getDocId());
-					result.add(returnRow);
-					
-					
-				}
-				
-				return result;
+			List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+			headers.add(Pair.of("authToken", _auth.getAuthToken()));
+			headers.add(Pair.of("walletID", _auth.getAccountId()));
+			String url = "/v1/history";
+			
+			if (nextPageToken != null)
+				url += "?nextPageToken=" +  nextPageToken;
+			
+			oldNextPageToken = nextPageToken;
+			nextPageToken = null;
+			
+			RestResponse restResult = _client.get(url, headers);
+			
+			HistoryResponse response = null;
+			
+			try {
+				response = _mapper.readValue(restResult.getBody(), HistoryResponse.class);
+			} catch (JsonParseException e) {
+				_events.walletMessage("Error in getHistory", new WalletException(e));
+			} catch (JsonMappingException e) {
+				_events.walletMessage("Error in getHistory", new WalletException(e));
+			} catch (IOException e) {
+				_events.walletMessage("Error in getHistory", new WalletException(e));
 			}
-		}
+			
+			if (response != null && response.getStatusCode() == 200) {
+				if (response.getData().getHistories() != null && 
+						response.getData().getHistories().length >0) {
+									
+					// Capture next page token
+					nextPageToken = response.getData().getNextPageTokenId();
+					
+					// If the same nextPageToken was passed then don't continue
+					// to pull the same page
+					
+					if (nextPageToken != null && nextPageToken.equals(oldNextPageToken)) {
+						nextPageToken = null;
+					} else {
+					
+						// Relyia results will be in reverse order with latest transaction
+						// at the top.
+						// Stop adding to the result once sinceTransaction is found
+						
+						for (HistoryRow row : response.getData().getHistories()) {
+							
+							// Only take up to sinceTransaction
+							if (row.getTxId().equals(sinceTransaction)) {
+								// Set nextPageToken to null to break out of do loop
+								nextPageToken = null;
+								// Break out of for loop
+								break;
+							}
+							
+							DigitalAssetTransaction returnRow = new DigitalAssetTransaction();
+							returnRow.setProtocol(row.getProtocol());
+							returnRow.setFrom(row.getFrom());
+							returnRow.setTimestamp(row.getTimestamp());
+							returnRow.setNotes(row.getNotes());
+							returnRow.setTxId(row.getTxId());
+							returnRow.setType(row.getType());
+							returnRow.setTo(row.getTo());
+							returnRow.setBalance_change(row.getBalance_change());
+							returnRow.setDocId(row.getDocId());
+							result.add(returnRow);							
+							
+						}
+					
+					}
+				}
+			}
 		
-		return null;
+		} while (nextPageToken != null && nextPageToken.length() > 0);
+		
+		return result;
 	}
 	
 	@Override

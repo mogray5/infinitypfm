@@ -355,7 +355,8 @@ public class LangLoader {
 		hmPhrases.put("308",  i18n.tr("Please keep this in a secure location."));
 		hmPhrases.put("309",  i18n.tr("Copy to clipboard"));
 		hmPhrases.put("310",  i18n.tr("Coins Sent!"));
-		
+		hmPhrases.put("311",  i18n.tr("Yearly Balances"));
+		hmPhrases.put("312",  i18n.tr("Report was empty"));
 	}
 	
 	

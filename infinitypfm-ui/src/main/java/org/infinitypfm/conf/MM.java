@@ -109,6 +109,7 @@ public class MM {
 	public static final int CANCEL = 3;
     public static final int THIS_MONTH = 4;
     public static final int LAST_MONTH = 5;
+    public static final int LAST_YEAR = 6;
 	
 	public static final int RETURNTYPE_SUCCESS = 0;
 	public static final int RETURNTYPE_FAIL = -1;
@@ -175,12 +176,13 @@ public class MM {
 	public static final int MENU_HELP_ABOUT = 91;
 	
 	public static final int MENU_REPORTS_MONTHLY_BALANCE = 100;
-	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 101;
-	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 102;
-	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 103;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 104;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 105;
-	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 106;
+	public static final int MENU_REPORTS_YEARLY_BALANCE = 101;
+	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 102;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 103;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 104;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 105;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 106;
+	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 107;
 	
 	public static final int MENU_BUDGET_SAVE = 120;
 	
@@ -246,6 +248,7 @@ public class MM {
 	public static final String GRAPH_LIB = "raphael-min.js";
 	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
 	public static final String RPT_MONTHLY_BALANCES = "MonthlyBalances.ftl";
+	public static final String RPT_YEARLY_BALANCES = "YearlyBalances.ftl";
 	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";
 	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
 	

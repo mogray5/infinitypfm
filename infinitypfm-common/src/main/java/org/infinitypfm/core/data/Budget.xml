@@ -236,6 +236,18 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 AND AccountTypes.ActTypeName='Liability'
    </select>
    
+  <select id="getLiabilityTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT SUM(MonthlyBalance.ActBalance)
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND AccountTypes.ActTypeName='Liability'
+   </select>
+   
     <select id="getIncomeTotalForMonth" parameterType="budgetDetail"
                                        resultType="java.lang.String" flushCache="true">    
     
@@ -247,6 +259,18 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
 	WHERE Yr=#{yr}
 	 AND Mth=#{mth}
+	 AND AccountTypes.ActTypeName='Income'
+   </select>
+  
+      <select id="getIncomeTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT SUM(MonthlyBalance.ActBalance)
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
 	 AND AccountTypes.ActTypeName='Income'
    </select>
    
@@ -263,6 +287,18 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	 AND Mth=#{mth}
 	 AND AccountTypes.ActTypeName='Expense'
    </select>
+ 
+   <select id="getExpenseTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT SUM(MonthlyBalance.ActBalance)
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND AccountTypes.ActTypeName='Expense'
+   </select>
    
    <update id="updateBudgetDetail" parameterType="budgetDetail">
   	UPDATE BudgetDetail 
@@ -271,7 +307,6 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 	  AND ActId=#{actId}
 	  AND Mth=#{mth}
    </update>
-   
    
     <select id="getBudgetDetail" parameterType="budgetDetail"
                                        resultType="budgetDetail" flushCache="true">    

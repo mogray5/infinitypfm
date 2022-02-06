@@ -211,6 +211,13 @@ public class MainAction {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
+		case MM.MENU_REPORTS_YEARLY_BALANCE:
+			try {
+				this.RunReport(MM.LAST_YEAR);
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
 		case MM.MENU_REPORT_SAVE:
 			this.SaveReport();
 			break;
@@ -633,7 +640,18 @@ public class MainAction {
 		if (!reportData.getUserCanceled()){
 		
 			BaseReport report = ReportFactory.getReport(reportType);
-			result = report.execute(reportData);
+			if (report != null)
+				result = report.execute(reportData);
+			else {
+				
+				MessageDialog messageDialog = new MessageDialog(
+						MM.DIALOG_INFO, MM.PHRASES.getPhrase("103") + " " +
+								MM.PHRASES.getPhrase("103"),
+						MM.PHRASES.getPhrase("312"));
+
+				messageDialog.Open();
+				
+			}
 
 		}
 		

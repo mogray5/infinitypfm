@@ -23,6 +23,7 @@ public class HistoryData {
 	private String status = null;
 	private String msg = null;
 	private HistoryRow[] histories = null;
+	private String nextPageTokenId = null;
 
 	public String getStatus() {
 		return status;
@@ -41,6 +42,12 @@ public class HistoryData {
 	}
 	public void setHistories(HistoryRow[] histories) {
 		this.histories = histories;
+	}
+	public String getNextPageTokenId() {
+		return nextPageTokenId;
+	}
+	public void setNextPageTokenId(String nextPageTokenId) {
+		this.nextPageTokenId = nextPageTokenId;
 	}
 
 }

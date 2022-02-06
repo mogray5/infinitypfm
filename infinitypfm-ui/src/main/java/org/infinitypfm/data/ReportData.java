@@ -19,7 +19,6 @@
 package org.infinitypfm.data;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -35,11 +34,13 @@ import org.infinitypfm.core.data.IReportable;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.data.YearlyBalance;
 import org.infinitypfm.reporting.BaseReport;
 import org.infinitypfm.reporting.ScriptLoader;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.BudgetSelector;
 import org.infinitypfm.ui.view.dialogs.MonthYearDialog;
+import org.infinitypfm.ui.view.dialogs.YearDialog;
 
 /**
  * 
@@ -66,6 +67,7 @@ public class ReportData {
 	private String budget;
 	private String account;
 	private String _template;
+	private int year;
 	
 	/********************/
 	/* Script Libraries */
@@ -110,6 +112,20 @@ public class ReportData {
 			populateIncomeAndExpenseLists();
 			
 			_template = MM.RPT_MONTHLY_BALANCES;
+			
+			break;
+		case MM.LAST_YEAR:
+
+			promptForYear();
+			initTotalsYear();
+			title = MM.PHRASES.getPhrase("311") + " " + year;
+			reportParam.setYr(year);
+			
+			setReportData("getReportYearlyBalances", reportParam);
+			
+			populateIncomeAndExpenseListYear();
+			
+			_template = MM.RPT_YEARLY_BALANCES;
 			
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
@@ -295,6 +311,26 @@ public class ReportData {
 
 	}
 
+	private void initTotalsYear() {
+
+		BudgetDetail budgetDetail = new BudgetDetail();
+		budgetDetail.setYr(year);
+
+		try {
+
+			incomeTotal = (String) MM.sqlMap.selectOne(
+					"getIncomeTotalForYear", budgetDetail);
+			expenseTotal = (String) MM.sqlMap.selectOne(
+					"getExpenseTotalForYear", budgetDetail);
+			liabilityTotal = (String) MM.sqlMap.selectOne(
+					"getLiabilityTotalForYear", budgetDetail);
+
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+
+	}
+	
 	private void initTotalsAccount() {
 
 		Transaction tran = new Transaction();
@@ -322,6 +358,17 @@ public class ReportData {
 
 	}
 
+	private void promptForYear() {
+
+		YearDialog yearPicker = new YearDialog();
+		yearPicker.Open();
+
+		year = yearPicker.getYear();
+		
+		userCancelled = yearPicker.userCancelled();
+
+	}
+	
 	private void setReportData(String reportName, Object args) {
 
 		try {
@@ -483,6 +530,7 @@ public class ReportData {
 	
 
 /**
+ * Derived 
  * From: https://stackoverflow.com/questions/3548733/how-do-i-convert-from-list-to-listt-in-java-using-generics
  * 
  * @param <T>
@@ -493,10 +541,13 @@ public class ReportData {
  * @return
  */
   private <T, C extends Collection<T>> C typesafeAdd(Iterable<?> from, C to, Class<T> listClass) {
-    for (Object item: from) {
-      to.add(listClass.cast(item));
-    }
+    if (from != null) {
+    	for (Object item: from) {
+    		to.add(listClass.cast(item));
+    	}
     return to;
+    } else 
+    	return null;
   }
 
   /**
@@ -507,6 +558,27 @@ public class ReportData {
 	  
 	  List<MonthlyBalance>listMB = new ArrayList<MonthlyBalance>();
 		listMB = typesafeAdd(this.reportData, listMB, MonthlyBalance.class);
+		
+		if (listMB == null || listMB.size()==0) return;
+		
+		reportDataIncome = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("income"))
+				.collect(Collectors.toList());
+
+		reportDataExpense = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("expense"))
+				.collect(Collectors.toList());
+		
+  }
+  
+  /**
+   * This method creates separate lists for income and account data and 
+   * stores them in reportDataIncome and reportDataExpense
+   */
+  private void populateIncomeAndExpenseListYear() {
+	  
+	  List<YearlyBalance>listMB = new ArrayList<YearlyBalance>();
+		listMB = typesafeAdd(this.reportData, listMB, YearlyBalance.class);
+		
+		if (listMB == null || listMB.size()==0) return;
 		
 		reportDataIncome = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("income"))
 				.collect(Collectors.toList());
@@ -551,6 +623,10 @@ public class ReportData {
   
   public String getWordLiabilityTotal() {
 	  return MM.PHRASES.getPhrase("264");
+  }
+  
+  public String getWordYear() {
+	  return MM.PHRASES.getPhrase("166");
   }
   
   public String getWordYearMonth() {

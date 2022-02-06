@@ -41,6 +41,7 @@
 	<typeAlias alias="importDef" type="org.infinitypfm.core.data.ImportDef"/>
 	<typeAlias alias="importRule" type="org.infinitypfm.core.data.ImportRule" />
 	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
+	<typeAlias alias="yearBalance" type="org.infinitypfm.core.data.YearlyBalance"/>
 	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
 	<typeAlias alias="trade" type="org.infinitypfm.core.data.Trade"/>
 	<typeAlias alias="trade2" type="org.infinitypfm.core.data.Trade2"/>

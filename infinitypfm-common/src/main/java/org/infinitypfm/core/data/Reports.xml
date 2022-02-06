@@ -40,9 +40,33 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
      	INNER JOIN CURRENCIES c
      		ON a.CURRENCYID = c.CURRENCYID
 	WHERE mb.YR = #{yr} AND mb.MTH = #{mth}
-	ORDER BY az.ACTTYPEID, a.ACTNAME;
+	ORDER BY az.ACTID, a.ACTNAME;
        ]]>
   </select>
+  
+  <select id="getReportYearlyBalances" resultType="yearBalance" parameterType="dateParams" flushCache="true">
+      <![CDATA[
+       SELECT az.ACTTYPENAME,
+   	a.ACTNAME,
+   	mb.YR,
+   	SUM(mb.ACTBALANCE) AS ACTBALANCE,
+   	c.ISOCODE 
+	FROM MONTHLYBALANCE mb
+  		INNER JOIN ACCOUNTS a
+   			ON mb.ACTID = a.ACTID
+   		INNER JOIN ACCOUNTTYPES az
+     		ON a.ACTTYPEID = az.ACTTYPEID
+     	INNER JOIN CURRENCIES c
+     		ON a.CURRENCYID = c.CURRENCYID
+	WHERE mb.YR = #{yr}
+	GROUP BY az.ACTTYPENAME,
+   		a.ACTNAME,
+   		mb.YR,
+   		c.ISOCODE
+	ORDER BY az.ACTTYPENAME, SUM(mb.ACTBALANCE) DESC, a.ACTNAME;
+       ]]>
+  </select>
+  
   <select id="getReportAccountHistory" resultType="monthBalance" parameterType="monthBalance" flushCache="true">
       <![CDATA[
 	  SELECT a.ACTNAME, 
