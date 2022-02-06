@@ -30,7 +30,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
    	a.ACTNAME,
    	mb.YR,
    	mb.MTH,
-   	mb.ACTBALANCE,
+   	CASE WHEN az.ACTTYPENAME = 'Bank' THEN mb.ACTBALANCE ELSE ABS(mb.ACTBALANCE) END as ACTBALANCE,
    	c.ISOCODE 
 	FROM MONTHLYBALANCE mb
   		INNER JOIN ACCOUNTS a
@@ -40,7 +40,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
      	INNER JOIN CURRENCIES c
      		ON a.CURRENCYID = c.CURRENCYID
 	WHERE mb.YR = #{yr} AND mb.MTH = #{mth}
-	ORDER BY az.ACTID, a.ACTNAME;
+	ORDER BY az.ACTTYPENAME, a.ACTNAME;
        ]]>
   </select>
   
@@ -59,6 +59,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
      	INNER JOIN CURRENCIES c
      		ON a.CURRENCYID = c.CURRENCYID
 	WHERE mb.YR = #{yr}
+		and az.ACTTYPENAME NOT LIKE 'Bank'
 	GROUP BY az.ACTTYPENAME,
    		a.ACTNAME,
    		mb.YR,

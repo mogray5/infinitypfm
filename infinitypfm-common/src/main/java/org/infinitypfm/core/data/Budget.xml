@@ -225,7 +225,7 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
   <select id="getLiabilityTotalForMonth" parameterType="budgetDetail"
                                        resultType="java.lang.String" flushCache="true">    
     
-    SELECT ABS(SUM(MonthlyBalance.ActBalance)
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
 	FROM MonthlyBalance
 	 INNER JOIN Accounts
 	  ON MonthlyBalance.ActID = Accounts.ActID

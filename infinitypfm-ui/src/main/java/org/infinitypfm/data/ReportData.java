@@ -567,6 +567,8 @@ public class ReportData {
 		reportDataExpense = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("expense"))
 				.collect(Collectors.toList());
 		
+		String x = "a";
+		
   }
   
   /**

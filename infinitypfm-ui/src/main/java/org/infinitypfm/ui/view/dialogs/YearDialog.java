@@ -77,13 +77,13 @@ public class YearDialog extends BaseDialog {
 	protected void LoadLayout() {
 		
 		FormData lblyeardata = new FormData();
-		lblyeardata.top = new FormAttachment(0, 20);
-		lblyeardata.left = new FormAttachment(20, 0);
+		lblyeardata.top = new FormAttachment(0, 40);
+		lblyeardata.left = new FormAttachment(35, 0);
 		lblYear.setLayoutData(lblyeardata);
 
 		FormData cmbyeardata = new FormData();
-		cmbyeardata.top = new FormAttachment(0, 20);
-		cmbyeardata.left = new FormAttachment(0, 30);
+		cmbyeardata.top = new FormAttachment(0, 36);
+		cmbyeardata.left = new FormAttachment(lblYear, 5);
 		cmbYear.setLayoutData(cmbyeardata);
 		
 		FormData cmdcanceldata = new FormData();
@@ -99,14 +99,9 @@ public class YearDialog extends BaseDialog {
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.mogray.quezen.ui.view.QZDialog#Open()
-	 */
 	public int Open() {
 		super.Open();
-		shell.setText(MM.PHRASES.getPhrase("123"));
+		shell.setText(MM.PHRASES.getPhrase("311"));
 		shell.setSize(400, 200);
 		this.CenterWindow();
 

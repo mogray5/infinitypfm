@@ -39,19 +39,19 @@ th,td {
 }
 
 .rowColoredBank {
-	background-color: #e7f0d0;
+	background-color: #f1faff;
 }
 
 .rowColoredExpense {
-	background-color: #d5e0b9;
+	background-color: #e0eaf0;
 }
 
 .rowColoredIncome {
-	background-color: #c1cba7;
+	background-color: #d1e3ee;
 }
 
 .rowColoredLiability {
-	background-color: #a5ae8e;
+	background-color: #b7d0dd;
 }
 
 .totals, .totals-dat {
