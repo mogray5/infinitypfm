@@ -233,7 +233,7 @@ public class ReportData {
 
 	public long getIncomeTotalRaw() {
 	
-		return -Long.parseLong(incomeTotal);
+		return Long.parseLong(incomeTotal);
 	}
 	
 	public String getExpenseTotal() {
@@ -597,7 +597,7 @@ public class ReportData {
   private String formatLongString(String value) {
 
 	if (dateUtil != null && value != null) 
-		return dateUtil.getAmountFormatted(Long.parseLong(value)*-1);
+		return dateUtil.getAmountFormatted(Long.parseLong(value));
 	 else 
 		return value;
   }
