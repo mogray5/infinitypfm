@@ -24,6 +24,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -79,6 +81,8 @@ public class OptionsDialog extends BaseDialog {
 	private Password _walletPassword = null;
 	private Label lblBsvRefresh = null;
 	private Combo cmbBsvRefresh = null;
+	
+	private boolean walletSettingsChanged = false;
 	
 	public OptionsDialog() {
 		super();
@@ -175,17 +179,18 @@ public class OptionsDialog extends BaseDialog {
 		
 		lblSpendingPassword = new Label(reportGroup, SWT.NONE);
 		lblSpendingPassword.setText(MM.PHRASES.getPhrase("284") + ":");
-
+		
 		txtSpendingPassword = new Text(reportGroup, SWT.BORDER);
 		txtSpendingPassword.setEnabled(options.isEnableWallet());		
 		txtSpendingPassword.setEchoChar('*');
+		txtSpendingPassword.addModifyListener(dcFieldsModified);
 		
 		lblEmail = new Label(reportGroup, SWT.NONE);
 		lblEmail.setText(MM.PHRASES.getPhrase("304") + ":");
 		txtEmail = new Text(reportGroup, SWT.BORDER);
 		txtEmail.setEnabled(options.isEnableWallet());
+		txtEmail.addModifyListener(dcFieldsModified);
 
-		
 		lblBsvRefresh = new Label(reportGroup, SWT.NONE);
 		lblBsvRefresh.setText(MM.PHRASES.getPhrase("216") + ":");
 		cmbBsvRefresh = new Combo(reportGroup, SWT.BORDER | SWT.READ_ONLY);
@@ -219,6 +224,10 @@ public class OptionsDialog extends BaseDialog {
 		cmdCancel.setText(MM.PHRASES.getPhrase("4"));
 		cmdCancel.addSelectionListener(cmdCancel_OnClick);
 
+		// wallet changed flag may have been toggled during initial load
+		// set it back to false
+		walletSettingsChanged = false;
+		
 	}
 
 	protected void LoadLayout() {
@@ -243,7 +252,7 @@ public class OptionsDialog extends BaseDialog {
 		FormData txtprecisiond = new FormData();
 		txtprecisiond.top = new FormAttachment(0, 20);
 		txtprecisiond.left = new FormAttachment(scale, 10);
-		txtprecisiond.right = new FormAttachment(scale, 80);
+		txtprecisiond.right = new FormAttachment(scale, 100);
 		txtPrecision.setLayoutData(txtprecisiond);
 
 		FormData lblbasecurrencydata = new FormData();
@@ -544,7 +553,8 @@ public class OptionsDialog extends BaseDialog {
 					
 					options.setEmailAddress(txtEmail.getText());
 					
-					restartRequiredNotice();
+					if (walletSettingsChanged)
+						restartRequiredNotice();
 				
 				}
 					
@@ -582,5 +592,14 @@ public class OptionsDialog extends BaseDialog {
 			if (_walletPassword != null)
 				_walletPassword.setPlainPassword(txtSpendingPassword.getText());
 		}
+	};
+	
+	ModifyListener dcFieldsModified = new ModifyListener() {
+
+		@Override
+		public void modifyText(ModifyEvent arg0) {
+			walletSettingsChanged = true;
+		}
+		
 	};
 }

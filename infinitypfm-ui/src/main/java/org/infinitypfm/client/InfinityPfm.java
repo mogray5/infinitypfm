@@ -80,8 +80,9 @@ public class InfinityPfm {
 		  data.tracking = true;
 		Display display = null;
 		 display = new Display(data);
-		  Sleak sleak = new Sleak();
-		  sleak.open();
+		 
+	  	 Sleak sleak = new Sleak();
+	  	 sleak.open();
 		
 		if (System.getenv(MM.ENVAPPHOME) != null) {
 			homeDirectory = new File(System.getenv(MM.ENVAPPHOME));
@@ -200,7 +201,10 @@ public class InfinityPfm {
 	    { 
 	      public void run() 
 	      { 
-	        if (MM.wallet != null) {
+	       			  
+	    	  try {Thread.sleep(1000);} catch (InterruptedException e) {}
+	    	  
+	    	  if (MM.wallet != null) {
 	        	MM.wallet.stop();
 	        
 	        	while (MM.wallet.isRunning()) {
@@ -217,9 +221,9 @@ public class InfinityPfm {
 		}
 		
 		//clean up		
-		qzMain.QZDispose();
+		try {qzMain.QZDispose();} catch (Exception e) {}
+		try {display.dispose();} catch (Exception e) {}
 		
-		display.dispose();
 		System.exit(0);
 	}
 	

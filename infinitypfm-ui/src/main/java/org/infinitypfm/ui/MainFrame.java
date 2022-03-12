@@ -240,6 +240,42 @@ public class MainFrame {
 	}
 
 	public void QZDispose() {
+		
+		try {
+			cbMain.QZDispose();
+		} catch (Exception e1) {
+			System.err.println(e1.getMessage());
+		}
+		try {
+			mnuMain.QZDispose();
+		} catch (Exception e2) {
+			System.err.println(e2.getMessage());
+		}
+		try {
+			trMain.QZDispose();
+		} catch (Exception e3) {
+			System.err.println(e3.getMessage());
+		}
+		try {
+			InfinityPfm.imMain.QZDispose();
+		} catch (Exception e5) {
+			System.err.println(e5.getMessage());
+		}
+		try {
+			vwMain.QZDispose();
+		} catch (Exception e6) {
+			System.err.println(e6.getMessage());
+		}
+
+		if (!VertSash.isDisposed()) {
+			VertSash.dispose();
+		}
+
+		try {
+			msgMain.QZDispose();
+		} catch (Exception e4) {
+		}
+
 	}
 
 	/**
@@ -334,42 +370,7 @@ public class MainFrame {
 
 	class onClose extends ShellAdapter {
 		public void shellClosed(ShellEvent e) {
-
-			try {
-				cbMain.QZDispose();
-			} catch (Exception e1) {
-				System.err.println(e1.getMessage());
-			}
-			try {
-				mnuMain.QZDispose();
-			} catch (Exception e2) {
-				System.err.println(e2.getMessage());
-			}
-			try {
-				trMain.QZDispose();
-			} catch (Exception e3) {
-				System.err.println(e3.getMessage());
-			}
-			try {
-				InfinityPfm.imMain.QZDispose();
-			} catch (Exception e5) {
-				System.err.println(e5.getMessage());
-			}
-			try {
-				vwMain.QZDispose();
-			} catch (Exception e6) {
-				System.err.println(e6.getMessage());
-			}
-
-			if (!VertSash.isDisposed()) {
-				VertSash.dispose();
-			}
-
-			try {
-				msgMain.QZDispose();
-			} catch (Exception e4) {
-			}
-
+			QZDispose();
 			super.shellClosed(e);
 
 		}

@@ -39,6 +39,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -52,9 +53,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
@@ -79,6 +82,7 @@ import org.infinitypfm.core.data.TransactionOffset;
 import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.currency.RateParser;
 import org.infinitypfm.data.DataHandler;
+import org.infinitypfm.graphics.ImageMap;
 import org.infinitypfm.ui.view.dialogs.ImportDialog;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.toolbars.WalletToolbar;
@@ -129,6 +133,10 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	private DataFormatUtil _formatter = null;
 	
+	protected ImageMap imIcons = null;
+	
+	Cursor cursorHand = null;
+	
 	// Use to control when a history lookup is needed.
 	// No need to fetch history again if the balance has not
 	// changed.
@@ -138,6 +146,8 @@ public class WalletView extends BaseView implements WalletEvents {
 		super(arg0, arg1);
 	
 		_links = new ArrayList<Link>();
+	
+		imIcons = InfinityPfm.imMain;
 		
 		if (MM.wallet != null) {
 			if (MM.wallet.isImplemented(WalletFunction.REGISTERFOREVENTS))
@@ -184,11 +194,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		colorFont = new Color(InfinityPfm.shMain.getDisplay(), 14,46,6);
 		addressFont = new Color(InfinityPfm.shMain.getDisplay(), 30,30,36);
 		
+		cursorHand = new Cursor(InfinityPfm.shMain.getDisplay(), SWT.CURSOR_HAND);
+		
 		tbMain = new WalletToolbar(this);
 		cmpHeader = new Composite(this, SWT.BORDER);
 		cmpHeader.setLayout(new FormLayout());
 		cmpHeader.setBackground(colorWhite);
-		bcLogo = InfinityPfm.imMain.getTransparentImage(MM.IMG_BSV_LOGO);
+		bcLogo = imIcons.getTransparentImage(MM.IMG_BSV_LOGO);
 		bcCanvas = new Canvas(cmpHeader, SWT.NONE);
 		bcCanvas.setBackground(colorWhite);
 		bcCanvas.addPaintListener(logo_OnPaint);
@@ -238,7 +250,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		txtSendTo.setFont(new Font(InfinityPfm.shMain.getDisplay(), fD3[0]));
 
 		cmdSend = new Button(sendGroup, SWT.PUSH);
-		cmdSend.setImage(InfinityPfm.imMain.getImage(MM.IMG_BSV));
+		cmdSend.setImage(imIcons.getImage(MM.IMG_BSV));
 		
 		if (MM.wallet.isImplemented(WalletFunction.SENDCOINS)) {
 			cmdSend.addSelectionListener(cmdSend_OnClick);
@@ -283,13 +295,13 @@ public class WalletView extends BaseView implements WalletEvents {
 		this.loadSendIsoCombo();
 		
 		cmdClipBoardAdr = new Button(receiveGroup, SWT.PUSH);
-		cmdClipBoardAdr.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
+		cmdClipBoardAdr.setImage(imIcons.getImage(MM.IMG_CLIPBOARD));
 		cmdClipBoardAdr.setBackground(colorWhite);
 		cmdClipBoardAdr.addSelectionListener(cmdClipBoardAdr_OnClick);
 		cmdClipBoardAdr.setToolTipText(MM.PHRASES.getPhrase("309"));
 		
 		cmdClipBoardPaymail = new Button(receiveGroup, SWT.PUSH);
-		cmdClipBoardPaymail.setImage(InfinityPfm.imMain.getImage(MM.IMG_CLIPBOARD));
+		cmdClipBoardPaymail.setImage(imIcons.getImage(MM.IMG_CLIPBOARD));
 		cmdClipBoardPaymail.setBackground(colorWhite);
 		cmdClipBoardPaymail.addSelectionListener(cmdClipBoardPaymail_OnClick);
 		cmdClipBoardPaymail.setToolTipText(MM.PHRASES.getPhrase("309"));
@@ -298,7 +310,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			if (_receiveAddress != null && MM.wallet.isImplemented(WalletFunction.GETQRCODE)) {
 				File qrImage = MM.wallet.getQrCode(_receiveAddress.getAddress());
 				if (qrImage.exists()) {
-					imgRcvQrCode = InfinityPfm.imMain.getTransparentImage(qrImage);
+					imgRcvQrCode = imIcons.getTransparentImage(qrImage);
 					qrCanvas = new Canvas(receiveGroup, SWT.BORDER);
 					qrCanvas.setBackground(colorWhite);
 					qrCanvas.addPaintListener(logo_OnPaintQr);
@@ -609,14 +621,15 @@ public class WalletView extends BaseView implements WalletEvents {
 					
 					if (t.getTransactionKey()!=null) {
 						TableEditor editor = new TableEditor(tblHistory);
-						Link link = new Link(tblHistory, SWT.NONE);
-						link.setText("<a href=\"https://eclipse.org\">" + MM.PHRASES.getPhrase("86") + "</a>");
-						//link.setText(MM.PHRASES.getPhrase("86"));
-						link.addSelectionListener(linkView_OnClick);
-						link.setEnabled(true);
+						Label link = new Label(tblHistory, SWT.CENTER);
+						link.setImage(imIcons.getImage(MM.IMG_EMBLEM_WEB));
+						link.setText(MM.PHRASES.getPhrase("86"));
 						link.setData(t);
+						link.addListener(SWT.MouseUp, linkVew_mouse);
+						link.setEnabled(true);
+						
 						link.setForeground(colorWhite);
-						_links.add(link);
+						//_links.add(link);
 						editor.minimumWidth = 50;
 						editor.horizontalAlignment = SWT.CENTER;
 						editor.setEditor(link, ti, 5);
@@ -853,8 +866,6 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 	}
 	
-	
-	
 	/*
 	 * Listeners
 	 */
@@ -948,21 +959,23 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 	};
 
-	SelectionAdapter linkView_OnClick = new SelectionAdapter() {
-		public void widgetSelected(SelectionEvent e) {
-	
-			//String s = "stop";
+	Listener linkVew_mouse = new Listener() {
+
+		@Override
+		public void handleEvent(Event event) {
 			
-			org.infinitypfm.core.data.Transaction t = 
-					(org.infinitypfm.core.data.Transaction) e.widget.getData();
+			if (event.type == SWT.MouseUp) {
 			
-			if (t.getTransactionKey() != null) {
-				String sLink = "https://whatsonchain.com/tx/" + t.getTransactionKey();
-				Program.launch(sLink);
+				org.infinitypfm.core.data.Transaction t = 
+						(org.infinitypfm.core.data.Transaction) event.widget.getData();
+				
+				if (t.getTransactionKey() != null) {
+					String sLink = "https://whatsonchain.com/tx/" + t.getTransactionKey();
+					Program.launch(sLink);
+				}
 			}
-		}
+		}		
 	};
-	
 	
 	/*****************/
 	/* Wallet Events */
@@ -1099,7 +1112,9 @@ public class WalletView extends BaseView implements WalletEvents {
 		try { addressFont.dispose();} catch (Exception e) {}
 		try { qrCanvas.dispose();} catch (Exception e){}
 		try { bcCanvas.dispose();} catch (Exception e) {}
-		
+		try { bcLogo.dispose(); } catch (Exception e) {}
+		try { imgRcvQrCode.dispose(); } catch (Exception e) {}
+		try { cursorHand.dispose(); } catch (Exception e) {}
 		try {
 			for (Link link : _links) {
 				link.dispose();

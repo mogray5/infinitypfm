@@ -109,7 +109,7 @@ public class InfoDialog extends BaseDialog {
 
 	protected void LoadLayout() {
 		
-		FormAttachment displayTop = new FormAttachment(30, 0);
+		FormAttachment displayTop = new FormAttachment(25, 0);
 		FormAttachment displayLeft = new FormAttachment(10, 0);
 		FormAttachment displayRight = new FormAttachment(90, 0);
 		FormAttachment displayBottom = new FormAttachment(50, 0);
@@ -123,6 +123,13 @@ public class InfoDialog extends BaseDialog {
 			lblinfodata.right = displayRight;
 			lblinfodata.bottom = displayBottom;
 			lblInfo.setLayoutData(lblinfodata);
+			
+			txtinfodata.top = new FormAttachment (lblInfo, -20);
+			txtinfodata.left = displayLeft;
+			txtinfodata.right = displayRight;
+			txtinfodata.bottom = new FormAttachment (lblInfo, 50);
+			txtInfo.setLayoutData(txtinfodata);
+			
 		} else {
 
 			txtinfodata.top = displayTop;
