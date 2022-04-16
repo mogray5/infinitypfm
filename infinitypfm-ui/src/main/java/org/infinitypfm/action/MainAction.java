@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -81,11 +82,11 @@ import org.infinitypfm.util.FileHandler;
  * 
  */
 public class MainAction {
-
+	
 	public MainAction() {
 		super();
 	}
-
+	
 	public void ProcessMenuItem(int item) {
 
 		int selectedAccount = -1; 
@@ -218,6 +219,13 @@ public class MainAction {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
+		case MM.MENU_REPORTS_REGISTER:
+			try {
+				this.RunReport(MM.MENU_REPORTS_REGISTER);
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
 		case MM.MENU_REPORT_SAVE:
 			this.SaveReport();
 			break;
@@ -341,6 +349,8 @@ public class MainAction {
 	public void CloseCurrentView() {
 		InfinityPfm.qzMain.getVwMain().UnloadCurrentView();
 		InfinityPfm.qzMain.getVwMain().getParent().layout(true);
+		// Clear out any lingering report params
+		MM.reportParams = null;
 	}
 
 	public void RefreshCurrentView() {
@@ -635,7 +645,7 @@ public class MainAction {
 		
 		File result = null;
 		
-		ReportData reportData = new ReportData(reportType);
+		ReportData reportData = new ReportData(reportType, MM.reportParams);
 		
 		if (!reportData.getUserCanceled()){
 		

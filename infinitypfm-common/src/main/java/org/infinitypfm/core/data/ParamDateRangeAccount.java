@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -35,6 +35,7 @@ public class ParamDateRangeAccount implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int actId = 0;
+	private String accountName = null;
 	private Timestamp startDate;
 	private Timestamp endDate;
 	int yr = 0;
@@ -46,6 +47,14 @@ public class ParamDateRangeAccount implements Serializable {
 
 	public void setActId(int actId) {
 		this.actId = actId;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 
 	public int getYr() {
@@ -70,8 +79,6 @@ public class ParamDateRangeAccount implements Serializable {
 	public ParamDateRangeAccount() {
 		super();
 	}
-	
-	
 
 	/**
 	 * @return Returns the endDate.

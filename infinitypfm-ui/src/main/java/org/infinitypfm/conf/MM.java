@@ -94,6 +94,7 @@ public class MM {
 	public static final String IMG_REMOVEQUEUE = "remove.png";
 	public static final String IMG_SAVE = "document-save.png";
 	public static final String IMG_SELECTALL = "ok.png";
+	public static final String IMG_SHARE = "emblem-shared.png";
 	public static final String IMG_SPREADSHEET = "x-office-spreadsheet.png";
 	public static final String IMG_STAR_EMPTY = "non-starred.png";
 	public static final String IMG_STAR_FULL = "starred.png";
@@ -158,44 +159,45 @@ public class MM {
 	public static final int MENU_FILE_IMPORT_CSV = 39;
 	public static final int MENU_FILE_IMPORT_MAIL = 40;
 	
-	public static final int MENU_REPORT_EXECUTE = 41;
-	public static final int MENU_REPORT_SAVE = 42;
+	public static final int MENU_REPORT_EXECUTE = 60;
+	public static final int MENU_REPORT_SAVE = 61;
 	
-	public static final int MENU_EDIT_ADD_ACCOUNT = 43;
-	public static final int MENU_EDIT_ADD_BUDGET = 44;
-	public static final int MENU_EDIT_ADD_CURRENCY = 45;
+	public static final int MENU_EDIT_ADD_ACCOUNT = 80;
+	public static final int MENU_EDIT_ADD_BUDGET = 81;
+	public static final int MENU_EDIT_ADD_CURRENCY = 82;
 	
-	public static final int MENU_CONSOLE_CLEAR = 50;
-	public static final int MENU_CONSOLE_CLOSE = 51;
+	public static final int MENU_CONSOLE_CLEAR = 100;
+	public static final int MENU_CONSOLE_CLOSE = 101;
 	
-	public static final int MENU_TOPIC_ADD = 60;
-	public static final int MENU_TOPIC_SELECTALL = 61;
-	public static final int MENU_TOPIC_CONFIG = 62;
+	public static final int MENU_TOPIC_ADD = 110;
+	public static final int MENU_TOPIC_SELECTALL = 111;
+	public static final int MENU_TOPIC_CONFIG = 112;
 	
-	public static final int MENU_SERVER_NEW = 70;
-	public static final int MENU_SERVER_EDIT = 71;
-	public static final int MENU_SERVER_REMOVE = 72;
+	public static final int MENU_SERVER_NEW = 122;
+	public static final int MENU_SERVER_EDIT = 123;
+	public static final int MENU_SERVER_REMOVE = 124;
 	
-	public static final int MENU_OPTIONS_CONFIG = 80;
+	public static final int MENU_OPTIONS_CONFIG = 134;
 	
-	public static final int MENU_HELP_CONTENTS = 90;
-	public static final int MENU_HELP_ABOUT = 91;
+	public static final int MENU_HELP_CONTENTS = 144;
+	public static final int MENU_HELP_ABOUT = 145;
 	
-	public static final int MENU_REPORTS_MONTHLY_BALANCE = 100;
-	public static final int MENU_REPORTS_YEARLY_BALANCE = 101;
-	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 102;
-	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 103;
-	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 104;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 105;
-	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 106;
-	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 107;
+	public static final int MENU_REPORTS_MONTHLY_BALANCE = 155;
+	public static final int MENU_REPORTS_YEARLY_BALANCE = 156;
+	public static final int MENU_REPORTS_PRIOR_MONTHLY_BALANCE = 157;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY = 158;
+	public static final int MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME = 159;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 160;
+	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 161;
+	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 162;
+	public static final int MENU_REPORTS_REGISTER = 163;
 	
-	public static final int MENU_BUDGET_SAVE = 120;
+	public static final int MENU_BUDGET_SAVE = 172;
 	
-	public static final int MENU_WALLET_SHOW_MNEMONIC = 150;
-	public static final int MENU_WALLET_BACKUP = 151;
-	public static final int MENU_WALLET_RESTORE = 152;
-	public static final int MENU_WALLET_REFRESH = 153;
+	public static final int MENU_WALLET_SHOW_MNEMONIC = 182;
+	public static final int MENU_WALLET_BACKUP = 183;
+	public static final int MENU_WALLET_RESTORE = 184;
+	public static final int MENU_WALLET_REFRESH = 185;
 	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;
@@ -242,6 +244,7 @@ public class MM {
 	public static String csvConfig = null;
 	
 	// Report Settings
+	public static Object reportParams; 
 	public static Configuration templateConfig = null;
 	public static final String PIE_CHART_BASE = "piechartBase.js";
 	public static final String PIE_CHART_1 ="piechart1.js";
@@ -253,6 +256,7 @@ public class MM {
 	public static final String JS_LIB = "jquery.js";
 	public static final String GRAPH_LIB = "raphael-min.js";
 	public static final String RPT_ACCOUNT_HISTORY = "AccountHistory.ftl";
+	public static final String RPT_ACCOUNT_REGISTER = "AccountRegister.ftl";
 	public static final String RPT_MONTHLY_BALANCES = "MonthlyBalances.ftl";
 	public static final String RPT_YEARLY_BALANCES = "YearlyBalances.ftl";
 	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";

@@ -19,6 +19,7 @@
 package org.infinitypfm.ui.view.views;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.ListIterator;
 
 import org.eclipse.swt.SWT;
@@ -320,12 +321,34 @@ public class RegisterView extends BaseView {
 
 				tblRegister.setLinesVisible(true);
 
+				updateReportParams();
+				
 			} catch (Exception se) {
 				InfinityPfm.LogMessage(se.getMessage());
 			}
 
 		}
 	}
+	
+	/**
+	 * Keep a report param account object in sync.
+	 * Use when running register report
+	 */
+	private void updateReportParams() {
+		if (MM.reportParams == null)
+			MM.reportParams = new ParamDateRangeAccount();
+		
+		ParamDateRangeAccount param =(ParamDateRangeAccount) MM.reportParams;
+		formatter.setDate(txtStartDate.getText(), "mm-dd-yyyy");
+		Timestamp start = new Timestamp(formatter.getDate().getTime());
+		formatter.setDate(txtEndDate.getText(), "mm-dd-yyyy");
+		Timestamp end = new Timestamp(formatter.getDate().getTime());
+		param.setActId(act.getActId());
+		param.setStartDate(start);
+		param.setEndDate(end);
+		param.setAccountName(act.getActName());
+	}
+	
 
 	/*
 	 * Listeners
@@ -369,6 +392,7 @@ public class RegisterView extends BaseView {
 			
 			try {
 				txtStartDate.setText(dateDialog.getSelectedDate());
+				updateReportParams();
 			} catch (Exception err) {
 				InfinityPfm.LogMessage(err.getMessage());
 			}
@@ -387,6 +411,7 @@ public class RegisterView extends BaseView {
 			
 			try {
 				txtEndDate.setText(dateDialog.getSelectedDate());
+				updateReportParams();
 			} catch (Exception err) {
 				InfinityPfm.LogMessage(err.getMessage());
 			}

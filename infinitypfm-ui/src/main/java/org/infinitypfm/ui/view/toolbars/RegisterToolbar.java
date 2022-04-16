@@ -34,9 +34,11 @@ public class RegisterToolbar extends BaseToolbar {
 
 	protected void LoadButtons() {
 		
+		addButton(MM.IMG_SHARE, MM.PHRASES.getPhrase("313"),
+				MM.MENU_REPORTS_REGISTER, true);
+		
 		addButton(MM.IMG_CLOSE_SMALL, MM.PHRASES.getPhrase("54"),
 				MM.MENU_TREE_CLOSEVIEW, true);
-
 	}
 
 	protected void Init(Composite cm) {

@@ -357,6 +357,8 @@ public class LangLoader {
 		hmPhrases.put("310",  i18n.tr("Coins Sent!"));
 		hmPhrases.put("311",  i18n.tr("Yearly Balances"));
 		hmPhrases.put("312",  i18n.tr("Report was empty"));
+		hmPhrases.put("313",  i18n.tr("Open as report"));
+		hmPhrases.put("314",  i18n.tr("Register Report"));
 	}
 	
 	

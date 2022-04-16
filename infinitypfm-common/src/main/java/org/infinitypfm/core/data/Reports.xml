@@ -184,5 +184,24 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
 			ORDER BY mb.YR, mb.MTH;
        ]]>
   </select>
+   <select id="getRegister" resultType="register" parameterType="dateRangeAccount" flushCache="true">
+      <![CDATA[
+        SELECT
+           TranDate as transactionDate,
+           CASE WHEN TranAmount>0 THEN TranAmount ELSE 0 END as debit,
+           CASE WHEN TranAmount<0 THEN TranAmount ELSE 0 END as credit,
+           TranMemo as memo
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE ActId = #{actId} 
+        	AND TranDate >= #{startDate}
+         	AND TranDate <=#{endDate}
+        Order By TranDate, TranMemo;
+       ]]>
+  </select>
+  
   
 </mapper>
