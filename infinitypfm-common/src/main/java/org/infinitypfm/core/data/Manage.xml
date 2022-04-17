@@ -110,7 +110,8 @@
 		DefaultBsvCurrencyID INT DEFAULT 0,
 		EmailAddress VARCHAR(50),
 		WalletUser VARCHAR(50),
-		WalletToken VARCHAR(500)
+		WalletToken VARCHAR(500),
+		BookmarksUrl VARCHAR(500)
 		) 
 	</update>
 

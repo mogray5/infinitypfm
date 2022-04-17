@@ -63,7 +63,6 @@ public class StatusView extends BaseView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.mogray.quezen.ui.view.views.QZView#LoadUI()
 	 */
 	protected void LoadUI() {
 		
@@ -81,7 +80,6 @@ public class StatusView extends BaseView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.mogray.quezen.ui.view.views.QZView#LoadLayout()
 	 */
 	protected void LoadLayout() {
 		FormData lblstatusdata = new FormData();
@@ -109,7 +107,6 @@ public class StatusView extends BaseView {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see net.mogray.quezen.ui.view.views.QZView#QZDispose()
 	 */
 	public void QZDispose() {
 		if (!this.isDisposed()) {

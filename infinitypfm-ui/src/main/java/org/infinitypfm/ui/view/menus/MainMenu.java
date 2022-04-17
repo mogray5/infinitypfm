@@ -47,6 +47,7 @@ public class MainMenu implements Widget {
 	private Menu mnuView;
 	private Menu mnuReports;
 	private MenuItem miConsole = null;
+	private MenuItem miBookmarks = null;
 
 	public MainMenu(Shell shMain) {
 		super();
@@ -157,6 +158,11 @@ public class MainMenu implements Widget {
 		
 		miConsole = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_CONSOLE,
 				MM.PHRASES.getPhrase("65"), ' ');
+		
+		mi = new MenuItem(mnuView, SWT.SEPARATOR);
+		
+		miBookmarks = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_BOOKMARKS,
+				MM.PHRASES.getPhrase("315"), ' ');
 
 		/*
 		 * Reports Menu
@@ -241,6 +247,10 @@ public class MainMenu implements Widget {
 	public void setConsole(boolean bVal) {
 		miConsole.setSelection(bVal);
 	}
+	
+	public void setBookmarks(boolean bVal) {
+		miBookmarks.setSelection(bVal);
+	}
 
 	/* add listener */
 	Listener mnuClick = new Listener() {
@@ -256,6 +266,12 @@ public class MainMenu implements Widget {
 				if (iResult.intValue() == MM.MENU_VIEW_CONSOLE) {
 					if (!mi.getSelection()) {
 						action.ProcessMenuItem(MM.MENU_CONSOLE_CLOSE);
+					} else {
+						action.ProcessMenuItem(iResult.intValue());
+					}
+				} else if (iResult.intValue() == MM.MENU_VIEW_BOOKMARKS) {
+					if (!mi.getSelection()) {
+						action.ProcessMenuItem(MM.MENU_BOOKMARKS_CLOSE);
 					} else {
 						action.ProcessMenuItem(iResult.intValue());
 					}

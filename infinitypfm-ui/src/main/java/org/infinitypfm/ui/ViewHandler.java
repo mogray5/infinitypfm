@@ -87,8 +87,8 @@ public class ViewHandler {
 
 		FormData canvasdata = new FormData();
 		canvasdata.top = new FormAttachment(35, 0);
-		canvasdata.left = new FormAttachment(30, 0);
-		canvasdata.right = new FormAttachment(70, 0);
+		canvasdata.left = new FormAttachment(50, -150);
+		canvasdata.right = new FormAttachment(50, 200);
 		canvasdata.bottom = new FormAttachment(70, 0);
 		canvas.setLayoutData(canvasdata);
 

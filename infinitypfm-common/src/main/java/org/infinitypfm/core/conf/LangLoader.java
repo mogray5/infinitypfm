@@ -359,6 +359,9 @@ public class LangLoader {
 		hmPhrases.put("312",  i18n.tr("Report was empty"));
 		hmPhrases.put("313",  i18n.tr("Open as report"));
 		hmPhrases.put("314",  i18n.tr("Register Report"));
+		hmPhrases.put("315",  i18n.tr("Bookmarks"));
+		hmPhrases.put("316",  i18n.tr("Browser not available"));
+		hmPhrases.put("317",  i18n.tr("Bookmarks URL"));
 	}
 	
 	

@@ -242,8 +242,13 @@ public class MainAction {
 		case MM.MENU_CONSOLE_CLOSE:
 			ToggleConsole(false);
 			break;
+		case MM.MENU_VIEW_BOOKMARKS:
+			ToggleBookmarks(true);
+			break;
+		case MM.MENU_BOOKMARKS_CLOSE:
+			ToggleBookmarks(false);
+			break;
 		case MM.MENU_TOPIC_CONFIG:
-
 			break;
 		case MM.VIEW_RECURRENCE:
 			this.LoadView(MM.VIEW_RECURRENCE);
@@ -554,6 +559,12 @@ public class MainAction {
 		InfinityPfm.shMain.layout();
 	}
 
+	public void ToggleBookmarks(boolean bShow) {
+		InfinityPfm.qzMain.getMnuMain().setBookmarks(bShow);
+		InfinityPfm.qzMain.LoadBookmarks(bShow);
+		InfinityPfm.shMain.layout();
+	}
+	
 	public void AddAccount(Account act) {
 		DataHandler db = new DataHandler();
 		try {

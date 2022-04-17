@@ -36,7 +36,8 @@
        DefaultBsvCurrencyID,
        EmailAddress,
        WalletUser,
-       WalletToken
+       WalletToken,
+       BookmarksUrl
     FROM AppSettings;
     ]]>
 	</select>
@@ -55,7 +56,8 @@
 		DefaultBsvCurrencyID = #{defaultBsvCurrencyID},
 		EmailAddress = #{emailAddress},
 		WalletUser = #{walletUser},
-		WalletToken = #{walletToken}
+		WalletToken = #{walletToken},
+		BookmarksUrl = #{bookmarksUrl}
 	</update>
 
 </mapper>

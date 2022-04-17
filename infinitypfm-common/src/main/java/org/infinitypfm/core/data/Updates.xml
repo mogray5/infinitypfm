@@ -254,4 +254,7 @@ Copyright (c) 2005-2021 Wayne Gray All rights reserved
    <update id="v0_9_5_c">
  	ALTER TABLE AppSettings ADD COLUMN WalletToken VARCHAR(500);
    </update>
+   <update id="v0_9_5_d">
+ 	ALTER TABLE AppSettings ADD COLUMN BookmarksUrl VARCHAR(500);
+   </update>
 </mapper>

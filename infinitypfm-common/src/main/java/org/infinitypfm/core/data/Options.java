@@ -36,6 +36,7 @@ public class Options implements Serializable {
 	private String emailAddress = null;
 	private String walletUser = null;
 	private String walletToken = null;
+	private String bookmarksUrl = null;
 	
 	public String getAppVersion() {
 		return appVersion;
@@ -109,6 +110,11 @@ public class Options implements Serializable {
 	public void setWalletToken(String walletToken) {
 		this.walletToken = walletToken;
 	}
-	
+	public String getBookmarksUrl() {
+		return bookmarksUrl;
+	}
+	public void setBookmarksUrl(String bookmarksUrl) {
+		this.bookmarksUrl = bookmarksUrl;
+	}
 
 }

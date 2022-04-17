@@ -64,9 +64,11 @@ public class OptionsDialog extends BaseDialog {
 	private Label lblBaseCurrency = null;
 	private Label lblSpendingPassword = null;
 	private Label lblEmail = null;
+	private Label lblBookmarks = null;
 	private Text txtPrecision = null;
 	private Text txtSpendingPassword = null;
 	private Text txtEmail = null;
+	private Text txtBookmarks = null;
 	
 	private Combo cmbBaseCurrency = null;
 	private Button cmdOk = null;
@@ -214,9 +216,15 @@ public class OptionsDialog extends BaseDialog {
 		
 		txtSpendingPassword.addFocusListener(txtSpendingPassword_OnLostFocus);
 
+		lblBookmarks = new Label(reportGroup, SWT.NONE);
+		lblBookmarks.setText(MM.PHRASES.getPhrase("317"));
+		
+		txtBookmarks = new Text(reportGroup, SWT.BORDER);
+		txtBookmarks.setText(options.getBookmarksUrl());
+		
 		currencyItem.setControl(currencyGroup);
 		reportItem.setControl(reportGroup);
-
+		
 		cmdOk = new Button(sh, SWT.PUSH);
 		cmdOk.setText(MM.PHRASES.getPhrase("5"));
 		cmdOk.addSelectionListener(cmdOk_OnClick);
@@ -312,6 +320,17 @@ public class OptionsDialog extends BaseDialog {
 		txtemaildata.left = new FormAttachment(lblEmail, 38);
 		txtemaildata.right = new FormAttachment(lblEmail, 300);
 		txtEmail.setLayoutData(txtemaildata);
+		
+		FormData lblbookmarksdata = new FormData();
+		lblbookmarksdata.top = new FormAttachment(txtEmail, 20);
+		lblbookmarksdata.left = new FormAttachment(0, 20);
+		lblBookmarks.setLayoutData(lblbookmarksdata);
+		
+		FormData txtbookmarksdata = new FormData();
+		txtbookmarksdata.top = new FormAttachment(txtEmail, 18);
+		txtbookmarksdata.left = new FormAttachment(lblBookmarks, 20);
+		txtbookmarksdata.right = new FormAttachment(80, 0);
+		txtBookmarks.setLayoutData(txtbookmarksdata);
 		
 		FormData cmdokdata = new FormData();
 		cmdokdata.top = new FormAttachment(tabFolder, 5);
@@ -561,6 +580,7 @@ public class OptionsDialog extends BaseDialog {
 				options.setReportsInBrowswer(chkReportsInBrowswer.getSelection());
 				options.setConsoleDefaultOpen(chkDefaultOpenConsole.getSelection());
 
+				options.setBookmarksUrl(txtBookmarks.getText());
 				
 				MM.sqlMap.update("updateOptions", options);
 

@@ -137,6 +137,7 @@ public class MM {
 	
 	public static final int MENU_VIEW_CONSOLE = 10;
 	public static final int MENU_VIEW_TRANS_ENTRY = 11;
+	public static final int MENU_VIEW_BOOKMARKS = 12;
 	
 	public static final int MENU_TREE_REFRESH = 20;
 	public static final int MENU_TREE_ACT_REMOVE = 21;
@@ -168,6 +169,8 @@ public class MM {
 	
 	public static final int MENU_CONSOLE_CLEAR = 100;
 	public static final int MENU_CONSOLE_CLOSE = 101;
+	
+	public static final int MENU_BOOKMARKS_CLOSE = 102;
 	
 	public static final int MENU_TOPIC_ADD = 110;
 	public static final int MENU_TOPIC_SELECTALL = 111;
