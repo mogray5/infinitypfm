@@ -1,0 +1,59 @@
+# CargoWatch client properties. Valid entries are:
+#
+# client.userName - CargoWatch user name.
+# client.password - CargoWatch password.
+# service.URL - specifies URL of the 2-Way command service server
+# login.service.URL - specifies URL of the user login service server
+#
+#
+#Wed Nov 13 00:10:02 PKT 2013
+#login.service.URL=http\://192.168.101.241/Par.LMS.CargoWatch.WebServices/
+#login.service.URL=http\://192.168.101.194/Par.LMS.CargoWatch.WebServices/
+#login.service.URL=http\://cargowatch.parlms.com/Par.LMS.CargoWatch.WebServices/
+login.service.URL=http\://192.168.101.243/Par.LMS.CargoWatch.WebServices/
+
+#######################
+# TMSDataService Beta #
+#service.URL=http\://192.168.178.211/TMSDataService/v1_0/
+#service.URL=http\://192.168.178.211/TMSDataService/v1_1/
+#service.URL=http\://192.168.178.211/TMSDataService/v1_2/
+#service.URL=http\://192.168.178.211/TMSDataService/v1_3/
+#service.URL=http\://192.168.178.211/TMSDataService/v3_0/
+#service.URL=http\://192.168.178.211/TMSDataService/v3_1/
+#######################
+
+########################
+# TMSDataService Alpha #
+#service.URL=http\://192.168.101.194/TMSDataService/v1_0/
+#service.URL=http\://192.168.101.194/TMSDataService/v1_1/
+#service.URL=http\://192.168.101.194/TMSDataService/v1_2/
+#service.URL=http\://192.168.101.194/TMSDataService/v1_3/
+#service.URL=http\://192.168.101.194/TMSDataService/v3_0/
+#service.URL=http\://192.168.101.194/TMSDataService/v3_1/
+########################
+
+#######################
+# Development Machine #
+#service.URL=http\://192.168.56.101/TMSDataService/
+#service.URL=http\://192.168.56.101/CWTMS/
+#service.URL=http://localhost/TMSDataService/v3_1/
+#######################
+
+
+##################
+# 2Way Legacy WS #
+service.URL=http\://192.168.178.211:6090/Par.LMS.CargoWatch.WebServices/
+#service.URL=http\://192.168.178.211/Par.LMS.CargoWatch.WebServices/
+##################
+
+
+##############
+# XML Socket #
+#service.URL=localhost
+#service.URL=192.168.178.217
+##############
+
+#client.userName=wggxml2
+#client.userName=hubxml
+client.userName=hubtestxml3
+client.password=Coco1233
