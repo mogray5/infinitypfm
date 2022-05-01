@@ -19,6 +19,7 @@
 package org.infinitypfm.ui.view.views;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FormAttachment;
@@ -62,7 +63,7 @@ public class BookmarksView extends BaseView {
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
 
-		if (browser != null)
+		if (browser != null && !StringUtils.isEmpty(reportUrl))
 			browser.setUrl(reportUrl);
 		else
 			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("316"));

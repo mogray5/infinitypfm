@@ -220,7 +220,8 @@ public class OptionsDialog extends BaseDialog {
 		lblBookmarks.setText(MM.PHRASES.getPhrase("317"));
 		
 		txtBookmarks = new Text(reportGroup, SWT.BORDER);
-		txtBookmarks.setText(options.getBookmarksUrl());
+		if (options.getBookmarksUrl() != null)
+			txtBookmarks.setText(options.getBookmarksUrl());
 		
 		currencyItem.setControl(currencyGroup);
 		reportItem.setControl(reportGroup);
