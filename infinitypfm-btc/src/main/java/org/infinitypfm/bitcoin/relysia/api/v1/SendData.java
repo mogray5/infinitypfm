@@ -18,8 +18,15 @@
  */
 package org.infinitypfm.bitcoin.relysia.api.v1;
 
+import org.infinitypfm.bitcoin.wallet.helpers.FloatToPlainString;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class SendData {
 	private String to = null;
+	@JsonProperty
+    @JsonSerialize(using=FloatToPlainString.class)
 	private float amount = 0F;
 	private String type = null;
 	private String notes = null;

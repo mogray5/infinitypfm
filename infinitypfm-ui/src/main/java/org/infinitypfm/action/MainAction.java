@@ -277,6 +277,7 @@ public class MainAction {
 			break;
 		case MM.MENU_WALLET_REFRESH:
 			this.WalletSignIn();
+			MM.walletNeedsSync = true;
 			this.LoadView(MM.VIEW_WALLET);
 			break;
 		}

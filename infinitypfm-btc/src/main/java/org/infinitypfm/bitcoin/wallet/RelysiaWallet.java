@@ -44,10 +44,12 @@ import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.RestResponse;
 import org.infinitypfm.core.util.RestClient;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import net.glxn.qrgen.QRCode;
 
@@ -55,6 +57,7 @@ public class RelysiaWallet implements BsvWallet {
 
 	private AuthData _auth = null;
 	private boolean _signedIn = false;
+	private boolean _inShutdown = false;
 	private RestClient _client = null;
 	private ObjectMapper _mapper = null;
 	private WalletEvents _events = null;
@@ -76,6 +79,10 @@ public class RelysiaWallet implements BsvWallet {
 		_auth = auth;
 		_client = new RestClient(baseUrl);
 		_mapper = new ObjectMapper();
+		//_mapper.configure(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN, true);
+		//_mapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+		//_mapper.disable(JsonGenerator.Feature.WRITE_NUMBERS_AS_STRINGS);
+		//_mapper.setNodeFactory(JsonNodeFactory.withExactBigDecimals(true));
 		_formatter = new DataFormatUtil(8);
 	}
 	
@@ -90,6 +97,8 @@ public class RelysiaWallet implements BsvWallet {
 	
 	@Override
 	public boolean isRunning(boolean TriggerEventOnSignInSuccess) {
+		
+		if (_inShutdown) return false;
 		
 		if (!_signedIn) {
 			try {
@@ -108,7 +117,9 @@ public class RelysiaWallet implements BsvWallet {
 	}
 
 	@Override
-	public void stop() {}
+	public void stop() {
+		_inShutdown = true;
+		}
 
 	@Override
 	public String getFiatBalance() {

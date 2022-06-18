@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -372,14 +373,14 @@ public class WalletView extends BaseView implements WalletEvents {
 		lblAmount.setLayoutData(lblamountdata);
 		
 		FormData lblamountbsvdata = new FormData();
-		lblamountbsvdata.top = new FormAttachment(cmpHeader, 5);
+		lblamountbsvdata.top = new FormAttachment(cmpHeader, 0);
 		lblamountbsvdata.left = new FormAttachment(100, -127);
 		//lblamountbsvdata.right = new FormAttachment(60, 0);
 		//lblamountbsvdata.bottom = new FormAttachment(100, 0);
 		lblAmountBsv.setLayoutData(lblamountbsvdata);
 		
 		FormData tabfolderdata = new FormData();
-		tabfolderdata.top = new FormAttachment(cmpHeader, 10);
+		tabfolderdata.top = new FormAttachment(cmpHeader, 13);
 		tabfolderdata.left = new FormAttachment(0, 20);
 		tabfolderdata.right = new FormAttachment(100, -10);
 		tabfolderdata.bottom = new FormAttachment(cmpHeader, 385);
@@ -393,7 +394,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		tblHistory.setLayoutData(tblhistorydata);
 		
 		FormData lblsentodata = new FormData();
-		lblsentodata.top = new FormAttachment(0, 25);
+		lblsentodata.top = new FormAttachment(0, 15);
 		lblsentodata.left = new FormAttachment(0, 40);
 		//lblsentodata.right = new FormAttachment(100, -10);
 		//lblsentodata.bottom = new FormAttachment(100, -20);
@@ -407,7 +408,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		txtSendTo.setLayoutData(txtsendtodata);
 		
 		FormData cmdsenddata = new FormData();
-		cmdsenddata.top = new FormAttachment(0, 38);
+		cmdsenddata.top = new FormAttachment(0, 32);
 		cmdsenddata.left = new FormAttachment(txtSendTo, 5);
 		//cmdsenddata.right = new FormAttachment(lblSendTo, 150);
 		//cmdsenddata.bottom = new FormAttachment(100, -20);
@@ -547,18 +548,49 @@ public class WalletView extends BaseView implements WalletEvents {
 			return;
 		
 		tblHistory.removeAll();
-
+		
+		org.infinitypfm.core.data.Transaction lastTran = null;
+		
+		try {
+			// Find last transaction having a transaction key
+			// getLastBsvTransaction
+			lastTran = MM.sqlMap.selectOne("getLastBsvTransaction");
+			
+		} catch (Exception e) {
+			
+		}
+		
 		if (MM.wallet.isImplemented(WalletFunction.GETHISTORY)) {
+
 			// Wallet implementation allows fetching history.
 			// Get history and compare with what is in the DB 
 			// and make necessary additions / corrections
-			LoadWalletHistory();
+			
+			// Going to call once for now on first startup
+			// and require refresh button click to do it again
+			if (MM.walletNeedsSync) {
+				LoadWalletHistory(lastTran);
+				MM.walletNeedsSync = false;
+			}
 		}
 		
 		ParamDateRangeAccount range = new ParamDateRangeAccount();
-		LocalDateTime today = LocalDateTime.now();
-		range.setEndDate(Timestamp.valueOf(today));
-		range.setStartDate(Timestamp.valueOf(today.minusDays(30)));
+		
+		LocalDateTime lastTranDate;
+		
+		if (lastTran != null) {
+			Date tranDate = lastTran.getTranDate();
+			lastTranDate = tranDate.toInstant()
+		      .atZone(ZoneId.systemDefault())
+		      .toLocalDateTime();
+			
+		} else {
+			// Did not find a previous transaction so start from today
+			lastTranDate = LocalDateTime.now();
+		}
+
+		range.setEndDate(Timestamp.valueOf(lastTranDate));
+		range.setStartDate(Timestamp.valueOf(lastTranDate.minusDays(30)));
 		if (bsvAccount != null)
 			range.setActId(bsvAccount.getActId());
 		TableItem ti = null;
@@ -648,14 +680,10 @@ public class WalletView extends BaseView implements WalletEvents {
 		}
 	}
 	
-	private void LoadWalletHistory() {
+	private void LoadWalletHistory(org.infinitypfm.core.data.Transaction lastTran) {
 		
 		if (bsvAccount ==  null) return;
-		
-		// Find last transaction having a transaction key
-		//getLastBsvTransaction
-		org.infinitypfm.core.data.Transaction lastTran = MM.sqlMap.selectOne("getLastBsvTransaction");
-			
+					
 		try {
 
 			String param = null;
@@ -928,7 +956,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			if (sendTo == null || sAmount.length() ==0) canSend = false;
 			
 			if (!canSend) {
-				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("274"), true);
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("288"), true);
 				return;
 			}
 			
@@ -1107,20 +1135,29 @@ public class WalletView extends BaseView implements WalletEvents {
 		
 		// SWT object cleanup
 		
-		try { colorFont.dispose();} catch (Exception e) {}
-		try { colorWhite.dispose();} catch (Exception e) {}
-		try { addressFont.dispose();} catch (Exception e) {}
-		try { qrCanvas.dispose();} catch (Exception e){}
-		try { bcCanvas.dispose();} catch (Exception e) {}
-		try { bcLogo.dispose(); } catch (Exception e) {}
-		try { imgRcvQrCode.dispose(); } catch (Exception e) {}
-		try { cursorHand.dispose(); } catch (Exception e) {}
+		try { colorFont.dispose();} catch (Exception e) {System.out.println(e.getMessage());}
+		try { colorWhite.dispose();} catch (Exception e) {System.out.println(e.getMessage());}
+		try { addressFont.dispose();} catch (Exception e) {System.out.println(e.getMessage());}
+		
+		try { bcLogo.dispose(); } catch (Exception e) {System.out.println(e.getMessage());}
+		try { imgRcvQrCode.dispose(); } catch (Exception e) {System.out.println(e.getMessage());}
+		try { cursorHand.dispose(); } catch (Exception e) {System.out.println(e.getMessage());}
+		
+		try { lblAmount.getFont().dispose(); } catch (Exception e ) {System.out.println(e.getMessage());}
+		try { lblAmountBsv.getFont().dispose(); } catch (Exception e ) {System.out.println(e.getMessage());}
+		try { lblSendTo.getFont().dispose(); } catch (Exception e ) {System.out.println(e.getMessage());}
+		try { txtSendTo.getFont().dispose(); } catch (Exception e ) {System.out.println(e.getMessage());}
+		try { lblRcvAddress.getFont().dispose(); } catch (Exception e ) {System.out.println(e.getMessage());}
+		try { imIcons.QZDispose(); } catch (Exception e) {System.out.println(e.getMessage());}
+		
 		try {
 			for (Link link : _links) {
 				link.dispose();
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {System.out.println(e.getMessage());}
 		
+		try { qrCanvas.dispose();} catch (Exception e){System.out.println(e.getMessage());}
+		try { bcCanvas.dispose();} catch (Exception e) {System.out.println(e.getMessage());}
 	}
 
 }

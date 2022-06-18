@@ -81,8 +81,8 @@ public class InfinityPfm {
 		Display display = null;
 		 display = new Display(data);
 		 
-	  	 Sleak sleak = new Sleak();
-	  	 sleak.open();
+	  	 //Sleak sleak = new Sleak();
+	  	 //sleak.open();
 		
 		if (System.getenv(MM.ENVAPPHOME) != null) {
 			homeDirectory = new File(System.getenv(MM.ENVAPPHOME));
