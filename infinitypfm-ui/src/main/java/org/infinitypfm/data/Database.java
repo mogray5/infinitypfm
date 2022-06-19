@@ -189,6 +189,9 @@ public class Database {
 			MM.sqlMap.insert("v0_7_0_d");
 			MM.sqlMap.insert("v0_7_0_e");
 			
+			// Add default bookmarks URL
+			MM.sqlMap.update("v0_9_5_f");
+			
 	}
 	
 	public String backup(String dir) throws IOException, ArchiveException{

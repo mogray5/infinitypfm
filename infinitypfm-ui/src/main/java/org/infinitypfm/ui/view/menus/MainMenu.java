@@ -162,7 +162,7 @@ public class MainMenu implements Widget {
 		mi = new MenuItem(mnuView, SWT.SEPARATOR);
 		
 		miBookmarks = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_BOOKMARKS,
-				MM.PHRASES.getPhrase("315"), ' ');
+				MM.PHRASES.getPhrase("62"), ' ');
 
 		/*
 		 * Reports Menu
