@@ -37,7 +37,8 @@
        EmailAddress,
        WalletUser,
        WalletToken,
-       BookmarksUrl
+       BookmarksUrl,
+       WalletId
     FROM AppSettings;
     ]]>
 	</select>
@@ -57,7 +58,8 @@
 		EmailAddress = #{emailAddress},
 		WalletUser = #{walletUser},
 		WalletToken = #{walletToken},
-		BookmarksUrl = #{bookmarksUrl}
+		BookmarksUrl = #{bookmarksUrl},
+		WalletId = #{walletId}
 	</update>
 
 </mapper>

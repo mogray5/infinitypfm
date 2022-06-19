@@ -327,7 +327,7 @@ public class LangLoader {
 		hmPhrases.put("280",  i18n.tr("Amount Local"));
 		hmPhrases.put("281",  i18n.tr("Amount BSV"));
 		hmPhrases.put("282",  i18n.tr("From"));
-		hmPhrases.put("283",  i18n.tr("Enable Bitcoin SV Wallet"));
+		hmPhrases.put("283",  i18n.tr("Enable Bitcoin SV Wallet (www.relysia.com)"));
 		hmPhrases.put("284",  i18n.tr("Spending Password"));
 		hmPhrases.put("285",  i18n.tr("Problem Saving Options"));
 		hmPhrases.put("286",  i18n.tr("Are you sure you do not want to set a spending password?"));
@@ -362,10 +362,11 @@ public class LangLoader {
 		hmPhrases.put("315",  i18n.tr("Bookmarks"));
 		hmPhrases.put("316",  i18n.tr("Browser not available"));
 		hmPhrases.put("317",  i18n.tr("Bookmarks URL"));
+		hmPhrases.put("318",  i18n.tr("Enter a paymail or Bitcoin address"));
+		hmPhrases.put("319",  i18n.tr("Wallet Id"));
+		hmPhrases.put("320",  i18n.tr("Leave blank to use default wallet"));
 	}
 	
-	
-
 	public String getPhrase(String id){
 		//return i18n.tr((String)hmPhrases.get(id));
 		return (String)hmPhrases.get(id);

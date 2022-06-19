@@ -65,10 +65,13 @@ public class OptionsDialog extends BaseDialog {
 	private Label lblSpendingPassword = null;
 	private Label lblEmail = null;
 	private Label lblBookmarks = null;
+	private Label lblWalletId = null;
+	
 	private Text txtPrecision = null;
 	private Text txtSpendingPassword = null;
 	private Text txtEmail = null;
 	private Text txtBookmarks = null;
+	private Text txtWalletId = null;
 	
 	private Combo cmbBaseCurrency = null;
 	private Button cmdOk = null;
@@ -181,7 +184,7 @@ public class OptionsDialog extends BaseDialog {
 		
 		lblSpendingPassword = new Label(reportGroup, SWT.NONE);
 		lblSpendingPassword.setText(MM.PHRASES.getPhrase("284") + ":");
-		
+
 		txtSpendingPassword = new Text(reportGroup, SWT.BORDER);
 		txtSpendingPassword.setEnabled(options.isEnableWallet());		
 		txtSpendingPassword.setEchoChar('*');
@@ -193,6 +196,13 @@ public class OptionsDialog extends BaseDialog {
 		txtEmail.setEnabled(options.isEnableWallet());
 		txtEmail.addModifyListener(dcFieldsModified);
 
+		lblWalletId = new Label(reportGroup, SWT.NONE);
+		lblWalletId.setText(MM.PHRASES.getPhrase("319") + ":");
+		txtWalletId = new Text(reportGroup, SWT.BORDER);
+		txtWalletId.setEnabled(options.isEnableWallet());
+		txtWalletId.addModifyListener(dcFieldsModified);
+		txtWalletId.setToolTipText(MM.PHRASES.getPhrase("320"));
+		
 		lblBsvRefresh = new Label(reportGroup, SWT.NONE);
 		lblBsvRefresh.setText(MM.PHRASES.getPhrase("216") + ":");
 		cmbBsvRefresh = new Combo(reportGroup, SWT.BORDER | SWT.READ_ONLY);
@@ -205,7 +215,8 @@ public class OptionsDialog extends BaseDialog {
 				txtSpendingPassword.setText(_walletPassword.getHashedPassword());
 
 			txtEmail.setText(options.getEmailAddress());
-			
+			if (options.getWalletId() != null)
+				txtWalletId.setText(options.getWalletId());
 			cmbBsvRefresh.setText(options.getDefaultBsvCurrencyMethod());
 			
 			InfinityPfm.LogMessage("Password starting hash is = " + _walletPassword.getHashedPassword());
@@ -254,14 +265,14 @@ public class OptionsDialog extends BaseDialog {
 		lblPrecision.setLayoutData(lblprecisiondata);
 
 		FormData scaledata = new FormData();
-		scaledata.top = new FormAttachment(0, 20);
+		scaledata.top = new FormAttachment(0, 15);
 		scaledata.left = new FormAttachment(lblPrecision, 10);
 		scale.setLayoutData(scaledata);
 
 		FormData txtprecisiond = new FormData();
 		txtprecisiond.top = new FormAttachment(0, 20);
 		txtprecisiond.left = new FormAttachment(scale, 10);
-		txtprecisiond.right = new FormAttachment(scale, 100);
+		txtprecisiond.right = new FormAttachment(scale, 120);
 		txtPrecision.setLayoutData(txtprecisiond);
 
 		FormData lblbasecurrencydata = new FormData();
@@ -290,7 +301,7 @@ public class OptionsDialog extends BaseDialog {
 		chkEnableWallet.setLayoutData(chkenablewalletdata);
 		
 		FormData lblspendingpassworddata = new FormData();
-		lblspendingpassworddata.top = new FormAttachment(chkEnableWallet, 20);
+		lblspendingpassworddata.top = new FormAttachment(chkEnableWallet, 15);
 		lblspendingpassworddata.left = new FormAttachment(0, 60);
 		lblSpendingPassword.setLayoutData(lblspendingpassworddata);
 		
@@ -321,14 +332,25 @@ public class OptionsDialog extends BaseDialog {
 		txtemaildata.left = new FormAttachment(lblEmail, 38);
 		txtemaildata.right = new FormAttachment(lblEmail, 300);
 		txtEmail.setLayoutData(txtemaildata);
+
+		FormData lblwalletiddata = new FormData();
+		lblwalletiddata.top = new FormAttachment(txtEmail, 10);
+		lblwalletiddata.left = new FormAttachment(0, 60);
+		lblWalletId.setLayoutData(lblwalletiddata);		
+
+		FormData txtwalletiddata = new FormData();
+		txtwalletiddata.top = new FormAttachment(txtEmail, 8);
+		txtwalletiddata.left = new FormAttachment(lblEmail, 38);
+		txtwalletiddata.right = new FormAttachment(lblWalletId, 400);
+		txtWalletId.setLayoutData(txtwalletiddata);
 		
 		FormData lblbookmarksdata = new FormData();
-		lblbookmarksdata.top = new FormAttachment(txtEmail, 20);
+		lblbookmarksdata.top = new FormAttachment(txtWalletId, 20);
 		lblbookmarksdata.left = new FormAttachment(0, 20);
 		lblBookmarks.setLayoutData(lblbookmarksdata);
 		
 		FormData txtbookmarksdata = new FormData();
-		txtbookmarksdata.top = new FormAttachment(txtEmail, 18);
+		txtbookmarksdata.top = new FormAttachment(txtWalletId, 18);
 		txtbookmarksdata.left = new FormAttachment(lblBookmarks, 20);
 		txtbookmarksdata.right = new FormAttachment(80, 0);
 		txtBookmarks.setLayoutData(txtbookmarksdata);
@@ -351,7 +373,7 @@ public class OptionsDialog extends BaseDialog {
 		super.Open();
 		shell.setText(MM.PHRASES.getPhrase("68"));
 
-		shell.setSize(600, 400);
+		shell.setSize(600, 450);
 		this.CenterWindow();
 
 		shell.open();
@@ -379,7 +401,7 @@ public class OptionsDialog extends BaseDialog {
 				c.setCurrencyName("Bitcoin SV");
 				c.setExchangeRate("69");
 				c.setCurrencyPrecision(8);
-				MM.sqlMap.insert("addCurrency", c);
+				MM.sqlMap.insert("addCurrencyWithPrecision", c);
 				
 				//Refresh BSV currency to get the ID
 				bsv = (Currency) MM.sqlMap.selectOne("getCurrencyByIsoCode", c.getIsoName());
@@ -461,6 +483,7 @@ public class OptionsDialog extends BaseDialog {
 		}
 		
 		// Also add a receiving account for new coins
+		/*
 		try {
 			account = (Account) MM.sqlMap.selectOne("getAccountForName", MM.BSV_WALLET_RECEIVING_ACCOUNT);
 		} catch (Exception e) {
@@ -478,7 +501,7 @@ public class OptionsDialog extends BaseDialog {
 			action.AddAccount(account);
 		
 		}
-		
+		*/
 	}
 	
 	private boolean ConfirmNoPassword() {
@@ -520,6 +543,7 @@ public class OptionsDialog extends BaseDialog {
 			txtSpendingPassword.setEnabled(walletEnabled);
 			cmbBsvRefresh.setEnabled(walletEnabled);
 			txtEmail.setEnabled(walletEnabled);
+			txtWalletId.setEnabled(walletEnabled);
 			
 			if (walletEnabled) {
 				
@@ -572,6 +596,7 @@ public class OptionsDialog extends BaseDialog {
 						options.setDefaultBsvCurrencyID(((Long)id).longValue());
 					
 					options.setEmailAddress(txtEmail.getText());
+					options.setWalletId(txtWalletId.getText());
 					
 					if (walletSettingsChanged)
 						restartRequiredNotice();

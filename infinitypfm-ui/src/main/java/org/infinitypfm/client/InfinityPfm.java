@@ -151,7 +151,7 @@ public class InfinityPfm {
 				Properties props = new Properties ();
 				props.load(input);
 				baseUrl = props.getProperty("wallet.base.url");
-				walletId = props.getProperty("wallet.id");
+				walletId = MM.options.getWalletId();
 			} catch (Exception e) {
 				InfinityPfm.LogMessage(e.getMessage());
 			} finally {

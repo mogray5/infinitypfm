@@ -111,6 +111,7 @@
 		EmailAddress VARCHAR(50),
 		WalletUser VARCHAR(50),
 		WalletToken VARCHAR(500),
+		WalletId VARCHAR (50),
 		BookmarksUrl VARCHAR(500)
 		) 
 	</update>
@@ -399,6 +400,11 @@
 	<insert id="addCurrency" parameterType="org.infinitypfm.core.data.Currency">
 		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate)
 		VALUES (#{currencyName}, #{isoName}, #{exchangeRate}, CURTIME ());
+ 	</insert>
+	
+	<insert id="addCurrencyWithPrecision" parameterType="org.infinitypfm.core.data.Currency">
+		INSERT INTO Currencies (Name, IsoCode, ExchRate, LastUpdate, CurrencyPrecision)
+		VALUES (#{currencyName}, #{isoName}, #{exchangeRate}, CURTIME (), #{currencyPrecision});
  	</insert>
 
 	<select id="tableExists" parameterType="java.lang.String"

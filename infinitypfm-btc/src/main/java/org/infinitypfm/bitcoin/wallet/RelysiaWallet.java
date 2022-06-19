@@ -260,8 +260,7 @@ public class RelysiaWallet implements BsvWallet {
 		
 		
 		SendData data = new SendData(toAddress,
-				Float.valueOf(amount), "BSV", 
-				memo == null ? "infinitypfm.org" : memo, "string", 0);
+				Float.valueOf(amount));
 		SendData[] sendList = new SendData [] { data };
 		SendRequest sendRequest = new SendRequest(sendList); 
 		

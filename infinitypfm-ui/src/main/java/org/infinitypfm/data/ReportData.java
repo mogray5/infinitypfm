@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.BudgetBalance;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DataFormatUtil;
@@ -53,7 +54,7 @@ import org.infinitypfm.ui.view.dialogs.YearDialog;
  */
 public class ReportData {
 
-	private DataFormatUtil dateUtil;
+	private DataFormatUtil dataUtil;
 	@SuppressWarnings("rawtypes")
 	private List reportData;
 	@SuppressWarnings("rawtypes")
@@ -83,21 +84,21 @@ public class ReportData {
 	
 	public ReportData(int reportType, Object params) {
 
-		dateUtil = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		dataUtil = new DataFormatUtil(MM.options.getCurrencyPrecision());
 		ParamDateRange reportParam = null;;
 
 		switch (reportType) {
 
 		case MM.THIS_MONTH:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			initTotals();
 			title = MM.PHRASES.getPhrase("123") + " "
-					+ dateUtil.getMonthName(0) + " " + dateUtil.getYear();
+					+ dataUtil.getMonthName(0) + " " + dataUtil.getYear();
 			if (params == null) {
 				reportParam = new ParamDateRange();
-				reportParam.setMth(dateUtil.getMonth());
-				reportParam.setYr(dateUtil.getYear());
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
 				setReportData("getReportMonthlyBalances", reportParam);
 			} else 
 				setReportData("getReportMonthlyBalances", params);
@@ -112,11 +113,11 @@ public class ReportData {
 			promptForMonthYr();
 			initTotals();
 			title = MM.PHRASES.getPhrase("123") + " "
-					+ dateUtil.getMonthName(0) + " " + dateUtil.getYear();
+					+ dataUtil.getMonthName(0) + " " + dataUtil.getYear();
 			if (params == null) {
 				reportParam = new ParamDateRange();
-				reportParam.setMth(dateUtil.getMonth());
-				reportParam.setYr(dateUtil.getYear());
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
 				setReportData("getReportMonthlyBalances", reportParam);
 			} else 
 				setReportData("getReportMonthlyBalances", params);
@@ -145,7 +146,7 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("136");
 			MonthlyBalance monthlyBalance = null;
 
@@ -156,8 +157,8 @@ public class ReportData {
 				if (params == null) {
 					monthlyBalance = new MonthlyBalance();
 					monthlyBalance.setActName(account);
-					monthlyBalance.setMth(dateUtil.getMonth());
-					monthlyBalance.setYr(dateUtil.getYear() - 1);
+					monthlyBalance.setMth(dataUtil.getMonth());
+					monthlyBalance.setYr(dataUtil.getYear() - 1);
 					setReportData("getReportAccountHistory", monthlyBalance);
 				} else 
 					setReportData("getReportAccountHistory", params);
@@ -168,7 +169,7 @@ public class ReportData {
 
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("273");
 			monthlyBalance = new MonthlyBalance();
 
@@ -177,8 +178,8 @@ public class ReportData {
 			if (account != null) {
 				initTotalsAccount();
 				monthlyBalance.setActName(account);
-				monthlyBalance.setMth(dateUtil.getMonth());
-				monthlyBalance.setYr(dateUtil.getYear() - 50);
+				monthlyBalance.setMth(dataUtil.getMonth());
+				monthlyBalance.setYr(dataUtil.getYear() - 50);
 				setReportData("getReportAccountHistory", monthlyBalance);
 				_template = MM.RPT_ACCOUNT_HISTORY;
 
@@ -186,7 +187,7 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("164");
 
 			budget = promptForBudget();
@@ -196,8 +197,8 @@ public class ReportData {
 				if (params == null) {
 					BudgetBalance args = new BudgetBalance();
 					args.setBudgetName(budget);
-					args.setMth(dateUtil.getMonth());
-					args.setYr(dateUtil.getYear());
+					args.setMth(dataUtil.getMonth());
+					args.setYr(dataUtil.getYear());
 					args.setActTypeName(MM.ACT_TYPE_EXPENSE);
 					setReportData("getBudgetVsExpenseByMonth", args);
 				} else
@@ -209,7 +210,7 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 
 			account = promptForAccount();
 			budget = promptForBudget();
@@ -222,8 +223,8 @@ public class ReportData {
 					BudgetBalance args = new BudgetBalance();
 					args.setActName(account);
 					args.setBudgetName(budget);
-					args.setMth(dateUtil.getMonth());
-					args.setYr(dateUtil.getYear());
+					args.setMth(dataUtil.getMonth());
+					args.setYr(dataUtil.getYear());
 					args.setActTypeName(MM.ACT_TYPE_EXPENSE);
 					setReportData("getBudgetVsExpenseByMonthAndAccount", args);
 				} else
@@ -235,12 +236,12 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("221");
 			if (params == null) {
 				reportParam = new ParamDateRange();
-				reportParam.setMth(dateUtil.getMonth());
-				reportParam.setYr(dateUtil.getYear());
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
 				setReportData("getIncomeVsExpense", reportParam);
 			} else
 				setReportData("getIncomeVsExpense", params);
@@ -251,7 +252,8 @@ public class ReportData {
 			
 			title = MM.PHRASES.getPhrase("314");
 			account = ((ParamDateRangeAccount)params).getAccountName();
-			
+			Account act = (Account)MM.sqlMap.selectOne("getAccountForName", account);
+			dataUtil.setPrecision(act.getCurrencyPrecision());
 			setReportData("getRegister", params);
 			_template = MM.RPT_ACCOUNT_REGISTER;
 			break;
@@ -329,8 +331,8 @@ public class ReportData {
 	private void initTotals() {
 
 		BudgetDetail budgetDetail = new BudgetDetail();
-		budgetDetail.setMth(dateUtil.getMonth());
-		budgetDetail.setYr(dateUtil.getYear());
+		budgetDetail.setMth(dataUtil.getMonth());
+		budgetDetail.setYr(dataUtil.getYear());
 
 		try {
 
@@ -370,7 +372,7 @@ public class ReportData {
 	private void initTotalsAccount() {
 
 		Transaction tran = new Transaction();
-		tran.setTranDate(dateUtil.getDate());
+		tran.setTranDate(dataUtil.getDate());
 		tran.setActName(account);
 		
 		try {
@@ -389,7 +391,7 @@ public class ReportData {
 		MonthYearDialog monthPicker = new MonthYearDialog();
 		monthPicker.Open();
 
-		dateUtil.setDate(monthPicker.getYear(), monthPicker.getMonth());
+		dataUtil.setDate(monthPicker.getYear(), monthPicker.getMonth());
 		userCancelled = monthPicker.userCancelled();
 
 	}
@@ -413,7 +415,7 @@ public class ReportData {
 
 			for (Object row : reportData) {
 				if (row != null)
-					((IReportable) row).setFormatter(dateUtil);
+					((IReportable) row).setFormatter(dataUtil);
 			}
 			
 			
@@ -634,8 +636,8 @@ public class ReportData {
    */
   private String formatLongString(String value) {
 
-	if (dateUtil != null && value != null) 
-		return dateUtil.getAmountFormatted(Long.parseLong(value));
+	if (dataUtil != null && value != null) 
+		return dataUtil.getAmountFormatted(Long.parseLong(value));
 	 else 
 		return value;
   }

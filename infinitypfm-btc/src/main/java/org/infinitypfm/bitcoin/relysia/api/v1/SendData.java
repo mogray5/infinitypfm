@@ -28,19 +28,11 @@ public class SendData {
 	@JsonProperty
     @JsonSerialize(using=FloatToPlainString.class)
 	private float amount = 0F;
-	private String type = null;
-	private String notes = null;
-	private String tokenId = null;
-	private int sn = 0;
 	
-	public SendData(String to, float amount, String type, String notes, String tokenId, int sn) {
+	public SendData(String to, float amount) {
 		super();
 		this.to = to;
 		this.amount = amount;
-		this.type = type;
-		this.notes = notes;
-		this.tokenId = tokenId;
-		this.sn = sn;
 	}
 	public String getTo() {
 		return to;
@@ -54,30 +46,5 @@ public class SendData {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getNotes() {
-		return notes;
-	}
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-	public String getTokenId() {
-		return tokenId;
-	}
-	public void setTokenId(String tokenId) {
-		this.tokenId = tokenId;
-	}
-	public int getSn() {
-		return sn;
-	}
-	public void setSn(int sn) {
-		this.sn = sn;
-	}
-
 	
 }
