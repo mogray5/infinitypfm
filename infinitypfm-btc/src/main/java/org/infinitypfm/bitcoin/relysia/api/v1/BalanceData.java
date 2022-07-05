@@ -18,12 +18,17 @@
  */
 package org.infinitypfm.bitcoin.relysia.api.v1;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BalanceData {
 
 	private String status = null;
 	private String msg = null;
 	private TotalBalance totalBalance = null;
 	private CoinBalance[] coins = null;
+	private Meta meta = null;
+	
 	public String getStatus() {
 		return status;
 	}
@@ -47,6 +52,12 @@ public class BalanceData {
 	}
 	public void setCoins(CoinBalance[] coins) {
 		this.coins = coins;
+	}
+	public Meta getMeta() {
+		return meta;
+	}
+	public void setMeta(Meta meta) {
+		this.meta = meta;
 	}
 	
 }

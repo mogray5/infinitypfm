@@ -167,19 +167,27 @@ public class WalletView extends BaseView implements WalletEvents {
 			}
 		}
 		_format = new DataFormatUtil();
-		refreshExchangeRate();
 		
-		try {
-			bsvAccount = (Account) MM.sqlMap.selectOne("getAccountForName", MM.BSV_WALLET_ACCOUNT);
-		} catch (Exception e) {
-			InfinityPfm.LogMessage(e.getMessage());
-		}
-		
-		try {
-			bsvCoinsReceived = (Account) MM.sqlMap.selectOne("getAccountForName", MM.BSV_WALLET_RECEIVING_ACCOUNT);
-		} catch (Exception e) {
-			InfinityPfm.LogMessage(e.getMessage());
-		}
+		Display.getDefault().asyncExec( new Runnable() {
+			@Override
+			public void run() {
+				
+				refreshExchangeRate();
+				
+				try {
+					bsvAccount = (Account) MM.sqlMap.selectOne("getAccountForName", MM.BSV_WALLET_ACCOUNT);
+				} catch (Exception e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}
+				
+				try {
+					bsvCoinsReceived = (Account) MM.sqlMap.selectOne("getAccountForName", MM.BSV_WALLET_RECEIVING_ACCOUNT);
+				} catch (Exception e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}	
+				
+			}
+		} );
 		
 		_formatter = new DataFormatUtil();
 		
@@ -209,8 +217,9 @@ public class WalletView extends BaseView implements WalletEvents {
 		lblAmount = new Label(cmpHeader, SWT.NONE);
 		lblAmount.setBackground(colorWhite);
 		lblAmount.setForeground(colorFont);
+		lblAmount.setText("$0");
 		lblAmountBsv = new Label(this, SWT.NONE);
-		this.setFiatAndBsvBalance();
+		lblAmountBsv.setText("0.00000000 BSV");
 		
 		FontData[] fD = lblAmount.getFont().getFontData();
 		fD[0].setHeight(45);
@@ -455,7 +464,7 @@ public class WalletView extends BaseView implements WalletEvents {
 		cmbOffset.setLayoutData(cmboffsetdata);
 		
 		FormData qrcanvasdata = new FormData();
-		qrcanvasdata.top = new FormAttachment(0, -10);
+		qrcanvasdata.top = new FormAttachment(0, -20);
 		qrcanvasdata.left = new FormAttachment(0, 0);
 		qrcanvasdata.right = new FormAttachment(100, 0);
 		qrcanvasdata.bottom = new FormAttachment(100, 0);
@@ -526,12 +535,12 @@ public class WalletView extends BaseView implements WalletEvents {
 		Display.getDefault().asyncExec( new Runnable() {
 			@Override
 			public void run() {
-				try {
-					Thread.sleep(1000);
+				//try {
+					//Thread.sleep(1000);
 					LoadTransactionHistory();
-				} catch (InterruptedException e) {
-					InfinityPfm.LogMessage(e.getMessage());
-				}
+				//} catch (InterruptedException e) {
+				//	InfinityPfm.LogMessage(e.getMessage());
+				//}
 			}
 		} );
 		
@@ -792,7 +801,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	private void setFiatAndBsvBalance(String bsvBalance) {
 		
 		if (bsvBalance != null) {
-			lblAmountBsv.setText(bsvBalance + " BSV");
+			
 			BigDecimal amount = _format.strictMultiply(bsvBalance, _bsvCurrency.getExchangeRate());
 			BigDecimal bsvAmount = new BigDecimal(bsvBalance);
 			long lbsvAmount = DataFormatUtil.moneyToLong(bsvAmount);
@@ -801,7 +810,8 @@ public class WalletView extends BaseView implements WalletEvents {
 			long lAmount = DataFormatUtil.moneyToLong(amount);
 			_format.setPrecision(MM.options.getCurrencyPrecision());
 			String fiatBalance = _format.getAmountFormatted(lAmount);
-			lblAmount.setText("$" + fiatBalance);
+			Display.getDefault().asyncExec(() -> lblAmount.setText("$" + fiatBalance));
+			Display.getDefault().asyncExec(() -> lblAmountBsv.setText(bsvBalance + " BSV"));
 			try {
 				MM.sqlMap.update("updateAccountBalanceFromAccount", bsvAccount);
 			} catch (Exception e) {
@@ -818,14 +828,24 @@ public class WalletView extends BaseView implements WalletEvents {
 	 * pass it to overload for formatting.
 	 */
 	private void setFiatAndBsvBalance() {
-		if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV)) { 
-			try {
-				WalletAuth.getInstance().walletPassword();
-				setFiatAndBsvBalance( MM.wallet.getBsvBalance());
-			} catch (PasswordInvalidException e) {
-				InfinityPfm.LogMessage(e.getMessage());
+		
+		Display.getDefault().asyncExec( new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETSETBALANCEBSV)) { 
+						try {
+							WalletAuth.getInstance().walletPassword();
+							setFiatAndBsvBalance( MM.wallet.getBsvBalance());
+						} catch (PasswordInvalidException e) {
+							InfinityPfm.LogMessage(e.getMessage());
+						}
+					}
+				} catch (Exception e) {
+					InfinityPfm.LogMessage(e.getMessage());
+				}
 			}
-		}
+		} );
 	}
 	
 	private void loadSendIsoCombo() {
