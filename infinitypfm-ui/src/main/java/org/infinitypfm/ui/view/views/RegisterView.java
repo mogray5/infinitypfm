@@ -339,9 +339,9 @@ public class RegisterView extends BaseView {
 			MM.reportParams = new ParamDateRangeAccount();
 		
 		ParamDateRangeAccount param =(ParamDateRangeAccount) MM.reportParams;
-		formatter.setDate(txtStartDate.getText(), "mm-dd-yyyy");
+		formatter.setDate(txtStartDate.getText(), "MM-dd-yyyy");
 		Timestamp start = new Timestamp(formatter.getDate().getTime());
-		formatter.setDate(txtEndDate.getText(), "mm-dd-yyyy");
+		formatter.setDate(txtEndDate.getText(), "MM-dd-yyyy");
 		Timestamp end = new Timestamp(formatter.getDate().getTime());
 		param.setActId(act.getActId());
 		param.setStartDate(start);

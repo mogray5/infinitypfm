@@ -29,6 +29,7 @@ public class HistoryRow {
 	private String to = null;
 	private long balance_change = 0;
 	private String docId = null;
+	private String version = null;
 
 	public String getProtocol() {
 		return protocol;
@@ -83,6 +84,12 @@ public class HistoryRow {
 	}
 	public void setDocId(String docId) {
 		this.docId = docId;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }
