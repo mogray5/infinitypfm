@@ -1105,7 +1105,7 @@ public class WalletView extends BaseView implements WalletEvents {
 			
 			if (bsvAccount != null && offset != null) {
 				org.infinitypfm.core.data.Transaction t = new org.infinitypfm.core.data.Transaction();
-				t.setTranAmount(DataFormatUtil.moneyToLong(value));
+				t.setTranAmount(-DataFormatUtil.moneyToLong(value));
 				t.setActId(bsvAccount.getActId());
 				t.setActOffset(offset.getActId());
 				t.setExchangeRate(_bsvCurrency.getExchangeRate());

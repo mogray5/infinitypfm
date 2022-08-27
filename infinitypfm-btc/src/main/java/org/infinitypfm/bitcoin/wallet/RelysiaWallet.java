@@ -300,9 +300,11 @@ public class RelysiaWallet implements BsvWallet {
 					memo, amount, null, null, null);
 			
 		} else 
-			_events.walletMessage("Relysia returned code: " + response.getStatusCode() +
-					" and message: " + response.getData().getMsg(), null);
-		
+			if (response != null)
+				_events.walletMessage("Relysia returned code: " + response.getStatusCode() +
+						" and message: " + response.getData().getMsg(), null);
+			else 
+				_events.walletMessage("Response was null", null);
 		
 	}
 

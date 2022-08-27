@@ -23,6 +23,7 @@ public class SendResponseData {
 	private String status = null;
 	private String msg = null;
 	private String[] txIds = null;
+	private String[] errors = null;
 
 	public String getStatus() {
 		return status;
@@ -41,6 +42,12 @@ public class SendResponseData {
 	}
 	public void setTxIds(String[] txIds) {
 		this.txIds = txIds;
+	}
+	public String[] getErrors() {
+		return errors;
+	}
+	public void setErrors(String[] errors) {
+		this.errors = errors;
 	}
 	
 	

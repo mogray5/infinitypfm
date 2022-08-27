@@ -342,7 +342,7 @@ public class RegisterView extends BaseView {
 		formatter.setDate(txtStartDate.getText(), "MM-dd-yyyy");
 		Timestamp start = new Timestamp(formatter.getDate().getTime());
 		formatter.setDate(txtEndDate.getText(), "MM-dd-yyyy");
-		Timestamp end = new Timestamp(formatter.getDate().getTime());
+		Timestamp end = new Timestamp(formatter.getDate().getTime()+24 * 60 * 60 * 1000); // Add a day for inclusive range
 		param.setActId(act.getActId());
 		param.setStartDate(start);
 		param.setEndDate(end);
