@@ -319,7 +319,7 @@ public class BudgetView extends BaseView {
 			if (sIncomeTotal == null) {
 				lblIncomeTotalAmt.setText(DEFAULTMONTHAMOUNT);
 			} else {
-				totalBalance = Long.parseLong(sIncomeTotal) * -1;
+				totalBalance = Long.parseLong(sIncomeTotal);
 				lblIncomeTotalAmt.setText(format
 						.getAmountFormatted(totalBalance));
 			}
