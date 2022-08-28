@@ -112,7 +112,8 @@
 		WalletUser VARCHAR(50),
 		WalletToken VARCHAR(500),
 		WalletId VARCHAR (50),
-		BookmarksUrl VARCHAR(500)
+		BookmarksUrl VARCHAR(500),
+		ReportPath VARCHAR(500)
 		) 
 	</update>
 

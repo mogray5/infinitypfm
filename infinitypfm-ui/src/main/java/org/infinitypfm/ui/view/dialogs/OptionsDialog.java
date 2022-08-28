@@ -66,12 +66,14 @@ public class OptionsDialog extends BaseDialog {
 	private Label lblEmail = null;
 	private Label lblBookmarks = null;
 	private Label lblWalletId = null;
+	private Label lblReportPath = null;
 	
 	private Text txtPrecision = null;
 	private Text txtSpendingPassword = null;
 	private Text txtEmail = null;
 	private Text txtBookmarks = null;
 	private Text txtWalletId = null;
+	private Text txtReportPath = null;
 	
 	private Combo cmbBaseCurrency = null;
 	private Button cmdOk = null;
@@ -234,6 +236,14 @@ public class OptionsDialog extends BaseDialog {
 		if (options.getBookmarksUrl() != null)
 			txtBookmarks.setText(options.getBookmarksUrl());
 		
+		
+		lblReportPath = new Label(reportGroup, SWT.NONE);
+		lblReportPath.setText(MM.PHRASES.getPhrase("321"));
+		
+		txtReportPath = new Text(reportGroup, SWT.BORDER);
+		if (options.getReportPath() != null)
+				txtReportPath.setText(options.getReportPath());
+		
 		currencyItem.setControl(currencyGroup);
 		reportItem.setControl(reportGroup);
 		
@@ -318,7 +328,7 @@ public class OptionsDialog extends BaseDialog {
 		
 		FormData cmbbsvrefreshdata = new FormData();
 		cmbbsvrefreshdata.top = new FormAttachment(txtSpendingPassword, 8);
-		cmbbsvrefreshdata.left = new FormAttachment(lblBsvRefresh, 38);
+		cmbbsvrefreshdata.left = new FormAttachment(lblBsvRefresh, 34);
 		cmbbsvrefreshdata.right = new FormAttachment(lblBsvRefresh, 300);
 		cmbBsvRefresh.setLayoutData(cmbbsvrefreshdata);
 		
@@ -355,14 +365,25 @@ public class OptionsDialog extends BaseDialog {
 		txtbookmarksdata.right = new FormAttachment(80, 0);
 		txtBookmarks.setLayoutData(txtbookmarksdata);
 		
+		FormData lblreportpathdata = new FormData();
+		lblreportpathdata.top = new FormAttachment(txtBookmarks, 10);
+		lblreportpathdata.left = new FormAttachment(0, 20);
+		lblReportPath.setLayoutData(lblreportpathdata);
+
+		FormData txtreportpathdata = new FormData();
+		txtreportpathdata.top = new FormAttachment(txtBookmarks, 8);
+		txtreportpathdata.left = new FormAttachment(lblReportPath, 43);
+		txtreportpathdata.right = new FormAttachment(80, 0);
+		txtReportPath.setLayoutData(txtreportpathdata);
+		
 		FormData cmdokdata = new FormData();
-		cmdokdata.top = new FormAttachment(tabFolder, 5);
+		cmdokdata.top = new FormAttachment(tabFolder, 3);
 		cmdokdata.left = new FormAttachment(30, 0);
 		cmdokdata.right = new FormAttachment(50, 0);
 		cmdOk.setLayoutData(cmdokdata);
 
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(tabFolder, 5);
+		cmdcanceldata.top = new FormAttachment(tabFolder, 3);
 		cmdcanceldata.left = new FormAttachment(cmdOk, 10);
 		cmdcanceldata.right = new FormAttachment(70, 10);
 		cmdCancel.setLayoutData(cmdcanceldata);
@@ -373,7 +394,7 @@ public class OptionsDialog extends BaseDialog {
 		super.Open();
 		shell.setText(MM.PHRASES.getPhrase("68"));
 
-		shell.setSize(600, 450);
+		shell.setSize(600, 480);
 		this.CenterWindow();
 
 		shell.open();
@@ -607,6 +628,7 @@ public class OptionsDialog extends BaseDialog {
 				options.setConsoleDefaultOpen(chkDefaultOpenConsole.getSelection());
 
 				options.setBookmarksUrl(txtBookmarks.getText());
+				options.setReportPath(txtReportPath.getText());
 				
 				MM.sqlMap.update("updateOptions", options);
 

@@ -135,6 +135,10 @@ public class InfinityPfm {
 		//Load app options
 		try {
 			MM.options = (Options) MM.sqlMap.selectOne("getOptions");
+			
+			// Set tmp dir
+			System.setProperty("java.io.tmpdir", MM.options.getReportPath());
+			
 		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
@@ -402,7 +406,8 @@ public class InfinityPfm {
 	private static void removeOldFiles() {
 	
 		FileHandler fileUtil = new FileHandler();
-		File[] fileList = fileUtil.getFileList(System.getProperty("java.io.tmpdir"), 
+		String reportPath = MM.options.getReportPath() == null ? System.getProperty("java.io.tmpdir") : MM.options.getReportPath();
+		File[] fileList = fileUtil.getFileList(reportPath, 
 					"infinitypfm", "");
 		if (fileList != null){
 			for (int i=0; i<fileList.length; i++){

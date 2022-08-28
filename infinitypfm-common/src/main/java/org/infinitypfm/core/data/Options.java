@@ -38,6 +38,7 @@ public class Options implements Serializable {
 	private String walletToken = null;
 	private String bookmarksUrl = null;
 	private String walletId = null;
+	private String reportPath = null;
 	
 	public String getAppVersion() {
 		return appVersion;
@@ -122,6 +123,12 @@ public class Options implements Serializable {
 	}
 	public void setWalletId(String walletId) {
 		this.walletId = walletId;
+	}
+	public String getReportPath() {
+		return reportPath;
+	}
+	public void setReportPath(String reportPath) {
+		this.reportPath = reportPath;
 	}
 
 }

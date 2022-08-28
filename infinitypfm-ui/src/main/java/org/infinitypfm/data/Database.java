@@ -192,6 +192,9 @@ public class Database {
 			// Add default bookmarks URL
 			MM.sqlMap.update("v0_9_5_f");
 			
+			// Add default report path
+			MM.sqlMap.update("v0_9_5_h");
+			
 	}
 	
 	public String backup(String dir) throws IOException, ArchiveException{

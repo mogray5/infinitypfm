@@ -365,6 +365,7 @@ public class LangLoader {
 		hmPhrases.put("318",  i18n.tr("Enter a paymail or Bitcoin address"));
 		hmPhrases.put("319",  i18n.tr("Wallet Id"));
 		hmPhrases.put("320",  i18n.tr("Leave blank to use default wallet"));
+		hmPhrases.put("321",  i18n.tr("Report Path"));
 	}
 	
 	public String getPhrase(String id){

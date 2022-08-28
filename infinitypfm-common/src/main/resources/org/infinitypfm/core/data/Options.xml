@@ -38,7 +38,8 @@
        WalletUser,
        WalletToken,
        BookmarksUrl,
-       WalletId
+       WalletId,
+       ReportPath
     FROM AppSettings;
     ]]>
 	</select>
@@ -59,7 +60,8 @@
 		WalletUser = #{walletUser},
 		WalletToken = #{walletToken},
 		BookmarksUrl = #{bookmarksUrl},
-		WalletId = #{walletId}
+		WalletId = #{walletId},
+		ReportPath = #{reportPath}
 	</update>
 
 </mapper>
