@@ -26,6 +26,7 @@ import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.DigitalAssetTransaction;
+import org.infinitypfm.core.data.DigitalAssetUtxo;
 import org.infinitypfm.core.data.ReceivingAddress;
 
 public interface BsvWallet {
@@ -122,7 +123,7 @@ public interface BsvWallet {
 	 * @throws WalletException thrown if fetch fails
 	 */
 	List<DigitalAssetTransaction> getHistory(String sinceTransaction)
-			throws WalletException;;
+			throws WalletException;
 	
 	/**
 	 * Send BSV to passed address
@@ -133,6 +134,13 @@ public interface BsvWallet {
 	 */
 	void sendCoins(String toAddress, String amount, String memo) throws SendException;
 
+	
+	/**
+	 * Returns list of unspent transaction outputs (UTXO) for wallet 
+	 * @return
+	 * @throws WalletException
+	 */
+	List<DigitalAssetUtxo> getUtxo() throws WalletException; 
 	
 	
 	/**
@@ -148,6 +156,7 @@ public interface BsvWallet {
 		GETQRCODE,
 		GETSETBALANCEBSV,
 		GETSETBALANCEFIAT,
+		GETUTXO,
 		RECIEVEREALTIME,
 		REGISTERFOREVENTS,
 		RESTOREFROMSEED,

@@ -35,21 +35,23 @@ import org.infinitypfm.bitcoin.relysia.api.v1.MnemonicResponse;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendData;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendRequest;
 import org.infinitypfm.bitcoin.relysia.api.v1.SendResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.UtxoResponse;
+import org.infinitypfm.bitcoin.relysia.api.v1.UtxoRow;
+import org.infinitypfm.bitcoin.relysia.api.v1.UtxoRows;
 import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.DigitalAssetTransaction;
+import org.infinitypfm.core.data.DigitalAssetUtxo;
 import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.data.RestResponse;
 import org.infinitypfm.core.util.RestClient;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import net.glxn.qrgen.QRCode;
 
@@ -396,6 +398,54 @@ public class RelysiaWallet implements BsvWallet {
 		
 		return result;
 	}
+
+	@Override
+	public List<DigitalAssetUtxo> getUtxo() throws WalletException {
+		
+		List<DigitalAssetUtxo> result = new ArrayList<DigitalAssetUtxo>();
+		List<Pair<String,String>> headers = new ArrayList<Pair<String,String>>();
+		headers.add(Pair.of("authToken", _auth.getAuthToken()));
+		String url = "/v1/metrics";
+		RestResponse restResult = _client.get(url, headers);
+		
+		UtxoResponse response = null;
+		
+		try {
+			response = _mapper.readValue(restResult.getBody(), UtxoResponse.class);
+		} catch (JsonParseException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		} catch (JsonMappingException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		} catch (IOException e) {
+			_events.walletMessage("Error in getHistory", new WalletException(e));
+		}
+		
+		if (response != null && response.getStatusCode() == 200) {
+			
+			if (response.getData() != null && response.getData().getData() != null ) {
+				
+				UtxoRows rows = response.getData().getData();
+				
+				if (rows.getUserUtxos() != null) {
+					for (UtxoRow row : rows.getUserUtxos()) {
+						
+						DigitalAssetUtxo utxo = new DigitalAssetUtxo();
+						utxo.setAddress(row.getAddress());
+						utxo.setHash(row.getTx_hash());
+						utxo.setHeight(row.getHeight());
+						utxo.setPath(row.getPath());
+						utxo.setPosition(row.getTx_pos());
+						utxo.setScript(row.getScript());
+						utxo.setValue(row.getValue());
+						result.add(utxo);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	
 	@Override
 	public boolean isImplemented(WalletFunction function) {
@@ -416,6 +466,8 @@ public class RelysiaWallet implements BsvWallet {
 		case UNREGISTERFOREVENTS:
 		case CURRENTRECEIVINGADDRESS:
 		case GETMNEUMONIC:
+			return true;
+		case GETUTXO:
 			return true;
 		case RESTOREFROMSEED:
 			return false;
@@ -481,6 +533,5 @@ public class RelysiaWallet implements BsvWallet {
 		}
 		
 	}
-	
-	
+
 }

@@ -41,6 +41,7 @@ import org.infinitypfm.conf.WalletAuth;
 import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
+import org.infinitypfm.core.data.DigitalAssetUtxo;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.data.DataHandler;
@@ -280,6 +281,10 @@ public class MainAction {
 			MM.walletNeedsSync = true;
 			this.LoadView(MM.VIEW_WALLET);
 			break;
+		case MM.MENU_WALLET_UTXO:
+			this.WalletSignIn();
+			this.WalletShowUtxo();
+			break;
 		}
 	}
 
@@ -340,6 +345,24 @@ public class MainAction {
 		InfinityPfm.LogMessage(mnemonic);
 		infoDialog.Open();
 		
+	}
+	
+	public void WalletShowUtxo() {
+	
+		try {
+			List<DigitalAssetUtxo> utxoRows =  MM.wallet.getUtxo();
+			
+			if (utxoRows != null) {
+				
+				for (DigitalAssetUtxo row : utxoRows) {
+					InfinityPfm.LogMessage(row.getAddress(), false);
+				}
+			}
+			
+			
+		} catch (WalletException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		}
 	}
 	
 	public void LoadView(int iViewID) {

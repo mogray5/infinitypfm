@@ -366,6 +366,7 @@ public class LangLoader {
 		hmPhrases.put("319",  i18n.tr("Wallet Id"));
 		hmPhrases.put("320",  i18n.tr("Leave blank to use default wallet"));
 		hmPhrases.put("321",  i18n.tr("Report Path"));
+		hmPhrases.put("322",  i18n.tr("Show unspent transactions outputs (UTXO) in console"));
 	}
 	
 	public String getPhrase(String id){

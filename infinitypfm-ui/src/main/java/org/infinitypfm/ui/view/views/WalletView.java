@@ -957,16 +957,7 @@ public class WalletView extends BaseView implements WalletEvents {
 	
 	SelectionAdapter cmdSend_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			
-			// Always get a new password from user to send
-			WalletAuth.getInstance().clearPassword();
-			try {
-				WalletAuth.getInstance().walletPassword();
-			} catch (PasswordInvalidException e2) {
-				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("292"), _inSend);
-				return;
-			}
-			
+						
 			String sendTo = txtSendTo.getText();
 			String memo = txtMemo.getText();
 			String sAmount = txtSendAmount.getText();
@@ -978,6 +969,15 @@ public class WalletView extends BaseView implements WalletEvents {
 			
 			if (!canSend) {
 				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("288"), true);
+				return;
+			}
+			
+			// Always get a new password from user to send
+			WalletAuth.getInstance().clearPassword();
+			try {
+				WalletAuth.getInstance().walletPassword();
+			} catch (PasswordInvalidException e2) {
+				InfinityPfm.LogMessage(MM.PHRASES.getPhrase("292"), _inSend);
 				return;
 			}
 			

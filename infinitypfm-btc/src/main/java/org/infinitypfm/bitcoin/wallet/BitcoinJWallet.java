@@ -28,6 +28,7 @@ import org.infinitypfm.bitcoin.wallet.exception.SendException;
 import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.DigitalAssetTransaction;
+import org.infinitypfm.core.data.DigitalAssetUtxo;
 import org.infinitypfm.core.data.Password;
 import org.infinitypfm.core.data.ReceivingAddress;
 import org.infinitypfm.core.util.EncryptUtil;
@@ -348,6 +349,12 @@ public class BitcoinJWallet implements BsvWallet {
 
 	@Override
 	public List<DigitalAssetTransaction> getHistory(String sinceTransaction) throws WalletException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DigitalAssetUtxo> getUtxo() throws WalletException {
 		// TODO Auto-generated method stub
 		return null;
 	}

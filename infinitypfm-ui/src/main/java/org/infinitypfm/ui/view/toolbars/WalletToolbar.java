@@ -52,7 +52,13 @@ public class WalletToolbar extends BaseToolbar {
 		
 		addButton(MM.IMG_KEY, MM.PHRASES.getPhrase("291"),
 				MM.MENU_WALLET_SHOW_MNEMONIC, featureEnabled);
-	
+
+		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.GETUTXO);
+		
+		addButton(MM.IMG_EMBLEM_DOCUMENTS, MM.PHRASES.getPhrase("322"),
+				MM.MENU_WALLET_UTXO, featureEnabled);
+
+		
 		featureEnabled = MM.wallet != null && MM.wallet.isImplemented(WalletFunction.BACKUP);
 		
 		addButton(MM.IMG_FOLDER_DOWNLOAD, MM.PHRASES.getPhrase("158"),

@@ -68,6 +68,7 @@ public class MM {
 	public static final String IMG_EDITSERVER = "edit-paste.png";
 	public static final String IMG_EMBLEM = "emblem-generic.png";
 	public static final String IMG_EMBLEM_WEB = "emblem-web.png";
+	public static final String IMG_EMBLEM_DOCUMENTS = "emblem-documents.png";
 	public static final String IMG_EYE = "eye.gif";
 	public static final String IMG_FILE = "file_obj.gif";
 	public static final String IMG_FOLDER_DOWNLOAD = "folder-download.png";
@@ -201,6 +202,7 @@ public class MM {
 	public static final int MENU_WALLET_BACKUP = 183;
 	public static final int MENU_WALLET_RESTORE = 184;
 	public static final int MENU_WALLET_REFRESH = 185;
+	public static final int MENU_WALLET_UTXO = 186;
 	
 	public static final int TAB_SERVER_AUTH = 16;
 	public static final int TAB_SERVER_LOGS = 17;
