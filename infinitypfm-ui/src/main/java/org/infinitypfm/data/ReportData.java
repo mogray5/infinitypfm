@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -56,11 +56,11 @@ public class ReportData {
 
 	private DataFormatUtil dataUtil;
 	@SuppressWarnings("rawtypes")
-	private List reportData;
+	private List<Object> reportData;
 	@SuppressWarnings("rawtypes")
-	private List reportDataIncome;
+	private List<Object> reportDataIncome;
 	@SuppressWarnings("rawtypes")
-	private List reportDataExpense;
+	private List<Object> reportDataExpense;
 	private String incomeTotal;
 	private String expenseTotal;
 	private String liabilityTotal;
@@ -257,6 +257,14 @@ public class ReportData {
 			setReportData("getRegister", params);
 			_template = MM.RPT_ACCOUNT_REGISTER;
 			break;
+			
+		case MM.MENU_REPORTS_UTXO:
+			
+			title = MM.PHRASES.getPhrase("329");
+			setReportData("getRegister", params);
+			_template = MM.RPT_UTXO;
+			break;
+			
 		}
 	}
 
@@ -423,6 +431,10 @@ public class ReportData {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
+	}
+	
+	public void setReportData(List<Object> data) {
+		reportData = data;
 	}
 
 	private String promptForBudget() {
@@ -712,6 +724,27 @@ public class ReportData {
   }
   public String getWordCredit() {
 	  return MM.PHRASES.getPhrase("46");
+  }
+  public String getWordAddress() {
+	  return MM.PHRASES.getPhrase("289");
+  }
+  public String getWordHeight() {
+	  return MM.PHRASES.getPhrase("323");
+  }
+  public String getWordPosition() {
+	  return MM.PHRASES.getPhrase("324");
+  }
+  public String getWordValue() {
+	  return MM.PHRASES.getPhrase("328");
+  }
+  public String getWordPath() {
+	  return MM.PHRASES.getPhrase("327");
+  }
+  public String getWordScript() {
+	  return MM.PHRASES.getPhrase("326");
+  }
+  public String getWordHash() {
+	  return MM.PHRASES.getPhrase("325");
   }
 }
 

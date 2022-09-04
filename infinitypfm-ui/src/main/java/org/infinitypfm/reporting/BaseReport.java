@@ -59,6 +59,7 @@ public abstract class BaseReport {
 	protected HashMap<String, String> reportParams = null;
 	protected HashMap<String, String> rowColors = null; 
 	protected DataFormatUtil formatter = null;
+
 	
 	public BaseReport() throws IOException {		
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());

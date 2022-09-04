@@ -27,7 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -166,63 +166,63 @@ public class MainAction {
 		case MM.MENU_REPORT_EXECUTE:
 		case MM.MENU_REPORTS_MONTHLY_BALANCE:
 			try {
-				this.RunReport(MM.THIS_MONTH);
+				this.RunReport(MM.THIS_MONTH, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_PRIOR_MONTHLY_BALANCE:
 			try {
-				this.RunReport(MM.LAST_MONTH);
+				this.RunReport(MM.LAST_MONTH, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 			try {
-				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY);
+				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
 			try {
-				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME);
+				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 			try {
-				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE);
+				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
 			try {
-				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT);
+				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 			try {
-				this.RunReport(MM.MENU_REPORTS_INCOME_VS_EXPENSE);
+				this.RunReport(MM.MENU_REPORTS_INCOME_VS_EXPENSE, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_YEARLY_BALANCE:
 			try {
-				this.RunReport(MM.LAST_YEAR);
+				this.RunReport(MM.LAST_YEAR, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_REGISTER:
 			try {
-				this.RunReport(MM.MENU_REPORTS_REGISTER);
+				this.RunReport(MM.MENU_REPORTS_REGISTER, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
@@ -352,13 +352,15 @@ public class MainAction {
 		try {
 			List<DigitalAssetUtxo> utxoRows =  MM.wallet.getUtxo();
 			
+			List<Object> reportRows = new ArrayList<Object>(utxoRows);
+			
 			if (utxoRows != null) {
-				
-				for (DigitalAssetUtxo row : utxoRows) {
-					InfinityPfm.LogMessage(row.getAddress(), false);
+				try {
+					this.RunReport(MM.MENU_REPORTS_UTXO, reportRows);
+				} catch (IOException e) {
+					InfinityPfm.LogMessage(e.getMessage(), true);
 				}
 			}
-			
 			
 		} catch (WalletException e) {
 			InfinityPfm.LogMessage(e.getMessage(), true);
@@ -676,11 +678,14 @@ public class MainAction {
 		dlg.Open();
 	}
 
-	public void RunReport(int reportType) throws IOException {
+	public void RunReport(int reportType, List<Object> data) throws IOException {
 		
 		File result = null;
 		
 		ReportData reportData = new ReportData(reportType, MM.reportParams);
+		
+		if (data != null)
+				reportData.setReportData(data);
 		
 		if (!reportData.getUserCanceled()){
 		

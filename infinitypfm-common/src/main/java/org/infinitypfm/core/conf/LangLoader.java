@@ -333,7 +333,7 @@ public class LangLoader {
 		hmPhrases.put("286",  i18n.tr("Are you sure you do not want to set a spending password?"));
 		hmPhrases.put("286",  i18n.tr("Offset"));
 		hmPhrases.put("288",  i18n.tr("Send address and send amount required."));
-		hmPhrases.put("289",  i18n.tr("address"));
+		hmPhrases.put("289",  i18n.tr("Address"));
 		hmPhrases.put("290",  i18n.tr("Confirm"));
 		hmPhrases.put("291",  i18n.tr("Show mnemonic phrase"));
 		hmPhrases.put("292",  i18n.tr("Invalid wallet password"));
@@ -367,6 +367,14 @@ public class LangLoader {
 		hmPhrases.put("320",  i18n.tr("Leave blank to use default wallet"));
 		hmPhrases.put("321",  i18n.tr("Report Path"));
 		hmPhrases.put("322",  i18n.tr("Show unspent transactions outputs (UTXO) in console"));
+		hmPhrases.put("323",  i18n.tr("Height"));
+		hmPhrases.put("324",  i18n.tr("Position"));
+		hmPhrases.put("325",  i18n.tr("Hash"));
+		hmPhrases.put("326",  i18n.tr("Script"));
+		hmPhrases.put("327",  i18n.tr("Path"));
+		hmPhrases.put("328",  i18n.tr("Value"));
+		hmPhrases.put("329",  i18n.tr("UTXO Report"));
+
 	}
 	
 	public String getPhrase(String id){
