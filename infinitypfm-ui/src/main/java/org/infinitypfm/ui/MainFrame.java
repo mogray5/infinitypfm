@@ -37,6 +37,7 @@ import org.infinitypfm.conf.MM;
 import org.infinitypfm.ui.view.menus.MainMenu;
 import org.infinitypfm.ui.view.toolbars.BaseToolbar;
 import org.infinitypfm.ui.view.toolbars.MainToolbar;
+import org.infinitypfm.ui.view.views.BookmarksView;
 import org.infinitypfm.ui.view.views.ConsoleView;
 import org.infinitypfm.ui.view.views.StatusView;
 
@@ -44,8 +45,10 @@ public class MainFrame {
 
 	private static Sash VertSash;
 	private static Sash HorSash;
+	private static Sash BookmarkSash;
 	private FormData Vsashdata;
 	private FormData Hsashdata;
+	private FormData Bsashdata;
 	public Label lblStatus = null;
 
 	private MoneyTree trMain;
@@ -54,6 +57,7 @@ public class MainFrame {
 	private MainMenu mnuMain;
 	private BaseToolbar cbMain;
 	private StatusView stMain;
+	private BookmarksView bkMain;
 
 	public MainFrame() {
 		super();
@@ -191,6 +195,12 @@ public class MainFrame {
 			data = (FormData) trMain.getTree().getLayoutData();
 			data.bottom = new FormAttachment(HorSash, 0);
 
+			if (bkMain != null) {
+				data = (FormData)bkMain.getLayoutData();
+				data.bottom = new FormAttachment(msgMain, 0);
+				Bsashdata.bottom = new FormAttachment(msgMain, 0);
+			}
+			
 			HorSash.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					Rectangle sashRect = HorSash.getBounds();
@@ -219,9 +229,82 @@ public class MainFrame {
 			data.bottom = new FormAttachment(stMain, 0);
 			data = (FormData) stMain.getLayoutData();
 			data.top = new FormAttachment(100, -20);
+			
+			if (bkMain != null) {
+				data = (FormData)bkMain.getLayoutData();
+				data.bottom = new FormAttachment(stMain, 0);
+				Bsashdata.bottom = new FormAttachment(stMain, 0);
+			}
 		}
 	}
 
+	public void LoadBookmarks(boolean bLoad) {
+	
+		if (bLoad && bkMain == null) {
+			
+			bkMain = new BookmarksView(InfinityPfm.shMain, SWT.NONE);
+
+			bkMain.setBackground(InfinityPfm.shMain.getDisplay()
+					.getSystemColor(SWT.COLOR_WHITE));
+
+			bkMain.setLayout(new FormLayout());
+
+			bkMain.setReportUrl(MM.options.getBookmarksUrl());
+			bkMain.setVisible(true);
+			
+			BookmarkSash = new Sash(InfinityPfm.shMain, SWT.FLAT | SWT.VERTICAL);
+			Bsashdata = new FormData();
+			Bsashdata.left = new FormAttachment(80, 0);
+			Bsashdata.top = new FormAttachment(cbMain.getToolbar(), 0);
+
+			if (msgMain != null)
+				Bsashdata.bottom = new FormAttachment(msgMain, 0);
+			else 
+				Bsashdata.bottom = new FormAttachment(stMain, 0);
+			
+			BookmarkSash.setLayoutData(Bsashdata);
+			
+			FormData bookmarksashdata = new FormData();
+			bookmarksashdata.top = new FormAttachment(cbMain.getToolbar(), 0);
+			
+			if (msgMain != null)
+				bookmarksashdata.bottom = new FormAttachment(msgMain, 0);
+			else 
+				bookmarksashdata.bottom = new FormAttachment(stMain, 0);
+			
+			bookmarksashdata.left = new FormAttachment(BookmarkSash, 0);
+			bookmarksashdata.right = new FormAttachment(100, 0);
+			bkMain.setLayoutData(bookmarksashdata);
+			
+			FormData data = (FormData) vwMain.getParent().getLayoutData();
+			data.right = new FormAttachment(BookmarkSash, 0);
+			
+			
+			
+			BookmarkSash.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					Rectangle sashRect = BookmarkSash.getBounds();
+					Rectangle shellRect = InfinityPfm.shMain.getClientArea();
+					int right = shellRect.width - sashRect.width - 100;
+					e.x = Math.max(Math.min(e.x, right), 100);
+					if (e.x != sashRect.x) {
+						Bsashdata.left = new FormAttachment(0, e.x);
+						InfinityPfm.shMain.layout();
+					}
+				}
+			});
+			
+			//vwMain
+		} else if (!bLoad && msgMain != null) {
+			bkMain.QZDispose();
+			bkMain = null;
+			if (!BookmarkSash.isDisposed())
+				BookmarkSash.dispose();
+			FormData data = (FormData) vwMain.getParent().getLayoutData();
+			data.right = new FormAttachment(100, 0);
+		}
+	}
+	
 	public void setListeners() {
 
 		VertSash.addListener(SWT.Selection, new Listener() {
@@ -240,6 +323,49 @@ public class MainFrame {
 	}
 
 	public void QZDispose() {
+		
+		try {
+			cbMain.QZDispose();
+		} catch (Exception e1) {
+			System.err.println(e1.getMessage());
+		}
+		try {
+			mnuMain.QZDispose();
+		} catch (Exception e2) {
+			System.err.println(e2.getMessage());
+		}
+		try {
+			trMain.QZDispose();
+		} catch (Exception e3) {
+			System.err.println(e3.getMessage());
+		}
+		try {
+			InfinityPfm.imMain.QZDispose();
+		} catch (Exception e5) {
+			System.err.println(e5.getMessage());
+		}
+		try {
+			vwMain.QZDispose();
+		} catch (Exception e6) {
+			System.err.println(e6.getMessage());
+		}
+
+		if (BookmarkSash != null && !BookmarkSash.isDisposed()) {
+			BookmarkSash.dispose();
+		}
+
+		if (!VertSash.isDisposed()) {
+			VertSash.dispose();
+		}
+		
+		if (bkMain != null && !bkMain.isDisposed())
+			bkMain.dispose();
+		
+		try {
+			msgMain.QZDispose();
+		} catch (Exception e4) {
+		}
+
 	}
 
 	/**
@@ -334,42 +460,7 @@ public class MainFrame {
 
 	class onClose extends ShellAdapter {
 		public void shellClosed(ShellEvent e) {
-
-			try {
-				cbMain.QZDispose();
-			} catch (Exception e1) {
-				System.err.println(e1.getMessage());
-			}
-			try {
-				mnuMain.QZDispose();
-			} catch (Exception e2) {
-				System.err.println(e2.getMessage());
-			}
-			try {
-				trMain.QZDispose();
-			} catch (Exception e3) {
-				System.err.println(e3.getMessage());
-			}
-			try {
-				InfinityPfm.imMain.QZDispose();
-			} catch (Exception e5) {
-				System.err.println(e5.getMessage());
-			}
-			try {
-				vwMain.QZDispose();
-			} catch (Exception e6) {
-				System.err.println(e6.getMessage());
-			}
-
-			if (!VertSash.isDisposed()) {
-				VertSash.dispose();
-			}
-
-			try {
-				msgMain.QZDispose();
-			} catch (Exception e4) {
-			}
-
+			QZDispose();
 			super.shellClosed(e);
 
 		}

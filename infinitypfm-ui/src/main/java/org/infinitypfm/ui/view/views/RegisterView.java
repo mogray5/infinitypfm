@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,8 +18,8 @@
  */
 package org.infinitypfm.ui.view.views;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.ListIterator;
 
 import org.eclipse.swt.SWT;
@@ -51,7 +51,7 @@ import org.infinitypfm.ui.view.dialogs.DateDialog;
 import org.infinitypfm.ui.view.toolbars.RegisterToolbar;
 
 /**
- * @author Wayne Gray
+ * Dialog to allow transaction import and setting of offsets before import.
  * 
  */
 public class RegisterView extends BaseView {
@@ -70,14 +70,16 @@ public class RegisterView extends BaseView {
 	private Account act = null;
 	private boolean columnsLoaded = false;
 	private DateDialog dateDialog = null;
-	DataFormatUtil formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+	DataFormatUtil formatter = null;
 	TableColumn tc3 = null;
 	TableColumn tc4 = null;
 	TableColumn tc5 = null;
 
 	public RegisterView(Composite arg0, int arg1) {
 		super(arg0, arg1);
-
+		
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		
 		// init console
 		LoadUI();
 		LoadLayout();
@@ -192,6 +194,9 @@ public class RegisterView extends BaseView {
 		TableItem ti = null;
 		Transaction tran = null;
 
+		if (act.getIsoCode().equalsIgnoreCase(MM.BSV))
+			formatter.setPrecision(8);
+		
 		tblRegister.removeAll();
 
 		final Display display = InfinityPfm.shMain.getDisplay();
@@ -269,9 +274,14 @@ public class RegisterView extends BaseView {
 			try {
 				
 				// get a fresh account in case balance changed
-				Account account = (Account) MM.sqlMap.queryForObject(
+				Account account = (Account) MM.sqlMap.selectOne(
 						"getAccountForName", act.getActName());
 				// set act balance and name
+				if (act.getIsoCode().equalsIgnoreCase(MM.BSV))
+					formatter.setPrecision(8);
+				else
+					formatter.setPrecision(account.getCurrencyPrecision());
+				
 				lblBalance
 						.setText(MM.PHRASES.getPhrase("2")
 								+ ": "
@@ -286,7 +296,7 @@ public class RegisterView extends BaseView {
 				params.setStartDate(new Timestamp(formatter.getDate().getTime()));
 				formatter.setDate(txtEndDate.getText());
 				params.setEndDate(new Timestamp(formatter.getDate().getTime()));
-				java.util.List tranList = MM.sqlMap.queryForList(
+				java.util.List tranList = MM.sqlMap.selectList(
 						"getTransactionsForRangeAndAccount", params);
 				if (tranList != null) {
 
@@ -311,12 +321,34 @@ public class RegisterView extends BaseView {
 
 				tblRegister.setLinesVisible(true);
 
-			} catch (SQLException se) {
+				updateReportParams();
+				
+			} catch (Exception se) {
 				InfinityPfm.LogMessage(se.getMessage());
 			}
 
 		}
 	}
+	
+	/**
+	 * Keep a report param account object in sync.
+	 * Use when running register report
+	 */
+	private void updateReportParams() {
+		if (MM.reportParams == null)
+			MM.reportParams = new ParamDateRangeAccount();
+		
+		ParamDateRangeAccount param =(ParamDateRangeAccount) MM.reportParams;
+		formatter.setDate(txtStartDate.getText(), "MM-dd-yyyy");
+		Timestamp start = new Timestamp(formatter.getDate().getTime());
+		formatter.setDate(txtEndDate.getText(), "MM-dd-yyyy");
+		Timestamp end = new Timestamp(formatter.getDate().getTime()+24 * 60 * 60 * 1000); // Add a day for inclusive range
+		param.setActId(act.getActId());
+		param.setStartDate(start);
+		param.setEndDate(end);
+		param.setAccountName(act.getActName());
+	}
+	
 
 	/*
 	 * Listeners
@@ -360,6 +392,7 @@ public class RegisterView extends BaseView {
 			
 			try {
 				txtStartDate.setText(dateDialog.getSelectedDate());
+				updateReportParams();
 			} catch (Exception err) {
 				InfinityPfm.LogMessage(err.getMessage());
 			}
@@ -378,6 +411,7 @@ public class RegisterView extends BaseView {
 			
 			try {
 				txtEndDate.setText(dateDialog.getSelectedDate());
+				updateReportParams();
 			} catch (Exception err) {
 				InfinityPfm.LogMessage(err.getMessage());
 			}

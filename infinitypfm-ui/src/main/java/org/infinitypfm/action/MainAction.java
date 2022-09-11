@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -27,24 +27,27 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.infinitypfm.bitcoin.wallet.exception.WalletException;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.conf.WalletAuth;
 import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
+import org.infinitypfm.core.data.DigitalAssetUtxo;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
 import org.infinitypfm.data.imports.BaseImport;
-import org.infinitypfm.data.imports.BitcoinImport;
-import org.infinitypfm.data.imports.BitcoinImportConfig;
 import org.infinitypfm.data.imports.CsvImport;
 import org.infinitypfm.data.imports.CsvImportConfig;
 import org.infinitypfm.data.imports.FileImportConfig;
@@ -80,11 +83,11 @@ import org.infinitypfm.util.FileHandler;
  * 
  */
 public class MainAction {
-
+	
 	public MainAction() {
 		super();
 	}
-
+	
 	public void ProcessMenuItem(int item) {
 
 		int selectedAccount = -1; 
@@ -102,7 +105,6 @@ public class MainAction {
 		case MM.MENU_FILE_IMPORT_QFX:
 		case MM.MENU_FILE_IMPORT_OFX:
 		case MM.MENU_FILE_IMPORT_QIF:
-		case MM.MENU_FILE_IMPORT_BTC:
 		case MM.MENU_FILE_IMPORT_MAIL:
 		case MM.MENU_FILE_IMPORT_CSV:
 			this.LoadImportDialog(item, selectedAccount);
@@ -164,49 +166,63 @@ public class MainAction {
 		case MM.MENU_REPORT_EXECUTE:
 		case MM.MENU_REPORTS_MONTHLY_BALANCE:
 			try {
-				this.RunReport(MM.THIS_MONTH);
+				this.RunReport(MM.THIS_MONTH, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_PRIOR_MONTHLY_BALANCE:
 			try {
-				this.RunReport(MM.LAST_MONTH);
+				this.RunReport(MM.LAST_MONTH, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 			try {
-				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY);
+				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
 			try {
-				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME);
+				this.RunReport(MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 			try {
-				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE);
+				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
 			try {
-				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT);
+				this.RunReport(MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
 			break;
 		case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 			try {
-				this.RunReport(MM.MENU_REPORTS_INCOME_VS_EXPENSE);
+				this.RunReport(MM.MENU_REPORTS_INCOME_VS_EXPENSE, null);
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
+		case MM.MENU_REPORTS_YEARLY_BALANCE:
+			try {
+				this.RunReport(MM.LAST_YEAR, null);
+			} catch (IOException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
+		case MM.MENU_REPORTS_REGISTER:
+			try {
+				this.RunReport(MM.MENU_REPORTS_REGISTER, null);
 			} catch (IOException e) {
 				InfinityPfm.LogMessage(e.getMessage(), true);
 			}
@@ -227,8 +243,13 @@ public class MainAction {
 		case MM.MENU_CONSOLE_CLOSE:
 			ToggleConsole(false);
 			break;
+		case MM.MENU_VIEW_BOOKMARKS:
+			ToggleBookmarks(true);
+			break;
+		case MM.MENU_BOOKMARKS_CLOSE:
+			ToggleBookmarks(false);
+			break;
 		case MM.MENU_TOPIC_CONFIG:
-
 			break;
 		case MM.VIEW_RECURRENCE:
 			this.LoadView(MM.VIEW_RECURRENCE);
@@ -244,19 +265,123 @@ public class MainAction {
 			break;
 		case MM.MENU_FILE_RESTORE:
 			break;
-
+		case MM.VIEW_WALLET:
+			this.LoadView(MM.VIEW_WALLET);
+			break;
+		case MM.MENU_WALLET_SHOW_MNEMONIC:
+			this.WalletShowMnemonic();
+			break;
+		case MM.MENU_WALLET_BACKUP:
+			break;
+		case MM.MENU_WALLET_RESTORE:
+			this.WalletRestore();
+			break;
+		case MM.MENU_WALLET_REFRESH:
+			this.WalletSignIn();
+			MM.walletNeedsSync = true;
+			this.LoadView(MM.VIEW_WALLET);
+			break;
+		case MM.MENU_WALLET_UTXO:
+			this.WalletSignIn();
+			this.WalletShowUtxo();
+			break;
 		}
 	}
 
+	public void WalletRestore() {
+		
+		try {
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+			return;
+		}
+		
+		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("293"), 
+				MM.PHRASES.getPhrase("293"));
+		String seedCode = infoDialog.getInput();
+		
+		if (seedCode == null || seedCode.length() ==0 ) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("294"), true);
+			return;
+		}
+	
+		try {
+			MM.wallet.restoreFromSeed(seedCode, null);
+		} catch (WalletException e) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("302"), true);
+		}
+		
+		InfinityPfm.LogMessage(MM.PHRASES.getPhrase("295"), true);
+	}
+	
+	public void WalletSignIn() {
+		
+		try {
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+			return;
+		}
+		
+		// Pass true to trigger success event callback on sign-in
+		MM.wallet.isRunning(true);
+	}
+	
+	public void WalletShowMnemonic() {
+		
+		// Always challenge before showing the mnemonic
+		WalletAuth.getInstance().clearPassword();
+		try {
+			WalletAuth.getInstance().walletPassword();
+		} catch (PasswordInvalidException e2) {
+			InfinityPfm.LogMessage(MM.PHRASES.getPhrase("292"), true);
+			return;
+		}
+		
+		String mnemonic = MM.wallet.getMnemonicCode();
+		InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("307"), 
+				mnemonic, true);
+		InfinityPfm.LogMessage(mnemonic);
+		infoDialog.Open();
+		
+	}
+	
+	public void WalletShowUtxo() {
+	
+		try {
+			List<DigitalAssetUtxo> utxoRows =  MM.wallet.getUtxo();
+			
+			List<Object> reportRows = new ArrayList<Object>(utxoRows);
+			
+			if (utxoRows != null) {
+				try {
+					this.RunReport(MM.MENU_REPORTS_UTXO, reportRows);
+				} catch (IOException e) {
+					InfinityPfm.LogMessage(e.getMessage(), true);
+				}
+			}
+			
+		} catch (WalletException e) {
+			InfinityPfm.LogMessage(e.getMessage(), true);
+		}
+	}
+	
 	public void LoadView(int iViewID) {
 
+		try {
 		BaseView vw = InfinityPfm.qzMain.getVwMain().getView(iViewID);
 		InfinityPfm.qzMain.getVwMain().LoadView(vw);
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
 	}
 
 	public void CloseCurrentView() {
 		InfinityPfm.qzMain.getVwMain().UnloadCurrentView();
 		InfinityPfm.qzMain.getVwMain().getParent().layout(true);
+		// Clear out any lingering report params
+		MM.reportParams = null;
 	}
 
 	public void RefreshCurrentView() {
@@ -305,7 +430,7 @@ public class MainAction {
 
 		String acctName = dlg.getAccountName();
 		try {
-			Account account = (Account) MM.sqlMap.queryForObject(
+			Account account = (Account) MM.sqlMap.selectOne(
 					"getAccountForName", acctName);
 			if (account != null) {
 				BudgetDetail detail = new BudgetDetail();
@@ -315,7 +440,7 @@ public class MainAction {
 				if (budget != null) {
 					detail.setBudgetId(budget.getBudgetId());
 
-					List result = (List) MM.sqlMap.queryForList(
+					List result = (List) MM.sqlMap.selectList(
 							"getBudgetDetailByName", detail);
 					if (result.size() == 0) {
 						DataHandler dataHandler = new DataHandler();
@@ -339,7 +464,7 @@ public class MainAction {
 		dlg.Open();
 		String acctName = dlg.getAccountName();
 		try {
-			Account account = (Account) MM.sqlMap.queryForObject(
+			Account account = (Account) MM.sqlMap.selectOne(
 					"getAccountForName", acctName);
 			if (account != null) {
 				BudgetDetail detail = new BudgetDetail();
@@ -349,7 +474,7 @@ public class MainAction {
 				if (budget != null) {
 					detail.setBudgetId(budget.getBudgetId());
 					detail.setActId(account.getActId());
-					List result = (List) MM.sqlMap.queryForList(
+					List result = (List) MM.sqlMap.selectList(
 							"getBudgetDetailByName", detail);
 					if (result.size() > 0) {
 						DataHandler dataHandler = new DataHandler();
@@ -380,9 +505,6 @@ public class MainAction {
 		} else if (importType == MM.MENU_FILE_IMPORT_QIF) {
 			config = new FileImportConfig();
 			importer = new QifImport();
-		} else if (importType == MM.MENU_FILE_IMPORT_BTC) {
-			config = new BitcoinImportConfig();
-			importer = new BitcoinImport();
 		} else if (importType == MM.MENU_FILE_IMPORT_CSV) {
 			config = new CsvImportConfig();
 			importer = new CsvImport();
@@ -463,6 +585,12 @@ public class MainAction {
 		InfinityPfm.shMain.layout();
 	}
 
+	public void ToggleBookmarks(boolean bShow) {
+		InfinityPfm.qzMain.getMnuMain().setBookmarks(bShow);
+		InfinityPfm.qzMain.LoadBookmarks(bShow);
+		InfinityPfm.shMain.layout();
+	}
+	
 	public void AddAccount(Account act) {
 		DataHandler db = new DataHandler();
 		try {
@@ -550,16 +678,30 @@ public class MainAction {
 		dlg.Open();
 	}
 
-	public void RunReport(int reportType) throws IOException {
+	public void RunReport(int reportType, List<Object> data) throws IOException {
 		
 		File result = null;
 		
-		ReportData reportData = new ReportData(reportType);
+		ReportData reportData = new ReportData(reportType, MM.reportParams);
+		
+		if (data != null)
+				reportData.setReportData(data);
 		
 		if (!reportData.getUserCanceled()){
 		
 			BaseReport report = ReportFactory.getReport(reportType);
-			result = report.execute(reportData);
+			if (report != null)
+				result = report.execute(reportData);
+			else {
+				
+				MessageDialog messageDialog = new MessageDialog(
+						MM.DIALOG_INFO, MM.PHRASES.getPhrase("103") + " " +
+								MM.PHRASES.getPhrase("103"),
+						MM.PHRASES.getPhrase("312"));
+
+				messageDialog.Open();
+				
+			}
 
 		}
 		
@@ -649,5 +791,5 @@ public class MainAction {
 		}
 
 	}
-
+	
 }

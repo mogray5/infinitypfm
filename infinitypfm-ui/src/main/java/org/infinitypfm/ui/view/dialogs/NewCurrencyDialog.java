@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,8 +18,6 @@
 */
 package org.infinitypfm.ui.view.dialogs;
 
-import java.sql.SQLException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,6 +26,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.client.InfinityPfm;
@@ -45,12 +44,26 @@ public class NewCurrencyDialog extends BaseDialog {
 	private Text txtRate = null;
 	private Button cmdSave = null;
 	private Button cmdCancel = null;
+	private Label lblPrecision = null;
+	private Text txtPrecision = null;
+	private Scale scale = null;
 	
 	@Override
 	protected void LoadUI(Shell sh) {
 		lblCurrName = new Label(sh, SWT.NONE);
 		lblCurrAbbr = new Label(sh, SWT.NONE);
 		lblRate = new Label(sh, SWT.NONE);
+		lblPrecision = new Label(sh, SWT.NONE);
+		
+		scale = new Scale(sh, SWT.BORDER);
+		scale.setMaximum(8);
+		scale.setPageIncrement(1);
+		scale.addSelectionListener(scale_onGesture);
+		scale.setSelection(2);
+
+		txtPrecision = new Text(sh, SWT.BORDER);
+		txtPrecision.setEnabled(false);
+		txtPrecision.setText(Integer.toString(scale.getSelection()));
 		txtCurrName = new Text(sh, SWT.BORDER);
 		txtCurrAbbr = new Text(sh, SWT.BORDER);
 		txtRate = new Text(sh, SWT.BORDER);
@@ -60,6 +73,7 @@ public class NewCurrencyDialog extends BaseDialog {
 		lblCurrName.setText(MM.PHRASES.getPhrase("209"));
 		lblCurrAbbr.setText(MM.PHRASES.getPhrase("210"));
 		lblRate.setText(MM.PHRASES.getPhrase("211"));
+		lblPrecision.setText(MM.PHRASES.getPhrase("225") + ":");
 		cmdSave.setText(MM.PHRASES.getPhrase("38"));
 		cmdSave.addSelectionListener(cmdSave_OnClick);
 		cmdCancel.setText(MM.PHRASES.getPhrase("4"));
@@ -81,34 +95,49 @@ public class NewCurrencyDialog extends BaseDialog {
 		txtCurrName.setLayoutData(txtcurrnamedata);
 
 		FormData lblcurrabbrdata = new FormData();
-		lblcurrabbrdata.top = new FormAttachment(lblCurrName, 10);
+		lblcurrabbrdata.top = new FormAttachment(lblCurrName, 25);
 		lblcurrabbrdata.left = new FormAttachment(0, 40);
 		lblCurrAbbr.setLayoutData(lblcurrabbrdata);
 
 		FormData txtactiddata = new FormData();
-		txtactiddata.top = new FormAttachment(lblCurrName, 10);
+		txtactiddata.top = new FormAttachment(lblCurrName, 25);
 		txtactiddata.left = new FormAttachment(lblCurrName, 40);
 		txtactiddata.right = new FormAttachment(100, -180);
 		txtCurrAbbr.setLayoutData(txtactiddata);
 		
 		FormData lblratedata = new FormData();
-		lblratedata.top = new FormAttachment(lblCurrAbbr, 10);
+		lblratedata.top = new FormAttachment(lblCurrAbbr, 25);
 		lblratedata.left = new FormAttachment(0, 40);
 		lblRate.setLayoutData(lblratedata);
 
 		FormData txtratedata = new FormData();
-		txtratedata.top = new FormAttachment(lblCurrAbbr, 10);
+		txtratedata.top = new FormAttachment(lblCurrAbbr, 25);
 		txtratedata.left = new FormAttachment(lblCurrName, 40);
 		txtratedata.right = new FormAttachment(100, -180);
 		txtRate.setLayoutData(txtratedata);
+
+		FormData lblprecisiondata = new FormData();
+		lblprecisiondata.top = new FormAttachment(lblRate, 40);
+		lblprecisiondata.left = new FormAttachment(0, 40);
+		lblPrecision.setLayoutData(lblprecisiondata);
+
+		FormData scaledata = new FormData();
+		scaledata.top = new FormAttachment(lblRate, 40);
+		scaledata.left = new FormAttachment(lblPrecision, 85);
+		scale.setLayoutData(scaledata);
 		
+		FormData txtprecisiondata = new FormData();
+		txtprecisiondata.top = new FormAttachment(lblRate, 30);
+		txtprecisiondata.left = new FormAttachment(scale, 5);
+		txtPrecision.setLayoutData(txtprecisiondata);
+
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(lblRate, 20);
-		cmdcanceldata.left = new FormAttachment(40, 0);
+		cmdcanceldata.top = new FormAttachment(lblPrecision, 35);
+		cmdcanceldata.left = new FormAttachment(35, 0);
 		cmdCancel.setLayoutData(cmdcanceldata);
 		
 		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(lblRate, 20);
+		cmdsavedata.top = new FormAttachment(lblPrecision, 35);
 		cmdsavedata.left = new FormAttachment(cmdCancel, 10);
 		cmdSave.setLayoutData(cmdsavedata);
 		
@@ -119,7 +148,7 @@ public class NewCurrencyDialog extends BaseDialog {
 		 shell.setText(MM.PHRASES.getPhrase("208") + " " +
 				MM.APPTITLE);
 
-		shell.setSize(450, 200);
+		shell.setSize(450, 300);
 		this.CenterWindow();
 
 		shell.open();
@@ -136,6 +165,15 @@ public class NewCurrencyDialog extends BaseDialog {
 	 * Listeners
 	 */
 	
+	SelectionAdapter scale_onGesture = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+
+			int perspectiveValue = scale.getSelection();
+			txtPrecision.setText(Integer.toString(perspectiveValue));
+
+		}
+	};
+	
 	SelectionAdapter cmdSave_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e){
 			
@@ -146,10 +184,12 @@ public class NewCurrencyDialog extends BaseDialog {
 				currency.setCurrencyName(txtCurrName.getText());
 				currency.setIsoName(txtCurrAbbr.getText());
 				currency.setExchangeRate(txtRate.getText());
+				currency.setCurrencyPrecision(Integer.parseInt(txtPrecision
+						.getText()));
 				
 				try {
 					MM.sqlMap.insert("addCurrency", currency);
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					InfinityPfm.LogMessage(e1.getMessage());
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -20,6 +20,7 @@
 package org.infinitypfm.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,16 +37,18 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.eclipse.swt.graphics.DeviceData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.infinitypfm.bitcoin.wallet.BsvKit;
+import org.infinitypfm.bitcoin.wallet.RelysiaWallet;
+import org.infinitypfm.bitcoin.wallet.BitcoinJWallet;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.conf.LangLoader;
+import org.infinitypfm.core.data.AuthData;
 import org.infinitypfm.core.data.Options;
+import org.infinitypfm.core.data.Password;
+import org.infinitypfm.core.util.EncryptUtil;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.InfinityUpdates;
@@ -54,9 +57,13 @@ import org.infinitypfm.graphics.ImageMap;
 import org.infinitypfm.ui.MainFrame;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.util.FileHandler;
+import org.infinitypfm.util.Sleak;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ibatis.common.resources.Resources;
-import com.ibatis.sqlmap.client.SqlMapClientBuilder;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -65,11 +72,17 @@ public class InfinityPfm {
 
 	private static final String CONFIG_ERROR_ENG = "Error setting up home directory for: ";
 	private static File homeDirectory = new File(System.getProperty("user.home") + File.separator + ".infinitypfm");
-	final static Logger LOG = Logger.getLogger(InfinityPfm.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(InfinityPfm.class);
 	
 	public static void main(String[] args) {
-		Display display = new Display();
+		
+		 DeviceData data = new DeviceData();
+		  data.tracking = true;
+		Display display = null;
+		 display = new Display(data);
+		 
+	  	 //Sleak sleak = new Sleak();
+	  	 //sleak.open();
 		
 		if (System.getenv(MM.ENVAPPHOME) != null) {
 			homeDirectory = new File(System.getenv(MM.ENVAPPHOME));
@@ -84,7 +97,7 @@ public class InfinityPfm {
 		}
 		
 		//configure logging
-		configureLogging();
+		//configureLogging();
 		
 		//load language
 		getLanguage();
@@ -104,15 +117,6 @@ public class InfinityPfm {
 			System.exit(0);
 		}
 		
-		/* Sleak Startup code
-		 * 
-		 * DeviceData data = new DeviceData();
-		 * data.tracking = true;
-		 * display = new Display(data);
-		 * Sleak sleak = new Sleak();
-		 * sleak.open();
-		 */
-
 		shMain = new Shell(display);
 
 		//Load icons
@@ -130,9 +134,48 @@ public class InfinityPfm {
 		
 		//Load app options
 		try {
-			MM.options = (Options) MM.sqlMap.queryForObject("getOptions");
-		} catch (SQLException e) {
+			MM.options = (Options) MM.sqlMap.selectOne("getOptions");
+			
+			// Set tmp dir
+			System.setProperty("java.io.tmpdir", MM.options.getReportPath());
+			
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
+		}
+		
+		//Load BsvWallet in background if enabled
+		if (MM.options.isEnableWallet()) {
+			
+			InputStream input = null;
+			String baseUrl = null;
+			String walletId = null;
+			
+			try {
+				input = new FileInputStream(homeDirectory.getPath() + File.separator + MM.PROPS_FILE);
+				Properties props = new Properties ();
+				props.load(input);
+				baseUrl = props.getProperty("wallet.base.url");
+				walletId = MM.options.getWalletId();
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			} finally {
+				try {input.close();} catch (Exception e1) {}
+			}
+			
+			try {
+				AuthData authData = new AuthData();
+				authData.setEmailAddress(MM.options.getEmailAddress());
+				authData.setAuthToken(MM.options.getWalletToken());
+				authData.setAccountId(walletId);
+				Password spendPassword = new Password(null, MM.options.getSpendPassword(), new EncryptUtil());
+				authData.setPassword(spendPassword);
+				RelysiaWallet kit = new RelysiaWallet(baseUrl, authData);
+				MM.wallet = kit;
+				
+				
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage());
+			}
 		}
 		
 		//Load main form		
@@ -157,24 +200,34 @@ public class InfinityPfm {
 		}
 		
 		qzMain.getTrMain().Reload();
-			
-		//while (!sleak.shell.isDisposed())
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() 
+	    { 
+	      public void run() 
+	      { 
+	       			  
+	    	  try {Thread.sleep(1000);} catch (InterruptedException e) {}
+	    	  
+	    	  if (MM.wallet != null) {
+	        	MM.wallet.stop();
+	        
+	        	while (MM.wallet.isRunning()) {
+	        		try {Thread.sleep(1000);} catch (InterruptedException e) {}
+	        	}
+	        }
+	      } 
+	    }); 
+		
 		while (!shMain.isDisposed())
 		{
 		  if (!display.readAndDispatch())
 			display.sleep();
 		}
 		
-	   
 		//clean up		
-		/*
-		try {
-			MM.sqlMap.insert("shutdown", null);
-		} catch (SQLException se){}
-		*/
-		qzMain.QZDispose();
+		try {qzMain.QZDispose();} catch (Exception e) {}
+		try {display.dispose();} catch (Exception e) {}
 		
-		display.dispose();
 		System.exit(0);
 	}
 	
@@ -297,12 +350,16 @@ public class InfinityPfm {
 			PropertiesConfiguration propsConfig = new PropertiesConfiguration(propsFile);
 			Properties props = propsConfig.getProperties("db.source");
 			reader = Resources.getResourceAsReader (MM.MAPFILE);
-						
-			MM.sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
-	
+			
+			SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader, props);
+			
+			MM.sqlMap = sessionFactory.openSession(true);
+			MM.sqlTransactionMap = sessionFactory.openSession(false);
+			
 			// See if we can get a connection	
-			MM.sqlMap.getDataSource().setLoginTimeout(2);
-			MM.sqlMap.getDataSource().getConnection();
+			//MM.sqlMap.
+			//MM.sqlMap.getConnection().set.setLoginTimeout(2);
+			//MM.sqlMap.getDataSource().getConnection();
 			
 			
 		} catch (Exception se){
@@ -314,7 +371,7 @@ public class InfinityPfm {
 			 //check tables
 			 try {
 				  
-				 Connection conn = MM.sqlMap.getDataSource().getConnection();
+				 Connection conn = MM.sqlMap.getConnection();
 				 DatabaseMetaData metadata = conn.getMetaData();
 				  
 				 ResultSet result = metadata.getTables(null, null, "ACCOUNTS", null);
@@ -349,7 +406,8 @@ public class InfinityPfm {
 	private static void removeOldFiles() {
 	
 		FileHandler fileUtil = new FileHandler();
-		File[] fileList = fileUtil.getFileList(System.getProperty("java.io.tmpdir"), 
+		String reportPath = MM.options.getReportPath() == null ? System.getProperty("java.io.tmpdir") : MM.options.getReportPath();
+		File[] fileList = fileUtil.getFileList(reportPath, 
 					"infinitypfm", "");
 		if (fileList != null){
 			for (int i=0; i<fileList.length; i++){
@@ -359,8 +417,8 @@ public class InfinityPfm {
 	}
 	
 	public static void LogMessage(String sMsg){
-		LOG.info(sMsg);
-		if (qzMain.getMsgMain()==null) return;
+		logger.info(sMsg);
+		if (qzMain == null || qzMain.getMsgMain()==null) return;
 		qzMain.getMsgMain().AppendMsg(sMsg);
 	}
 	
@@ -376,6 +434,7 @@ public class InfinityPfm {
 		}
 	}
 	
+	/*
 	private static void configureLogging() {
 		
 		String logFile = null;
@@ -412,7 +471,7 @@ public class InfinityPfm {
 			Logger.getRootLogger().addAppender(fa);
 		}
 	}
-	
+	*/
 	public static MainFrame qzMain;	
 	public static Shell shMain;
 	public static ImageMap imMain;

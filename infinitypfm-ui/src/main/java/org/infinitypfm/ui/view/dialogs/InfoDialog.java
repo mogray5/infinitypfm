@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -40,6 +40,7 @@ public class InfoDialog extends BaseDialog {
 	private String sDMsg = "";
 	private int iReturn = MM.CANCEL;
 	private String sReturn = "";
+	private boolean bValueInText = false;
 
 	/*
 	 * Widgets
@@ -53,7 +54,7 @@ public class InfoDialog extends BaseDialog {
 		super.Open();
 		shell.setText(sDTitle);
 
-		shell.setSize(400, 175);
+		shell.setSize(400, 200);
 		this.CenterWindow();
 		shell.open();
 		Display display = parent.getDisplay();
@@ -74,7 +75,13 @@ public class InfoDialog extends BaseDialog {
 		super();
 		sDTitle = sTitle;
 		sDMsg = sMsg;
-
+	}
+	
+	public InfoDialog(String sTitle, String sMsg, boolean valueInText) {
+		super();
+		sDTitle = sTitle;
+		sDMsg = sMsg;
+		bValueInText = valueInText;
 	}
 
 	protected void LoadUI(Shell sh) {
@@ -82,7 +89,7 @@ public class InfoDialog extends BaseDialog {
 		sh.setText(sDTitle);
 
 		lblInfo = new Label(sh, SWT.WRAP);
-		lblInfo.setText(sDMsg);
+		if (!bValueInText) lblInfo.setText(sDMsg);
 
 		cmdOne = new Button(sh, SWT.PUSH);
 		cmdOne.addSelectionListener(cmdOne_OnClick);
@@ -92,33 +99,54 @@ public class InfoDialog extends BaseDialog {
 		cmdTwo.addSelectionListener(cmdTwo_OnClick);
 		cmdTwo.setText(MM.PHRASES.getPhrase("4"));
 
-		txtInfo = new Text(sh, SWT.BORDER);
+		txtInfo = new Text(sh, SWT.BORDER | SWT.WRAP);
 		txtInfo.setFocus();
-
+		
+		if (bValueInText && sDMsg != null) txtInfo.setText(sDMsg);
+		
 		this.CenterWindow();
 	}
 
 	protected void LoadLayout() {
-		FormData lblinfodata = new FormData();
-		lblinfodata.top = new FormAttachment(15, 0);
-		lblinfodata.left = new FormAttachment(10, 0);
-		lblinfodata.right = new FormAttachment(90, 0);
-		lblInfo.setLayoutData(lblinfodata);
-
-		FormData txtinfodata = new FormData();
-		txtinfodata.top = new FormAttachment(lblInfo, 10);
-		txtinfodata.left = new FormAttachment(10, 0);
-		txtinfodata.right = new FormAttachment(90, 0);
-		txtInfo.setLayoutData(txtinfodata);
 		
+		FormAttachment displayTop = new FormAttachment(25, 0);
+		FormAttachment displayLeft = new FormAttachment(10, 0);
+		FormAttachment displayRight = new FormAttachment(90, 0);
+		FormAttachment displayBottom = new FormAttachment(50, 0);
+		
+		FormData lblinfodata = new FormData();
+		FormData txtinfodata = new FormData();
+		
+		if (!bValueInText) {
+			lblinfodata.top = displayTop;
+			lblinfodata.left = displayLeft;
+			lblinfodata.right = displayRight;
+			lblinfodata.bottom = displayBottom;
+			lblInfo.setLayoutData(lblinfodata);
+			
+			txtinfodata.top = new FormAttachment (lblInfo, -20);
+			txtinfodata.left = displayLeft;
+			txtinfodata.right = displayRight;
+			txtinfodata.bottom = new FormAttachment (lblInfo, 50);
+			txtInfo.setLayoutData(txtinfodata);
+			
+		} else {
+
+			txtinfodata.top = displayTop;
+			txtinfodata.left = displayLeft;
+			txtinfodata.right = displayRight;
+			txtinfodata.bottom = displayBottom;
+			txtInfo.setLayoutData(txtinfodata);
+		}
+
 		FormData cmdonedata = new FormData();
-		cmdonedata.top = new FormAttachment(65, 0);
-		cmdonedata.left = new FormAttachment(25, 0);
+		cmdonedata.top = new FormAttachment(70, 0);
+		cmdonedata.left = new FormAttachment(30, 0);
 		cmdonedata.right = new FormAttachment(50, 0);
 		cmdOne.setLayoutData(cmdonedata);
 
 		FormData cmdtwodata = new FormData();
-		cmdtwodata.top = new FormAttachment(65, 0);
+		cmdtwodata.top = new FormAttachment(70, 0);
 		cmdtwodata.left = new FormAttachment(cmdOne, 10);
 		cmdtwodata.right = new FormAttachment(70, 10);
 		cmdTwo.setLayoutData(cmdtwodata);

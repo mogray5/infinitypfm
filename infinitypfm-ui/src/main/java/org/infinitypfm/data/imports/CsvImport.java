@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +35,6 @@ import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.ImportDef;
 import org.infinitypfm.core.data.Transaction;
-import org.infinitypfm.exception.ConfigurationException;
 import org.infinitypfm.ui.view.dialogs.ImportDefSelector;
 
 public class CsvImport extends BaseImport {
@@ -55,7 +53,7 @@ public class CsvImport extends BaseImport {
 			ImportDef param = new ImportDef();
 			param.setImportID(defSelect.Open());
 			
-			ImportDef def = (ImportDef) MM.sqlMap.queryForObject("getImportDef", param);
+			ImportDef def = (ImportDef) MM.sqlMap.selectOne("getImportDef", param);
 			
 			if (def == null) return null;
 			
@@ -102,14 +100,10 @@ public class CsvImport extends BaseImport {
 			    in.close();
 			}
 			
-					
-		} catch (ConfigurationException | SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage(), true);
 		} 
 		
 		return resultList;
 	}
-
-	
-	
 }

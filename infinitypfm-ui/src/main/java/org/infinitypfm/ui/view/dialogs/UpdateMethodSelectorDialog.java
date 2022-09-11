@@ -72,14 +72,14 @@ public class UpdateMethodSelectorDialog extends BaseDialog {
 		try {
 			CurrencyMethod method = null;
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList("getAllCurrencyMethods");
+			java.util.List list = MM.sqlMap.selectList("getAllCurrencyMethods");
 			
 			cmbMethod.removeAll();
 			
 			for (int i=0; i<list.size(); i++) {
 				
 				method = (CurrencyMethod)list.get(i);
-				Currency currency = (Currency)MM.sqlMap.queryForObject("getCurrencyById", method.getCurrencyID());
+				Currency currency = (Currency)MM.sqlMap.selectOne("getCurrencyById", method.getCurrencyID());
 				
 				if (currency != null){
 				
@@ -94,7 +94,7 @@ public class UpdateMethodSelectorDialog extends BaseDialog {
 	
 			cmbMethod.select(0);
 			
-		} catch (SQLException se){
+		} catch (Exception se){
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 		

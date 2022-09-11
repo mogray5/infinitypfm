@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -19,7 +19,6 @@
 package org.infinitypfm.data;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,17 +27,22 @@ import java.util.stream.Collectors;
 
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.BudgetBalance;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.IReportable;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
+import org.infinitypfm.core.data.ParamDateRangeAccount;
+import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.data.YearlyBalance;
 import org.infinitypfm.reporting.BaseReport;
 import org.infinitypfm.reporting.ScriptLoader;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.BudgetSelector;
 import org.infinitypfm.ui.view.dialogs.MonthYearDialog;
+import org.infinitypfm.ui.view.dialogs.YearDialog;
 
 /**
  * 
@@ -50,20 +54,22 @@ import org.infinitypfm.ui.view.dialogs.MonthYearDialog;
  */
 public class ReportData {
 
-	private DataFormatUtil dateUtil;
+	private DataFormatUtil dataUtil;
 	@SuppressWarnings("rawtypes")
-	private List reportData;
+	private List<Object> reportData;
 	@SuppressWarnings("rawtypes")
-	private List reportDataIncome;
+	private List<Object> reportDataIncome;
 	@SuppressWarnings("rawtypes")
-	private List reportDataExpense;
+	private List<Object> reportDataExpense;
 	private String incomeTotal;
 	private String expenseTotal;
 	private String liabilityTotal;
+	private String accountTotal;
 	private String title;
 	private String budget;
 	private String account;
 	private String _template;
+	private int year;
 	
 	/********************/
 	/* Script Libraries */
@@ -72,22 +78,30 @@ public class ReportData {
 	
 	private Boolean userCancelled = false;
 
-	public ReportData(int reportType) {
+	public ReportData (int reportType) {
+		this(reportType, null);
+	}
+	
+	public ReportData(int reportType, Object params) {
 
-		dateUtil = new DataFormatUtil(MM.options.getCurrencyPrecision());
-		ParamDateRange reportParam = new ParamDateRange();
+		dataUtil = new DataFormatUtil(MM.options.getCurrencyPrecision());
+		ParamDateRange reportParam = null;;
 
 		switch (reportType) {
 
 		case MM.THIS_MONTH:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			initTotals();
 			title = MM.PHRASES.getPhrase("123") + " "
-					+ dateUtil.getMonthName(0) + " " + dateUtil.getYear();
-			reportParam.setMth(dateUtil.getMonth());
-			reportParam.setYr(dateUtil.getYear());
-			setReportData("getReportMonthlyBalances", reportParam);
+					+ dataUtil.getMonthName(0) + " " + dataUtil.getYear();
+			if (params == null) {
+				reportParam = new ParamDateRange();
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
+				setReportData("getReportMonthlyBalances", reportParam);
+			} else 
+				setReportData("getReportMonthlyBalances", params);
 
 			populateIncomeAndExpenseLists();
 			
@@ -99,48 +113,73 @@ public class ReportData {
 			promptForMonthYr();
 			initTotals();
 			title = MM.PHRASES.getPhrase("123") + " "
-					+ dateUtil.getMonthName(0) + " " + dateUtil.getYear();
-			reportParam.setMth(dateUtil.getMonth());
-			reportParam.setYr(dateUtil.getYear());
-			
-			setReportData("getReportMonthlyBalances", reportParam);
+					+ dataUtil.getMonthName(0) + " " + dataUtil.getYear();
+			if (params == null) {
+				reportParam = new ParamDateRange();
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
+				setReportData("getReportMonthlyBalances", reportParam);
+			} else 
+				setReportData("getReportMonthlyBalances", params);
 			
 			populateIncomeAndExpenseLists();
 			
 			_template = MM.RPT_MONTHLY_BALANCES;
 			
 			break;
+		case MM.LAST_YEAR:
+
+			promptForYear();
+			initTotalsYear();
+			title = MM.PHRASES.getPhrase("311") + " " + year;
+			if (params == null) {
+				reportParam = new ParamDateRange();
+				reportParam.setYr(year);
+				setReportData("getReportYearlyBalances", reportParam);
+			} else 
+				setReportData("getReportYearlyBalances", params);
+			
+			populateIncomeAndExpenseListYear();
+			
+			_template = MM.RPT_YEARLY_BALANCES;
+			
+			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("136");
-			MonthlyBalance monthlyBalance = new MonthlyBalance();
+			MonthlyBalance monthlyBalance = null;
 
 			account = promptForAccount(true); //Include income accounts
 
 			if (account != null) {
-
-				monthlyBalance.setActName(account);
-				monthlyBalance.setMth(dateUtil.getMonth());
-				monthlyBalance.setYr(dateUtil.getYear() - 1);
-				setReportData("getReportAccountHistory", monthlyBalance);
+				initTotalsAccount();
+				if (params == null) {
+					monthlyBalance = new MonthlyBalance();
+					monthlyBalance.setActName(account);
+					monthlyBalance.setMth(dataUtil.getMonth());
+					monthlyBalance.setYr(dataUtil.getYear() - 1);
+					setReportData("getReportAccountHistory", monthlyBalance);
+				} else 
+					setReportData("getReportAccountHistory", params);
+				
 				_template = MM.RPT_ACCOUNT_HISTORY;
 
 			}
 
 			break;
 		case MM.MENU_REPORTS_ACCOUNT_HISTORY_ALL_TIME:
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("273");
 			monthlyBalance = new MonthlyBalance();
 
 			account = promptForAccount(true); //Include income accounts
 
 			if (account != null) {
-
+				initTotalsAccount();
 				monthlyBalance.setActName(account);
-				monthlyBalance.setMth(dateUtil.getMonth());
-				monthlyBalance.setYr(dateUtil.getYear() - 50);
+				monthlyBalance.setMth(dataUtil.getMonth());
+				monthlyBalance.setYr(dataUtil.getYear() - 50);
 				setReportData("getReportAccountHistory", monthlyBalance);
 				_template = MM.RPT_ACCOUNT_HISTORY;
 
@@ -148,28 +187,30 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("164");
 
 			budget = promptForBudget();
 
 			if (budget != null) {
 
-				BudgetBalance args = new BudgetBalance();
-				args.setBudgetName(budget);
-				args.setMth(dateUtil.getMonth());
-				args.setYr(dateUtil.getYear());
-				args.setActTypeName(MM.ACT_TYPE_EXPENSE);
-				setReportData("getBudgetVsExpenseByMonth", args);
-
-				_template = MM.RPT_BUDGET_PERFORMANCE;
+				if (params == null) {
+					BudgetBalance args = new BudgetBalance();
+					args.setBudgetName(budget);
+					args.setMth(dataUtil.getMonth());
+					args.setYr(dataUtil.getYear());
+					args.setActTypeName(MM.ACT_TYPE_EXPENSE);
+					setReportData("getBudgetVsExpenseByMonth", args);
+				} else
+					setReportData("getBudgetVsExpenseByMonth", params);
 				
+				_template = MM.RPT_BUDGET_PERFORMANCE;
 			}
 
 			break;
 		case MM.MENU_REPORTS_BUDGET_PERFORMANCE_ACT:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 
 			account = promptForAccount();
 			budget = promptForBudget();
@@ -178,13 +219,16 @@ public class ReportData {
 
 				title = MM.PHRASES.getPhrase("164") + ":  " + account;
 
-				BudgetBalance args = new BudgetBalance();
-				args.setActName(account);
-				args.setBudgetName(budget);
-				args.setMth(dateUtil.getMonth());
-				args.setYr(dateUtil.getYear());
-				args.setActTypeName(MM.ACT_TYPE_EXPENSE);
-				setReportData("getBudgetVsExpenseByMonthAndAccount", args);
+				if (params == null) {
+					BudgetBalance args = new BudgetBalance();
+					args.setActName(account);
+					args.setBudgetName(budget);
+					args.setMth(dataUtil.getMonth());
+					args.setYr(dataUtil.getYear());
+					args.setActTypeName(MM.ACT_TYPE_EXPENSE);
+					setReportData("getBudgetVsExpenseByMonthAndAccount", args);
+				} else
+					setReportData("getBudgetVsExpenseByMonthAndAccount", params);
 
 				_template = MM.RPT_BUDGET_PERFORMANCE;
 			}
@@ -192,15 +236,35 @@ public class ReportData {
 			break;
 		case MM.MENU_REPORTS_INCOME_VS_EXPENSE:
 
-			dateUtil.setDate(new Date());
+			dataUtil.setDate(new Date());
 			title = MM.PHRASES.getPhrase("221");
-			reportParam.setMth(dateUtil.getMonth());
-			reportParam.setYr(dateUtil.getYear());
-			setReportData("getIncomeVsExpense", reportParam);
-
+			if (params == null) {
+				reportParam = new ParamDateRange();
+				reportParam.setMth(dataUtil.getMonth());
+				reportParam.setYr(dataUtil.getYear());
+				setReportData("getIncomeVsExpense", reportParam);
+			} else
+				setReportData("getIncomeVsExpense", params);
 			_template = MM.RPT_INCOME_VS_EXPENSE;
 			
 			break;
+		case MM.MENU_REPORTS_REGISTER:
+			
+			title = MM.PHRASES.getPhrase("314");
+			account = ((ParamDateRangeAccount)params).getAccountName();
+			Account act = (Account)MM.sqlMap.selectOne("getAccountForName", account);
+			dataUtil.setPrecision(act.getCurrencyPrecision());
+			setReportData("getRegister", params);
+			_template = MM.RPT_ACCOUNT_REGISTER;
+			break;
+			
+		case MM.MENU_REPORTS_UTXO:
+			
+			title = MM.PHRASES.getPhrase("329");
+			setReportData("getRegister", params);
+			_template = MM.RPT_UTXO;
+			break;
+			
 		}
 	}
 
@@ -215,7 +279,7 @@ public class ReportData {
 
 	public long getIncomeTotalRaw() {
 	
-		return -Long.parseLong(incomeTotal);
+		return Long.parseLong(incomeTotal);
 	}
 	
 	public String getExpenseTotal() {
@@ -234,6 +298,10 @@ public class ReportData {
 		return Long.parseLong(liabilityTotal);
 	}
 	
+	public String getAccountTotal() {
+		return formatLongString(accountTotal);
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -271,50 +339,102 @@ public class ReportData {
 	private void initTotals() {
 
 		BudgetDetail budgetDetail = new BudgetDetail();
-		budgetDetail.setMth(dateUtil.getMonth());
-		budgetDetail.setYr(dateUtil.getYear());
+		budgetDetail.setMth(dataUtil.getMonth());
+		budgetDetail.setYr(dataUtil.getYear());
 
 		try {
 
-			incomeTotal = (String) MM.sqlMap.queryForObject(
+			incomeTotal = (String) MM.sqlMap.selectOne(
 					"getIncomeTotalForMonth", budgetDetail);
-			expenseTotal = (String) MM.sqlMap.queryForObject(
+			expenseTotal = (String) MM.sqlMap.selectOne(
 					"getExpenseTotalForMonth", budgetDetail);
-			liabilityTotal = (String) MM.sqlMap.queryForObject(
+			liabilityTotal = (String) MM.sqlMap.selectOne(
 					"getLiabilityTotalForMonth", budgetDetail);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
 	}
 
+	private void initTotalsYear() {
+
+		BudgetDetail budgetDetail = new BudgetDetail();
+		budgetDetail.setYr(year);
+
+		try {
+
+			incomeTotal = (String) MM.sqlMap.selectOne(
+					"getIncomeTotalForYear", budgetDetail);
+			expenseTotal = (String) MM.sqlMap.selectOne(
+					"getExpenseTotalForYear", budgetDetail);
+			liabilityTotal = (String) MM.sqlMap.selectOne(
+					"getLiabilityTotalForYear", budgetDetail);
+
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+
+	}
+	
+	private void initTotalsAccount() {
+
+		Transaction tran = new Transaction();
+		tran.setTranDate(dataUtil.getDate());
+		tran.setActName(account);
+		
+		try {
+
+			accountTotal = (String) MM.sqlMap.selectOne(
+					"getMonthlyTotalByAccountName", tran);
+
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+
+	}
+	
 	private void promptForMonthYr() {
 
 		MonthYearDialog monthPicker = new MonthYearDialog();
 		monthPicker.Open();
 
-		dateUtil.setDate(monthPicker.getYear(), monthPicker.getMonth());
+		dataUtil.setDate(monthPicker.getYear(), monthPicker.getMonth());
 		userCancelled = monthPicker.userCancelled();
 
 	}
 
+	private void promptForYear() {
+
+		YearDialog yearPicker = new YearDialog();
+		yearPicker.Open();
+
+		year = yearPicker.getYear();
+		
+		userCancelled = yearPicker.userCancelled();
+
+	}
+	
 	private void setReportData(String reportName, Object args) {
 
 		try {
 
-			reportData = MM.sqlMap.queryForList(reportName, args);
+			reportData = MM.sqlMap.selectList(reportName, args);
 
 			for (Object row : reportData) {
 				if (row != null)
-					((IReportable) row).setFormatter(dateUtil);
+					((IReportable) row).setFormatter(dataUtil);
 			}
 			
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}
 
+	}
+	
+	public void setReportData(List<Object> data) {
+		reportData = data;
 	}
 
 	private String promptForBudget() {
@@ -460,6 +580,7 @@ public class ReportData {
 	
 
 /**
+ * Derived 
  * From: https://stackoverflow.com/questions/3548733/how-do-i-convert-from-list-to-listt-in-java-using-generics
  * 
  * @param <T>
@@ -470,10 +591,13 @@ public class ReportData {
  * @return
  */
   private <T, C extends Collection<T>> C typesafeAdd(Iterable<?> from, C to, Class<T> listClass) {
-    for (Object item: from) {
-      to.add(listClass.cast(item));
-    }
+    if (from != null) {
+    	for (Object item: from) {
+    		to.add(listClass.cast(item));
+    	}
     return to;
+    } else 
+    	return null;
   }
 
   /**
@@ -484,6 +608,29 @@ public class ReportData {
 	  
 	  List<MonthlyBalance>listMB = new ArrayList<MonthlyBalance>();
 		listMB = typesafeAdd(this.reportData, listMB, MonthlyBalance.class);
+		
+		if (listMB == null || listMB.size()==0) return;
+		
+		reportDataIncome = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("income"))
+				.collect(Collectors.toList());
+
+		reportDataExpense = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("expense"))
+				.collect(Collectors.toList());
+		
+		String x = "a";
+		
+  }
+  
+  /**
+   * This method creates separate lists for income and account data and 
+   * stores them in reportDataIncome and reportDataExpense
+   */
+  private void populateIncomeAndExpenseListYear() {
+	  
+	  List<YearlyBalance>listMB = new ArrayList<YearlyBalance>();
+		listMB = typesafeAdd(this.reportData, listMB, YearlyBalance.class);
+		
+		if (listMB == null || listMB.size()==0) return;
 		
 		reportDataIncome = listMB.stream().filter(mb -> mb.getActTypeName().equalsIgnoreCase("income"))
 				.collect(Collectors.toList());
@@ -501,8 +648,8 @@ public class ReportData {
    */
   private String formatLongString(String value) {
 
-	if (dateUtil != null && value != null) 
-		return dateUtil.getAmountFormatted(Long.parseLong(value)*-1);
+	if (dataUtil != null && value != null) 
+		return dataUtil.getAmountFormatted(Long.parseLong(value));
 	 else 
 		return value;
   }
@@ -528,6 +675,10 @@ public class ReportData {
   
   public String getWordLiabilityTotal() {
 	  return MM.PHRASES.getPhrase("264");
+  }
+  
+  public String getWordYear() {
+	  return MM.PHRASES.getPhrase("166");
   }
   
   public String getWordYearMonth() {
@@ -557,6 +708,43 @@ public class ReportData {
   }
   public String getWordAccountName() {
 	  return MM.PHRASES.getPhrase("93");
+  }
+  public String getWordAccountTotal() {
+	  return MM.PHRASES.getPhrase("275");
+  }
+  
+  public String getWordTranDate() {
+	  return MM.PHRASES.getPhrase("24");
+  }
+  public String getWordMemo() {
+	  return MM.PHRASES.getPhrase("41");
+  }
+  public String getWordDebit() {
+	  return MM.PHRASES.getPhrase("48");
+  }
+  public String getWordCredit() {
+	  return MM.PHRASES.getPhrase("46");
+  }
+  public String getWordAddress() {
+	  return MM.PHRASES.getPhrase("289");
+  }
+  public String getWordHeight() {
+	  return MM.PHRASES.getPhrase("323");
+  }
+  public String getWordPosition() {
+	  return MM.PHRASES.getPhrase("324");
+  }
+  public String getWordValue() {
+	  return MM.PHRASES.getPhrase("328");
+  }
+  public String getWordPath() {
+	  return MM.PHRASES.getPhrase("327");
+  }
+  public String getWordScript() {
+	  return MM.PHRASES.getPhrase("326");
+  }
+  public String getWordHash() {
+	  return MM.PHRASES.getPhrase("325");
   }
 }
 

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+Copyright (c) 2005-2011 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Budget">
+
+  <resultMap id="budgetDetailMap" type="budgetDetail">
+  	<result property="budgetId"  column="BudgetId"/>
+  	<result property="actId"  column="ActId"/>
+	<result property="actName"  column="ActName"/>
+	<result property="mth"  column="Mth"/>
+	<result property="amount"  column="Amount"/>
+	<result property="actBalance"  column="ActBalance"/>
+	<result property="yr"  column="Yr"/>
+  </resultMap>
+  	   
+   <insert id="insertMonthlyBalance" parameterType="tran">
+	    INSERT INTO MonthlyBalance
+	     (
+	      ActId,
+	      Yr,
+	      Mth,
+	      ActBalance
+	     )
+    	VALUES 
+    	 (
+    	  #{actId},
+    	  #{tranYear},
+    	  #{tranMonth},
+     	  #{tranAmount}
+    	 )
+   </insert>
+   
+   <update id="updateMonthlyBalance" parameterType="tran">
+	    UPDATE MonthlyBalance
+	     SET ActBalance = ActBalance + #{tranAmount}
+	    WHERE ActId = #{actId}
+	     AND Yr=#{tranYear}
+	     AND Mth=#{tranMonth}
+   </update>
+   
+    <select id="getMonthlyBalance" parameterType="tran"
+                          resultType="monthBalance" flushCache="true">
+       <![CDATA[
+        SELECT
+           ActId as actId,
+           Yr as yr,
+           Mth as mth,
+           ABS(ActBalance) as actBalance
+        FROM MonthlyBalance
+         WHERE ActId = #{actId}
+         AND Yr =#{tranYear}
+         AND Mth=#{tranMonth};
+        ]]>
+   </select>
+   
+       <select id="getMonthlyTotalByAccountName" parameterType="tran"
+                          resultType="java.lang.String" flushCache="true">
+       <![CDATA[
+
+         SELECT
+           ABS(SUM(mb.ActBalance)) as actBalance
+        FROM MonthlyBalance mb
+		  INNER JOIN ACCOUNTS act
+	  		ON mb.actid = act.actid
+         WHERE act.ACTNAME = #{actName}
+         AND mb.Yr =#{tranYear}
+         AND mb.Mth=#{tranMonth};
+         
+        ]]>
+   </select>
+   
+   <select id="getYearlyBalance" parameterType="tran"
+                          resultType="java.lang.String" flushCache="true">
+       <![CDATA[
+        SELECT
+           ABS(SUM(ActBalance)) as actBalance
+        FROM MonthlyBalance
+         WHERE ActId = #{actId}
+         AND Yr = #{tranYear}
+         AND Mth <= #{tranMonth};
+        ]]>
+   </select>
+   
+   <select id="getAllBudgets" resultType="budget" flushCache="true">
+       <![CDATA[
+        SELECT
+           BudgetID,
+           BudgetName
+        FROM Budget
+         ORDER BY BudgetName;
+        ]]>
+   </select>
+   
+    <select id="getBudget" resultType="budget" flushCache="true">
+       <![CDATA[
+        SELECT
+           BudgetID,
+           BudgetName
+        FROM Budget
+         WHERE BudgetName=#{value};
+        ]]>
+   </select>
+   
+   <insert id="insertBudget" parameterType="budget">
+	    INSERT INTO Budget
+	     (
+	      BudgetName
+	     )
+    	VALUES 
+    	 (
+    	  #{budgetName}
+    	 )
+   </insert>
+
+  <insert id="insertBudgetDetail" parameterType="budgetDetail">
+  	INSERT INTO BudgetDetail (BudgetID, ActID, Mth, Amount)
+	 VALUES(#{budgetId}, #{actId}, #{mth}, #{amount})
+   </insert>
+
+   <!-- select id="getBudgetDetailForMonthWithCompare" parameterType="budgetDetail"
+                                       resultMap="budgetDetailMap">
+	   SELECT BudgetId, 
+	  ActId as actId,
+	  ActName as actName,
+	  Mth as mth,
+	  Amount as amount,
+      MonthlyBalance.ActBalance as actBalance,
+      MonthlyBalance.Yr as yr
+	 FROM BudgetDetail
+	  INNER JOIN Accounts
+	   ON BudgetDetail.ActId = Accounts.ActId
+      LEFT OUTER JOIN MonthlyBalance
+       ON BudgetDetail.ActID = MonthlyBalance.ActID 
+        AND BudgetDetail.Mth = MonthlyBalance.Mth
+	  WHERE BudgetDetail.Mth=#mth# AND
+	   BudgetDetail.BudgetId = #budgetId# AND
+           MonthlyBalance.Yr=#yr#
+	  ORDER BY ActName;
+   </select -->
+   
+   
+   
+    <select id="getBudgetDetailForMonth" parameterType="budgetDetail"
+                                       resultType="budgetDetail" flushCache="true">
+	   SELECT BudgetID as budgetId, 
+	  ActId as actId,
+	  ActName as actName,
+	  Mth as mth,
+	  Amount as amount
+	 FROM BudgetDetail
+	  INNER JOIN Accounts
+	   ON BudgetDetail.ActId = Accounts.ActId
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId} 
+	  ORDER BY ActName;
+   </select>
+   
+   <select id="getYearBudgetBalance" parameterType="budgetDetail" resultType="java.lang.String" flushCache="true">
+     
+     <![CDATA[                                  
+	 SELECT 
+	  SUM(Amount) as amount
+	 FROM BudgetDetail
+	  INNER JOIN Accounts
+	   ON BudgetDetail.ActId = Accounts.ActId
+	 WHERE BudgetDetail.Mth<=#{mth} AND
+      BudgetDetail.BudgetId = #{budgetId} AND
+      BudgetDetail.ActId = #{actId};
+     
+	  ]]>
+	  
+   </select>
+   
+   
+   
+  <select id="getOverUnderForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">  
+   SELECT Budget.BudgetAmount - Actual.ActualAmount as MonthOverUnder
+	FROM 
+	(
+	SELECT BudgetDetail.Mth, SUM(BudgetDetail.Amount) as BudgetAmount
+	FROM BudgetDetail
+	WHERE  BudgetDetail.Mth=#{mth} AND
+	BudgetDetail.BudgetId = #{budgetId}
+	GROUP BY BudgetDetail.Mth) Budget
+	INNER JOIN 
+	( 
+	SELECT MonthlyBalance.Mth, SUM(MonthlyBalance.ActBalance) AS ActualAmount
+	FROM MonthlyBalance
+	INNER JOIN ACCOUNTS
+	ON MonthlyBalance.ActID = Accounts.ActID
+	INNER JOIN AccountTypes
+	ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE  MonthlyBalance.Mth =#{mth} AND
+	MonthlyBalance.Yr = #{yr} 
+	 AND MonthlyBalance.ActID IN (SELECT 
+	 BudgetDetail.ActID FROM BudgetDetail WHERE BudgetDetail.Mth=#{mth} AND
+	BudgetDetail.BudgetId = #{budgetId})
+	GROUP BY MonthlyBalance.Mth) Actual
+	ON Budget.Mth = Actual.Mth
+    </select>
+  
+  <select id="getLiabilityTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
+	 AND AccountTypes.ActTypeName='Liability'
+   </select>
+   
+  <select id="getLiabilityTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND AccountTypes.ActTypeName='Liability'
+   </select>
+   
+    <select id="getIncomeTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
+	 AND AccountTypes.ActTypeName='Income'
+   </select>
+  
+   <select id="getIncomeTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND AccountTypes.ActTypeName='Income'
+   </select>
+   
+     <select id="getExpenseTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    
+    SELECT SUM(MonthlyBalance.ActBalance)
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND Mth=#{mth}
+	 AND AccountTypes.ActTypeName='Expense'
+   </select>
+ 
+   <select id="getExpenseTotalForYear" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">    
+    SELECT ABS(SUM(MonthlyBalance.ActBalance))
+	FROM MonthlyBalance
+	 INNER JOIN Accounts
+	  ON MonthlyBalance.ActID = Accounts.ActID
+	 INNER JOIN AccountTypes
+	  ON Accounts.ActTypeID = AccountTypes.ActTypeID
+	WHERE Yr=#{yr}
+	 AND AccountTypes.ActTypeName='Expense'
+   </select>
+   
+   <update id="updateBudgetDetail" parameterType="budgetDetail">
+  	UPDATE BudgetDetail 
+  	 SET Amount=#{amount}
+	 WHERE BudgetId=#{budgetId}
+	  AND ActId=#{actId}
+	  AND Mth=#{mth}
+   </update>
+   
+    <select id="getBudgetDetail" parameterType="budgetDetail"
+                                       resultType="budgetDetail" flushCache="true">    
+    
+      SELECT BudgetID as budgetId, 
+	  ActId as actId,
+	  ActName as actName,
+	  Mth as mth,
+	  Amount as amount
+	 FROM BudgetDetail
+	  INNER JOIN Accounts
+	   ON BudgetDetail.ActId = Accounts.ActId
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId}  AND
+	     BudgetDetail.ActID = #{actId}
+	  ORDER BY ActName;
+   </select>
+   
+   <select id="getBudgetDetailByName" parameterType="budgetDetail"
+                                       resultType="budgetDetail" flushCache="true">    
+      SELECT BudgetID as budgetId, 
+	  ActId as actId,
+	  ActName as actName,
+	  Mth as mth,
+	  Amount as amount
+	 FROM BudgetDetail
+	  INNER JOIN Accounts
+	   ON BudgetDetail.ActId = Accounts.ActId
+	  WHERE
+	   BudgetDetail.BudgetId = #{budgetId}  AND
+	     Accounts.ActName = #{actName}
+	  ORDER BY ActName;
+   </select>
+   
+    <update id="updateAccountForBudget" parameterType="budgetDetail">
+  	UPDATE BudgetDetail 
+  	 SET Amount= #{amount}
+  	  WHERE BudgetId=#{budgetId}
+  	   AND ActId = #{actId}
+   </update>
+   
+   <select id="getBudgetTotalForMonth" parameterType="budgetDetail"
+                                       resultType="java.lang.String" flushCache="true">        
+      SELECT 
+	  	SUM(Amount)
+	 FROM BudgetDetail
+	  WHERE BudgetDetail.Mth=#{mth} AND
+	   BudgetDetail.BudgetId = #{budgetId}
+   </select>
+   
+    <delete id="deleteAccountFromBudget" parameterType="budgetDetail">
+	    DELETE FROM BudgetDetail
+    	  WHERE ActId = #{actId}
+    	  	AND BudgetId = #{budgetId}
+   </delete>
+</mapper>

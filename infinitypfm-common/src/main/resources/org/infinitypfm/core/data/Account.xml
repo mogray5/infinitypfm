@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+ Copyright (c) 2005-2012 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Account">
+
+   <select id="getAccountsForType" parameterType="java.lang.String"
+                           resultType="act" flushCache="true">
+      SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+         INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+         INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        WHERE ActTypeName = #{value}
+        Order By ActName;
+   </select>
+   
+     <select id="getAccountForName" parameterType="java.lang.String"
+                           resultType="act" flushCache="true">
+     SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+         INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+	      INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        WHERE ActName = #{value}
+   </select>
+   
+   <select id="getAccountForOffset" parameterType="tran"
+                           resultType="act" flushCache="true">
+     SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+         INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+	      INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        WHERE ActId = #{actOffset}
+   </select>
+   
+   <select id="getAccountById" parameterType="tran"
+                           resultType="act" flushCache="true">
+     SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+         INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+	      INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        WHERE ActId = #{actId}
+   </select>
+   
+   <select id="getAccountByActId" parameterType="act"
+                           resultType="act" flushCache="true">
+     SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+         INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+	      INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        WHERE ActId = #{actId}
+   </select>
+   
+     <select id="getAllAccountsByType" resultType="act" flushCache="true">
+        SELECT
+           ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActTypeName as actTypeName,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+          curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+        FROM Accounts
+        INNER JOIN AccountTypes
+	      ON Accounts.ActTypeId = AccountTypes.ActTypeId
+	    INNER JOIN Currencies curr
+			ON Accounts.CurrencyID = curr.CurrencyID
+        Order By ActTypeName,ActName;
+   </select>
+   
+   <select id="getAccountsTypes" resultType="java.lang.String" flushCache="true">
+     SELECT ActTypeName
+        FROM AccountTypes
+   </select>
+   
+   <select id="getAccountTypeIdForName" parameterType="java.lang.String" 
+     					resultType="java.lang.Integer" flushCache="true">
+      SELECT ActTypeId
+        FROM AccountTypes
+       WHERE ActTypeName=#{value}
+   </select>
+   
+   <select id="getAccountTemplates" resultType="act" flushCache="true">
+   		SELECT ActTypeName,
+   			AccountTypes.ActTypeId, 
+   			ActName
+   		FROM AccountTemplates
+   			INNER JOIN AccountTypes
+   				ON AccountTemplates.ActTypeId = 
+   					AccountTypes.ActTypeId
+   			LEFT OUTER JOIN Accounts
+   				ON AccountTemplates.ActTypeId = Accounts.ActTypeId
+   					AND AccountTemplates.ActName = Accounts.ActName
+   			WHERE Accounts.ActTypeId IS NULL
+   				AND Accounts.ActName IS NULL
+   		ORDER BY ActTypeId,
+   			ActName
+   </select>
+   
+   <select id="getSavedMemo" parameterType="tran"
+   						resultType="tran" flushCache="true">
+   		SELECT ActId as actId,
+   			Memo as tranMemo
+   		FROM ImportHistory
+   		WHERE ActId = #{actId}
+   			AND Memo = #{tranMemo}
+   
+   </select>
+   
+   <select id="getAccountsForMemo" parameterType="tran"
+   					resultType="act" flushCache="true">
+   		
+   		SELECT 
+           Accounts.ActId as actId,
+           ActName as actName,
+           ActTypeId as actTypeId,
+           ActNumber as actNumber,
+           ActBalance as actBalance,
+           curr.CurrencyID,
+          curr.Name as currencyName,
+          curr.IsoCode as isoCode,
+          curr.CurrencyPrecision as currencyPrecision
+         FROM Accounts 
+         	INNER JOIN
+         		ImportHistory ON
+         		Accounts.ActId = ImportHistory.ActId
+         	INNER JOIN Currencies curr
+				ON Accounts.CurrencyID = curr.CurrencyID
+         WHERE ImportHistory.Memo = #{tranMemo}
+         
+   
+   </select>
+   
+   <insert id="insertAccount" parameterType="act">
+	    INSERT INTO Accounts
+	     (
+	      ActName,
+	      ActTypeId,
+	      ActNumber,
+	      ActBalance,
+	      CurrencyID
+	     )
+    	VALUES 
+    	 (
+    	  #{actName},
+    	  #{actTypeId},
+    	  #{actNumber},
+    	  #{actBalance},
+    	  #{currencyID}
+    	 )
+   </insert>
+   
+   <insert id="insertMemo" parameterType="tran">
+   
+   		INSERT INTO ImportHistory
+   		(
+   		  ActID,
+   		  Memo
+   		)
+   		VALUES
+   		(
+   			#{actId},
+   			#{tranMemo}
+   		)
+   
+   </insert>
+    
+    <delete id="deleteAccount" parameterType="act">
+	    DELETE FROM Accounts
+    	  WHERE ActName = #{actName}
+   </delete>
+   
+   <update id="updateAccountBalance" parameterType="tran">
+        UPDATE Accounts
+        	SET ActBalance = ActBalance + #{tranAmount}
+        WHERE ActId = #{actId}
+   </update>
+   
+   <update id="updateAccountBalanceFromAccount" parameterType="act">
+        UPDATE Accounts
+        	SET ActBalance = #{actBalance}
+        WHERE ActId = #{actId}
+   </update>  
+
+ <update id="updateAccountName" parameterType="act">
+     UPDATE Accounts
+     	SET ActName = #{actName}
+     WHERE ActId = #{actId}
+   </update>
+   
+</mapper>
+ 

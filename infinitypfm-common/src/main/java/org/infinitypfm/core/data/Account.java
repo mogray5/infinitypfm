@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -37,6 +37,7 @@ public class Account implements Serializable {
 	private long currencyID;
 	private String currencyName = null;
 	private String isoCode = null;
+	private int currencyPrecision=2;
 	
 	public Account() {
 		super();
@@ -144,13 +145,15 @@ public class Account implements Serializable {
 		return isoCode;
 	}
 
-
-
 	public void setIsoCode(String isoCode) {
 		this.isoCode = isoCode;
 	}
-	
-	
-	
-	
+
+	public int getCurrencyPrecision() {
+		return currencyPrecision;
+	}
+
+	public void setCurrencyPrecision(int currencyPrecision) {
+		this.currencyPrecision = currencyPrecision;
+	}
 }

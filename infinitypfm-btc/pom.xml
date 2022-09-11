@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.infinitypfm</groupId>
+    <artifactId>infinitypfm-client</artifactId>
+    <version>0.9.5</version>
+  </parent>
+  <groupId>org.infinitypfm.btc</groupId>
+  <artifactId>infinitypfm-btc</artifactId>
+  <packaging>jar</packaging>
+  <name>infinitypfm-btc</name>
+  <url>http://infinitypfm.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	    <version>4.5.13</version>
+	</dependency>
+	<dependency>
+	    <groupId>net.glxn</groupId>
+	    <artifactId>qrgen</artifactId>
+	    <version>1.4</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.infinitypfm.common</groupId>
+	    <artifactId>infinitypfm-common</artifactId>
+	    <version>0.9.5</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>2.9.8</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.easymock</groupId>
+	    <artifactId>easymock</artifactId>
+	    <version>4.3</version>
+	    <scope>test</scope>
+	</dependency>
+
+	<!-- TODO:  Do something other than bitcoinj-sv compiled locally 
+	<dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-wallet-and-tests</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/user/target/bitcoinj-wallet-and-tests-1.0.1.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-base</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/user/target/bitcoinj-base-1.0.1.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>io.bitcoinsv.bitcoinjsv</groupId>
+	    <artifactId>bitcoinj-legacy</artifactId>
+	    <version>1.0.1</version>
+	    <scope>system</scope>
+	    <systemPath>/home/user/target/bitcoinj-legacy-1.0.1.jar</systemPath>
+	</dependency>
+	-->
+	<!-- Additional BitcoinJ deps 
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>21.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.12.2</version>
+    </dependency>
+	-->
+</dependencies> 
+ <build>
+	<plugins>
+	    <plugin>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <version>3.8.1</version>
+	        <configuration>
+<!-- 	            <source>1.8</source> -->
+<!-- 	            <target>1.8</target> -->
+				<release>11</release>
+	        </configuration>
+	    </plugin>
+	</plugins>
+ </build>
+   
+</project>

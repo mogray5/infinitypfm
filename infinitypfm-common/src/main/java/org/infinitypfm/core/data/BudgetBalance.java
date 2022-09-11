@@ -66,7 +66,7 @@ public class BudgetBalance implements Serializable, IReportable {
 	}
 
 	public String getBudgetBalanceFmt() {
-		return _formatter.getAmountFormatted(budgetBalance, "###0.00");
+		return _formatter.getAmountFormatted(budgetBalance, "#,##0.00;(#,##0.00)");
 	}
 	
 	public void setBudgetBalance(long budgetBalance) {
@@ -78,7 +78,7 @@ public class BudgetBalance implements Serializable, IReportable {
 	}
 
 	public String getExpenseBalanceFmt() {
-		return _formatter.getAmountFormatted(expenseBalance, "###0.00");
+		return _formatter.getAmountFormatted(expenseBalance, "#,##0.00;(#,##0.00)");
 	}
 	
 	public void setExpenseBalance(long expenseBalance) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
+import org.infinitypfm.core.exception.PasswordInvalidException;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.views.BaseView;
 import org.infinitypfm.ui.view.views.BudgetView;
@@ -41,6 +42,7 @@ import org.infinitypfm.ui.view.views.CurrencyView;
 import org.infinitypfm.ui.view.views.RecurrenceView;
 import org.infinitypfm.ui.view.views.RegisterView;
 import org.infinitypfm.ui.view.views.ReportView;
+import org.infinitypfm.ui.view.views.WalletView;
 
 /**
  * @author Wayne Gray
@@ -85,8 +87,8 @@ public class ViewHandler {
 
 		FormData canvasdata = new FormData();
 		canvasdata.top = new FormAttachment(35, 0);
-		canvasdata.left = new FormAttachment(30, 0);
-		canvasdata.right = new FormAttachment(70, 0);
+		canvasdata.left = new FormAttachment(50, -150);
+		canvasdata.right = new FormAttachment(50, 200);
 		canvasdata.bottom = new FormAttachment(70, 0);
 		canvas.setLayoutData(canvasdata);
 
@@ -126,6 +128,11 @@ public class ViewHandler {
 
 	public void UnloadCurrentView() {
 		if (!cmpMain.isDisposed()) {
+			
+			try {
+				((BaseView)cmpMain).QZDispose();
+			} catch (Exception e) {}
+			
 			cmpMain.dispose();
 		}
 		cmpMain = getDefaultView();
@@ -168,7 +175,7 @@ public class ViewHandler {
 
 	}
 
-	public BaseView getView(int iViewID) {
+	public BaseView getView(int iViewID) throws PasswordInvalidException {
 
 		BaseView vw = null;
 
@@ -180,8 +187,9 @@ public class ViewHandler {
 			vw = new RecurrenceView(cmpWin, SWT.NONE);
 		} else if (iViewID == MM.VIEW_CURRENCY) {
 			vw = new CurrencyView(cmpWin, SWT.NONE);
+		} else if (iViewID == MM.VIEW_WALLET) {
+			vw = new WalletView(cmpWin, SWT.NONE);
 		} else {
-
 			return null;
 		}
 

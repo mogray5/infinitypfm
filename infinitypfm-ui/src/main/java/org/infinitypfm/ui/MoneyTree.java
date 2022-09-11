@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -19,7 +19,6 @@
 
 package org.infinitypfm.ui;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -39,7 +38,7 @@ import org.infinitypfm.ui.view.menus.BudgetMenu;
 import org.infinitypfm.ui.view.menus.TreeMenu;
 
 /**
- * @author Wayne Gray
+ * Account tree
  */
 public class MoneyTree {
 
@@ -82,26 +81,26 @@ public class MoneyTree {
 		TreeItem budgetNode = new TreeItem(trMain, 0);
 		budgetNode.setText(MM.PHRASES.getPhrase("97"));
 		budgetNode.setData("budget");
-		budgetNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_EYE));
+		budgetNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_LOGO_ICON_SMALL));
 		bookmarks.setBudgetNode(budgetNode);
 		TreeItem bankNode = new TreeItem(trMain, 1);
 		bankNode.setText(MM.PHRASES.getPhrase("8"));
 		bankNode.setData("bank");
-		bankNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_EYE));
+		bankNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_LOGO_ICON_SMALL));
 		bookmarks.setBankAccountNode(bankNode);
 		TreeItem liabilityNode = new TreeItem(trMain, 2);
 		liabilityNode.setText(MM.PHRASES.getPhrase("53"));
 		liabilityNode.setData("liability");
-		liabilityNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_EYE));
+		liabilityNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_LOGO_ICON_SMALL));
 		TreeItem expenseNode = new TreeItem(trMain, 3);
 		expenseNode.setText(MM.PHRASES.getPhrase("9"));
 		expenseNode.setData("expense");
-		expenseNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_EYE));
+		expenseNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_LOGO_ICON_SMALL));
 		bookmarks.setExpenseNode(expenseNode);
 		TreeItem incomeNode = new TreeItem(trMain, 4);
 		incomeNode.setText(MM.PHRASES.getPhrase("10"));
 		incomeNode.setData("income");
-		incomeNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_EYE));
+		incomeNode.setImage(InfinityPfm.imMain.getImage(MM.IMG_LOGO_ICON_SMALL));
 
 		// TODO: Remove duplication of code below for each account type.
 
@@ -113,7 +112,7 @@ public class MoneyTree {
 			// add bank accounts
 			@SuppressWarnings("rawtypes")
 			List bankList = MM.sqlMap
-					.queryForList("getAccountsForType", "Bank");
+					.selectList("getAccountsForType", "Bank");
 
 			if (bankList != null) {
 
@@ -122,7 +121,7 @@ public class MoneyTree {
 					ti = new TreeItem(bankNode, i);
 					ti.setText(act.getActName());
 					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_CREDIT));
+					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_SPREADSHEET));
 					System.out.println(act.getActName() + ":"
 							+ Integer.toString(act.getActId()));
 
@@ -132,7 +131,7 @@ public class MoneyTree {
 
 			// add liability accounts
 			@SuppressWarnings("rawtypes")
-			List liabilityList = MM.sqlMap.queryForList("getAccountsForType",
+			List liabilityList = MM.sqlMap.selectList("getAccountsForType",
 					"Liability");
 
 			if (liabilityList != null) {
@@ -142,7 +141,7 @@ public class MoneyTree {
 					ti = new TreeItem(liabilityNode, i);
 					ti.setText(act.getActName());
 					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_EMBLEM));
+					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
 					System.out.println(act.getActName() + ":"
 							+ Integer.toString(act.getActId()));
 
@@ -152,7 +151,7 @@ public class MoneyTree {
 
 			// add expense accounts
 			@SuppressWarnings("rawtypes")
-			List expenseList = MM.sqlMap.queryForList("getAccountsForType",
+			List expenseList = MM.sqlMap.selectList("getAccountsForType",
 					"Expense");
 
 			if (expenseList != null) {
@@ -162,14 +161,14 @@ public class MoneyTree {
 					ti = new TreeItem(expenseNode, i);
 					ti.setText(act.getActName());
 					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_EMBLEM));
+					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
 				}
 
 			}
 
 			// add income accounts
 			@SuppressWarnings("rawtypes")
-			List incomeList = MM.sqlMap.queryForList("getAccountsForType",
+			List incomeList = MM.sqlMap.selectList("getAccountsForType",
 					"Income");
 
 			if (incomeList != null) {
@@ -179,14 +178,14 @@ public class MoneyTree {
 					ti = new TreeItem(incomeNode, i);
 					ti.setText(act.getActName());
 					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_EMBLEM));
+					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_FULL));
 				}
 
 			}
 
 			// add budgets
 			@SuppressWarnings("rawtypes")
-			List budgetList = MM.sqlMap.queryForList("getAllBudgets", null);
+			List budgetList = MM.sqlMap.selectList("getAllBudgets", null);
 
 			if (budgetList != null) {
 				Budget budget = null;
@@ -199,7 +198,7 @@ public class MoneyTree {
 				}
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -295,7 +294,6 @@ public class MoneyTree {
 	}
 
 	/*
-	 * 
 	 * Listeners
 	 */
 

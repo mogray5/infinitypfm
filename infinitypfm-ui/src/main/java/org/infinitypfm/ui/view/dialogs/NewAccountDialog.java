@@ -97,7 +97,7 @@ public class NewAccountDialog extends BaseDialog {
 		
 		try {
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList("getAccountsTypes",
+			java.util.List list = MM.sqlMap.selectList("getAccountsTypes",
 					null);
 
 			if (list != null) {
@@ -109,7 +109,7 @@ public class NewAccountDialog extends BaseDialog {
 				
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -117,7 +117,7 @@ public class NewAccountDialog extends BaseDialog {
 
 		try {
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList("getCurrencies", null);
+			java.util.List list = MM.sqlMap.selectList("getCurrencies", null);
 
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
@@ -130,7 +130,7 @@ public class NewAccountDialog extends BaseDialog {
 
 			}
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 		
@@ -278,10 +278,10 @@ public class NewAccountDialog extends BaseDialog {
 				account.setActTypeName(cmbActType.getText());
 
 				try {
-					Currency curr = (Currency) MM.sqlMap.queryForObject(
+					Currency curr = (Currency) MM.sqlMap.selectOne(
 							"getCurrencyByIsoCode", cmbCurrency.getText());
 					account.setCurrencyID(curr.getCurrencyID());
-				} catch (SQLException e1) {
+				} catch (Exception e1) {
 					InfinityPfm.LogMessage(e1.getMessage());
 				}
 				

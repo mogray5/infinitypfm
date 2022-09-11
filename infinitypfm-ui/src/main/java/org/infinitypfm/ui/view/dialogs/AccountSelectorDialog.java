@@ -70,7 +70,7 @@ public class AccountSelectorDialog extends BaseDialog {
 		try {
 			Account act = null;
 			@SuppressWarnings("rawtypes")
-			java.util.List list = MM.sqlMap.queryForList("getAccountsForType",
+			java.util.List list = MM.sqlMap.selectList("getAccountsForType",
 					MM.ACT_TYPE_EXPENSE);
 
 			cmbAccount.removeAll();
@@ -80,7 +80,7 @@ public class AccountSelectorDialog extends BaseDialog {
 				cmbAccount.add(act.getActName());
 
 			}
-			list = MM.sqlMap.queryForList("getAccountsForType",
+			list = MM.sqlMap.selectList("getAccountsForType",
 					MM.ACT_TYPE_LIABILITY);
 
 			for (int i = 0; i < list.size(); i++) {
@@ -91,7 +91,7 @@ public class AccountSelectorDialog extends BaseDialog {
 
 			if (includeIncomeAccounts){
 				
-				list = MM.sqlMap.queryForList("getAccountsForType",
+				list = MM.sqlMap.selectList("getAccountsForType",
 						MM.ACT_TYPE_INCOME);
 
 				for (int i = 0; i < list.size(); i++) {
@@ -104,7 +104,7 @@ public class AccountSelectorDialog extends BaseDialog {
 			
 			cmbAccount.select(0);
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 

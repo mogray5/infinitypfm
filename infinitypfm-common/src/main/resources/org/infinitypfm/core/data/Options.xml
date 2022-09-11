@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2005-2022 Wayne Gray All rights reserved This file is 
+	part of Infinity PFM. Infinity PFM is free software: you can redistribute 
+	it and/or modify it under the terms of the GNU General Public License as 
+	published by the Free Software Foundation, either version 3 of the License, 
+	or (at your option) any later version. Infinity PFM is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	GNU General Public License for more details. You should have received a copy 
+	of the GNU General Public License along with Infinity PFM. If not, see <http://www.gnu.org/licenses/>. -->
+
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Options">
+
+	<select id="getAppVersion" resultType="java.lang.String" flushCache="true">
+   <![CDATA[
+    SELECT
+       AppVersion
+    FROM AppSettings
+    ]]>
+	</select>
+
+	<select id="getOptions" resultType="opt" flushCache="true">
+   <![CDATA[
+    SELECT
+       AppVersion,
+       DefaultCurrencyID,
+       CurrencyPrecision,
+       ReportsInBrowswer,
+       ConsoleDefaultOpen,
+       WalletEnabled as EnableWallet,
+       SpendPassword,
+       DefaultBsvCurrencyMethod,
+       DefaultBsvCurrencyID,
+       EmailAddress,
+       WalletUser,
+       WalletToken,
+       BookmarksUrl,
+       WalletId,
+       ReportPath
+    FROM AppSettings;
+    ]]>
+	</select>
+
+	<update id="updateOptions" parameterType="opt">
+		UPDATE AppSettings
+		SET
+		AppVersion = #{appVersion},
+		DefaultCurrencyID = #{defaultCurrencyID},
+		CurrencyPrecision = #{currencyPrecision},
+		ReportsInBrowswer = #{reportsInBrowswer},
+		ConsoleDefaultOpen = #{consoleDefaultOpen},
+		WalletEnabled = #{enableWallet},
+		SpendPassword = #{spendPassword},
+		DefaultBsvCurrencyMethod = #{defaultBsvCurrencyMethod},
+		DefaultBsvCurrencyID = #{defaultBsvCurrencyID},
+		EmailAddress = #{emailAddress},
+		WalletUser = #{walletUser},
+		WalletToken = #{walletToken},
+		BookmarksUrl = #{bookmarksUrl},
+		WalletId = #{walletId},
+		ReportPath = #{reportPath}
+	</update>
+
+</mapper>

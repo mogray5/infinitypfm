@@ -1,0 +1,77 @@
+h1,h3 {
+	color:#2f7991;
+}
+
+table  {
+	width:75%;
+	font-size:12px;
+	border-collapse: collapse;
+	border-bottom: 1px solid #ddd;
+	text-align: left;
+	padding: 15px;
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+header {
+	width: 30%;
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+article {
+	margin-top: 50px;
+}
+
+section {
+	margin-top: 50px;
+}
+
+tr:hover {background-color: #f5f5f5;}
+
+th {
+	background-color:#004f78;
+	color: white;
+}
+
+th,td {
+	 border-bottom: 1px solid #ddd;
+}
+
+.rowColoredBank {
+	background-color: #f1faff;
+}
+
+.rowColoredExpense {
+	background-color: #e0eaf0;
+}
+
+.rowColoredIncome {
+	background-color: #d1e3ee;
+}
+
+.rowColoredLiability {
+	background-color: #b7d0dd;
+}
+
+.totals, .totals-dat {
+	font-size:16px;
+	display: inline-block;
+}
+
+.totals {
+	color:#2f7991;
+	width: 150px;
+}
+
+.totals-dat {
+	margin-left; 20px;	
+}
+
+.chartArea {
+	margin-left: 25%;
+}
+
+.tblWrapper {
+	overflow-x:auto;
+}

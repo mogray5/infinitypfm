@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+ Copyright (c) 2005-2012 Wayne Gray All rights reserved
+  
+ This file is part of Infinity PFM.
+  
+ Infinity PFM is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+  
+ Infinity PFM is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Currency">
+   
+	  <select id="getCurrencies" resultType="currency" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CASE WHEN DefaultCurrencyId IS NOT NULL THEN TRUE
+           ELSE FALSE END AS IsDefault
+         FROM Currencies
+			LEFT OUTER JOIN
+			AppSettings
+			ON Currencies.CurrencyId = AppSettings.DefaultCurrencyId
+		 ORDER BY IsoCode
+         
+   
+   </select>
+   
+   <select id="getCurrencyByIsoCode" parameterType="java.lang.String" 
+   						resultType="currency" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
+         FROM Currencies
+         	WHERE IsoCode = #{value}
+         	
+   
+   </select>
+
+   <select id="getCurrencyById" parameterType="java.lang.Long" 
+   						resultType="currency" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
+         FROM Currencies
+         	WHERE CurrencyID = #{value}
+         	
+   
+   </select>
+
+   <select id="getCurrencyByName" parameterType="java.lang.String" 
+   						resultType="currency" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyId,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
+         FROM Currencies
+         	WHERE Name = #{value}
+         	
+   
+   </select>
+   
+   <select id="getCurrencyDefault" resultType="currency">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           Name as currencyName,
+           IsoCode as isoName,
+           ExchRate as exchangeRate,
+           LastUpdate as lastUpdate,
+           CurrencyPrecision
+         FROM Currencies c
+		INNER JOIN AppSettings a
+			on c.currencyid = a.defaultcurrencyid
+         	
+   </select>
+      
+   <select id="getCurrencyMethods" parameterType="currency" 
+   						resultType="currencyMethod" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods
+         	WHERE CurrencyID = #{currencyID}
+         	
+   
+   </select>
+   
+   <select id="getAllCurrencyMethods" resultType="currencyMethod" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods;         	
+   
+   </select>
+   
+    <select id="getCurrencyMethod" parameterType="currencyMethod" 
+   						resultType="currencyMethod" flushCache="true">
+   		
+   		SELECT 
+           CurrencyID as currencyID,
+           MethodName as methodName,
+           MethodUrl as methodUrl,
+           MethodPath as methodPath
+         FROM CurrencyMethods
+         	WHERE CurrencyID = #{currencyID}
+         		and MethodName = #{methodName}
+         	
+   
+    </select>
+   
+   <insert id="insertCurrencyMethod" parameterType="currencyMethod">
+	    INSERT INTO CurrencyMethods
+	     (
+	      CurrencyID,
+	      MethodName,
+	      MethodUrl,
+	      MethodPath
+	     )
+    	VALUES 
+    	 (
+    	  #{currencyID},
+    	  #{methodName},
+    	  #{methodUrl},
+    	  #{methodPath}
+    	 )
+   </insert>
+   
+   <update id="updateExchangeRate" parameterType="currency">
+   
+   		UPDATE Currencies 
+   		SET EXCHRATE = #{exchangeRate},
+   			LASTUPDATE = #{lastUpdate} 
+   		WHERE CurrencyID = #{currencyID}
+   
+   </update>
+   
+    <delete id="deleteUpdateMethod" parameterType="currencyMethod">
+   		DELETE FROM CURRENCYMETHODS WHERE MethodName = #{methodName}
+   			AND CurrencyID = #{currencyID}; 
+   </delete>
+   
+</mapper>
+ 

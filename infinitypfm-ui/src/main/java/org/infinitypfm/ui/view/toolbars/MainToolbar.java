@@ -78,6 +78,11 @@ public class MainToolbar extends BaseToolbar {
 		
 		addButton(MM.IMG_DOLLAR, MM.PHRASES.getPhrase("214"),
 				MM.VIEW_CURRENCY, true);
+		
+		if (MM.options.isEnableWallet()) 
+			addButton(MM.IMG_WALLET, MM.PHRASES.getPhrase("276"),
+				MM.VIEW_WALLET, true);
+		
 
 	}
 

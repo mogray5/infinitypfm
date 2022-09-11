@@ -49,8 +49,11 @@ public class Database {
 				"createFK2BudgetDetail", "createFKMonthlyBalance",
 				"createTableCurrencies",
 				"createTableCurrencyMethods",
-				"createFKCurrencyMethods", "createTableTrades", 
+				"createFKCurrencyMethods", "createTableTrades",
+				"createTableBasis", "createFKBasis1", "createFKBasis2",
+				"createTableTrades2",
 				"createFKTrades1", "createFKTrades2",
+				"createFKTrades21", "createFKTrades22","createFKTrades23",
 				"createFKImportRules",
 				"akTransactions",
 				"createTableConnectors",
@@ -186,6 +189,12 @@ public class Database {
 			MM.sqlMap.insert("v0_7_0_d");
 			MM.sqlMap.insert("v0_7_0_e");
 			
+			// Add default bookmarks URL
+			MM.sqlMap.update("v0_9_5_f");
+			
+			// Add default report path
+			MM.sqlMap.update("v0_9_5_h");
+			
 	}
 	
 	public String backup(String dir) throws IOException, ArchiveException{
@@ -205,7 +214,7 @@ public class Database {
 						sdf.format(c1.getTime()) + ".tar.gz";
 			    
 				
-			    conn = MM.sqlMap.getDataSource().getConnection();
+			    conn = MM.sqlMap.getConnection();
 				st = conn.createStatement();
 				st.executeUpdate("BACKUP DATABASE TO '" + dir + backupFile + "' BLOCKING");
 				

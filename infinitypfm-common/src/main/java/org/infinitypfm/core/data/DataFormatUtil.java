@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import org.apache.commons.codec.DecoderException;
@@ -193,6 +194,18 @@ public class DataFormatUtil implements Serializable {
 		return formatter.format(amtD);
 
 	}
+	
+	/**
+	 * Format a double using to specified precision
+	 * @param amount as double
+	 * @return Formatted amount as string
+	 */
+	public String getAmountFormatted(double amount) {
+		
+		formatter.applyPattern(NumberFormat.getDefault(_precision));
+		return formatter.format(amount);
+
+	}
 
 	/**
 	 * Format a number using passed format with passed
@@ -210,6 +223,19 @@ public class DataFormatUtil implements Serializable {
 				_precision);
 
 		return formatter.format(amtD);
+	}
+	
+	/**
+	 * Format a number using passed format with passed
+	 * precision.
+	 * @param amount as double type
+	 * @param format format to use
+	 * @return Formatted amount as a string
+	 */
+	public String getAmountFormatted(double amount, String format) {
+		
+		formatter.applyPattern(format);
+		return formatter.format(amount);
 	}
 
 	/**
@@ -248,6 +274,22 @@ public class DataFormatUtil implements Serializable {
 		return calendar.getTime();
 	}
 
+	public Date convertUTCToLocal() {
+		
+		if (this.date == null) return null;
+		dateFmt = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		dateFmt.setTimeZone(TimeZone.getDefault());
+		
+		String sDate = dateFmt.format(date);
+		
+		//TODO: convert to java.time 
+		@SuppressWarnings("deprecation")
+		Date result = new Date(Date.parse(sDate));
+		
+		return result;
+		
+	}
+	
 	public Date getToday() {
 		return today.getTime();
 	}

@@ -47,6 +47,7 @@ public class MainMenu implements Widget {
 	private Menu mnuView;
 	private Menu mnuReports;
 	private MenuItem miConsole = null;
+	private MenuItem miBookmarks = null;
 
 	public MainMenu(Shell shMain) {
 		super();
@@ -95,8 +96,6 @@ public class MainMenu implements Widget {
 				' ');
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_QIF, "QIF",
 				' ');
-		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_BTC,
-				MM.PHRASES.getPhrase("217"), ' ');
 		
 		mi = addSelection(mnuImport, SWT.PUSH, MM.MENU_FILE_IMPORT_CSV,
 				MM.PHRASES.getPhrase("253"), ' ');
@@ -146,9 +145,24 @@ public class MainMenu implements Widget {
 		mi = addSelection(mnuView, SWT.PUSH, MM.MENU_OPTIONS_CONFIG,
 				MM.PHRASES.getPhrase("67"), 'O');
 
+		if (MM.options.isEnableWallet()) {
+		
+			mi = new MenuItem(mnuView, SWT.SEPARATOR);
+			
+			mi = addSelection(mnuView, SWT.PUSH, MM.VIEW_WALLET,
+				MM.PHRASES.getPhrase("276"), 'O');
+		
+		}
+		
 		mi = new MenuItem(mnuView, SWT.SEPARATOR);
+		
 		miConsole = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_CONSOLE,
 				MM.PHRASES.getPhrase("65"), ' ');
+		
+		mi = new MenuItem(mnuView, SWT.SEPARATOR);
+		
+		miBookmarks = addSelection(mnuView, SWT.CHECK, MM.MENU_VIEW_BOOKMARKS,
+				MM.PHRASES.getPhrase("62"), ' ');
 
 		/*
 		 * Reports Menu
@@ -171,6 +185,13 @@ public class MainMenu implements Widget {
 				MM.PHRASES.getPhrase("123") + " " + MM.PHRASES.getPhrase("126"),
 				' ');
 
+		mi = addSelection(
+				mnuReports,
+				SWT.PUSH,
+				MM.MENU_REPORTS_YEARLY_BALANCE,
+				MM.PHRASES.getPhrase("311"),
+				' ');
+		
 		mi = addSelection(mnuReports, SWT.PUSH,
 				MM.MENU_REPORTS_ACCOUNT_HISTORY, MM.PHRASES.getPhrase("136"),
 				' ');
@@ -226,6 +247,10 @@ public class MainMenu implements Widget {
 	public void setConsole(boolean bVal) {
 		miConsole.setSelection(bVal);
 	}
+	
+	public void setBookmarks(boolean bVal) {
+		miBookmarks.setSelection(bVal);
+	}
 
 	/* add listener */
 	Listener mnuClick = new Listener() {
@@ -241,6 +266,12 @@ public class MainMenu implements Widget {
 				if (iResult.intValue() == MM.MENU_VIEW_CONSOLE) {
 					if (!mi.getSelection()) {
 						action.ProcessMenuItem(MM.MENU_CONSOLE_CLOSE);
+					} else {
+						action.ProcessMenuItem(iResult.intValue());
+					}
+				} else if (iResult.intValue() == MM.MENU_VIEW_BOOKMARKS) {
+					if (!mi.getSelection()) {
+						action.ProcessMenuItem(MM.MENU_BOOKMARKS_CLOSE);
 					} else {
 						action.ProcessMenuItem(iResult.intValue());
 					}

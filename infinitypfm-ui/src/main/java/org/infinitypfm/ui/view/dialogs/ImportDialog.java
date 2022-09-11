@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -52,8 +52,8 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.AccountHash;
 import org.infinitypfm.core.data.ImportRule;
 import org.infinitypfm.core.data.Transaction;
+import org.infinitypfm.core.exception.TransactionException;
 import org.infinitypfm.data.DataHandler;
-import org.infinitypfm.exception.TransactionException;
 import org.infinitypfm.types.AccountTypes;
 import org.infinitypfm.types.ImportRuleNames;
 
@@ -81,6 +81,7 @@ public class ImportDialog extends BaseDialog {
 	private DataHandler data = new DataHandler();
 
 	private String importCurrency = null;
+	private int importPrecision = 2;
 	private final int importAccount;
 
 	private static final int EDITABLECOLUMN = 2;
@@ -89,20 +90,18 @@ public class ImportDialog extends BaseDialog {
 	private static final String SPLIT = "**" + MM.PHRASES.getPhrase("235")
 			+ "**";
 
-	@SuppressWarnings("unchecked")
 	public ImportDialog() {
 		super();
 
 		importAccount = -1;
 
 		try {
-			allActList = MM.sqlMap.queryForList("getAllAccountsByType", null);
-		} catch (SQLException se) {
+			allActList = MM.sqlMap.selectList("getAllAccountsByType", null);
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ImportDialog(java.util.List<Transaction> tList, int importAcct) {
 		super();
 
@@ -110,9 +109,9 @@ public class ImportDialog extends BaseDialog {
 		importAccount = importAcct;
 
 		try {
-			allActList = MM.sqlMap.queryForList("getAllAccountsByType", null);
+			allActList = MM.sqlMap.selectList("getAllAccountsByType", null);
 			actHash = new AccountHash(allActList);
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -203,7 +202,6 @@ public class ImportDialog extends BaseDialog {
 		return 1;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void LoadAccounts() {
 
 		TableEditor rateEditor = null;
@@ -221,8 +219,8 @@ public class ImportDialog extends BaseDialog {
 
 		// Load all defined import rules
 		try {
-			importRules = MM.sqlMap.queryForList("getImportRules");
-		} catch (SQLException e1) {
+			importRules = MM.sqlMap.selectList("getImportRules");
+		} catch (Exception e1) {
 			InfinityPfm.LogMessage("Error loading import rules:  "
 					+ e1.getMessage());
 		}
@@ -291,7 +289,7 @@ public class ImportDialog extends BaseDialog {
 
 						// Found a rule match. Add mapped offset to the
 						// transactions
-						offset = (Account) MM.sqlMap.queryForObject(
+						offset = (Account) MM.sqlMap.selectList(
 								"getAccountByActId", offset);
 						if (offset != null) {
 							tran.setActOffset(offset.getActId());
@@ -305,7 +303,7 @@ public class ImportDialog extends BaseDialog {
 					} else {
 
 						// Try to use last saved offset for this transactions
-						accountList = MM.sqlMap.queryForList(
+						accountList = MM.sqlMap.selectList(
 								"getAccountsForMemo", tran);
 
 						if (accountList != null) {
@@ -319,11 +317,12 @@ public class ImportDialog extends BaseDialog {
 						}
 					}
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					InfinityPfm.LogMessage(e.getMessage());
 				}
 
 				ti.setData(TRAN, tran);
+				
 				ti.setText(3,
 						formatter.getAmountFormatted(tran.getTranAmount()));
 
@@ -384,12 +383,11 @@ public class ImportDialog extends BaseDialog {
 		tblTrans.setHeaderVisible(true);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void LoadAccountCombo() {
 
 		try {
 			Account act = null;
-			java.util.List<Account> list = MM.sqlMap.queryForList(
+			java.util.List<Account> list = MM.sqlMap.selectList(
 					"getAccountsForType", AccountTypes.BANK);
 
 			if (list.size() == 0) {
@@ -408,6 +406,11 @@ public class ImportDialog extends BaseDialog {
 				if (act.getActId() == importAccount) {
 					showIndex = i;
 					importCurrency = act.getIsoCode();
+					if (act.getIsoCode().equalsIgnoreCase(MM.BSV)) {
+						importPrecision = 8;
+						formatter.setPrecision(importPrecision);
+					}
+					
 					lblAct.setText(MM.PHRASES.getPhrase("15") + " ("
 							+ importCurrency + ")");
 				}
@@ -416,7 +419,7 @@ public class ImportDialog extends BaseDialog {
 
 			cmbAct.select(showIndex);
 
-		} catch (SQLException se) {
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}

@@ -29,6 +29,10 @@ pbuilder-dist trusty build infinitypfm-ui_0.7.0-3ppa1.dsc
 
 java -cp /usr/share/java/hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
 
+sql to convert bigint currency values to double:
+
+java -cp /usr/share/java/hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
+
 ...or...
 
 hsqldb-databasemanagerswing
@@ -43,3 +47,8 @@ ppa4: trusty
 # Start db in server mode
 # Need host file entry INFINITYPFM_DB 
 java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server -database.0 file:ile:/home/user/.infinitypfm/data -dbname.0 infinitypfm
+
+Lite client BSV:  https://github.com/bitcoin-sv/bitcoinj-sv
+Lite client Toolbox: https://bitcoinsv.io/2021/10/06/liteclient-toolbox-open-source-project-releases/
+
+

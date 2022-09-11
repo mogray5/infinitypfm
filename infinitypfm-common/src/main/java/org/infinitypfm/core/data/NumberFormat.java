@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -18,7 +18,7 @@
 */
 package org.infinitypfm.core.data;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class NumberFormat {
 	

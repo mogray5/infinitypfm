@@ -47,8 +47,8 @@ public class DefaultAccountSelectorDialog extends BaseDialog {
 		super();
 
 		try {
-			allActList = MM.sqlMap.queryForList("getAccountTemplates", null);
-		} catch (SQLException se) {
+			allActList = MM.sqlMap.selectList("getAccountTemplates");
+		} catch (Exception se) {
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 
@@ -205,7 +205,7 @@ public class DefaultAccountSelectorDialog extends BaseDialog {
 							account.setActTypeId(catId.intValue());
 							try {
 								MM.sqlMap.insert("insertAccount", account);
-							} catch (SQLException se) {
+							} catch (Exception se) {
 								InfinityPfm.LogMessage(se.getMessage());
 							}
 

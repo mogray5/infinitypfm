@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2021 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -49,8 +49,8 @@ import org.infinitypfm.core.data.AccountHash;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.TransactionOffset;
+import org.infinitypfm.core.exception.TransactionException;
 import org.infinitypfm.data.DataHandler;
-import org.infinitypfm.exception.TransactionException;
 import org.infinitypfm.types.NumberFormat;
 
 /**
@@ -177,7 +177,7 @@ public class TransactionDialog extends BaseDialog {
 		//load offset accounts
 		try {
 			Account act = null;
-			java.util.List actList = MM.sqlMap.queryForList("getAllAccountsByType", null);
+			java.util.List actList = MM.sqlMap.selectList("getAllAccountsByType", null);
 			actHash = new AccountHash(actList);
 			
 			if (actList !=null){
@@ -205,7 +205,7 @@ public class TransactionDialog extends BaseDialog {
 					//Offset has the ID but is missing the name.  Go get it.
 					Transaction param = new Transaction();
 					param.setActId(offset.getOffsetId());
-					Account offsetAccount = (Account) MM.sqlMap.queryForObject("getAccountById", param);
+					Account offsetAccount = (Account) MM.sqlMap.selectOne("getAccountById", param);
 					
 					if (offsetAccount != null){
 						
@@ -230,7 +230,7 @@ public class TransactionDialog extends BaseDialog {
 		cmpOffset.setTabList(new Control[] {cmbOffset, txtOffset, cmdAddOffset, cmdClearOffset, cmdDeleteOffsetLine});
 		
 			
-		} catch (SQLException se){
+		} catch (Exception se){
 			InfinityPfm.LogMessage(se.getMessage());
 		}
 	}
@@ -570,7 +570,7 @@ private void LoadColumns() {
 		public void widgetSelected(SelectionEvent e){
 			
 			try {
-				Account act = (Account)MM.sqlMap.queryForObject("getAccountForName", cmbOffset.getText());
+				Account act = (Account)MM.sqlMap.selectOne("getAccountForName", cmbOffset.getText());
 				
 				if (!act.getIsoCode().equals(account.getIsoCode())){
 					

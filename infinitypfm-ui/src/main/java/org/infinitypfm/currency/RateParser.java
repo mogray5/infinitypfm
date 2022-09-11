@@ -34,7 +34,8 @@ public class RateParser {
 
 		BigDecimal rate = null;
 		String page = null;
-		page = PageHandler.getPage(method.getMethodUrl());
+		if (method != null)
+			page = PageHandler.getPage(method.getMethodUrl());
 
 		if (page != null && page.length() > 0) {
 
