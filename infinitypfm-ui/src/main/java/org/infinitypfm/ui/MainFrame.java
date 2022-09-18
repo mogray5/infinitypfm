@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -244,8 +244,8 @@ public class MainFrame {
 			
 			bkMain = new BookmarksView(InfinityPfm.shMain, SWT.NONE);
 
-			bkMain.setBackground(InfinityPfm.shMain.getDisplay()
-					.getSystemColor(SWT.COLOR_WHITE));
+			//bkMain.setBackground(InfinityPfm.shMain.getDisplay()
+			//		.getSystemColor(SWT.COLOR_WHITE));
 
 			bkMain.setLayout(new FormLayout());
 
@@ -295,7 +295,7 @@ public class MainFrame {
 			});
 			
 			//vwMain
-		} else if (!bLoad && msgMain != null) {
+		} else if (!bLoad && bkMain != null) {
 			bkMain.QZDispose();
 			bkMain = null;
 			if (!BookmarkSash.isDisposed())
