@@ -203,5 +203,20 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
        ]]>
   </select>
   
+   <select id="getRegisterTotal" resultType="java.lang.String" parameterType="dateRangeAccount" flushCache="true">
+      <![CDATA[
+        SELECT
+           ABS(SUM(TranAmount)) as actBalance
+        FROM Transactions
+         INNER JOIN Accounts
+          ON Transactions.ActId = Accounts.ActId
+         INNER JOIN AccountTypes
+          ON Accounts.ActTypeId = AccountTypes.ActTypeId
+        WHERE ActId = #{actId} 
+        	AND TranDate >= #{startDate}
+         	AND TranDate <=#{endDate};
+       ]]>
+  </select>
+  
   
 </mapper>

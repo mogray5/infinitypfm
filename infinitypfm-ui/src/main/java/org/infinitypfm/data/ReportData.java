@@ -253,8 +253,10 @@ public class ReportData {
 			title = MM.PHRASES.getPhrase("314");
 			account = ((ParamDateRangeAccount)params).getAccountName();
 			Account act = (Account)MM.sqlMap.selectOne("getAccountForName", account);
+			initTotalsAccountRegister(params);
 			dataUtil.setPrecision(act.getCurrencyPrecision());
 			setReportData("getRegister", params);
+			
 			_template = MM.RPT_ACCOUNT_REGISTER;
 			break;
 			
@@ -387,6 +389,19 @@ public class ReportData {
 
 			accountTotal = (String) MM.sqlMap.selectOne(
 					"getMonthlyTotalByAccountName", tran);
+
+		} catch (Exception e) {
+			InfinityPfm.LogMessage(e.getMessage());
+		}
+
+	}
+	
+	private void initTotalsAccountRegister(Object params) {
+
+		try {
+
+			accountTotal = (String) MM.sqlMap.selectOne(
+					"getRegisterTotal", params);
 
 		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());

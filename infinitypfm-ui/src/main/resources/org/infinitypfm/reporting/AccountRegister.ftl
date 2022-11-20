@@ -21,9 +21,20 @@
 	</style>
 </head>
 	<body>
-		<h2>${account}</h2>
-			
-<div class="tblWrapper">									
+	<article>
+		<header>
+			<div>
+				<span class="totals">${wordAccountName}:</span>
+				<span class="totals-dat">${account}</span>
+			</div>
+			<div>
+				<span class="totals">${wordAccountTotal}:</span>
+				<span class="totals-dat">${accountTotal!"0"}</span>
+			</div>
+		<br/>
+		</header>
+		
+	<div class="tblWrapper">									
 		<table id="tblRegister">
 			<tr>
 				<th>${wordTranDate}</th>
@@ -41,6 +52,7 @@
 			</#list>
 			
 		</table>
-</div>
+	</div>
+	</article>
 	</body>
 </html>
