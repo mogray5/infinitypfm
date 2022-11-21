@@ -83,7 +83,8 @@ public class CsvImport extends BaseImport {
 			    		memo = record.get(def.getMemoField());
 			    	}
 			    	
-				    long amount = DataFormatUtil.moneyToLong(record.get(def.getAmountField()));
+			    	String sAmount = record.get(def.getAmountField()).replaceAll("[^\\d.]", "");
+				    long amount = DataFormatUtil.moneyToLong(sAmount);
 				    
 				    dataUtils.setDate(record.get(def.getDateField()), def.getDateFormat());
 				    Date dt = dataUtils.getDate();

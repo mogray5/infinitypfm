@@ -374,6 +374,8 @@ public class LangLoader {
 		hmPhrases.put("327",  i18n.tr("Path"));
 		hmPhrases.put("328",  i18n.tr("Value"));
 		hmPhrases.put("329",  i18n.tr("UTXO Report"));
+		hmPhrases.put("330",  i18n.tr("Remove Budget"));
+		hmPhrases.put("331", i18n.tr("Are you sure you want to delete budget: %s?"));
 
 	}
 	

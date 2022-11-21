@@ -33,6 +33,9 @@ public class BudgetMenu extends PopupMenu {
 		addSelection(SWT.PUSH, MM.MENU_TREE_REM_ACT_BUDGET, MM.PHRASES
 				.getPhrase("140"), 'A');
 		
+		addSelection(SWT.PUSH, MM.MENU_TREE_REM_BUDGET, MM.PHRASES
+				.getPhrase("330"), 'R');
+		
 		addSelection(SWT.PUSH, MM.MENU_TREE_CLOSEVIEW, MM.PHRASES
 				.getPhrase("54"), 'C');
 	}

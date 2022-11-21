@@ -163,6 +163,13 @@ public class MainAction {
 		case MM.MENU_BUDGET_SAVE:
 
 			break;
+		case MM.MENU_TREE_REM_BUDGET:
+			try {
+				this.RemoveBudget();
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			break;
 		case MM.MENU_REPORT_EXECUTE:
 		case MM.MENU_REPORTS_MONTHLY_BALANCE:
 			try {
@@ -491,6 +498,33 @@ public class MainAction {
 
 	}
 
+	public void RemoveBudget() {
+		
+		Budget budget = InfinityPfm.qzMain.getTrMain()
+				.getSelectedBudget();
+		
+		if (budget == null) return;
+		
+		MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+				String.format(MM.PHRASES.getPhrase("331"), budget.getBudgetName()));
+		
+		dlg.setDimensions(400, 150);
+		int iResult = dlg.Open();
+
+		if (iResult == MM.YES) {
+			
+			try {
+				DataHandler dataHandler = new DataHandler();
+				dataHandler.RemoveBudget(budget);
+			} catch (SQLException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			this.CloseCurrentView();
+			InfinityPfm.qzMain.getTrMain().Reload();
+			InfinityPfm.LogMessage("removed:  " + budget.getBudgetId());
+		}
+	}
+	
 	public void LoadImportDialog(int importType, int showAccount) {
 
 		BaseImport importer = null;

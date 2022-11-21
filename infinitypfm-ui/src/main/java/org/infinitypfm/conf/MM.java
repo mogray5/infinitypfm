@@ -148,7 +148,8 @@ public class MM {
 	public static final int MENU_TREE_ADD_ACT_BUDGET = 25;
 	public static final int MENU_TREE_ADD_ACT_FROM_TEMP = 26;
 	public static final int MENU_TREE_REM_ACT_BUDGET = 27;
-	public static final int MENU_TREE_EDIT_ACT = 28;
+	public static final int MENU_TREE_REM_BUDGET = 28;
+	public static final int MENU_TREE_EDIT_ACT = 29;
 
 	public static final int MENU_FILE_EXIT = 30;
 	public static final int MENU_FILE_SAVE = 31;
