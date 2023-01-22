@@ -457,8 +457,10 @@ public class ReportData {
 		BudgetSelector budgetDialog = new BudgetSelector();
 		budgetDialog.Open();
 		userCancelled = budgetDialog.userCancelled();
-
-		return budgetDialog.getBudgetName();
+		if (userCancelled)
+			return null;
+		else
+			return budgetDialog.getBudgetName();
 	}
 
 	private String promptForAccount() {

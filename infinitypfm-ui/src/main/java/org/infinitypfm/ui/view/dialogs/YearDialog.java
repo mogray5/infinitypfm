@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2022 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -57,7 +57,7 @@ public class YearDialog extends BaseDialog {
 		
 		int year = dateUtil.getYear();
 		
-		for (int j=year-20; j<=year; j++)	
+		for (int j=year; j>year-20; j--)	
 			cmbYear.add(Integer.toString(j));
 
 		

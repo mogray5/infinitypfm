@@ -42,6 +42,7 @@
 				<th>${wordDebit}</th>
 				<th>${wordCredit}</th>
 			</tr>
+			<#if reportData??>
 			<#list reportData as row>
 				<tr>
 					<td>${row.transactionDateFormatted}</td>
@@ -50,6 +51,7 @@
 					<td>${row.creditFormatted}</td>
 				</tr>		
 			</#list>
+			</#if>
 			
 		</table>
 	</div>
