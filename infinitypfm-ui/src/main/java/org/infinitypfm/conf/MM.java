@@ -139,6 +139,7 @@ public class MM {
 	public static final int MENU_VIEW_CONSOLE = 10;
 	public static final int MENU_VIEW_TRANS_ENTRY = 11;
 	public static final int MENU_VIEW_BOOKMARKS = 12;
+	public static final int MENU_VIEW_PLANNER = 13;
 	
 	public static final int MENU_TREE_REFRESH = 20;
 	public static final int MENU_TREE_ACT_REMOVE = 21;
