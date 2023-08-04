@@ -139,7 +139,6 @@ public class MM {
 	public static final int MENU_VIEW_CONSOLE = 10;
 	public static final int MENU_VIEW_TRANS_ENTRY = 11;
 	public static final int MENU_VIEW_BOOKMARKS = 12;
-	public static final int MENU_VIEW_PLANNER = 13;
 	
 	public static final int MENU_TREE_REFRESH = 20;
 	public static final int MENU_TREE_ACT_REMOVE = 21;
@@ -221,6 +220,7 @@ public class MM {
 	public static final int VIEW_RECURRENCE=407;
 	public static final int VIEW_CURRENCY=408;
 	public static final int VIEW_WALLET=409;
+	public static final int VIEW_PLANNER=410;
 	
 	public static final int QS_REFRESH_QUEUE = 0;
 	public static final int QS_REFRESH_TOPIC = 1;

@@ -142,7 +142,7 @@ public class MainMenu implements Widget {
 		mi = addSelection(mnuView, SWT.PUSH, MM.MENU_VIEW_TRANS_ENTRY,
 				MM.PHRASES.getPhrase("79"), 'T');
 		
-		mi = addSelection(mnuView, SWT.PUSH, MM.MENU_VIEW_PLANNER,
+		mi = addSelection(mnuView, SWT.PUSH, MM.VIEW_PLANNER,
 				MM.PHRASES.getPhrase("332"), 'P');
 
 		mi = addSelection(mnuView, SWT.PUSH, MM.MENU_OPTIONS_CONFIG,

@@ -377,6 +377,7 @@ public class LangLoader {
 		hmPhrases.put("330",  i18n.tr("Remove Budget"));
 		hmPhrases.put("331", i18n.tr("Are you sure you want to delete budget: %s?"));
 		hmPhrases.put("332", i18n.tr("Retirement Planner"));
+		hmPhrases.put("333", i18n.tr("Plans"));
 
 	}
 	

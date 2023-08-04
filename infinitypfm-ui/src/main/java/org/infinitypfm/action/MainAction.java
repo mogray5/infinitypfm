@@ -247,6 +247,9 @@ public class MainAction {
 		case MM.VIEW_BUDGET:
 			this.LoadView(MM.VIEW_BUDGET);
 			break;
+		case MM.VIEW_PLANNER:
+			this.LoadView(MM.VIEW_PLANNER);
+			break;
 		case MM.MENU_CONSOLE_CLOSE:
 			ToggleConsole(false);
 			break;
