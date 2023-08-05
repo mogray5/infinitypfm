@@ -380,6 +380,10 @@ public class LangLoader {
 		hmPhrases.put("333", i18n.tr("Plan"));
 		hmPhrases.put("334", i18n.tr("Add Plan"));
 		hmPhrases.put("335", i18n.tr("Delete Plan"));
+		hmPhrases.put("336", i18n.tr("Run Plan"));
+		hmPhrases.put("337", i18n.tr("Plan Name"));
+		hmPhrases.put("338", i18n.tr("Starting Balance"));
+		hmPhrases.put("339", i18n.tr("Starting Age"));
 
 	}
 	

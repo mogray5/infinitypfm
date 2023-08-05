@@ -72,6 +72,7 @@ import org.infinitypfm.ui.view.dialogs.InfoDialog;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
+import org.infinitypfm.ui.view.dialogs.NewPlanDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
@@ -138,6 +139,9 @@ public class MainAction {
 			break;
 		case MM.MENU_TREE_ADD_ACT_FROM_TEMP:
 			this.LoadNewAccountSelectorDialog();
+			break;
+		case MM.MENU_TREE_ADD_PLAN:
+			this.LoadNewPlanDialog();
 			break;
 		case MM.MENU_TREE_REFRESH:
 			this.RefreshCurrentView();
@@ -408,6 +412,11 @@ public class MainAction {
 		about.Open();
 	}
 
+	public void LoadNewPlanDialog() {
+		BaseDialog plan = new NewPlanDialog();
+		plan.Open();
+	}
+	
 	public void LoadNewAccountDialog() {
 		BaseDialog act = new NewAccountDialog();
 		act.Open();

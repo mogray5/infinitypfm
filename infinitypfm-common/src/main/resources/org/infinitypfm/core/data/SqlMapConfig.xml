@@ -41,6 +41,7 @@
 	<typeAlias alias="importDef" type="org.infinitypfm.core.data.ImportDef"/>
 	<typeAlias alias="importRule" type="org.infinitypfm.core.data.ImportRule" />
 	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
+	<typeAlias alias="plan" type="org.infinitypfm.core.data.Plan"/>
 	<typeAlias alias="yearBalance" type="org.infinitypfm.core.data.YearlyBalance"/>
 	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
 	<typeAlias alias="register" type="org.infinitypfm.core.data.RegisterEntry" />
@@ -86,6 +87,7 @@
   <mapper resource="org/infinitypfm/core/data/ImportRules.xml" />
   <mapper resource="org/infinitypfm/core/data/Connectors.xml" />
   <mapper resource="org/infinitypfm/core/data/Trades.xml" />
+  <mapper resource="org/infinitypfm/core/data/Plans.xml" />
 </mappers>
 
 </configuration>

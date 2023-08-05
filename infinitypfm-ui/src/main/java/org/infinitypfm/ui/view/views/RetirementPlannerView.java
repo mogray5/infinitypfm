@@ -42,6 +42,7 @@ public class RetirementPlannerView extends BaseView {
 	private List lstPlans = null;
 	private Composite cmpHeader = null;
 	private Button cmdRemovePlan = null;
+	private Button cmdRunPlan = null;
 	private Table tblPlanDetail = null;
 	
 	
@@ -64,6 +65,10 @@ public class RetirementPlannerView extends BaseView {
 		cmdRemovePlan = new Button(cmpHeader, SWT.PUSH);
 		cmdRemovePlan.setText(MM.PHRASES.getPhrase("335"));
 		cmdRemovePlan.setEnabled(false);
+		
+		cmdRunPlan = new Button(cmpHeader, SWT.PUSH);
+		cmdRunPlan.setText(MM.PHRASES.getPhrase("336"));
+		cmdRunPlan.setEnabled(false);
 	}
 
 	protected void LoadLayout() {
@@ -82,10 +87,15 @@ public class RetirementPlannerView extends BaseView {
 		cmpheaderdata.right = new FormAttachment(100, -10);
 		cmpheaderdata.bottom = new FormAttachment(0, 80);
 		cmpHeader.setLayoutData(cmpheaderdata);
+
+		FormData cmdrunplandata = new FormData();
+		cmdrunplandata.top = new FormAttachment(0, 6);
+		cmdrunplandata.left = new FormAttachment(0, 10);
+		cmdRunPlan.setLayoutData(cmdrunplandata);
 		
 		FormData cmdremoveplandata = new FormData();
 		cmdremoveplandata.top = new FormAttachment(0, 6);
-		cmdremoveplandata.left = new FormAttachment(0, 10);
+		cmdremoveplandata.left = new FormAttachment(cmdRunPlan, 10);
 		cmdRemovePlan.setLayoutData(cmdremoveplandata);
 		
 		FormData tblplandetaildata = new FormData();
@@ -106,9 +116,11 @@ public class RetirementPlannerView extends BaseView {
 	@Override
 	public void Refresh() {
 		super.Refresh();
-
 	}
 
+	private void InitTable() {
+		
+	}
 
 	/*
 	 * Listeners

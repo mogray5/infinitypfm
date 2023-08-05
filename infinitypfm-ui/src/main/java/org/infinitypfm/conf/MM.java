@@ -36,10 +36,10 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.9.5"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.9.6"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2022 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2023 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -152,16 +152,16 @@ public class MM {
 	public static final int MENU_TREE_EDIT_ACT = 29;
 	public static final int MENU_TREE_ADD_PLAN = 30;
 
-	public static final int MENU_FILE_EXIT = 30;
-	public static final int MENU_FILE_SAVE = 31;
-	public static final int MENU_FILE_IMPORT_OFX = 32;
-	public static final int MENU_FILE_IMPORT_QFX = 33;
-	public static final int MENU_FILE_IMPORT_QIF = 34;
-	public static final int MENU_FILE_IMPORT_RULES = 36;
-	public static final int MENU_FILE_BACKUP = 37;
-	public static final int MENU_FILE_RESTORE = 38;
-	public static final int MENU_FILE_IMPORT_CSV = 39;
-	public static final int MENU_FILE_IMPORT_MAIL = 40;
+	public static final int MENU_FILE_EXIT = 40;
+	public static final int MENU_FILE_SAVE = 41;
+	public static final int MENU_FILE_IMPORT_OFX = 42;
+	public static final int MENU_FILE_IMPORT_QFX = 43;
+	public static final int MENU_FILE_IMPORT_QIF = 44;
+	public static final int MENU_FILE_IMPORT_RULES = 45;
+	public static final int MENU_FILE_BACKUP = 46;
+	public static final int MENU_FILE_RESTORE = 47;
+	public static final int MENU_FILE_IMPORT_CSV = 48;
+	public static final int MENU_FILE_IMPORT_MAIL = 49;
 	
 	public static final int MENU_REPORT_EXECUTE = 60;
 	public static final int MENU_REPORT_SAVE = 61;

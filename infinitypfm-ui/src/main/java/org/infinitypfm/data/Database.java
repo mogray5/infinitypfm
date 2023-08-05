@@ -57,7 +57,8 @@ public class Database {
 				"createFKImportRules",
 				"akTransactions",
 				"createTableConnectors",
-				"createTableImportDef"
+				"createTableImportDef",
+				"createTablePlans"
 				};
 
 		
