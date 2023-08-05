@@ -24,8 +24,8 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Table;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
@@ -40,10 +40,10 @@ public class RetirementPlannerView extends BaseView {
 	private RetirementPlannerToolbar tbMain = null;
 	
 	private List lstPlans = null;
-	private Label lblPlans = null;
 	private Composite cmpHeader = null;
-	private Button cmdDelPlan = null;
-	private Button cmdAddPlan = null;
+	private Button cmdRemovePlan = null;
+	private Table tblPlanDetail = null;
+	
 	
 	public RetirementPlannerView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -58,40 +58,44 @@ public class RetirementPlannerView extends BaseView {
 	protected void LoadUI() {
 		tbMain = new RetirementPlannerToolbar(this);
 		lstPlans = new List (this, SWT.BORDER | SWT.V_SCROLL);
-		lblPlans = new Label(this, SWT.NONE);
-		lblPlans.setText(MM.PHRASES.getPhrase("333"));
-		cmdAddPlan = new Button(this, SWT.PUSH);
-		cmdAddPlan.setText(MM.PHRASES.getPhrase("45"));
-		cmdDelPlan = new Button(this, SWT.PUSH);
-		cmdDelPlan.setText(MM.PHRASES.getPhrase("6"));
-		
-		
+		tblPlanDetail = new Table(this, SWT.BORDER);
+		cmpHeader = new Composite(this, SWT.BORDER);
+		cmpHeader.setLayout(new FormLayout());
+		cmdRemovePlan = new Button(cmpHeader, SWT.PUSH);
+		cmdRemovePlan.setText(MM.PHRASES.getPhrase("335"));
+		cmdRemovePlan.setEnabled(false);
 	}
 
 	protected void LoadLayout() {
 		this.setLayout(new FormLayout());
 
-		FormData lblplansdata = new FormData();
-		lblplansdata.top = new FormAttachment(0, 20);
-		lblplansdata.left = new FormAttachment(0, 50);
-		lblPlans.setLayoutData(lblplansdata);
-		
-		FormData cmdaddplandata = new FormData();
-		cmdaddplandata.top = new FormAttachment(0, 10);
-		cmdaddplandata.left = new FormAttachment(lblPlans, 5);
-		cmdAddPlan.setLayoutData(cmdaddplandata);
-		
-		FormData cmddelplandata = new FormData();
-		cmddelplandata.top = new FormAttachment(0, 10);
-		cmddelplandata.left = new FormAttachment(cmdAddPlan, 5);
-		cmdDelPlan.setLayoutData(cmddelplandata);
-		
 		FormData lstplansdata = new FormData();
-		lstplansdata.top = new FormAttachment(lblPlans, 10);
+		lstplansdata.top = new FormAttachment(0, 32);
 		lstplansdata.left = new FormAttachment(0, 5);
 		lstplansdata.right = new FormAttachment(0, 260);
 		lstplansdata.bottom = new FormAttachment(100, -10);
 		lstPlans.setLayoutData(lstplansdata);
+
+		FormData cmpheaderdata = new FormData();
+		cmpheaderdata.top = new FormAttachment(0, 32);
+		cmpheaderdata.left = new FormAttachment(lstPlans, 10);
+		cmpheaderdata.right = new FormAttachment(100, -10);
+		cmpheaderdata.bottom = new FormAttachment(0, 80);
+		cmpHeader.setLayoutData(cmpheaderdata);
+		
+		FormData cmdremoveplandata = new FormData();
+		cmdremoveplandata.top = new FormAttachment(0, 6);
+		cmdremoveplandata.left = new FormAttachment(0, 10);
+		cmdRemovePlan.setLayoutData(cmdremoveplandata);
+		
+		FormData tblplandetaildata = new FormData();
+		tblplandetaildata.top = new FormAttachment(cmpHeader, 10);
+		tblplandetaildata.left = new FormAttachment(lstPlans, 10);
+		tblplandetaildata.right = new FormAttachment(100, -10);
+		tblplandetaildata.bottom = new FormAttachment(100, -10);
+		tblPlanDetail.setLayoutData(tblplandetaildata);
+
+
 		
 		FormData tbmaindata = new FormData();
 		tbmaindata.right = new FormAttachment(100, 0);

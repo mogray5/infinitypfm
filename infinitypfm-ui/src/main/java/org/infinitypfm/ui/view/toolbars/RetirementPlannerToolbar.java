@@ -34,6 +34,9 @@ public class RetirementPlannerToolbar extends BaseToolbar {
 
 	protected void LoadButtons() {
 		
+		addButton(MM.IMG_ADD, MM.PHRASES.getPhrase("334"),
+				MM.MENU_TREE_ADD_PLAN, true);
+		
 		addButton(MM.IMG_CLOSE_SMALL, MM.PHRASES.getPhrase("54"),
 				MM.MENU_TREE_CLOSEVIEW, true);
 	}
