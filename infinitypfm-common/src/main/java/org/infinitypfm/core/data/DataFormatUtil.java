@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -414,4 +414,18 @@ public class DataFormatUtil implements Serializable {
 		return result;
 		
 	}
+	
+	public static boolean isInteger(String val) {
+		try{
+		Integer.parseInt(val);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean isNumber(String val) {
+		return true;
+	}
+	
 }

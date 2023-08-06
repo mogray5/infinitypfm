@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.action.MainAction;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.Plan;
 
 /**
  * Pop-up Dialog for adding new plans.
@@ -53,6 +54,7 @@ public class NewPlanDialog extends BaseDialog {
 
 	public NewPlanDialog() {
 		super();
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 	}
 
 	protected void LoadUI(Shell sh) {
@@ -95,46 +97,47 @@ public class NewPlanDialog extends BaseDialog {
 		txtPlanName.setLayoutData(txtplannamedata);
 
 		FormData lblstartbalancedata = new FormData();
-		lblstartbalancedata.top = new FormAttachment(lblPlanName, 25);
+		lblstartbalancedata.top = new FormAttachment(lblPlanName, 20);
 		lblstartbalancedata.left = new FormAttachment(0, 40);
 		lblStartBalance.setLayoutData(lblstartbalancedata);
 
 		FormData txtstartbalancedata = new FormData();
 		txtstartbalancedata.top = new FormAttachment(lblPlanName, 25);
-		txtstartbalancedata.left = new FormAttachment(lblStartBalance, 80);
+		txtstartbalancedata.left = new FormAttachment(lblPlanName, 80);
 		txtstartbalancedata.right = new FormAttachment(100, -120);
 		txtStartBalance.setLayoutData(txtstartbalancedata);
 
 		FormData lblstartagedata = new FormData();
-		lblstartagedata.top = new FormAttachment(lblStartBalance, 35);
+		lblstartagedata.top = new FormAttachment(lblStartBalance, 30);
 		lblstartagedata.left = new FormAttachment(0, 40);
 		lblStartAge.setLayoutData(lblstartagedata);
 
 		FormData txtstartagedata = new FormData();
 		txtstartagedata.top = new FormAttachment(lblStartBalance, 25);
-		txtstartagedata.left = new FormAttachment(lblStartAge, 80);
+		txtstartagedata.left = new FormAttachment(lblPlanName, 80);
 		txtstartagedata.right = new FormAttachment(100, -200);
 		txtStartAge.setLayoutData(txtstartagedata);
 
-		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(lblStartAge, 20);
-		cmdsavedata.left = new FormAttachment(0, 95);
-		cmdsavedata.right = new FormAttachment(100, -255);
-		cmdSave.setLayoutData(cmdsavedata);
-				
+		
 		FormData cmdcanceldata = new FormData();
 		cmdcanceldata.top = new FormAttachment(lblStartAge, 20);
-		cmdcanceldata.left = new FormAttachment(cmdSave, 5);
-		cmdcanceldata.right = new FormAttachment(100, -115);
+		cmdcanceldata.left = new FormAttachment(0, 95);
+		cmdcanceldata.right = new FormAttachment(100, -255);
 		cmdCancel.setLayoutData(cmdcanceldata);
+		
+		FormData cmdsavedata = new FormData();
+		cmdsavedata.top = new FormAttachment(lblStartAge, 20);
+		cmdsavedata.left = new FormAttachment(cmdCancel, 5);
+		cmdsavedata.right = new FormAttachment(100, -115);
+		cmdSave.setLayoutData(cmdsavedata);
 
 	}
 
 	public int Open() {
 		super.Open();
-		shell.setText(MM.PHRASES.getPhrase("82") + " " + MM.APPTITLE);
+		shell.setText(MM.PHRASES.getPhrase("334") + " " + MM.APPTITLE);
 
-		shell.setSize(500, 350);
+		shell.setSize(500, 200);
 		this.CenterWindow();
 
 		shell.open();
@@ -157,7 +160,16 @@ public class NewPlanDialog extends BaseDialog {
 			MainAction action = new MainAction();
 			boolean doDispose = true;
 			
-
+			if (!DataFormatUtil.isInteger(txtStartAge.getText())) {
+				
+			}
+			
+			Plan plan = new Plan();
+			plan.setPlanName(txtPlanName.getText());
+			plan.setStartAge(Integer.parseInt(txtStartAge.getText()));
+			plan.setStartBalance(DataFormatUtil.moneyToLong(txtStartBalance.getText()));
+			//insertPlan
+			MM.sqlMap.insert("insertPlan", plan);
 			
 			if (doDispose){
 				shell.dispose();

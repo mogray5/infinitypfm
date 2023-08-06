@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Table;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
+import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
 
 /**
@@ -54,6 +55,7 @@ public class RetirementPlannerView extends BaseView {
 		// init console
 		LoadUI();
 		LoadLayout();
+		LoadPlans();
 	}
 
 	protected void LoadUI() {
@@ -118,8 +120,28 @@ public class RetirementPlannerView extends BaseView {
 		super.Refresh();
 	}
 
+	/*
+	 * Helpers
+	 */
+	
 	private void InitTable() {
 		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void LoadPlans() {
+		
+		lstPlans.removeAll();
+		
+		java.util.List plans = (java.util.List)MM.sqlMap.selectList("getPlans", null);
+		if (plans != null && plans.size() >0) {
+			for (Object p : plans) {
+				
+				Plan plan = (Plan) p;
+				lstPlans.add(plan.getPlanName());
+			}
+		}
+		 
 	}
 
 	/*
