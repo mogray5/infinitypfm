@@ -23,6 +23,7 @@ package org.infinitypfm.ui.view.toolbars;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
+import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 
 public class RetirementPlannerToolbar extends BaseToolbar {
@@ -47,6 +48,7 @@ public class RetirementPlannerToolbar extends BaseToolbar {
 	}
 
 	public void Refresh() {
+		InfinityPfm.LogMessage("refresh");
 	}
 
 }

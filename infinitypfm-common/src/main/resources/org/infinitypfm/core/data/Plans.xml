@@ -40,5 +40,19 @@
 		From Plans
 		ORDER BY PlanName
 	</select>
+	
+	<select id="getPlanByName" parameterType="java.lang.String" resultType="plan" flushCache="true">
+		SELECT PlanID,
+			PlanName,
+			StartBalance,
+			StartAge
+		From Plans
+		WHERE PlanName=#{value}
+	</select>
+
+    <delete id="deletePlan" parameterType="java.lang.String">
+	    DELETE FROM Plans
+    	  WHERE PlanName = #{value}
+   </delete>
 
 </mapper>

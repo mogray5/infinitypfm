@@ -415,6 +415,7 @@ public class MainAction {
 	public void LoadNewPlanDialog() {
 		BaseDialog plan = new NewPlanDialog();
 		plan.Open();
+		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
 	}
 	
 	public void LoadNewAccountDialog() {
