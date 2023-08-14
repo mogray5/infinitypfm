@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang3.StringUtils;
 import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.conf.PfmSettings;
 
@@ -417,7 +418,10 @@ public class DataFormatUtil implements Serializable {
 	
 	public static boolean isInteger(String val) {
 		try{
-		Integer.parseInt(val);
+			if (StringUtils.isNumeric(val))
+				Integer.parseInt(val);
+			else 
+				return false;
 		} catch (Exception e) {
 			return false;
 		}
@@ -425,7 +429,14 @@ public class DataFormatUtil implements Serializable {
 	}
 	
 	public static boolean isNumber(String val) {
-		return true;
+		if (StringUtils.isNoneEmpty(val)) {
+			try {
+				Float.parseFloat(val);
+				return true;
+			} catch (Exception e) {}
+		}
+		
+		return false;
 	}
 	
 }

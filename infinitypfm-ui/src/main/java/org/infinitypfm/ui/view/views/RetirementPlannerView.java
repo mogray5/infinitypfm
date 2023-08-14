@@ -33,6 +33,8 @@ import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Plan;
+import org.infinitypfm.core.data.PlanEvent;
+import org.infinitypfm.ui.view.dialogs.NewPlanEventDialog;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
 
 /**
@@ -48,10 +50,13 @@ public class RetirementPlannerView extends BaseView {
 	private Composite cmpHeader = null;
 	private Button cmdRemovePlan = null;
 	private Button cmdRunPlan = null;
+	private Button cmdAddEvent = null;
 	private Table tblPlanDetail = null;
 	private Label lblPlanName = null; 
 	private Label lblStartAmount = null;
 	private Label lblStartAge = null; 
+	
+	private Plan _plan = null;
 	
 	public RetirementPlannerView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -81,6 +86,11 @@ public class RetirementPlannerView extends BaseView {
 		cmdRunPlan.setEnabled(false);
 		cmdRunPlan.addSelectionListener(cmdRunPlan_OnClick);
 		
+		cmdAddEvent = new Button(cmpHeader, SWT.PUSH);
+		cmdAddEvent.setText(MM.PHRASES.getPhrase("346"));
+		cmdAddEvent.setEnabled(false);
+		cmdAddEvent.addSelectionListener(cmdAddEvent_OnClick);
+		
 		lblPlanName = new Label(cmpHeader, SWT.NONE); 
 		lblPlanName.setText(" ");
 		lblStartAmount = new Label(cmpHeader, SWT.NONE);
@@ -103,18 +113,23 @@ public class RetirementPlannerView extends BaseView {
 		cmpheaderdata.top = new FormAttachment(0, 32);
 		cmpheaderdata.left = new FormAttachment(lstPlans, 10);
 		cmpheaderdata.right = new FormAttachment(100, -10);
-		cmpheaderdata.bottom = new FormAttachment(0, 120);
+		cmpheaderdata.bottom = new FormAttachment(0, 125);
 		cmpHeader.setLayoutData(cmpheaderdata);
 
 		FormData cmdrunplandata = new FormData();
-		cmdrunplandata.top = new FormAttachment(0, 6);
+		cmdrunplandata.top = new FormAttachment(0, 10);
 		cmdrunplandata.left = new FormAttachment(0, 10);
 		cmdRunPlan.setLayoutData(cmdrunplandata);
 		
 		FormData cmdremoveplandata = new FormData();
-		cmdremoveplandata.top = new FormAttachment(0, 6);
+		cmdremoveplandata.top = new FormAttachment(0, 10);
 		cmdremoveplandata.left = new FormAttachment(cmdRunPlan, 10);
 		cmdRemovePlan.setLayoutData(cmdremoveplandata);
+
+		FormData cmdaddeventdata = new FormData();
+		cmdaddeventdata.top = new FormAttachment(cmdRunPlan, 5);
+		cmdaddeventdata.left = new FormAttachment(0, 10);
+		cmdAddEvent.setLayoutData(cmdaddeventdata);
 		
 		FormData tblplandetaildata = new FormData();
 		tblplandetaildata.top = new FormAttachment(cmpHeader, 10);
@@ -124,13 +139,13 @@ public class RetirementPlannerView extends BaseView {
 		tblPlanDetail.setLayoutData(tblplandetaildata);
 
 		FormData lblplannamedata = new FormData();
-		lblplannamedata.top = new FormAttachment(0, 10);
+		lblplannamedata.top = new FormAttachment(0, 15);
 		lblplannamedata.left = new FormAttachment(cmdRemovePlan, 10);
 		lblplannamedata.right = new FormAttachment(cmdRemovePlan, 280);
 		lblPlanName.setLayoutData(lblplannamedata);
 		
 		FormData lblstartamountdata = new FormData();
-		lblstartamountdata.top = new FormAttachment(0, 10);
+		lblstartamountdata.top = new FormAttachment(0, 15);
 		lblstartamountdata.left = new FormAttachment(lblPlanName, 10);
 		lblstartamountdata.right = new FormAttachment(lblPlanName, 400);
 		lblStartAmount.setLayoutData(lblstartamountdata);
@@ -172,9 +187,9 @@ public class RetirementPlannerView extends BaseView {
 				
 				Plan plan = (Plan) p;
 				lstPlans.add(plan.getPlanName());
+				lstPlans.setData(plan.getPlanName(), p);
 			}
 		}
-		 
 	}
 
 	/*
@@ -184,13 +199,14 @@ public class RetirementPlannerView extends BaseView {
 	SelectionAdapter lstPlans_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			
-			Plan plan = (Plan) MM.sqlMap.selectOne("getPlanByName", lstPlans.getSelection()[0]);
-			InfinityPfm.LogMessage("Plan " + plan.getPlanName());
-			lblPlanName.setText(MM.PHRASES.getPhrase("337") + ": " + plan.getPlanName());
-			lblStartAmount.setText(MM.PHRASES.getPhrase("338")  + ": " + formatter.getAmountFormatted(plan.getStartBalance()));
-			lblStartAge.setText(MM.PHRASES.getPhrase("339") + ": " +  Integer.toString(plan.getStartAge()));
+			_plan = (Plan) MM.sqlMap.selectOne("getPlanByName", lstPlans.getSelection()[0]);
+			InfinityPfm.LogMessage("Plan " + _plan.getPlanName());
+			lblPlanName.setText(MM.PHRASES.getPhrase("337") + ": " + _plan.getPlanName());
+			lblStartAmount.setText(MM.PHRASES.getPhrase("338")  + ": " + formatter.getAmountFormatted(_plan.getStartBalance()));
+			lblStartAge.setText(MM.PHRASES.getPhrase("339") + ": " +  Integer.toString(_plan.getStartAge()));
 			cmdRunPlan.setEnabled(true);
 			cmdRemovePlan.setEnabled(true);
+			cmdAddEvent.setEnabled(true);
 		}
 		
 	};
@@ -205,6 +221,7 @@ public class RetirementPlannerView extends BaseView {
 			tblPlanDetail.removeAll();
 			cmdRemovePlan.setEnabled(false);
 			cmdRunPlan.setEnabled(false);
+			cmdAddEvent.setEnabled(false);
 			LoadPlans();
 		}
 	};
@@ -214,5 +231,19 @@ public class RetirementPlannerView extends BaseView {
 		}
 	};
 		
+	SelectionAdapter cmdAddEvent_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			NewPlanEventDialog dialog = new NewPlanEventDialog(MM.PHRASES.getPhrase("346"), _plan);
+			dialog.Open();
+			
+			if (dialog.getResult() != null) {
+				
+				PlanEvent event = dialog.getResult();
+				
+				InfinityPfm.LogMessage(event.getEventName());
+				
+			}
+		}
+	};
 		
 }

@@ -19,6 +19,7 @@
 
 package org.infinitypfm.ui.view.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -159,18 +160,43 @@ public class NewPlanDialog extends BaseDialog {
 
 			MainAction action = new MainAction();
 			boolean doDispose = true;
+			boolean inputValid = false;
 			
-			if (!DataFormatUtil.isInteger(txtStartAge.getText())) {
-				
+			if (StringUtils.isNoneEmpty(txtPlanName.getText())) {
+				if (DataFormatUtil.isInteger(txtStartAge.getText())) {
+					if (DataFormatUtil.isNumber(txtStartBalance.getText())) {
+			
+						inputValid = true;
+						
+						// Check if plan name is unique
+						Plan plan = MM.sqlMap.selectOne("getPlanByName", txtPlanName.getText());
+						
+						if (plan == null) {
+							plan = new Plan();
+							plan.setPlanName(txtPlanName.getText());
+							plan.setStartAge(Integer.parseInt(txtStartAge.getText()));
+							plan.setStartBalance(DataFormatUtil.moneyToLong(txtStartBalance.getText()));
+							//insertPlan
+							MM.sqlMap.insert("insertPlan", plan);
+	
+						
+						} else {
+							MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
+									MM.PHRASES.getPhrase("341"));
+							show.Open();
+							doDispose = false;
+						}
+					}
+				}
 			}
 			
-			Plan plan = new Plan();
-			plan.setPlanName(txtPlanName.getText());
-			plan.setStartAge(Integer.parseInt(txtStartAge.getText()));
-			plan.setStartBalance(DataFormatUtil.moneyToLong(txtStartBalance.getText()));
-			//insertPlan
-			MM.sqlMap.insert("insertPlan", plan);
-			
+			if (!inputValid) {
+				MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
+						MM.PHRASES.getPhrase("340"));
+				show.Open();
+				doDispose = false;
+			}
+						
 			if (doDispose){
 				shell.dispose();
 			}

@@ -384,7 +384,13 @@ public class LangLoader {
 		hmPhrases.put("337", i18n.tr("Plan Name"));
 		hmPhrases.put("338", i18n.tr("Starting Balance"));
 		hmPhrases.put("339", i18n.tr("Starting Age"));
-
+		hmPhrases.put("340", i18n.tr("Plan name can not be empty, starting age must be an integer, and starting balance must be a number."));
+		hmPhrases.put("341", i18n.tr("Plan name already in use.  Please choose a different plan name."));
+		hmPhrases.put("342", i18n.tr("Invest"));
+		hmPhrases.put("343", i18n.tr("Draw"));
+		hmPhrases.put("344", i18n.tr("Earn"));
+		hmPhrases.put("345", i18n.tr("Return"));
+		hmPhrases.put("346", i18n.tr("Add Event"));
 	}
 	
 	public String getPhrase(String id){

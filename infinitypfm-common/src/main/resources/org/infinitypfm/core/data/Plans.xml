@@ -15,9 +15,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Plans">
 
-
-
-   <insert id="insertPlan" parameterType="trade2">
+   <insert id="insertPlan" parameterType="plan">
 		INSERT INTO PLANS
 		( 
 			PLANNAME, 
@@ -29,6 +27,42 @@
 			#{planName}, 
 			#{startBalance}, 
 			#{startAge}
+		)
+   </insert>
+
+   <insert id="insertPlanEvent" parameterType="planEvent">
+		INSERT INTO PLANEVENTS
+		( 
+			PLANID,
+			EVENTTYPEID,
+			EVENTNAME,
+			EVENTVALUE,
+			STARTDATE,
+			ENDDATE
+		)
+		VALUES 
+		( 
+			#{planID}, 
+			#{eventTypeId}, 
+			#{eventName},
+			#{eventValue},
+			#{startDate},
+			#{stopDate}
+		)
+   </insert>
+
+   <insert id="insertPlanEventType" parameterType="planEventType">
+		INSERT INTO PlanEventTypes
+		( 
+			EVENTTYPENAME, 
+			ALLOWAMOUNTS, 
+			ALLOWPERCENTS
+		)
+		VALUES 
+		( 
+			#{eventTypeName}, 
+			#{allowAmmounts}, 
+			#{allowPercents}
 		)
    </insert>
 
@@ -48,6 +82,18 @@
 			StartAge
 		From Plans
 		WHERE PlanName=#{value}
+	</select>
+
+	<select id="getPlanEventsById" parameterType="java.lang.Integer" resultType="planEvent" flushCache="true">
+		SELECT PLanID,
+		EventTypeID,
+		EventName,
+		EventValue,
+		StartDate,
+		EndDate,
+		From PlansEvents
+		WHERE PlanID=#{value}
+		ORDER BY EventName
 	</select>
 
     <delete id="deletePlan" parameterType="java.lang.String">

@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Currency;
+import org.infinitypfm.core.data.PlanEventType;
 
 
 public class InfinityUpdates {
@@ -401,7 +402,18 @@ public class InfinityUpdates {
 	private void ApplyVersion096() throws SQLException {
 		
 		MM.sqlMap.insert("createTablePlans");
+		MM.sqlMap.insert("createTablePlanEventTypes");
+		MM.sqlMap.insert("createTablePlanEvents");
+		MM.sqlMap.insert("createFK1PlanEvents");
+		MM.sqlMap.insert("createFK2PlanEvents");
+		
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("342"),1,0));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("343"),1,1));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("344"),1,0));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("345"),0,1));
+		
 		MM.sqlMap.update("bumpVersion", "0.9.6");
+		
 	}
 	
 }

@@ -15,18 +15,19 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package org.infinitypfm.core.data;
 
-/**
- * POJO for retirement plans
- */
-public class Plan {
+import java.util.Date;
+
+public class PlanEvent {
 
 	private int planID;
-	private String planName;
-	private long startBalance=0;
-	private int startAge = 55;
+	private String eventName;
+	private int eventTypeId;
+	private long eventValue;
+	private Date startDate;
+	private Date stopDate;
 	
 	public int getPlanID() {
 		return planID;
@@ -34,23 +35,34 @@ public class Plan {
 	public void setPlanID(int planID) {
 		this.planID = planID;
 	}
-	public String getPlanName() {
-		return planName;
+	public String getEventName() {
+		return eventName;
 	}
-	public void setPlanName(String planName) {
-		this.planName = planName;
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
 	}
-	public long getStartBalance() {
-		return startBalance;
+	public int getEventTypeId() {
+		return eventTypeId;
 	}
-	public void setStartBalance(long startBalance) {
-		this.startBalance = startBalance;
+	public void setEventTypeId(int eventTypeId) {
+		this.eventTypeId = eventTypeId;
 	}
-	public int getStartAge() {
-		return startAge;
+	public long getEventValue() {
+		return eventValue;
 	}
-	public void setStartAge(int startAge) {
-		this.startAge = startAge;
+	public void setEventValue(long eventValue) {
+		this.eventValue = eventValue;
 	}
-
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getStopDate() {
+		return stopDate;
+	}
+	public void setStopDate(Date stopDate) {
+		this.stopDate = stopDate;
+	}
 }
