@@ -19,6 +19,8 @@
 
 package org.infinitypfm.ui.view.dialogs;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,6 +39,7 @@ import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.PlanEvent;
+import org.infinitypfm.core.data.PlanEventType;
 import org.infinitypfm.types.DefaultDateFormat;
 
 /**
@@ -50,6 +53,7 @@ import org.infinitypfm.types.DefaultDateFormat;
 public class NewPlanEventDialog extends BaseDialog {
 
 	private Label lblPlanName = null;
+	private Label lblPlanNameValue = null;
 	private Label lblEventName = null;
 	private Label lblEventType = null;
 	private Label lblEventValue = null;
@@ -91,18 +95,29 @@ public class NewPlanEventDialog extends BaseDialog {
 	protected void LoadUI(Shell sh) {
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 		lblPlanName = new Label(sh, SWT.NONE);
+		lblPlanName.setText(MM.PHRASES.getPhrase("333") + ": ");
+		lblPlanNameValue = new Label(sh, SWT.NONE);
+		lblPlanNameValue.setText(_plan.getPlanName());
 		lblEventName = new Label(sh, SWT.NONE);
+		lblEventName.setText(MM.PHRASES.getPhrase("347"));
 		lblEventType = new Label(sh, SWT.NONE);
+		lblEventType.setText(MM.PHRASES.getPhrase("348") + ":");
 		lblEventValue = new Label(sh, SWT.NONE);
+		lblEventValue.setText(MM.PHRASES.getPhrase("349") + ":");
 		lblEventValueType = new Label(sh, SWT.NONE);
+		lblEventValueType.setText(MM.PHRASES.getPhrase("350") + ":");
 		lblStartDate = new Label(sh, SWT.NONE);
+		lblStartDate.setText(MM.PHRASES.getPhrase("222") + ":");
 		lblEndDate = new Label(sh, SWT.NONE);
+		lblEndDate.setText(MM.PHRASES.getPhrase("223") + ":");
 		
 		txtEventName = new Text(sh, SWT.BORDER);
 		txtEventValue = new Text(sh, SWT.BORDER);
 
 		cmbEventType = new Combo(sh, SWT.BORDER | SWT.READ_ONLY);
+		this.populatePlanEventTypes();
 		cmbEventValueType = new Combo(sh, SWT.BORDER | SWT.READ_ONLY);
+		this.populatePlanEventValueType();
 		
 		txtStartDate = new Text(sh, SWT.BORDER);
 		formatter.setDate(formatter.getToday());
@@ -125,9 +140,6 @@ public class NewPlanEventDialog extends BaseDialog {
 		cmdSave = new Button(sh, SWT.PUSH);
 		cmdCancel = new Button(sh, SWT.PUSH);
 
-		lblPlanName.setText(MM.PHRASES.getPhrase("337"));
-
-
 		cmdSave.setText(MM.PHRASES.getPhrase("38"));
 		cmdSave.addSelectionListener(cmdSave_OnClick);
 		cmdCancel.setText(MM.PHRASES.getPhrase("4"));
@@ -145,98 +157,103 @@ public class NewPlanEventDialog extends BaseDialog {
 		lblplannamedata.left = new FormAttachment(0, 10);
 		lblPlanName.setLayoutData(lblplannamedata);
 
+		FormData lblplannamevaluedata = new FormData();
+		lblplannamevaluedata.top = new FormAttachment(0, 20);
+		lblplannamevaluedata.left = new FormAttachment(lblEventName, 10);
+		lblPlanNameValue.setLayoutData(lblplannamevaluedata);
+		
 		FormData lbleventnamedata = new FormData();
-		lbleventnamedata.top = new FormAttachment(lblPlanName, 10);
+		lbleventnamedata.top = new FormAttachment(lblPlanName, 12);
 		lbleventnamedata.left = new FormAttachment(0, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40);
+		//lbleventnamedata.right = new FormAttachment(0, 150);
 		lblEventName.setLayoutData(lbleventnamedata);
 
 		FormData txteventnamedata = new FormData();
-		txteventnamedata.top = new FormAttachment(lblPlanName, 10);
+		txteventnamedata.top = new FormAttachment(lblPlanName, 7);
 		txteventnamedata.left = new FormAttachment(lblEventName, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40);
+		txteventnamedata.right = new FormAttachment(lblEventName, 300);
 		txtEventName.setLayoutData(txteventnamedata);
 
 		FormData lbleventtypedata = new FormData();
-		lbleventtypedata.top = new FormAttachment(lblEventName, 10);
+		lbleventtypedata.top = new FormAttachment(lblEventName, 23);
 		lbleventtypedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		lblEventType.setLayoutData(lbleventtypedata);
 		
 		FormData cmbeventtypedata = new FormData();
-		cmbeventtypedata.top = new FormAttachment(lblEventName, 10);
-		cmbeventtypedata.left = new FormAttachment(lblEventType, 10);
+		cmbeventtypedata.top = new FormAttachment(lblEventName, 14);
+		cmbeventtypedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		cmbEventType.setLayoutData(cmbeventtypedata);
 	
 		FormData lbleventvaluedata = new FormData();
-		lbleventvaluedata.top = new FormAttachment(lblEventType, 10);
+		lbleventvaluedata.top = new FormAttachment(lblEventType, 22);
 		lbleventvaluedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		lblEventValue.setLayoutData(lbleventvaluedata);
 
 		FormData txteventvaluedata = new FormData();
-		txteventvaluedata.top = new FormAttachment(lblEventType, 10);
-		txteventvaluedata.left = new FormAttachment(lblEventValue, 10);
+		txteventvaluedata.top = new FormAttachment(lblEventType, 14);
+		txteventvaluedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		txtEventValue.setLayoutData(txteventvaluedata);
 
 		FormData lbleventvaluetypedata = new FormData();
-		lbleventvaluetypedata.top = new FormAttachment(lblEventType, 10);
+		lbleventvaluetypedata.top = new FormAttachment(lblEventType, 22);
 		lbleventvaluetypedata.left = new FormAttachment(txtEventValue, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		lblEventValueType.setLayoutData(lbleventvaluetypedata);
 	
 		FormData cmbeventvaluetypedata = new FormData();
-		cmbeventvaluetypedata.top = new FormAttachment(lblEventType, 10);
+		cmbeventvaluetypedata.top = new FormAttachment(lblEventType, 14);
 		cmbeventvaluetypedata.left = new FormAttachment(lblEventValueType, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		cmbEventValueType.setLayoutData(cmbeventvaluetypedata);
 		
 		FormData lblstartdatedata = new FormData();
-		lblstartdatedata.top = new FormAttachment(lblEventValue, 10);
+		lblstartdatedata.top = new FormAttachment(lblEventValue, 22);
 		lblstartdatedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		lblStartDate.setLayoutData(lblstartdatedata);
 
 		FormData txtstartdatedata = new FormData();
-		txtstartdatedata.top = new FormAttachment(lblEventValue, 10);
-		txtstartdatedata.left = new FormAttachment(lblStartDate, 10);
+		txtstartdatedata.top = new FormAttachment(lblEventValue, 12);
+		txtstartdatedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		txtStartDate.setLayoutData(txtstartdatedata);
 		
 		FormData cmdstartdatedata = new FormData();
-		cmdstartdatedata.top = new FormAttachment(lblEventValue, 10);
+		cmdstartdatedata.top = new FormAttachment(lblEventValue, 12);
 		cmdstartdatedata.left = new FormAttachment(txtStartDate, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		cmdStartDate.setLayoutData(cmdstartdatedata);
 
 		FormData lblenddatedata = new FormData();
-		lblenddatedata.top = new FormAttachment(lblStartDate, 10);
+		lblenddatedata.top = new FormAttachment(lblStartDate, 22);
 		lblenddatedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		lblEndDate.setLayoutData(lblenddatedata);
 
 		FormData txtenddatedata = new FormData();
-		txtenddatedata.top = new FormAttachment(lblStartDate, 10);
-		txtenddatedata.left = new FormAttachment(lblEndDate, 10);
+		txtenddatedata.top = new FormAttachment(lblStartDate, 12);
+		txtenddatedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		txtEndDate.setLayoutData(txtenddatedata);
 		
 		FormData cmdenddatedata = new FormData();
-		cmdenddatedata.top = new FormAttachment(lblStartDate, 10);
+		cmdenddatedata.top = new FormAttachment(lblStartDate, 12);
 		cmdenddatedata.left = new FormAttachment(txtEndDate, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40);
+		//lbleventnamedata.right = new FormAttachment(100, -40)
 		cmdEndDate.setLayoutData(cmdenddatedata);
 		
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(lblEndDate, 20);
+		cmdcanceldata.top = new FormAttachment(lblEndDate, 30);
 		cmdcanceldata.left = new FormAttachment(0, 95);
 		cmdcanceldata.right = new FormAttachment(100, -255);
 		cmdCancel.setLayoutData(cmdcanceldata);
 		
 		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(lblEndDate, 20);
+		cmdsavedata.top = new FormAttachment(lblEndDate, 30);
 		cmdsavedata.left = new FormAttachment(cmdCancel, 5);
 		cmdsavedata.right = new FormAttachment(100, -115);
 		cmdSave.setLayoutData(cmdsavedata);
@@ -245,9 +262,9 @@ public class NewPlanEventDialog extends BaseDialog {
 
 	public int Open() {
 		super.Open();
-		shell.setText(MM.PHRASES.getPhrase("334") + " " + MM.APPTITLE);
+		shell.setText(MM.PHRASES.getPhrase("346") + " " + MM.APPTITLE);
 
-		shell.setSize(500, 200);
+		shell.setSize(500, 310);
 		this.CenterWindow();
 
 		shell.open();
@@ -264,6 +281,24 @@ public class NewPlanEventDialog extends BaseDialog {
 		
 	}
 	
+ 	private void populatePlanEventTypes() {
+ 		
+ 		cmbEventType.removeAll();
+ 		List<PlanEventType> eventTypes = MM.sqlMap.selectList("getPlanEventsTypes");
+ 	
+ 		for (PlanEventType pType : eventTypes) {
+ 			cmbEventType.add(pType.getEventTypeName());
+ 			cmbEventType.setData(pType.getEventTypeName(), pType);
+ 		}
+ 		cmbEventType.select(0);
+ 	}
+	
+ 	private void populatePlanEventValueType() {
+ 		cmbEventValueType.add(MM.PHRASES.getPhrase("352"));
+ 		cmbEventValueType.add(MM.PHRASES.getPhrase("351"));
+ 		cmbEventValueType.select(0);
+ 	}
+ 	
 	/*
 	 * Listeners
 	 */

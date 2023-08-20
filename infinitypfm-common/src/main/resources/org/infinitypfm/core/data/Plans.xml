@@ -96,6 +96,15 @@
 		ORDER BY EventName
 	</select>
 
+	<select id="getPlanEventsTypes" resultType="planEventType" flushCache="true">
+		SELECT EventTypeID,
+		EventTypeName,
+		AllowAmounts,
+		AllowPercents
+		From PlanEventTypes
+		ORDER BY EventTypeName
+	</select>
+
     <delete id="deletePlan" parameterType="java.lang.String">
 	    DELETE FROM Plans
     	  WHERE PlanName = #{value}

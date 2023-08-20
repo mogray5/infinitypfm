@@ -7,6 +7,14 @@ public class PlanEventType {
 	private int allowAmmounts;
 	private int allowPercents;
 	
+	public PlanEventType(int eventTypeID, String eventTypeName, int allowAmmounts, int allowPercents) {
+		super();
+		this.eventTypeID = eventTypeID;
+		this.eventTypeName = eventTypeName;
+		this.allowAmmounts = allowAmmounts;
+		this.allowPercents = allowPercents;
+	}
+	
 	public PlanEventType(String eventTypeName, int allowAmmounts, int allowPercents) {
 		super();
 		this.eventTypeName = eventTypeName;

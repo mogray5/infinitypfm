@@ -391,6 +391,12 @@ public class LangLoader {
 		hmPhrases.put("344", i18n.tr("Earn"));
 		hmPhrases.put("345", i18n.tr("Return"));
 		hmPhrases.put("346", i18n.tr("Add Event"));
+		hmPhrases.put("347", i18n.tr("Event Name"));
+		hmPhrases.put("348", i18n.tr("Event Type"));
+		hmPhrases.put("349", i18n.tr("Event Value"));
+		hmPhrases.put("350", i18n.tr("Event Value Type"));
+		hmPhrases.put("351", i18n.tr("Percent"));
+		hmPhrases.put("352", i18n.tr("Number"));
 	}
 	
 	public String getPhrase(String id){
