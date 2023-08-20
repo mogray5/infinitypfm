@@ -37,8 +37,9 @@
 			EVENTTYPEID,
 			EVENTNAME,
 			EVENTVALUE,
-			STARTDATE,
-			ENDDATE
+			EVENTVALUETYPE,
+			STARTAGE,
+			ENDAGE
 		)
 		VALUES 
 		( 
@@ -46,8 +47,9 @@
 			#{eventTypeId}, 
 			#{eventName},
 			#{eventValue},
-			#{startDate},
-			#{stopDate}
+			#{eventValueType},
+			#{startAge},
+			#{endAge}
 		)
    </insert>
 
@@ -85,15 +87,36 @@
 	</select>
 
 	<select id="getPlanEventsById" parameterType="java.lang.Integer" resultType="planEvent" flushCache="true">
-		SELECT PLanID,
-		EventTypeID,
-		EventName,
-		EventValue,
-		StartDate,
-		EndDate,
-		From PlansEvents
-		WHERE PlanID=#{value}
-		ORDER BY EventName
+		SELECT pe.PLanID,
+		pe.EventTypeID,
+		pet.EventTypeName,
+		pe.EventName,
+		pe.EventValue,
+		pe.EventValueType,
+		pe.StartAge,
+		pe.EndAge
+		From PlanEvents pe
+			INNER JOIN PlanEventTypes pet
+				on pe.EventTypeID = pet.EventTypeID
+		WHERE pe.PlanID=#{value}
+		ORDER BY pe.EventName
+	</select>
+
+	<select id="getPlanEventsByIdAndName" parameterType="planEvent" resultType="planEvent" flushCache="true">
+		SELECT pe.PLanID,
+		pe.EventTypeID,
+		pet.EventTypeName,
+		pe.EventName,
+		pe.EventValue,
+		pe.EventValueType,
+		pe.StartAge,
+		pe.EndAge
+		From PlanEvents pe
+			INNER JOIN PlanEventTypes pet
+				on pe.EventTypeID = pet.EventTypeID
+		WHERE pe.PlanID=#{planID}
+			AND pe.EventName = #{eventName}
+		ORDER BY pe.EventName
 	</select>
 
 	<select id="getPlanEventsTypes" resultType="planEventType" flushCache="true">
@@ -108,6 +131,17 @@
     <delete id="deletePlan" parameterType="java.lang.String">
 	    DELETE FROM Plans
     	  WHERE PlanName = #{value}
+   </delete>
+
+    <delete id="deletePlanEvents" parameterType="java.lang.Integer">
+	    DELETE FROM PlanEvents
+    	  WHERE PlanID = #{value}
+   </delete>
+   
+   <delete id="deletePlanEventByIdAndName" parameterType="planEvent">
+	    DELETE FROM PlanEvents
+    	  WHERE PlanID = #{planID}
+    	  	AND EventName = #{eventName}
    </delete>
 
 </mapper>

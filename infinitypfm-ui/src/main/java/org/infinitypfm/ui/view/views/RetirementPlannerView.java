@@ -29,11 +29,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.PlanEvent;
+import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewPlanEventDialog;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
 
@@ -51,12 +54,14 @@ public class RetirementPlannerView extends BaseView {
 	private Button cmdRemovePlan = null;
 	private Button cmdRunPlan = null;
 	private Button cmdAddEvent = null;
+	private Button cmdRemoveEvent = null;
 	private Table tblPlanDetail = null;
 	private Label lblPlanName = null; 
 	private Label lblStartAmount = null;
 	private Label lblStartAge = null; 
 	
 	private Plan _plan = null;
+	private PlanEvent _planEvent = null;
 	
 	public RetirementPlannerView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -67,6 +72,7 @@ public class RetirementPlannerView extends BaseView {
 		LoadUI();
 		LoadLayout();
 		LoadPlans();
+		LoadColumns();
 	}
 
 	protected void LoadUI() {
@@ -74,6 +80,7 @@ public class RetirementPlannerView extends BaseView {
 		lstPlans = new List (this, SWT.BORDER | SWT.V_SCROLL);
 		lstPlans.addSelectionListener(lstPlans_OnClick);
 		tblPlanDetail = new Table(this, SWT.BORDER);
+		tblPlanDetail.addSelectionListener(tblPlanDetail_OnClick);
 		cmpHeader = new Composite(this, SWT.BORDER);
 		cmpHeader.setLayout(new FormLayout());
 		cmdRemovePlan = new Button(cmpHeader, SWT.PUSH);
@@ -90,6 +97,11 @@ public class RetirementPlannerView extends BaseView {
 		cmdAddEvent.setText(MM.PHRASES.getPhrase("346"));
 		cmdAddEvent.setEnabled(false);
 		cmdAddEvent.addSelectionListener(cmdAddEvent_OnClick);
+
+		cmdRemoveEvent = new Button(cmpHeader, SWT.PUSH);
+		cmdRemoveEvent.setText(MM.PHRASES.getPhrase("353"));
+		cmdRemoveEvent.setEnabled(false);
+		cmdRemoveEvent.addSelectionListener(cmdRemoveEvent_OnClick);
 		
 		lblPlanName = new Label(cmpHeader, SWT.NONE); 
 		lblPlanName.setText(" ");
@@ -131,6 +143,11 @@ public class RetirementPlannerView extends BaseView {
 		cmdaddeventdata.left = new FormAttachment(0, 10);
 		cmdAddEvent.setLayoutData(cmdaddeventdata);
 		
+		FormData cmdremoveeventdata = new FormData();
+		cmdremoveeventdata.top = new FormAttachment(cmdRunPlan, 5);
+		cmdremoveeventdata.left = new FormAttachment(cmdAddEvent, 5);
+		cmdRemoveEvent.setLayoutData(cmdremoveeventdata);
+		
 		FormData tblplandetaildata = new FormData();
 		tblplandetaildata.top = new FormAttachment(cmpHeader, 10);
 		tblplandetaildata.left = new FormAttachment(lstPlans, 10);
@@ -140,7 +157,7 @@ public class RetirementPlannerView extends BaseView {
 
 		FormData lblplannamedata = new FormData();
 		lblplannamedata.top = new FormAttachment(0, 15);
-		lblplannamedata.left = new FormAttachment(cmdRemovePlan, 10);
+		lblplannamedata.left = new FormAttachment(cmdRemovePlan, 20);
 		lblplannamedata.right = new FormAttachment(cmdRemovePlan, 280);
 		lblPlanName.setLayoutData(lblplannamedata);
 		
@@ -152,7 +169,7 @@ public class RetirementPlannerView extends BaseView {
 		
 		FormData lblstartagetdata = new FormData();
 		lblstartagetdata.top = new FormAttachment(lblPlanName, 10);
-		lblstartagetdata.left = new FormAttachment(cmdRemovePlan, 10);
+		lblstartagetdata.left = new FormAttachment(cmdRemovePlan, 20);
 		lblstartagetdata.right = new FormAttachment(cmdRemovePlan, 300);
 		lblStartAge.setLayoutData(lblstartagetdata);
 		
@@ -172,11 +189,66 @@ public class RetirementPlannerView extends BaseView {
 	 * Helpers
 	 */
 	
-	private void InitTable() {
+	private void LoadEvents() {
+		
+		TableItem ti = null;
+		String eventValueType = null;
+		java.util.List<PlanEvent> events = MM.sqlMap.selectList("getPlanEventsById", _plan.getPlanID());
+		
+		tblPlanDetail.removeAll();
+		
+		if (events != null && events.size() >0) {
+			
+			for (PlanEvent event : events ) {
+				
+				ti = new TableItem(tblPlanDetail, SWT.NONE);
+				ti.setText(0,  event.getEventName());
+				ti.setText(1, event.getEventTypeName());
+				ti.setText(2, formatter.getAmountFormatted(event.getEventValue()));
+				
+				if (event.getEventValueType() == 0) 
+					eventValueType = MM.PHRASES.getPhrase("352");
+				else 
+					eventValueType = MM.PHRASES.getPhrase("351");
+				
+				ti.setText(3, eventValueType);
+				
+				ti.setText(4,  Integer.toString(event.getStartAge()));
+				ti.setText(5,  Integer.toString(event.getEndAge()));
+			}
+			
+		}
+		
+		cmdRemoveEvent.setEnabled(false);
 		
 	}
 	
-	@SuppressWarnings("rawtypes")
+	private void LoadColumns() {
+
+		TableColumn tc1 = new TableColumn(tblPlanDetail, SWT.LEFT);
+		TableColumn tc2 = new TableColumn(tblPlanDetail, SWT.LEFT);
+		TableColumn tc3 = new TableColumn(tblPlanDetail, SWT.LEFT);
+		TableColumn tc4 = new TableColumn(tblPlanDetail, SWT.LEFT);
+		TableColumn tc5 = new TableColumn(tblPlanDetail, SWT.LEFT);
+		TableColumn tc6 = new TableColumn(tblPlanDetail, SWT.LEFT);	
+
+		tc1.setText(MM.PHRASES.getPhrase("347"));
+		tc2.setText(MM.PHRASES.getPhrase("348"));
+		tc3.setText(MM.PHRASES.getPhrase("349"));
+		tc4.setText(MM.PHRASES.getPhrase("350"));
+		tc5.setText(MM.PHRASES.getPhrase("339"));
+		tc6.setText(MM.PHRASES.getPhrase("354"));
+
+		tc1.setWidth(150);
+		tc2.setWidth(100);
+		tc3.setWidth(100);
+		tc4.setWidth(150);
+		tc5.setWidth(100);
+		tc6.setWidth(100);
+		
+		tblPlanDetail.setHeaderVisible(true);
+		
+	}@SuppressWarnings("rawtypes")
 	private void LoadPlans() {
 		
 		lstPlans.removeAll();
@@ -207,6 +279,7 @@ public class RetirementPlannerView extends BaseView {
 			cmdRunPlan.setEnabled(true);
 			cmdRemovePlan.setEnabled(true);
 			cmdAddEvent.setEnabled(true);
+			LoadEvents();
 		}
 		
 	};
@@ -214,15 +287,25 @@ public class RetirementPlannerView extends BaseView {
 	SelectionAdapter cmdRemovePlan_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			
-			MM.sqlMap.delete("deletePlan", lstPlans.getSelection()[0]);
-			lblPlanName.setText("");
-			lblStartAmount.setText("");
-			lblStartAge.setText("");
-			tblPlanDetail.removeAll();
-			cmdRemovePlan.setEnabled(false);
-			cmdRunPlan.setEnabled(false);
-			cmdAddEvent.setEnabled(false);
-			LoadPlans();
+			
+			MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+					String.format(MM.PHRASES.getPhrase("355"), _plan.getPlanName()));
+			
+			dlg.setDimensions(400, 150);
+			int iResult = dlg.Open();
+
+			if (iResult == MM.YES) {
+				MM.sqlMap.delete("deletePlanEvents", _plan.getPlanID());
+				MM.sqlMap.delete("deletePlan", _plan.getPlanName());
+				lblPlanName.setText("");
+				lblStartAmount.setText("");
+				lblStartAge.setText("");
+				tblPlanDetail.removeAll();
+				cmdRemovePlan.setEnabled(false);
+				cmdRunPlan.setEnabled(false);
+				cmdAddEvent.setEnabled(false);
+				LoadPlans();
+			}
 		}
 	};
 	
@@ -243,7 +326,31 @@ public class RetirementPlannerView extends BaseView {
 				InfinityPfm.LogMessage(event.getEventName());
 				
 			}
+			LoadEvents();
 		}
 	};
-		
+	
+	SelectionAdapter cmdRemoveEvent_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			
+			MM.sqlMap.delete("deletePlanEventByIdAndName", _planEvent);
+			LoadEvents();
+		}
+		};
+	
+	SelectionAdapter tblPlanDetail_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent event) {
+	
+			TableItem item = (TableItem) event.item;
+			
+			PlanEvent arg = new PlanEvent();
+			arg.setEventName(item.getText(0));
+			arg.setPlanID(_plan.getPlanID());
+			
+			_planEvent = MM.sqlMap.selectOne("getPlanEventsByIdAndName", arg);
+			
+			cmdRemoveEvent.setEnabled(true);
+			
+		}
+	};
 }

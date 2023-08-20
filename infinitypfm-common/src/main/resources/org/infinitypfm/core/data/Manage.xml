@@ -294,8 +294,9 @@
 		EventTypeID INT,
 		EventName VARCHAR(50),
 		EventValue BIGINT,
-		StartDate DATETIME,
-		EndDate DATETIME,
+		EventValueType INT,
+		StartAge INT,
+		EndAge INT,
 		UNIQUE(PLanID,EventName)
 		)
 </update>

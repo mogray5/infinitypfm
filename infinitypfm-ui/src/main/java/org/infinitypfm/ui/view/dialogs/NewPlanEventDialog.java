@@ -21,6 +21,7 @@ package org.infinitypfm.ui.view.dialogs;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,13 +35,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.infinitypfm.action.MainAction;
-import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.PlanEvent;
 import org.infinitypfm.core.data.PlanEventType;
-import org.infinitypfm.types.DefaultDateFormat;
 
 /**
  * Pop-up Dialog for adding new plan events.  
@@ -58,20 +57,17 @@ public class NewPlanEventDialog extends BaseDialog {
 	private Label lblEventType = null;
 	private Label lblEventValue = null;
 	private Label lblEventValueType = null;
-	private Label lblStartDate = null;
-	private Label lblEndDate = null;
+	private Label lblStartAge = null;
+	private Label lblEndAge = null;
 	
 	private Text txtEventName = null;
 	private Text txtEventValue = null;
-	private Text txtStartDate = null;
-	private Text txtEndDate = null;
+	private Text txtStartAge = null;
+	private Text txtEndAge = null;
 
 	private Combo cmbEventValueType = null;
 	private Combo cmbEventType = null;
-	
-	private Button cmdStartDate = null;
-	private Button cmdEndDate = null;
-	
+		
 	private Button cmdSave = null;
 	private Button cmdCancel = null;
 	
@@ -106,10 +102,10 @@ public class NewPlanEventDialog extends BaseDialog {
 		lblEventValue.setText(MM.PHRASES.getPhrase("349") + ":");
 		lblEventValueType = new Label(sh, SWT.NONE);
 		lblEventValueType.setText(MM.PHRASES.getPhrase("350") + ":");
-		lblStartDate = new Label(sh, SWT.NONE);
-		lblStartDate.setText(MM.PHRASES.getPhrase("222") + ":");
-		lblEndDate = new Label(sh, SWT.NONE);
-		lblEndDate.setText(MM.PHRASES.getPhrase("223") + ":");
+		lblStartAge = new Label(sh, SWT.NONE);
+		lblStartAge.setText(MM.PHRASES.getPhrase("339") + ":");
+		lblEndAge = new Label(sh, SWT.NONE);
+		lblEndAge.setText(MM.PHRASES.getPhrase("354") + ":");
 		
 		txtEventName = new Text(sh, SWT.BORDER);
 		txtEventValue = new Text(sh, SWT.BORDER);
@@ -119,22 +115,8 @@ public class NewPlanEventDialog extends BaseDialog {
 		cmbEventValueType = new Combo(sh, SWT.BORDER | SWT.READ_ONLY);
 		this.populatePlanEventValueType();
 		
-		txtStartDate = new Text(sh, SWT.BORDER);
-		formatter.setDate(formatter.getToday());
-		formatter.setDate(formatter.getYear(), formatter.getMonth() == 1 ? 1
-				: formatter.getMonth() - 1);
-		txtStartDate.setText(formatter.getFormat(DefaultDateFormat.DAY));
-		txtStartDate.setEditable(false);
-		txtEndDate = new Text(sh, SWT.BORDER);
-		formatter.setDate(formatter.getToday());
-		txtEndDate.setText(formatter.getFormat(DefaultDateFormat.DAY));
-		txtEndDate.setEditable(false);
-		cmdStartDate = new Button(sh, SWT.PUSH);
-		cmdStartDate.setImage(InfinityPfm.imMain.getImage(MM.IMG_CALENDAR));
-		cmdStartDate.addSelectionListener(cmdStartDatePicker_OnClick);
-		cmdEndDate = new Button(sh, SWT.PUSH);
-		cmdEndDate.setImage(InfinityPfm.imMain.getImage(MM.IMG_CALENDAR));
-		cmdEndDate.addSelectionListener(cmdEndDatePicker_OnClick);
+		txtStartAge = new Text(sh, SWT.BORDER);		
+		txtEndAge = new Text(sh, SWT.BORDER);
 		
 		
 		cmdSave = new Button(sh, SWT.PUSH);
@@ -144,10 +126,9 @@ public class NewPlanEventDialog extends BaseDialog {
 		cmdSave.addSelectionListener(cmdSave_OnClick);
 		cmdCancel.setText(MM.PHRASES.getPhrase("4"));
 		cmdCancel.addSelectionListener(cmdCancel_OnClick);
-
 		
 		// Set tab order
-		sh.setTabList(new Control[] {txtEventName, cmbEventType, txtEventValue, cmdSave, cmdCancel});
+		sh.setTabList(new Control[] {txtEventName, cmbEventType, txtEventValue, txtStartAge, txtEndAge, cmdSave, cmdCancel});
 
 	}
 
@@ -210,50 +191,38 @@ public class NewPlanEventDialog extends BaseDialog {
 		//lbleventnamedata.right = new FormAttachment(100, -40);
 		cmbEventValueType.setLayoutData(cmbeventvaluetypedata);
 		
-		FormData lblstartdatedata = new FormData();
-		lblstartdatedata.top = new FormAttachment(lblEventValue, 22);
-		lblstartdatedata.left = new FormAttachment(0, 10);
+		FormData lblstartagedata = new FormData();
+		lblstartagedata.top = new FormAttachment(lblEventValue, 22);
+		lblstartagedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
-		lblStartDate.setLayoutData(lblstartdatedata);
+		lblStartAge.setLayoutData(lblstartagedata);
 
-		FormData txtstartdatedata = new FormData();
-		txtstartdatedata.top = new FormAttachment(lblEventValue, 12);
-		txtstartdatedata.left = new FormAttachment(lblEventName, 10);
+		FormData txtstartagedata = new FormData();
+		txtstartagedata.top = new FormAttachment(lblEventValue, 12);
+		txtstartagedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
-		txtStartDate.setLayoutData(txtstartdatedata);
+		txtStartAge.setLayoutData(txtstartagedata);
 		
-		FormData cmdstartdatedata = new FormData();
-		cmdstartdatedata.top = new FormAttachment(lblEventValue, 12);
-		cmdstartdatedata.left = new FormAttachment(txtStartDate, 10);
+		FormData lblendagedata = new FormData();
+		lblendagedata.top = new FormAttachment(lblStartAge, 22);
+		lblendagedata.left = new FormAttachment(0, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
-		cmdStartDate.setLayoutData(cmdstartdatedata);
+		lblEndAge.setLayoutData(lblendagedata);
 
-		FormData lblenddatedata = new FormData();
-		lblenddatedata.top = new FormAttachment(lblStartDate, 22);
-		lblenddatedata.left = new FormAttachment(0, 10);
+		FormData txtendagedata = new FormData();
+		txtendagedata.top = new FormAttachment(lblStartAge, 12);
+		txtendagedata.left = new FormAttachment(lblEventName, 10);
 		//lbleventnamedata.right = new FormAttachment(100, -40);
-		lblEndDate.setLayoutData(lblenddatedata);
-
-		FormData txtenddatedata = new FormData();
-		txtenddatedata.top = new FormAttachment(lblStartDate, 12);
-		txtenddatedata.left = new FormAttachment(lblEventName, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40);
-		txtEndDate.setLayoutData(txtenddatedata);
-		
-		FormData cmdenddatedata = new FormData();
-		cmdenddatedata.top = new FormAttachment(lblStartDate, 12);
-		cmdenddatedata.left = new FormAttachment(txtEndDate, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40)
-		cmdEndDate.setLayoutData(cmdenddatedata);
-		
+		txtEndAge.setLayoutData(txtendagedata);
+				
 		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(lblEndDate, 30);
+		cmdcanceldata.top = new FormAttachment(lblEndAge, 30);
 		cmdcanceldata.left = new FormAttachment(0, 95);
 		cmdcanceldata.right = new FormAttachment(100, -255);
 		cmdCancel.setLayoutData(cmdcanceldata);
 		
 		FormData cmdsavedata = new FormData();
-		cmdsavedata.top = new FormAttachment(lblEndDate, 30);
+		cmdsavedata.top = new FormAttachment(lblEndAge, 30);
 		cmdsavedata.left = new FormAttachment(cmdCancel, 5);
 		cmdsavedata.right = new FormAttachment(100, -115);
 		cmdSave.setLayoutData(cmdsavedata);
@@ -288,7 +257,7 @@ public class NewPlanEventDialog extends BaseDialog {
  	
  		for (PlanEventType pType : eventTypes) {
  			cmbEventType.add(pType.getEventTypeName());
- 			cmbEventType.setData(pType.getEventTypeName(), pType);
+ 			cmbEventType.setData(pType.getEventTypeName(), pType.getEventTypeID());
  		}
  		cmbEventType.select(0);
  	}
@@ -310,15 +279,18 @@ public class NewPlanEventDialog extends BaseDialog {
 			boolean doDispose = true;
 			boolean inputValid = false;
 
-			_result = new PlanEvent();
-			_result.setEventName(txtEventName.getText());
-			_result.setEventTypeId((int)cmbEventType.getData());
-			_result.setEventValue(formatter.moneyToLong(txtEventValue.getText()));
-			_result.setPlanID(_plan.getPlanID());
-			formatter.setDate(txtStartDate.getText());
-			_result.setStartDate(formatter.getDate());
-			formatter.setDate(txtEndDate.getText());
-			_result.setStopDate(formatter.getDate());
+			if (!StringUtils.isEmpty(txtEventName.getText()) && 
+					DataFormatUtil.isNumber(txtEventValue.getText())) {
+				inputValid = true;
+				_result = new PlanEvent();
+				_result.setEventName(txtEventName.getText());
+				_result.setEventTypeId((int)cmbEventType.getData(cmbEventType.getText()));
+				_result.setEventValue(formatter.moneyToLong(txtEventValue.getText()));
+				_result.setEventValueType(cmbEventValueType.getSelectionIndex());
+				_result.setPlanID(_plan.getPlanID());
+				_result.setStartAge(Integer.parseInt(txtStartAge.getText()));
+				_result.setEndAge(Integer.parseInt(txtEndAge.getText()));
+			}
 			
 			if (!inputValid) {
 				MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
@@ -326,6 +298,8 @@ public class NewPlanEventDialog extends BaseDialog {
 				show.Open();
 				doDispose = false;
 			}
+			
+			MM.sqlMap.insert("insertPlanEvent", _result);
 						
 			if (doDispose){
 				shell.dispose();
@@ -341,42 +315,4 @@ public class NewPlanEventDialog extends BaseDialog {
 		}
 	};
 	
-	SelectionAdapter cmdStartDatePicker_OnClick = new SelectionAdapter() {
-		public void widgetSelected(SelectionEvent e) {
-			if (dateDialog == null) {
-				dateDialog = new DateDialog();
-			}
-
-			dateDialog.Open();
-			
-			try {
-				txtStartDate.setText(dateDialog.getSelectedDate());
-				//updateReportParams();
-			} catch (Exception err) {
-				InfinityPfm.LogMessage(err.getMessage());
-			}
-			
-			Refresh();
-		}
-	};
-
-	SelectionAdapter cmdEndDatePicker_OnClick = new SelectionAdapter() {
-		public void widgetSelected(SelectionEvent e) {
-			if (dateDialog == null) {
-				dateDialog = new DateDialog();
-			}
-
-			dateDialog.Open();
-			
-			try {
-				txtEndDate.setText(dateDialog.getSelectedDate());
-				//updateReportParams();
-			} catch (Exception err) {
-				InfinityPfm.LogMessage(err.getMessage());
-			}
-			
-			Refresh();
-		}
-	};
-
 }

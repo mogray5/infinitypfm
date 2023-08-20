@@ -397,6 +397,9 @@ public class LangLoader {
 		hmPhrases.put("350", i18n.tr("Event Value Type"));
 		hmPhrases.put("351", i18n.tr("Percent"));
 		hmPhrases.put("352", i18n.tr("Number"));
+		hmPhrases.put("353", i18n.tr("Delete Event"));
+		hmPhrases.put("354", i18n.tr("Ending Age"));
+		hmPhrases.put("355", i18n.tr("Are you sure you want to delete plan: %s?"));
 	}
 	
 	public String getPhrase(String id){

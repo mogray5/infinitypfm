@@ -25,9 +25,11 @@ public class PlanEvent {
 	private int planID;
 	private String eventName;
 	private int eventTypeId;
+	private String eventTypeName;
 	private long eventValue;
-	private Date startDate;
-	private Date stopDate;
+	private int eventValueType;
+	private int startAge;
+	private int endAge;
 	
 	public int getPlanID() {
 		return planID;
@@ -47,22 +49,34 @@ public class PlanEvent {
 	public void setEventTypeId(int eventTypeId) {
 		this.eventTypeId = eventTypeId;
 	}
+	public String getEventTypeName() {
+		return eventTypeName;
+	}
+	public void setEventTypeName(String eventTypeName) {
+		this.eventTypeName = eventTypeName;
+	}
 	public long getEventValue() {
 		return eventValue;
 	}
 	public void setEventValue(long eventValue) {
 		this.eventValue = eventValue;
 	}
-	public Date getStartDate() {
-		return startDate;
+	public int getEventValueType() {
+		return eventValueType;
 	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setEventValueType(int eventValueType) {
+		this.eventValueType = eventValueType;
 	}
-	public Date getStopDate() {
-		return stopDate;
+	public int getStartAge() {
+		return startAge;
 	}
-	public void setStopDate(Date stopDate) {
-		this.stopDate = stopDate;
+	public void setStartAge(int startAge) {
+		this.startAge = startAge;
+	}
+	public int getEndAge() {
+		return endAge;
+	}
+	public void setEndAge(int stopAge) {
+		this.endAge = stopAge;
 	}
 }
