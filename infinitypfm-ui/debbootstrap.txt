@@ -51,4 +51,13 @@ java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server -database.0 file:ile:/home
 Lite client BSV:  https://github.com/bitcoin-sv/bitcoinj-sv
 Lite client Toolbox: https://bitcoinsv.io/2021/10/06/liteclient-toolbox-open-source-project-releases/
 
-
+select age,
+remaining / 100000000 as remaining,
+draw / 100000000 as draw,
+earninvest / 100000000 as earninvest,
+earnwage / 100000000 as earnwage,
+contribution / 100000000 as contribution,
+tax / 100000000 as tax
+from planruns
+where planid = 1
+order by age;

@@ -72,12 +72,11 @@ public class PlanRunner {
 			
 				if (event.getStartAge() > currAge || event.getEndAge() < currAge) continue;
 				
-				String planValue = _formatter.getAmountFormatted(event.getEventValue());
+				String planValue = _formatter.getAmountFormatted(event.getEventValue(),NumberFormat.getNoCommaNoParems(8));
 				
 				switch (event.getEventTypeId()) {
 				case PlanEventType.EARN:
 					currEarnWage += event.getEventValue();
-					currBalance += event.getEventValue();
 					break;
 				case PlanEventType.INVEST:
 					currContribution += event.getEventValue();
