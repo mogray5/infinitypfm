@@ -118,7 +118,6 @@ public class NewPlanEventDialog extends BaseDialog {
 		txtStartAge = new Text(sh, SWT.BORDER);		
 		txtEndAge = new Text(sh, SWT.BORDER);
 		
-		
 		cmdSave = new Button(sh, SWT.PUSH);
 		cmdCancel = new Button(sh, SWT.PUSH);
 
@@ -286,7 +285,12 @@ public class NewPlanEventDialog extends BaseDialog {
 				_result.setEventName(txtEventName.getText());
 				_result.setEventTypeId((int)cmbEventType.getData(cmbEventType.getText()));
 				_result.setEventValue(formatter.moneyToLong(txtEventValue.getText()));
-				_result.setEventValueType(cmbEventValueType.getSelectionIndex());
+				
+				if (_result.getEventTypeId() == PlanEventType.DRAW || _result.getEventTypeId() == PlanEventType.RETURN)
+					_result.setEventValueType(cmbEventValueType.getSelectionIndex());
+				else 
+					_result.setEventValueType(0);
+				
 				_result.setPlanID(_plan.getPlanID());
 				_result.setStartAge(Integer.parseInt(txtStartAge.getText()));
 				_result.setEndAge(Integer.parseInt(txtEndAge.getText()));
@@ -304,7 +308,6 @@ public class NewPlanEventDialog extends BaseDialog {
 			if (doDispose){
 				shell.dispose();
 			}
-
 		}
 	};
 
@@ -314,5 +317,4 @@ public class NewPlanEventDialog extends BaseDialog {
 			shell.dispose();
 		}
 	};
-	
 }

@@ -301,6 +301,31 @@
 		)
 </update>
 
+<update id="createTablePlanRuns">
+		CREATE CACHED TABLE PlanRuns
+		(
+		PLanID INT,
+		RunDate DATETIME,
+		Age INT,
+		Remaining BIGINT,
+		Draw BIGINT,
+		DrawPercent BIGINT,
+		EarnInvest BIGINT,
+		EarnWage BIGINT,
+		Contribution BIGINT,
+		Tax BIGINT,
+		UNIQUE(PLanID,RunDate,Age)
+		)
+</update>
+
+	<update id="createFK1PlanRuns">
+		ALTER TABLE PlanRuns ADD
+		CONSTRAINT
+		FK_PlanERuns_Plans
+		FOREIGN KEY (PlanID) REFERENCES Plans
+		(PlanID)
+	 </update>
+
 	<update id="createFK1PlanEvents">
 		ALTER TABLE PlanEvents ADD
 		CONSTRAINT

@@ -44,6 +44,7 @@
 	<typeAlias alias="plan" type="org.infinitypfm.core.data.Plan"/>
 	<typeAlias alias="planEvent" type="org.infinitypfm.core.data.PlanEvent"/>
 	<typeAlias alias="planEventType" type="org.infinitypfm.core.data.PlanEventType"/>
+	<typeAlias alias="planRun" type="org.infinitypfm.core.data.PlanRun"/>
 	<typeAlias alias="yearBalance" type="org.infinitypfm.core.data.YearlyBalance"/>
 	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
 	<typeAlias alias="register" type="org.infinitypfm.core.data.RegisterEntry" />

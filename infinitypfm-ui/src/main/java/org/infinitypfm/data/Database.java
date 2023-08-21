@@ -59,7 +59,8 @@ public class Database {
 				"akTransactions",
 				"createTableConnectors",
 				"createTableImportDef",
-				"createTablePlans","createTablePlanEventTypes","createTablePlanEvents", "createFK1PlanEvents","createFK2PlanEvents"
+				"createTablePlans","createTablePlanEventTypes","createTablePlanEvents", "createFK1PlanEvents","createFK2PlanEvents",
+				"createTablePlanRuns","createFK1PlanRuns"
 				};
 
 		

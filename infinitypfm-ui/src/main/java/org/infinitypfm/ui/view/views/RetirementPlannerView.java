@@ -36,6 +36,7 @@ import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
 import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.PlanEvent;
+import org.infinitypfm.core.plan.PlanRunner;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewPlanEventDialog;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
@@ -311,6 +312,8 @@ public class RetirementPlannerView extends BaseView {
 	
 	SelectionAdapter cmdRunPlan_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
+			PlanRunner runner = new PlanRunner();
+			runner.run(_plan.getPlanID(), MM.sqlMap);
 		}
 	};
 		

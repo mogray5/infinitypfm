@@ -7,6 +7,11 @@ public class PlanEventType {
 	private int allowAmmounts;
 	private int allowPercents;
 	
+	public static final int INVEST = 0;
+	public static final int DRAW = 1;
+	public static final int EARN = 2;
+	public static final int RETURN = 3;
+	
 	public PlanEventType(int eventTypeID, String eventTypeName, int allowAmmounts, int allowPercents) {
 		super();
 		this.eventTypeID = eventTypeID;

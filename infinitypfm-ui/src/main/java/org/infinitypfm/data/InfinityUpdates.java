@@ -406,6 +406,8 @@ public class InfinityUpdates {
 		MM.sqlMap.insert("createTablePlanEvents");
 		MM.sqlMap.insert("createFK1PlanEvents");
 		MM.sqlMap.insert("createFK2PlanEvents");
+		MM.sqlMap.insert("createTablePlanRuns");
+		MM.sqlMap.insert("createFK1PlanRuns");
 		
 		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("342"),1,0));
 		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("343"),1,1));

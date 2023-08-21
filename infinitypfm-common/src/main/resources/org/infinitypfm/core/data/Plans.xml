@@ -68,6 +68,35 @@
 		)
    </insert>
 
+   <insert id="insertPlanRun" parameterType="planRun">
+		INSERT INTO PlanRuns
+		( 
+			PLANID,
+			RUNDATE,
+			AGE,
+			REMAINING,
+			DRAW,
+			DRAWPERCENT,
+			EARNINVEST,
+			EARNWAGE,
+			CONTRIBUTION,
+			TAX
+		)
+		VALUES 
+		( 
+			#{planID},
+			#{runDate},
+			#{age},
+			#{remaining},
+			#{draw},
+			#{drawPercent},
+			#{earnInvest},
+			#{earnWage},
+			#{contribution},
+			#{tax}
+		)
+   </insert>
+
 	<select id="getPlans" resultType="plan" flushCache="true">
 		SELECT PlanID,
 			PlanName,
@@ -77,6 +106,22 @@
 		ORDER BY PlanName
 	</select>
 	
+	<select id="getPlanRunById" parameterType="java.lang.Integer" resultType="planRun" flushCache="true">
+		SELECT PLanID,
+			RunDate,
+			Age,
+			Remaining,
+			Draw,
+			DrawPercent,
+			EarnInvest,
+			EarnWage,
+			Contribution,
+			Tax
+		From PlanRuns
+		WHERE PlanID=#{value}
+		ORDER BY Age
+	</select>
+	
 	<select id="getPlanByName" parameterType="java.lang.String" resultType="plan" flushCache="true">
 		SELECT PlanID,
 			PlanName,
@@ -84,6 +129,15 @@
 			StartAge
 		From Plans
 		WHERE PlanName=#{value}
+	</select>
+
+	<select id="getPlanById" parameterType="java.lang.Integer" resultType="plan" flushCache="true">
+		SELECT PlanID,
+			PlanName,
+			StartBalance,
+			StartAge
+		From Plans
+		WHERE PlanID=#{value}
 	</select>
 
 	<select id="getPlanEventsById" parameterType="java.lang.Integer" resultType="planEvent" flushCache="true">
@@ -142,6 +196,11 @@
 	    DELETE FROM PlanEvents
     	  WHERE PlanID = #{planID}
     	  	AND EventName = #{eventName}
+   </delete>
+
+   <delete id="deletePlanRunById" parameterType="java.lang.Integer">
+	    DELETE FROM PlanRuns
+    	  WHERE PlanID = #{planID}
    </delete>
 
 </mapper>
