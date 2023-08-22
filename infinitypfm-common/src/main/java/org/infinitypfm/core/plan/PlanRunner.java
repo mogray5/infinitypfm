@@ -88,14 +88,24 @@ public class PlanRunner {
 					currBalance += lReturn;
 					break;
 				case PlanEventType.DRAW:
-					//0=Number, 1=perceont TODO make this a type
+					//0=Number, 1=percent TODO make this a type
 					if (event.getEventValueType()==1) {
 						long lDraw = getPercentage(currBalance, planValue);
+						if (lDraw <= currBalance) {
 						currDraw += lDraw;
 						currBalance -= lDraw;
+						} else {
+							currDraw += currBalance;
+							currBalance = 0;
+						}
 					} else {
-						currDraw += event.getEventValue();
-						currBalance -= event.getEventValue();
+						if (event.getEventValue() <= currBalance) {
+							currDraw += event.getEventValue();
+							currBalance -= event.getEventValue();
+						} else {
+							currDraw += currBalance;
+							currBalance = 0;
+						}
 					}
 					break;
 				
@@ -103,7 +113,7 @@ public class PlanRunner {
 			}
 		
 			// TODO:  Calculate proper tax on earnings
-			currTax = getPercentage((currDraw + currEarnWage), "15");
+			currTax = getPercentage((currDraw + currEarnWage), "18");
 			run.setAge(currAge);
 			run.setContribution(currContribution);
 			run.setDraw(currDraw);

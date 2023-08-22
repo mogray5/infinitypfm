@@ -18,6 +18,10 @@
 		width:90%;
 		}
 		
+		.moneyisgone {
+		 color: red;
+		}
+		
 	</style>
 </head>
 	<body>
@@ -36,7 +40,7 @@
 						</tr>
 						<#if reportData??>
 						<#list reportData as row>
-							<tr>
+							<tr <#if row.remaining lt 1>class="rowColoredExpense moneyisgone"</#if>>
 								<td>${row.age}</td>
 								<td>${row.remainingFormatted}</td>
 								<td>${row.drawFormatted}</td>
