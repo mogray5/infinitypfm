@@ -35,6 +35,7 @@ import org.infinitypfm.core.data.IReportable;
 import org.infinitypfm.core.data.MonthlyBalance;
 import org.infinitypfm.core.data.ParamDateRange;
 import org.infinitypfm.core.data.ParamDateRangeAccount;
+import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.data.YearlyBalance;
 import org.infinitypfm.reporting.BaseReport;
@@ -266,7 +267,12 @@ public class ReportData {
 			setReportData("getRegister", params);
 			_template = MM.RPT_UTXO;
 			break;
-			
+		case MM.MENU_REPORTS_PLANNER:
+			Plan plan = (Plan)params;
+			title = String.format(MM.PHRASES.getPhrase("356"), plan.getPlanName());
+			_template = MM.RPT_PLANNER;
+			setReportData("getPlanReport", plan.getPlanID());
+			break;
 		}
 	}
 
@@ -762,6 +768,27 @@ public class ReportData {
   }
   public String getWordHash() {
 	  return MM.PHRASES.getPhrase("325");
+  }
+  public String getWordAge() {
+	  return MM.PHRASES.getPhrase("357");
+  }
+  public String getWordBalance() {
+	  return MM.PHRASES.getPhrase("2");
+  }
+  public String getWordDistribution() {
+	  return MM.PHRASES.getPhrase("358");
+  }
+  public String getWordEarnInvest() {
+	  return MM.PHRASES.getPhrase("359");
+  }
+  public String getWordContributions() {
+	  return MM.PHRASES.getPhrase("360");
+  }
+  public String getWordIncomeTaxes() {
+	  return MM.PHRASES.getPhrase("179");
+  }
+  public String getWordNetEarnings() {
+	  return MM.PHRASES.getPhrase("361");
   }
 }
 

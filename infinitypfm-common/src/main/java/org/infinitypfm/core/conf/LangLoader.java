@@ -400,6 +400,12 @@ public class LangLoader {
 		hmPhrases.put("353", i18n.tr("Delete Event"));
 		hmPhrases.put("354", i18n.tr("Ending Age"));
 		hmPhrases.put("355", i18n.tr("Are you sure you want to delete plan: %s?"));
+		hmPhrases.put("356", i18n.tr("Plan Results: %s"));
+		hmPhrases.put("357", i18n.tr("Age"));
+		hmPhrases.put("358", i18n.tr("Distribution"));
+		hmPhrases.put("359", i18n.tr("Investment Returns"));
+		hmPhrases.put("360", i18n.tr("Contributions"));
+		hmPhrases.put("361", i18n.tr("Net Earnings"));
 	}
 	
 	public String getPhrase(String id){

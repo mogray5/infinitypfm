@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.infinitypfm.action.MainAction;
 import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.DataFormatUtil;
@@ -296,8 +297,10 @@ public class RetirementPlannerView extends BaseView {
 			int iResult = dlg.Open();
 
 			if (iResult == MM.YES) {
+				MM.sqlMap.delete("deletePlanRunById", _plan.getPlanID());
 				MM.sqlMap.delete("deletePlanEvents", _plan.getPlanID());
 				MM.sqlMap.delete("deletePlan", _plan.getPlanName());
+				
 				lblPlanName.setText("");
 				lblStartAmount.setText("");
 				lblStartAge.setText("");
@@ -314,6 +317,13 @@ public class RetirementPlannerView extends BaseView {
 		public void widgetSelected(SelectionEvent e) {
 			PlanRunner runner = new PlanRunner();
 			runner.run(_plan.getPlanID(), MM.sqlMap);
+			MainAction action = new MainAction();
+			try {
+			MM.reportParams = _plan;
+			action.RunReport(MM.MENU_REPORTS_PLANNER, null);
+			} catch (Exception ex) {
+				InfinityPfm.LogMessage(ex.getMessage());
+			}
 		}
 	};
 		

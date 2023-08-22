@@ -196,8 +196,9 @@ public class MM {
 	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 160;
 	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 161;
 	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 162;
-	public static final int MENU_REPORTS_REGISTER = 163;
-	public static final int MENU_REPORTS_UTXO = 164;
+	public static final int MENU_REPORTS_PLANNER = 163;
+	public static final int MENU_REPORTS_REGISTER = 164;
+	public static final int MENU_REPORTS_UTXO = 165;
 	
 	public static final int MENU_BUDGET_SAVE = 172;
 	
@@ -270,6 +271,7 @@ public class MM {
 	public static final String RPT_YEARLY_BALANCES = "YearlyBalances.ftl";
 	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";
 	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
+	public static final String RPT_PLANNER = "Planner.ftl";
 	public static final String RPT_UTXO = "Utxo.ftl";
 	
 	public static Options options = null;

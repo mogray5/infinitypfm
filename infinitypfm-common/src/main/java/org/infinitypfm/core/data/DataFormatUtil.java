@@ -49,6 +49,7 @@ public class DataFormatUtil implements Serializable {
 
 	private static final long serialVersionUID = 6215132601470795925L;
 	public static final String DefaultDateFormat = "M-dd-yyyy";
+	public static final String NUM_FORMAT_NO_CENTS = "#,##0;(#,##0)";
 
 	String[] monthName = { "January", "February", "March", "April", "May",
 			"June", "July", "August", "September", "October", "November",

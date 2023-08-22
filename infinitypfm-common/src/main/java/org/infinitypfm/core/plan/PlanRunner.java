@@ -103,7 +103,7 @@ public class PlanRunner {
 			}
 		
 			// TODO:  Calculate proper tax on earnings
-			currTax = getPercentage((currDraw + currEarnWage), "28");
+			currTax = getPercentage((currDraw + currEarnWage), "15");
 			run.setAge(currAge);
 			run.setContribution(currContribution);
 			run.setDraw(currDraw);

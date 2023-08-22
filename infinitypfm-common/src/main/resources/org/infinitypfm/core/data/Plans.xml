@@ -153,7 +153,7 @@
 			INNER JOIN PlanEventTypes pet
 				on pe.EventTypeID = pet.EventTypeID
 		WHERE pe.PlanID=#{value}
-		ORDER BY pe.EventName
+		ORDER BY pe.StartAge, pe.EndAge, pe.EventName
 	</select>
 
 	<select id="getPlanEventsByIdAndName" parameterType="planEvent" resultType="planEvent" flushCache="true">
@@ -170,7 +170,7 @@
 				on pe.EventTypeID = pet.EventTypeID
 		WHERE pe.PlanID=#{planID}
 			AND pe.EventName = #{eventName}
-		ORDER BY pe.EventName
+		ORDER BY pe.StartAge, pe.EndAge, pe.EventName
 	</select>
 
 	<select id="getPlanEventsTypes" resultType="planEventType" flushCache="true">
@@ -180,6 +180,23 @@
 		AllowPercents
 		From PlanEventTypes
 		ORDER BY EventTypeName
+	</select>
+
+	<select id="getPlanReport" parameterType="java.lang.Integer" resultType="planResult" flushCache="true">
+		SELECT p.planname, 
+		pr.age,
+		pr.remaining,
+		pr.draw,
+		pr.earninvest,
+		pr.earnwage,
+		pr.contribution,
+		pr.tax,
+		(pr.earnwage+pr.draw)-pr.tax as netearnings 
+		FROM planruns pr
+		    Inner join plans p
+		      ON pr.planid =p.planid
+		WHERE pr.planid = #{value}
+		ORDER BY pr.age
 	</select>
 
     <delete id="deletePlan" parameterType="java.lang.String">
