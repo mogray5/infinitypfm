@@ -410,6 +410,9 @@ public class LangLoader {
 		hmPhrases.put("363", i18n.tr("New Plan Name"));
 		hmPhrases.put("364", i18n.tr("New plan name cannot be empty"));
 		hmPhrases.put("365", i18n.tr("Plan name already exists"));
+		hmPhrases.put("366", i18n.tr("Plan not found"));
+		hmPhrases.put("367", i18n.tr("Edit Event"));
+		
 	}
 	
 	public String getPhrase(String id){

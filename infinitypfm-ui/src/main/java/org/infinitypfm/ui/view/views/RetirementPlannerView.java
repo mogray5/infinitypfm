@@ -56,6 +56,7 @@ public class RetirementPlannerView extends BaseView {
 	private Button cmdRemovePlan = null;
 	private Button cmdRunPlan = null;
 	private Button cmdAddEvent = null;
+	private Button cmdEditEvent = null;
 	private Button cmdRemoveEvent = null;
 	private Table tblPlanDetail = null;
 	private Label lblPlanName = null; 
@@ -100,6 +101,11 @@ public class RetirementPlannerView extends BaseView {
 		cmdAddEvent.setEnabled(false);
 		cmdAddEvent.addSelectionListener(cmdAddEvent_OnClick);
 
+		cmdEditEvent = new Button(cmpHeader, SWT.PUSH);
+		cmdEditEvent.setText(MM.PHRASES.getPhrase("367"));
+		cmdEditEvent.setEnabled(false);
+		cmdEditEvent.addSelectionListener(cmdEditEvent_OnClick);
+		
 		cmdRemoveEvent = new Button(cmpHeader, SWT.PUSH);
 		cmdRemoveEvent.setText(MM.PHRASES.getPhrase("353"));
 		cmdRemoveEvent.setEnabled(false);
@@ -127,27 +133,32 @@ public class RetirementPlannerView extends BaseView {
 		cmpheaderdata.top = new FormAttachment(0, 32);
 		cmpheaderdata.left = new FormAttachment(lstPlans, 10);
 		cmpheaderdata.right = new FormAttachment(100, -10);
-		cmpheaderdata.bottom = new FormAttachment(0, 125);
+		cmpheaderdata.bottom = new FormAttachment(0, 150);
 		cmpHeader.setLayoutData(cmpheaderdata);
 
 		FormData cmdrunplandata = new FormData();
-		cmdrunplandata.top = new FormAttachment(0, 10);
+		cmdrunplandata.top = new FormAttachment(0, 15);
 		cmdrunplandata.left = new FormAttachment(0, 10);
 		cmdRunPlan.setLayoutData(cmdrunplandata);
 		
 		FormData cmdremoveplandata = new FormData();
-		cmdremoveplandata.top = new FormAttachment(0, 10);
+		cmdremoveplandata.top = new FormAttachment(0, 15);
 		cmdremoveplandata.left = new FormAttachment(cmdRunPlan, 10);
 		cmdRemovePlan.setLayoutData(cmdremoveplandata);
 
 		FormData cmdaddeventdata = new FormData();
-		cmdaddeventdata.top = new FormAttachment(cmdRunPlan, 5);
+		cmdaddeventdata.top = new FormAttachment(cmdRunPlan, 25);
 		cmdaddeventdata.left = new FormAttachment(0, 10);
 		cmdAddEvent.setLayoutData(cmdaddeventdata);
+
+		FormData cmdediteventdata = new FormData();
+		cmdediteventdata.top = new FormAttachment(cmdRunPlan, 25);
+		cmdediteventdata.left = new FormAttachment(cmdAddEvent, 15);
+		cmdEditEvent.setLayoutData(cmdediteventdata);
 		
 		FormData cmdremoveeventdata = new FormData();
-		cmdremoveeventdata.top = new FormAttachment(cmdRunPlan, 5);
-		cmdremoveeventdata.left = new FormAttachment(cmdAddEvent, 5);
+		cmdremoveeventdata.top = new FormAttachment(cmdRunPlan, 25);
+		cmdremoveeventdata.left = new FormAttachment(cmdEditEvent, 5);
 		cmdRemoveEvent.setLayoutData(cmdremoveeventdata);
 		
 		FormData tblplandetaildata = new FormData();
@@ -221,6 +232,7 @@ public class RetirementPlannerView extends BaseView {
 			
 		}
 		
+		cmdRemoveEvent.setEnabled(false);
 		cmdRemoveEvent.setEnabled(false);
 		
 	}
@@ -343,6 +355,25 @@ public class RetirementPlannerView extends BaseView {
 		}
 	};
 	
+	SelectionAdapter cmdEditEvent_OnClick = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			
+			
+			
+			NewPlanEventDialog dialog = new NewPlanEventDialog(MM.PHRASES.getPhrase("367"), _planEvent);
+			dialog.Open();
+			
+			if (dialog.getResult() != null) {
+				
+				PlanEvent event = dialog.getResult();
+				
+				InfinityPfm.LogMessage(event.getEventName());
+				
+			}
+			LoadEvents();
+		}
+	};
+	
 	SelectionAdapter cmdRemoveEvent_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
 			
@@ -363,6 +394,7 @@ public class RetirementPlannerView extends BaseView {
 			_planEvent = MM.sqlMap.selectOne("getPlanEventsByIdAndName", arg);
 			
 			cmdRemoveEvent.setEnabled(true);
+			cmdEditEvent.setEnabled(true);
 			
 		}
 	};

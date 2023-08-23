@@ -73,14 +73,32 @@ public class NewPlanEventDialog extends BaseDialog {
 	
 	private DataFormatUtil formatter = null;
 	
-	private DateDialog dateDialog = null;
-	
 	private final Plan _plan;
 	private PlanEvent _result;
+	private boolean _doUpdate = false;
 
 	public NewPlanEventDialog(String title, Plan plan) {
 		super();
 		_plan = plan;
+		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
+	}
+	
+	public NewPlanEventDialog(String title, PlanEvent planEvent) {
+		super();
+		
+		if (planEvent != null) {
+			_plan = MM.sqlMap.selectOne("getPlanById", planEvent.getPlanID());
+			_result = planEvent;
+			_doUpdate = true;
+		}
+		else  {
+			MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
+					MM.PHRASES.getPhrase("366"));
+			_plan = new Plan();
+			show.Open();
+			shell.dispose();
+		}
+		
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 	}
 	
@@ -106,17 +124,25 @@ public class NewPlanEventDialog extends BaseDialog {
 		lblStartAge.setText(MM.PHRASES.getPhrase("339") + ":");
 		lblEndAge = new Label(sh, SWT.NONE);
 		lblEndAge.setText(MM.PHRASES.getPhrase("354") + ":");
-		
-		txtEventName = new Text(sh, SWT.BORDER);
-		txtEventValue = new Text(sh, SWT.BORDER);
 
+		txtEventName = new Text(sh, SWT.BORDER);
+		if (_result != null) txtEventName.setEditable(false);
+		txtEventValue = new Text(sh, SWT.BORDER);
 		cmbEventType = new Combo(sh, SWT.BORDER | SWT.READ_ONLY);
 		this.populatePlanEventTypes();
 		cmbEventValueType = new Combo(sh, SWT.BORDER | SWT.READ_ONLY);
 		this.populatePlanEventValueType();
-		
 		txtStartAge = new Text(sh, SWT.BORDER);		
 		txtEndAge = new Text(sh, SWT.BORDER);
+	
+		if (_result != null) {		
+			txtEventName.setText(_result.getEventName());
+			txtEventValue.setText(formatter.getAmountFormatted(_result.getEventValue()));
+			cmbEventType.setText(_result.getEventTypeName());
+			cmbEventValueType.select(_result.getEventValueType());
+			txtStartAge.setText(Integer.toString(_result.getStartAge()));
+			txtEndAge.setText(Integer.toString(_result.getEndAge()));
+		}
 		
 		cmdSave = new Button(sh, SWT.PUSH);
 		cmdCancel = new Button(sh, SWT.PUSH);
@@ -175,7 +201,7 @@ public class NewPlanEventDialog extends BaseDialog {
 		FormData txteventvaluedata = new FormData();
 		txteventvaluedata.top = new FormAttachment(lblEventType, 14);
 		txteventvaluedata.left = new FormAttachment(lblEventName, 10);
-		//lbleventnamedata.right = new FormAttachment(100, -40);
+		txteventvaluedata.right = new FormAttachment(lblEventName, 175);
 		txtEventValue.setLayoutData(txteventvaluedata);
 
 		FormData lbleventvaluetypedata = new FormData();
@@ -281,7 +307,10 @@ public class NewPlanEventDialog extends BaseDialog {
 			if (!StringUtils.isEmpty(txtEventName.getText()) && 
 					DataFormatUtil.isNumber(txtEventValue.getText())) {
 				inputValid = true;
-				_result = new PlanEvent();
+				
+				if (_result == null)
+					_result = new PlanEvent();
+				
 				_result.setEventName(txtEventName.getText());
 				_result.setEventTypeId((int)cmbEventType.getData(cmbEventType.getText()));
 				_result.setEventValue(formatter.moneyToLong(txtEventValue.getText()));
@@ -303,8 +332,11 @@ public class NewPlanEventDialog extends BaseDialog {
 				doDispose = false;
 			}
 			
-			MM.sqlMap.insert("insertPlanEvent", _result);
-						
+			if (_doUpdate)
+				MM.sqlMap.update("updatePlanEvent", _result);
+			else
+				MM.sqlMap.insert("insertPlanEvent", _result);
+					
 			if (doDispose){
 				shell.dispose();
 			}

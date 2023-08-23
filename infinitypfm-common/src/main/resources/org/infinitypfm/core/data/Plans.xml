@@ -119,6 +119,18 @@
 		WHERE PLANID = #{oldPlanID}
    </insert>
 
+   <update id="updatePlanEvent" parameterType="planEvent">
+		UPDATE PLANEVENTS
+		SET 
+			EVENTTYPEID = #{eventTypeId},
+			EVENTVALUE = #{eventValue},
+			EVENTVALUETYPE = #{eventValueType},
+			STARTAGE = #{startAge},
+			ENDAGE = #{endAge}
+		WHERE PLANID =  #{planID}
+			AND EVENTNAME = #{eventName}
+   </update>
+
 
 	<select id="getPlans" resultType="plan" flushCache="true">
 		SELECT PlanID,

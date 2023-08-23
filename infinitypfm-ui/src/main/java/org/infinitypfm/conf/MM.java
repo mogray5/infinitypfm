@@ -66,6 +66,7 @@ public class MM {
 	public static final String IMG_CREDIT = "credit_32x32.png";
 	public static final String IMG_DOLLAR = "coins_32x32.png";
 	public static final String IMG_EDITSERVER = "edit-paste.png";
+	public static final String IMG_ENGINEERING = "applications-engineering.png";
 	public static final String IMG_EMBLEM = "emblem-generic.png";
 	public static final String IMG_EMBLEM_WEB = "emblem-web.png";
 	public static final String IMG_EMBLEM_DOCUMENTS = "emblem-documents.png";
