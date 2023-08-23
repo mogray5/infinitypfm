@@ -33,6 +33,7 @@
 	<typeAlias alias="budgetDetail" type="org.infinitypfm.core.data.BudgetDetail"/>
 	<typeAlias alias="budget" type="org.infinitypfm.core.data.Budget"/>
 	<typeAlias alias="connector" type="org.infinitypfm.core.data.Connector"/>
+	<typeAlias alias="copyPlanParams" type="org.infinitypfm.core.data.CopyPlanParams"/>
 	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
 	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
 	<typeAlias alias="dateParams" type="org.infinitypfm.core.data.ParamDateRange"/>

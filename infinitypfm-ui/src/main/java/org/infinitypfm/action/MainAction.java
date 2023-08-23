@@ -64,6 +64,7 @@ import org.infinitypfm.reporting.ReportFactory;
 import org.infinitypfm.ui.view.dialogs.AboutDialog;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.BaseDialog;
+import org.infinitypfm.ui.view.dialogs.ClonePlanDialog;
 import org.infinitypfm.ui.view.dialogs.DefaultAccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.HelpDialog;
 import org.infinitypfm.ui.view.dialogs.ImportDialog;
@@ -142,6 +143,9 @@ public class MainAction {
 			break;
 		case MM.MENU_TREE_ADD_PLAN:
 			this.LoadNewPlanDialog();
+			break;
+		case MM.MENU_TREE_CLONE_PLAN:
+			this.ClonePlan();
 			break;
 		case MM.MENU_TREE_REFRESH:
 			this.RefreshCurrentView();
@@ -415,6 +419,12 @@ public class MainAction {
 	public void LoadNewPlanDialog() {
 		BaseDialog plan = new NewPlanDialog();
 		plan.Open();
+		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+	}
+	
+	public void ClonePlan() {
+		BaseDialog clonePlan = new ClonePlanDialog();
+		clonePlan.Open();
 		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
 	}
 	

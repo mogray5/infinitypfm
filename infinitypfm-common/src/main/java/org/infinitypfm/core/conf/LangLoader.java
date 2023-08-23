@@ -406,6 +406,10 @@ public class LangLoader {
 		hmPhrases.put("359", i18n.tr("Investment Returns"));
 		hmPhrases.put("360", i18n.tr("Contributions"));
 		hmPhrases.put("361", i18n.tr("Net Earnings"));
+		hmPhrases.put("362", i18n.tr("Clone Plan"));
+		hmPhrases.put("363", i18n.tr("New Plan Name"));
+		hmPhrases.put("364", i18n.tr("New plan name cannot be empty"));
+		hmPhrases.put("365", i18n.tr("Plan name already exists"));
 	}
 	
 	public String getPhrase(String id){

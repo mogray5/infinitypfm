@@ -151,6 +151,7 @@ public class MM {
 	public static final int MENU_TREE_REM_BUDGET = 28;
 	public static final int MENU_TREE_EDIT_ACT = 29;
 	public static final int MENU_TREE_ADD_PLAN = 30;
+	public static final int MENU_TREE_CLONE_PLAN = 31;
 
 	public static final int MENU_FILE_EXIT = 40;
 	public static final int MENU_FILE_SAVE = 41;

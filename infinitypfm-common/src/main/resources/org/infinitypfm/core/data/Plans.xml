@@ -97,6 +97,29 @@
 		)
    </insert>
 
+<insert id="copyPlanEvents" parameterType="copyPlanParams">
+		INSERT INTO PLANEVENTS
+		( 
+			PLANID,
+			EVENTTYPEID,
+			EVENTNAME,
+			EVENTVALUE,
+			EVENTVALUETYPE,
+			STARTAGE,
+			ENDAGE
+		)
+		SELECT #{newPlanID} as PlanID,
+			EVENTTYPEID,
+			EVENTNAME,
+			EVENTVALUE,
+			EVENTVALUETYPE,
+			STARTAGE,
+			ENDAGE
+		FROM PLANEVENTS PE
+		WHERE PLANID = #{oldPlanID}
+   </insert>
+
+
 	<select id="getPlans" resultType="plan" flushCache="true">
 		SELECT PlanID,
 			PlanName,
