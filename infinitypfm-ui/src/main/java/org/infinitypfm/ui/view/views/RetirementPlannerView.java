@@ -171,13 +171,13 @@ public class RetirementPlannerView extends BaseView {
 		FormData lblplannamedata = new FormData();
 		lblplannamedata.top = new FormAttachment(0, 15);
 		lblplannamedata.left = new FormAttachment(cmdRemovePlan, 20);
-		lblplannamedata.right = new FormAttachment(cmdRemovePlan, 280);
+		lblplannamedata.right = new FormAttachment(cmdRemovePlan, 380);
 		lblPlanName.setLayoutData(lblplannamedata);
 		
 		FormData lblstartamountdata = new FormData();
 		lblstartamountdata.top = new FormAttachment(0, 15);
 		lblstartamountdata.left = new FormAttachment(lblPlanName, 10);
-		lblstartamountdata.right = new FormAttachment(lblPlanName, 400);
+		lblstartamountdata.right = new FormAttachment(lblPlanName, 520);
 		lblStartAmount.setLayoutData(lblstartamountdata);
 		
 		FormData lblstartagetdata = new FormData();

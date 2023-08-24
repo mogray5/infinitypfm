@@ -323,6 +323,7 @@ public class NewPlanEventDialog extends BaseDialog {
 				_result.setPlanID(_plan.getPlanID());
 				_result.setStartAge(Integer.parseInt(txtStartAge.getText()));
 				_result.setEndAge(Integer.parseInt(txtEndAge.getText()));
+				if (_result.getStartAge() > _result.getEndAge()) _result.setStartAge(_result.getEndAge());
 			}
 			
 			if (!inputValid) {
