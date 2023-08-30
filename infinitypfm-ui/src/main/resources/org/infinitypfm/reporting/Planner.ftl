@@ -36,6 +36,7 @@
 							<th>${wordIncome}</th>
 							<th>${wordContributions}</th>
 							<th>${wordIncomeTaxes}</th>
+							<th>${wordFees}</th>
 							<th>${wordNetEarnings}</th>
 						</tr>
 						<#if reportData??>
@@ -48,6 +49,7 @@
 								<td>${row.earnWageFormatted}</td>
 								<td>${row.contributionFormatted}</td>
 								<td>${row.taxFormatted}</td>
+								<td>${row.feeFormatted}</td>
 								<td>${row.netEarningsFormatted}</td>
 							</tr>		
 						</#list>

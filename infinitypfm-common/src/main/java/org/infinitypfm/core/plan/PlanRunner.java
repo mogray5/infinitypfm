@@ -61,13 +61,14 @@ public class PlanRunner {
 		long currEarnWage = 0;
 		long currContribution=0;
 		long currDraw = 0;
+		long currFee = 0;
 		
 		if (planEvents == null || planEvents.size() == 0) return;
 		
 		while (currAge < 96 && currBalance > 0) {
 			
 			PlanRun run = new PlanRun();
-			
+			_formatter.setPrecision(8);
 			for (PlanEvent event : planEvents) {
 			
 				if (event.getStartAge() > currAge || event.getEndAge() < currAge) continue;
@@ -108,6 +109,23 @@ public class PlanRunner {
 						}
 					}
 					break;
+				case PlanEventType.FEE:
+					long lFee = 0;
+					if (event.getEventValueType()==1) {
+						lFee = getPercentage(currBalance, planValue);
+					} else { 
+						lFee = event.getEventValue();
+					}
+					
+					if (lFee <= currBalance) {
+						currBalance -= lFee;
+						currFee += lFee;
+					} else {
+						currFee += currBalance;
+						currBalance = 0;
+					}
+					
+					break;
 				
 				}
 			}
@@ -122,6 +140,7 @@ public class PlanRunner {
 			run.setPlanID(plan.getPlanID());
 			run.setRemaining(currBalance);
 			run.setTax(currTax);
+			run.setFee(currFee);
 			run.setRunDate(runDate);
 			
 			session.update("insertPlanRun", run);
@@ -131,12 +150,13 @@ public class PlanRunner {
 			currEarnWage = 0;
 			currContribution=0;
 			currDraw = 0;
+			currFee = 0;
 		}
 		
 	}
 	
 	private long getPercentage(long balance, String percent) {
-		BigDecimal pctReturn = _formatter.strictDivide(percent, "100",2);
+		BigDecimal pctReturn = _formatter.strictDivide(percent, "100",4);
 		BigDecimal newBalance = _formatter.strictMultiply(pctReturn.toPlainString(), _formatter.getAmountFormatted(balance, NumberFormat.getNoCommaNoParems(8)));
 		return _formatter.moneyToLong(newBalance);
 	}

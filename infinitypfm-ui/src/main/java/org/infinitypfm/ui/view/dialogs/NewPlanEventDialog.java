@@ -315,7 +315,8 @@ public class NewPlanEventDialog extends BaseDialog {
 				_result.setEventTypeId((int)cmbEventType.getData(cmbEventType.getText()));
 				_result.setEventValue(formatter.moneyToLong(txtEventValue.getText()));
 				
-				if (_result.getEventTypeId() == PlanEventType.DRAW || _result.getEventTypeId() == PlanEventType.RETURN)
+				if (_result.getEventTypeId() == PlanEventType.DRAW || _result.getEventTypeId() == PlanEventType.RETURN || 
+						_result.getEventTypeId() == PlanEventType.FEE)
 					_result.setEventValueType(cmbEventValueType.getSelectionIndex());
 				else 
 					_result.setEventValueType(0);

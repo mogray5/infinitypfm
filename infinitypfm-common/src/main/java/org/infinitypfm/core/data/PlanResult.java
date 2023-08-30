@@ -31,6 +31,7 @@ public class PlanResult  implements Serializable, IReportable {
 	private long earnWage;
 	private long contribution;
 	private long tax;
+	private long fee;
 	private long netEarnings;
 	private DataFormatUtil _formatter = null;
 	
@@ -124,4 +125,14 @@ public class PlanResult  implements Serializable, IReportable {
 		_formatter = formatter;
 		
 	}
+	public long getFee() {
+		return fee;
+	}
+	public String getFeeFormatted() {
+		return _formatter.getAmountFormatted(fee, DataFormatUtil.NUM_FORMAT_NO_CENTS);
+	}
+	public void setFee(long fee) {
+		this.fee = fee;
+	}
+	
 }

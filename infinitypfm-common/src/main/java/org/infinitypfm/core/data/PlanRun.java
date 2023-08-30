@@ -35,6 +35,7 @@ public class PlanRun {
 	private long earnWage;
 	private long contribution;
 	private long tax;
+	private long fee;
 	
 	public int getPlanID() {
 		return planID;
@@ -96,4 +97,11 @@ public class PlanRun {
 	public void setTax(long tax) {
 		this.tax = tax;
 	}
+	public long getFee() {
+		return fee;
+	}
+	public void setFee(long fee) {
+		this.fee = fee;
+	}
+	
 }

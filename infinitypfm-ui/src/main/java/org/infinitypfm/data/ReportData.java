@@ -790,5 +790,9 @@ public class ReportData {
   public String getWordNetEarnings() {
 	  return MM.PHRASES.getPhrase("361");
   }
+  public String getWordFees() {
+	  return MM.PHRASES.getPhrase("368");
+  }
+  
 }
 

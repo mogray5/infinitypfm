@@ -314,6 +314,7 @@
 		EarnWage BIGINT,
 		Contribution BIGINT,
 		Tax BIGINT,
+		Fee BIGINT,
 		UNIQUE(PLanID,RunDate,Age)
 		)
 </update>

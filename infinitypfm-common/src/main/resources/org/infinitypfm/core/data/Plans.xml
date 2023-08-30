@@ -80,7 +80,8 @@
 			EARNINVEST,
 			EARNWAGE,
 			CONTRIBUTION,
-			TAX
+			TAX,
+			FEE
 		)
 		VALUES 
 		( 
@@ -93,7 +94,8 @@
 			#{earnInvest},
 			#{earnWage},
 			#{contribution},
-			#{tax}
+			#{tax},
+			#{fee}
 		)
    </insert>
 
@@ -151,7 +153,8 @@
 			EarnInvest,
 			EarnWage,
 			Contribution,
-			Tax
+			Tax,
+			Fee
 		From PlanRuns
 		WHERE PlanID=#{value}
 		ORDER BY Age
@@ -226,6 +229,7 @@
 		pr.earnwage,
 		pr.contribution,
 		pr.tax,
+		pr.fee,
 		(pr.earnwage+pr.draw)-pr.tax as netearnings 
 		FROM planruns pr
 		    Inner join plans p

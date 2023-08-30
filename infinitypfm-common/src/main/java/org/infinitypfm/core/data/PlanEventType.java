@@ -11,6 +11,7 @@ public class PlanEventType {
 	public static final int DRAW = 1;
 	public static final int EARN = 2;
 	public static final int RETURN = 3;
+	public static final int FEE = 4;
 	
 	public PlanEventType(int eventTypeID, String eventTypeName, int allowAmmounts, int allowPercents) {
 		super();

@@ -85,6 +85,7 @@ public class Database {
 			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("343"),1,1));
 			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("344"),1,0));
 			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("345"),0,1));
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("368"),1,1));
 			
 			Account acct = new Account();
 			acct.setActTypeName("Expense");
