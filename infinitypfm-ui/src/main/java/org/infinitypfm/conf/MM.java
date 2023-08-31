@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
-
+import org.infinitypfm.core.data.Plan;
 import org.apache.ibatis.session.SqlSession;
 
 import freemarker.template.Configuration;
@@ -153,7 +153,14 @@ public class MM {
 	public static final int MENU_TREE_EDIT_ACT = 29;
 	public static final int MENU_TREE_ADD_PLAN = 30;
 	public static final int MENU_TREE_CLONE_PLAN = 31;
-
+	public static final int MENU_TREE_RENAME_PLAN = 32;
+	public static final int MENU_TREE_DELETE_PLAN = 33;
+	public static final int MENU_TREE_RUN_PLAN = 34;
+	public static final int MENU_TREE_ADD_PLAN_EVENT = 35;
+	public static final int MENU_TREE_DELETE_PLAN_EVENT = 36;
+	public static final int MENU_TREE_EDIT_PLAN_EVENT = 37;
+	
+	
 	public static final int MENU_FILE_EXIT = 40;
 	public static final int MENU_FILE_SAVE = 41;
 	public static final int MENU_FILE_IMPORT_OFX = 42;
@@ -283,5 +290,6 @@ public class MM {
 	public static final String BSV_WALLET_RECEIVING_ACCOUNT = "Coins Received";
 	public static final String NUM_FORMAT_USE_PARENS = "#,##0.00;(#,##0.00)";
 	public static boolean walletNeedsSync = true;
+	public static Plan currentPlan;
 	
 }

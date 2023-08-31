@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -40,6 +41,7 @@ import org.infinitypfm.core.data.PlanEvent;
 import org.infinitypfm.core.plan.PlanRunner;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewPlanEventDialog;
+import org.infinitypfm.ui.view.menus.PlanMenu;
 import org.infinitypfm.ui.view.toolbars.RetirementPlannerToolbar;
 
 /**
@@ -82,6 +84,8 @@ public class RetirementPlannerView extends BaseView {
 		tbMain = new RetirementPlannerToolbar(this);
 		lstPlans = new List (this, SWT.BORDER | SWT.V_SCROLL);
 		lstPlans.addSelectionListener(lstPlans_OnClick);
+		PlanMenu plan = new PlanMenu(this.getShell());
+		lstPlans.setMenu(plan.getMenu());
 		tblPlanDetail = new Table(this, SWT.BORDER);
 		tblPlanDetail.addSelectionListener(tblPlanDetail_OnClick);
 		cmpHeader = new Composite(this, SWT.BORDER);
@@ -276,6 +280,16 @@ public class RetirementPlannerView extends BaseView {
 				lstPlans.setData(plan.getPlanName(), p);
 			}
 		}
+		
+		lblPlanName.setText("");
+		lblStartAmount.setText("");
+		lblStartAge.setText("");
+		tblPlanDetail.removeAll();
+		cmdRemovePlan.setEnabled(false);
+		cmdRunPlan.setEnabled(false);
+		cmdAddEvent.setEnabled(false);
+		_plan = null;
+		MM.currentPlan = null;
 	}
 
 	/*
@@ -286,6 +300,7 @@ public class RetirementPlannerView extends BaseView {
 		public void widgetSelected(SelectionEvent e) {
 			
 			_plan = (Plan) MM.sqlMap.selectOne("getPlanByName", lstPlans.getSelection()[0]);
+			MM.currentPlan = _plan;
 			InfinityPfm.LogMessage("Plan " + _plan.getPlanName());
 			lblPlanName.setText(MM.PHRASES.getPhrase("337") + ": " + _plan.getPlanName());
 			lblStartAmount.setText(MM.PHRASES.getPhrase("338")  + ": " + formatter.getAmountFormatted(_plan.getStartBalance()));
@@ -300,42 +315,15 @@ public class RetirementPlannerView extends BaseView {
 	
 	SelectionAdapter cmdRemovePlan_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			
-			
-			MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
-					String.format(MM.PHRASES.getPhrase("355"), _plan.getPlanName()));
-			
-			dlg.setDimensions(400, 150);
-			int iResult = dlg.Open();
-
-			if (iResult == MM.YES) {
-				MM.sqlMap.delete("deletePlanRunById", _plan.getPlanID());
-				MM.sqlMap.delete("deletePlanEvents", _plan.getPlanID());
-				MM.sqlMap.delete("deletePlan", _plan.getPlanName());
-				
-				lblPlanName.setText("");
-				lblStartAmount.setText("");
-				lblStartAge.setText("");
-				tblPlanDetail.removeAll();
-				cmdRemovePlan.setEnabled(false);
-				cmdRunPlan.setEnabled(false);
-				cmdAddEvent.setEnabled(false);
-				LoadPlans();
-			}
+			MainAction action = new MainAction();
+			action.ProcessMenuItem(MM.MENU_TREE_DELETE_PLAN);
 		}
 	};
 	
 	SelectionAdapter cmdRunPlan_OnClick = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			PlanRunner runner = new PlanRunner();
-			runner.run(_plan.getPlanID(), MM.sqlMap);
 			MainAction action = new MainAction();
-			try {
-			MM.reportParams = _plan;
-			action.RunReport(MM.MENU_REPORTS_PLANNER, null);
-			} catch (Exception ex) {
-				InfinityPfm.LogMessage(ex.getMessage());
-			}
+			action.ProcessMenuItem(MM.MENU_TREE_RUN_PLAN);
 		}
 	};
 		
@@ -347,7 +335,6 @@ public class RetirementPlannerView extends BaseView {
 			if (dialog.getResult() != null) {
 				
 				PlanEvent event = dialog.getResult();
-				
 				InfinityPfm.LogMessage(event.getEventName());
 				
 			}
@@ -366,7 +353,6 @@ public class RetirementPlannerView extends BaseView {
 			if (dialog.getResult() != null) {
 				
 				PlanEvent event = dialog.getResult();
-				
 				InfinityPfm.LogMessage(event.getEventName());
 				
 			}

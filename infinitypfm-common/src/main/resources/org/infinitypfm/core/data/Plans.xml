@@ -133,6 +133,13 @@
 			AND EVENTNAME = #{eventName}
    </update>
 
+   <update id="renamePlan" parameterType="plan">
+		UPDATE PLANS
+		SET 
+			PLANNAME = #{planName}
+		WHERE PLANID =  #{planID}
+   </update>
+
 
 	<select id="getPlans" resultType="plan" flushCache="true">
 		SELECT PlanID,

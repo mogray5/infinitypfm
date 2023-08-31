@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
@@ -42,8 +43,10 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DigitalAssetUtxo;
+import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.exception.PasswordInvalidException;
+import org.infinitypfm.core.plan.PlanRunner;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
@@ -146,6 +149,15 @@ public class MainAction {
 			break;
 		case MM.MENU_TREE_CLONE_PLAN:
 			this.ClonePlan();
+			break;
+		case MM.MENU_TREE_DELETE_PLAN:
+			this.RemovePlan();
+			break;
+		case MM.MENU_TREE_RUN_PLAN:
+			this.RunPlan();
+			break;
+		case MM.MENU_TREE_RENAME_PLAN:
+			this.RenamePlan();
 			break;
 		case MM.MENU_TREE_REFRESH:
 			this.RefreshCurrentView();
@@ -426,6 +438,66 @@ public class MainAction {
 		BaseDialog clonePlan = new ClonePlanDialog();
 		clonePlan.Open();
 		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+	}
+	
+	public void RemovePlan() {
+		
+		if (MM.currentPlan != null) {
+			MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+					String.format(MM.PHRASES.getPhrase("355"), MM.currentPlan.getPlanName()));
+			
+			dlg.setDimensions(400, 150);
+			int iResult = dlg.Open();
+
+			if (iResult == MM.YES) {
+				MM.sqlMap.delete("deletePlanRunById", MM.currentPlan.getPlanID());
+				MM.sqlMap.delete("deletePlanEvents", MM.currentPlan.getPlanID());
+				MM.sqlMap.delete("deletePlan", MM.currentPlan.getPlanName());
+				InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+			}
+		}
+	}
+	
+	public void RunPlan() {
+		if (MM.currentPlan != null) {
+			PlanRunner runner = new PlanRunner();
+			runner.run(MM.currentPlan.getPlanID(), MM.sqlMap);
+			MainAction action = new MainAction();
+			try {
+			MM.reportParams = MM.currentPlan;
+			action.RunReport(MM.MENU_REPORTS_PLANNER, null);
+			} catch (Exception ex) {
+				InfinityPfm.LogMessage(ex.getMessage());
+			}
+		}
+	}
+	
+	public void RenamePlan() {
+		if (MM.currentPlan != null) {
+			
+			InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("369"), 
+					MM.PHRASES.getPhrase("370"));
+			String newName = infoDialog.getInput();
+			
+			if (!StringUtils.isEmpty(newName)) {
+				
+				Plan plan = MM.sqlMap.selectOne("getPlanByName", newName);
+				
+				if (plan == null) {
+					
+					plan = new Plan();
+					plan.setPlanID(MM.currentPlan.getPlanID());
+					plan.setPlanName(newName);
+					MM.sqlMap.update("renamePlan", plan);
+					InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+					
+				} else {
+					MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
+							MM.PHRASES.getPhrase("365"));
+					show.Open();
+				}
+			}
+		}
 	}
 	
 	public void LoadNewAccountDialog() {
@@ -759,7 +831,6 @@ public class MainAction {
 				messageDialog.Open();
 				
 			}
-
 		}
 		
 		try {
@@ -846,7 +917,5 @@ public class MainAction {
 			messageDialog.Open();
 
 		}
-
 	}
-	
 }

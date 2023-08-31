@@ -413,7 +413,8 @@ public class LangLoader {
 		hmPhrases.put("366", i18n.tr("Plan not found"));
 		hmPhrases.put("367", i18n.tr("Edit Event"));
 		hmPhrases.put("368", i18n.tr("Fee"));
-		
+		hmPhrases.put("369", i18n.tr("Rename Plan"));
+		hmPhrases.put("370", i18n.tr("Enter a new plan name"));
 	}
 	
 	public String getPhrase(String id){
