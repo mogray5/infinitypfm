@@ -24,7 +24,7 @@
 			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
 			<version>4.23</version>
 			<scope>system</scope>
-			<systemPath>/home/wayne/bin/swt-4.25-gtk-linux-x86_64/swt.jar</systemPath>
+			<systemPath>/home/wayne/Downloads/swt-4.28-gtk-linux-x86_64/swt.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
