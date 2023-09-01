@@ -61,6 +61,7 @@ public class ClonePlanDialog extends BaseDialog {
 		cmdClone = new Button(sh, SWT.PUSH);
 		cmdClone.setText(MM.PHRASES.getPhrase("362"));
 		cmdClone.addSelectionListener(cmdSelect_OnClick);
+		cmdClone.setEnabled(false);
 		lblNewPlan = new Label(sh, SWT.NONE);
 		lblNewPlan.setText(MM.PHRASES.getPhrase("363"));
 		txtNewPlan = new Text(sh, SWT.BORDER);
@@ -81,6 +82,9 @@ public class ClonePlanDialog extends BaseDialog {
 				cmbPlan.add(plan.getPlanName());
 				cmbPlan.setData(plan.getPlanName(), plan.getPlanID());
 			}
+
+			if (cmbPlan.getItemCount() > 0)
+				cmdClone.setEnabled(true);
 			
 			cmbPlan.select(0);
 
