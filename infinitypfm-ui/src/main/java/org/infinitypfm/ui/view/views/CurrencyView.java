@@ -84,7 +84,7 @@ public class CurrencyView extends BaseView {
 		formatter = new DataFormatUtil(MM.options.getCurrencyPrecision());
 		tbMain = new CurrencyToolbar(this);
 		tblCurrencies = new Table(this, SWT.BORDER);
-
+		
 		LoadColumns();
 
 		cmpHeader = new Composite(this, SWT.BORDER);
@@ -278,6 +278,7 @@ public class CurrencyView extends BaseView {
 					item = (Currency) currList.get(i);
 					formatter.setDate(item.getLastUpdate());
 					ti = new TableItem(tblCurrencies, SWT.NONE);
+					
 					ti.setText(new String[] { item.getIsoName(),
 							item.getCurrencyName(), item.getExchangeRate(),
 							formatter.getFormat(DefaultDateFormat.TIME) });
@@ -289,6 +290,7 @@ public class CurrencyView extends BaseView {
 			}
 
 			tblCurrencies.setLinesVisible(true);
+			
 
 			// Load currency combo
 
@@ -370,7 +372,7 @@ public class CurrencyView extends BaseView {
 
 			combos.add(cmbMethod);
 			buttons.add(button);
-
+			
 		} catch (Exception e) {
 			InfinityPfm.LogMessage(e.getMessage());
 		}

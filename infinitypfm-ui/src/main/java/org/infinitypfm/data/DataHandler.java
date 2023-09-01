@@ -179,6 +179,16 @@ public class DataHandler implements ProcessorCallback {
 		
 	}
 
+	public void RemoveBudget(Budget budget) throws SQLException {
+
+		if (budget != null) {
+			// delete the detail
+			MM.sqlMap.delete("deleteBudgetDetail", budget);
+			// delete the budget
+			MM.sqlMap.delete("deleteBudget", budget);
+		}
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private void AddBudgetDetailBatch(int budgetId, List actList)
 			throws SQLException {

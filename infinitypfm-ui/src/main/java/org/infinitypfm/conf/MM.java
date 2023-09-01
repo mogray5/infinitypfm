@@ -25,7 +25,7 @@ import org.eclipse.swt.SWT;
 import org.infinitypfm.bitcoin.wallet.BsvWallet;
 import org.infinitypfm.core.conf.LangLoader;
 import org.infinitypfm.core.data.Options;
-
+import org.infinitypfm.core.data.Plan;
 import org.apache.ibatis.session.SqlSession;
 
 import freemarker.template.Configuration;
@@ -36,10 +36,10 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.9.5"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.9.6"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
-	public static final String APPCOPYRIGHT = "(c) 2005-2022 by Wayne Gray";
+	public static final String APPCOPYRIGHT = "(c) 2005-2023 by Wayne Gray";
 	public static final String APPPATH = System.getProperty("INFINITYPFM_HOME") + File.separator;
 	public static final String ENVAPPHOME = "INFINITYPFM_HOME";
 	public static final int ROW_BACKGROUND = SWT.COLOR_LIST_BACKGROUND;
@@ -66,6 +66,7 @@ public class MM {
 	public static final String IMG_CREDIT = "credit_32x32.png";
 	public static final String IMG_DOLLAR = "coins_32x32.png";
 	public static final String IMG_EDITSERVER = "edit-paste.png";
+	public static final String IMG_ENGINEERING = "applications-engineering.png";
 	public static final String IMG_EMBLEM = "emblem-generic.png";
 	public static final String IMG_EMBLEM_WEB = "emblem-web.png";
 	public static final String IMG_EMBLEM_DOCUMENTS = "emblem-documents.png";
@@ -148,18 +149,28 @@ public class MM {
 	public static final int MENU_TREE_ADD_ACT_BUDGET = 25;
 	public static final int MENU_TREE_ADD_ACT_FROM_TEMP = 26;
 	public static final int MENU_TREE_REM_ACT_BUDGET = 27;
-	public static final int MENU_TREE_EDIT_ACT = 28;
-
-	public static final int MENU_FILE_EXIT = 30;
-	public static final int MENU_FILE_SAVE = 31;
-	public static final int MENU_FILE_IMPORT_OFX = 32;
-	public static final int MENU_FILE_IMPORT_QFX = 33;
-	public static final int MENU_FILE_IMPORT_QIF = 34;
-	public static final int MENU_FILE_IMPORT_RULES = 36;
-	public static final int MENU_FILE_BACKUP = 37;
-	public static final int MENU_FILE_RESTORE = 38;
-	public static final int MENU_FILE_IMPORT_CSV = 39;
-	public static final int MENU_FILE_IMPORT_MAIL = 40;
+	public static final int MENU_TREE_REM_BUDGET = 28;
+	public static final int MENU_TREE_EDIT_ACT = 29;
+	public static final int MENU_TREE_ADD_PLAN = 30;
+	public static final int MENU_TREE_CLONE_PLAN = 31;
+	public static final int MENU_TREE_RENAME_PLAN = 32;
+	public static final int MENU_TREE_DELETE_PLAN = 33;
+	public static final int MENU_TREE_RUN_PLAN = 34;
+	public static final int MENU_TREE_ADD_PLAN_EVENT = 35;
+	public static final int MENU_TREE_DELETE_PLAN_EVENT = 36;
+	public static final int MENU_TREE_EDIT_PLAN_EVENT = 37;
+	
+	
+	public static final int MENU_FILE_EXIT = 40;
+	public static final int MENU_FILE_SAVE = 41;
+	public static final int MENU_FILE_IMPORT_OFX = 42;
+	public static final int MENU_FILE_IMPORT_QFX = 43;
+	public static final int MENU_FILE_IMPORT_QIF = 44;
+	public static final int MENU_FILE_IMPORT_RULES = 45;
+	public static final int MENU_FILE_BACKUP = 46;
+	public static final int MENU_FILE_RESTORE = 47;
+	public static final int MENU_FILE_IMPORT_CSV = 48;
+	public static final int MENU_FILE_IMPORT_MAIL = 49;
 	
 	public static final int MENU_REPORT_EXECUTE = 60;
 	public static final int MENU_REPORT_SAVE = 61;
@@ -194,8 +205,9 @@ public class MM {
 	public static final int MENU_REPORTS_BUDGET_PERFORMANCE = 160;
 	public static final int MENU_REPORTS_BUDGET_PERFORMANCE_ACT = 161;
 	public static final int MENU_REPORTS_INCOME_VS_EXPENSE = 162;
-	public static final int MENU_REPORTS_REGISTER = 163;
-	public static final int MENU_REPORTS_UTXO = 164;
+	public static final int MENU_REPORTS_PLANNER = 163;
+	public static final int MENU_REPORTS_REGISTER = 164;
+	public static final int MENU_REPORTS_UTXO = 165;
 	
 	public static final int MENU_BUDGET_SAVE = 172;
 	
@@ -219,6 +231,7 @@ public class MM {
 	public static final int VIEW_RECURRENCE=407;
 	public static final int VIEW_CURRENCY=408;
 	public static final int VIEW_WALLET=409;
+	public static final int VIEW_PLANNER=410;
 	
 	public static final int QS_REFRESH_QUEUE = 0;
 	public static final int QS_REFRESH_TOPIC = 1;
@@ -267,6 +280,7 @@ public class MM {
 	public static final String RPT_YEARLY_BALANCES = "YearlyBalances.ftl";
 	public static final String RPT_BUDGET_PERFORMANCE = "BudgetPerformance.ftl";
 	public static final String RPT_INCOME_VS_EXPENSE = "IncomveVsExpense.ftl";
+	public static final String RPT_PLANNER = "Planner.ftl";
 	public static final String RPT_UTXO = "Utxo.ftl";
 	
 	public static Options options = null;
@@ -276,5 +290,6 @@ public class MM {
 	public static final String BSV_WALLET_RECEIVING_ACCOUNT = "Coins Received";
 	public static final String NUM_FORMAT_USE_PARENS = "#,##0.00;(#,##0.00)";
 	public static boolean walletNeedsSync = true;
+	public static Plan currentPlan;
 	
 }

@@ -24,7 +24,7 @@
 			
 <div class="tblWrapper">			
 		<table id="tblRegister">
-				
+		<#if reportdata??>
 		<#list reportData as row>
 		<tr>
 			<td>${wordHeight}</td>
@@ -59,6 +59,7 @@
 			<td><br/></span>
 		</tr>
 		</#list>
+		</#if>
 	</table>				
 </div>
 	</body>

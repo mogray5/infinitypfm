@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2020 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -64,20 +64,14 @@ public class MonthYearDialog extends BaseDialog {
 		
 		int year = dateUtil.getYear();
 		
-		for (int i=106; i<118; i++){
-			
+		for (int i=106; i<118; i++)
 			cmbMonth.add(MM.PHRASES.getPhrase(Integer.toString(i)));
-			
-		}
 		
 		cmbMonth.select(dateUtil.getMonth());
 		cmbMonth.setText(dateUtil.getMonthName(0));
 		
-		for (int j=year-10; j<=year; j++){
-			
+		for (int j=year; j>year-20; j--)
 			cmbYear.add(Integer.toString(j));
-			
-		}
 		
 		cmbYear.select(year);
 		cmbYear.setText(Integer.toString(year));

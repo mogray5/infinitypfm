@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
@@ -42,8 +43,10 @@ import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Budget;
 import org.infinitypfm.core.data.BudgetDetail;
 import org.infinitypfm.core.data.DigitalAssetUtxo;
+import org.infinitypfm.core.data.Plan;
 import org.infinitypfm.core.data.Transaction;
 import org.infinitypfm.core.exception.PasswordInvalidException;
+import org.infinitypfm.core.plan.PlanRunner;
 import org.infinitypfm.data.DataHandler;
 import org.infinitypfm.data.Database;
 import org.infinitypfm.data.ReportData;
@@ -64,6 +67,7 @@ import org.infinitypfm.reporting.ReportFactory;
 import org.infinitypfm.ui.view.dialogs.AboutDialog;
 import org.infinitypfm.ui.view.dialogs.AccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.BaseDialog;
+import org.infinitypfm.ui.view.dialogs.ClonePlanDialog;
 import org.infinitypfm.ui.view.dialogs.DefaultAccountSelectorDialog;
 import org.infinitypfm.ui.view.dialogs.HelpDialog;
 import org.infinitypfm.ui.view.dialogs.ImportDialog;
@@ -72,6 +76,7 @@ import org.infinitypfm.ui.view.dialogs.InfoDialog;
 import org.infinitypfm.ui.view.dialogs.MessageDialog;
 import org.infinitypfm.ui.view.dialogs.NewAccountDialog;
 import org.infinitypfm.ui.view.dialogs.NewCurrencyDialog;
+import org.infinitypfm.ui.view.dialogs.NewPlanDialog;
 import org.infinitypfm.ui.view.dialogs.OptionsDialog;
 import org.infinitypfm.ui.view.dialogs.TransactionDialog;
 import org.infinitypfm.ui.view.views.BaseView;
@@ -139,6 +144,21 @@ public class MainAction {
 		case MM.MENU_TREE_ADD_ACT_FROM_TEMP:
 			this.LoadNewAccountSelectorDialog();
 			break;
+		case MM.MENU_TREE_ADD_PLAN:
+			this.LoadNewPlanDialog();
+			break;
+		case MM.MENU_TREE_CLONE_PLAN:
+			this.ClonePlan();
+			break;
+		case MM.MENU_TREE_DELETE_PLAN:
+			this.RemovePlan();
+			break;
+		case MM.MENU_TREE_RUN_PLAN:
+			this.RunPlan();
+			break;
+		case MM.MENU_TREE_RENAME_PLAN:
+			this.RenamePlan();
+			break;
 		case MM.MENU_TREE_REFRESH:
 			this.RefreshCurrentView();
 			break;
@@ -162,6 +182,13 @@ public class MainAction {
 			break;
 		case MM.MENU_BUDGET_SAVE:
 
+			break;
+		case MM.MENU_TREE_REM_BUDGET:
+			try {
+				this.RemoveBudget();
+			} catch (Exception e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
 			break;
 		case MM.MENU_REPORT_EXECUTE:
 		case MM.MENU_REPORTS_MONTHLY_BALANCE:
@@ -239,6 +266,9 @@ public class MainAction {
 			break;
 		case MM.VIEW_BUDGET:
 			this.LoadView(MM.VIEW_BUDGET);
+			break;
+		case MM.VIEW_PLANNER:
+			this.LoadView(MM.VIEW_PLANNER);
 			break;
 		case MM.MENU_CONSOLE_CLOSE:
 			ToggleConsole(false);
@@ -398,6 +428,78 @@ public class MainAction {
 		about.Open();
 	}
 
+	public void LoadNewPlanDialog() {
+		BaseDialog plan = new NewPlanDialog();
+		plan.Open();
+		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+	}
+	
+	public void ClonePlan() {
+		BaseDialog clonePlan = new ClonePlanDialog();
+		clonePlan.Open();
+		InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+	}
+	
+	public void RemovePlan() {
+		
+		if (MM.currentPlan != null) {
+			MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+					String.format(MM.PHRASES.getPhrase("355"), MM.currentPlan.getPlanName()));
+			
+			dlg.setDimensions(400, 150);
+			int iResult = dlg.Open();
+
+			if (iResult == MM.YES) {
+				MM.sqlMap.delete("deletePlanRunById", MM.currentPlan.getPlanID());
+				MM.sqlMap.delete("deletePlanEvents", MM.currentPlan.getPlanID());
+				MM.sqlMap.delete("deletePlan", MM.currentPlan.getPlanName());
+				InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+			}
+		}
+	}
+	
+	public void RunPlan() {
+		if (MM.currentPlan != null) {
+			PlanRunner runner = new PlanRunner();
+			runner.run(MM.currentPlan.getPlanID(), MM.sqlMap);
+			MainAction action = new MainAction();
+			try {
+			MM.reportParams = MM.currentPlan;
+			action.RunReport(MM.MENU_REPORTS_PLANNER, null);
+			} catch (Exception ex) {
+				InfinityPfm.LogMessage(ex.getMessage());
+			}
+		}
+	}
+	
+	public void RenamePlan() {
+		if (MM.currentPlan != null) {
+			
+			InfoDialog infoDialog = new InfoDialog(MM.PHRASES.getPhrase("369"), 
+					MM.PHRASES.getPhrase("370"));
+			String newName = infoDialog.getInput();
+			
+			if (!StringUtils.isEmpty(newName)) {
+				
+				Plan plan = MM.sqlMap.selectOne("getPlanByName", newName);
+				
+				if (plan == null) {
+					
+					plan = new Plan();
+					plan.setPlanID(MM.currentPlan.getPlanID());
+					plan.setPlanName(newName);
+					MM.sqlMap.update("renamePlan", plan);
+					InfinityPfm.qzMain.getVwMain().RefreshCurrentView();
+					
+				} else {
+					MessageDialog show = new MessageDialog(MM.DIALOG_INFO, MM.APPTITLE,
+							MM.PHRASES.getPhrase("365"));
+					show.Open();
+				}
+			}
+		}
+	}
+	
 	public void LoadNewAccountDialog() {
 		BaseDialog act = new NewAccountDialog();
 		act.Open();
@@ -491,6 +593,33 @@ public class MainAction {
 
 	}
 
+	public void RemoveBudget() {
+		
+		Budget budget = InfinityPfm.qzMain.getTrMain()
+				.getSelectedBudget();
+		
+		if (budget == null) return;
+		
+		MessageDialog dlg = new MessageDialog(MM.DIALOG_QUESTION, MM.APPTITLE,
+				String.format(MM.PHRASES.getPhrase("331"), budget.getBudgetName()));
+		
+		dlg.setDimensions(400, 150);
+		int iResult = dlg.Open();
+
+		if (iResult == MM.YES) {
+			
+			try {
+				DataHandler dataHandler = new DataHandler();
+				dataHandler.RemoveBudget(budget);
+			} catch (SQLException e) {
+				InfinityPfm.LogMessage(e.getMessage(), true);
+			}
+			this.CloseCurrentView();
+			InfinityPfm.qzMain.getTrMain().Reload();
+			InfinityPfm.LogMessage("removed:  " + budget.getBudgetId());
+		}
+	}
+	
 	public void LoadImportDialog(int importType, int showAccount) {
 
 		BaseImport importer = null;
@@ -702,7 +831,6 @@ public class MainAction {
 				messageDialog.Open();
 				
 			}
-
 		}
 		
 		try {
@@ -789,7 +917,5 @@ public class MainAction {
 			messageDialog.Open();
 
 		}
-
 	}
-	
 }

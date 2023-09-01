@@ -26,8 +26,8 @@
     	guideLineLbl = $("#chart1").attr("guideLineLbl");
     	
         $("#chart1 tr").each(function () {
-            values1.push(parseInt($("td.barVal1", this).text(), 10));
-            values2.push(parseInt($("td.barVal2", this).text(), 10));
+            values1.push(parseInt($("td.barVal1", this).text().replace(/,/g, ''), 10));
+            values2.push(parseInt($("td.barVal2", this).text().replace(/,/g, ''), 10));
             labels.push($("th", this).text());
             
         });

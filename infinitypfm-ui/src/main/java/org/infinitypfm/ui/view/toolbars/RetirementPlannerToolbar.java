@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2017 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -16,39 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 */
-package org.infinitypfm.ui.view.menus;
+
+package org.infinitypfm.ui.view.toolbars;
 
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
+import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 
-public class BudgetMenu extends PopupMenu {
+public class RetirementPlannerToolbar extends BaseToolbar {
 
-	public BudgetMenu(Shell sh) {
+
+	public RetirementPlannerToolbar(Composite sh) {
 		super(sh);
-		
-		addSelection(SWT.PUSH, MM.MENU_TREE_ADD_ACT_BUDGET, MM.PHRASES
-				.getPhrase("120"), 'A');
-		addSelection(SWT.PUSH, MM.MENU_TREE_REM_ACT_BUDGET, MM.PHRASES
-				.getPhrase("140"), 'A');
-		
-		addSelection(SWT.PUSH, MM.MENU_TREE_REM_BUDGET, MM.PHRASES
-				.getPhrase("330"), 'R');
-		
-		addSelection(SWT.PUSH, MM.MENU_TREE_CLOSEVIEW, MM.PHRASES
-				.getPhrase("54"), 'C');
 	}
 
-	@Override
-	public void QZDispose() {		
+	protected void LoadButtons() {
+		
+		addButton(MM.IMG_ADD, MM.PHRASES.getPhrase("334"),
+				MM.MENU_TREE_ADD_PLAN, true);
+		
+		addButton(MM.IMG_CLIPBOARD, MM.PHRASES.getPhrase("362"),
+				MM.MENU_TREE_CLONE_PLAN, true);
+		
+		addButton(MM.IMG_CLOSE_SMALL, MM.PHRASES.getPhrase("54"),
+				MM.MENU_TREE_CLOSEVIEW, true);
 	}
 
+	protected void Init(Composite cm) {
+		cbMain = new ToolBar(cm, SWT.FLAT);
 
+	}
 
-	@Override
 	public void Refresh() {
-		
+		InfinityPfm.LogMessage("refresh");
 	}
 
 }

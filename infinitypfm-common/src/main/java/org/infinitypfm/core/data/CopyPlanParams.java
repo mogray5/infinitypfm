@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -15,26 +15,25 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
-*/
-(function (raphael) {
-    $(function () {
-        
-    	var values1 = [],
-            labels = [];
-        
-    	guideLineLbl = $("#chart1").attr("guideLineLbl");
-    	
-        $("#chart1 tr").each(function () {
-            values1.push(parseInt($("td.barVal1", this).text().replace(/,/g, ''), 10));
-            labels.push($("th", this).text());
-            
-        });
-        $("#chart1").hide();
-              
-        var chart1Title = $("#chart1Title").val();
-        
-        raphael("holder1", 650, 400).lineChart(75,50,550,250,values1, labels, chart1Title);
-         
+ */
+package org.infinitypfm.core.data;
 
-    });
-})(Raphael.ninja());
+public class CopyPlanParams {
+
+	private int oldPlanID;
+	private int newPlanID;
+	
+	public int getOldPlanID() {
+		return oldPlanID;
+	}
+	public void setOldPlanID(int oldPlanID) {
+		this.oldPlanID = oldPlanID;
+	}
+	public int getNewPlanID() {
+		return newPlanID;
+	}
+	public void setNewPlanID(int newPlanID) {
+		this.newPlanID = newPlanID;
+	}
+	
+}

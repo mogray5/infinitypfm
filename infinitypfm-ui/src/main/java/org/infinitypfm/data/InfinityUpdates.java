@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Currency;
+import org.infinitypfm.core.data.PlanEventType;
 
 
 public class InfinityUpdates {
@@ -64,6 +65,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.0.2")) {
 			ApplyVersion010();
 			ApplyVersion030();
@@ -78,6 +80,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.1.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -91,6 +94,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.2.0")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -104,6 +108,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.2.1")) {
 			ApplyVersion030();
 			ApplyVersion035();
@@ -117,6 +122,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.3.0")) {
 			ApplyVersion035();
 			ApplyVersion040();
@@ -129,6 +135,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.3.5")) {
 			ApplyVersion040();
 			ApplyVersion050();
@@ -140,6 +147,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.4.0")) {
 			ApplyVersion050();
 			ApplyVersion060();
@@ -150,6 +158,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.5.0")) {
 			ApplyVersion060();
 			ApplyVersion070();
@@ -159,6 +168,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.6.0")){
 			ApplyVersion070();
 			ApplyVersion075();
@@ -167,6 +177,7 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.7.0")){
 			ApplyVersion075();
 			ApplyVersion076();
@@ -174,29 +185,38 @@ public class InfinityUpdates {
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.7.5")) {
 			ApplyVersion076();
 			ApplyVersion077();
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.7.6")) {
 			ApplyVersion077();
 			ApplyVersion078();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equals("0.7.7")) {
 			ApplyVersion078();
 			ApplyVersion095();
+			ApplyVersion096();
 		 } else if (sVersion.equalsIgnoreCase("0.7.8")) {
 			ApplyVersion085();
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equalsIgnoreCase("0.8.5")) {
 			ApplyVersion090();
 			ApplyVersion095();
+			ApplyVersion096();
 		} else if (sVersion.equalsIgnoreCase("0.9.0")) {
 			ApplyVersion095();
+			ApplyVersion096();
+		} else if (sVersion.equalsIgnoreCase("0.9.5")) {
+			ApplyVersion096();
 		}
 
 	}
@@ -379,4 +399,24 @@ public class InfinityUpdates {
 		MM.sqlMap.update("bumpVersion", "0.9.5");
 	}
 
+	private void ApplyVersion096() throws SQLException {
+		
+		MM.sqlMap.insert("createTablePlans");
+		MM.sqlMap.insert("createTablePlanEventTypes");
+		MM.sqlMap.insert("createTablePlanEvents");
+		MM.sqlMap.insert("createFK1PlanEvents");
+		MM.sqlMap.insert("createFK2PlanEvents");
+		MM.sqlMap.insert("createTablePlanRuns");
+		MM.sqlMap.insert("createFK1PlanRuns");
+		
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("342"),1,0));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("343"),1,1));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("344"),1,0));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("345"),0,1));
+		MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("368"),1,1));
+		
+		MM.sqlMap.update("bumpVersion", "0.9.6");
+		
+	}
+	
 }

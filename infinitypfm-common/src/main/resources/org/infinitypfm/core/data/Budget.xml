@@ -362,4 +362,15 @@ Copyright (c) 2005-2011 Wayne Gray All rights reserved
     	  WHERE ActId = #{actId}
     	  	AND BudgetId = #{budgetId}
    </delete>
+   
+    <delete id="deleteBudgetDetail" parameterType="budget">
+	    DELETE FROM BudgetDetail
+    	  WHERE BudgetId = #{budgetId}
+   </delete>
+   
+   <delete id="deleteBudget" parameterType="budget">
+	    DELETE FROM Budget
+    	  WHERE BudgetId = #{budgetId}
+   </delete>
+   
 </mapper>

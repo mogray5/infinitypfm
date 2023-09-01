@@ -44,6 +44,7 @@
 		<section>
 		<div class="chartArea">
 			<table id="chart1">
+				<#if reportDataIncome??>
 				<#list reportDataIncome as row>
 					<tr>
 						<th>${row.actName}</th>
@@ -59,10 +60,12 @@
 						</td>
 					</tr>		
 				</#list>
+				</#if>
 			</table>
 		
 		
 			<table id="chart2">
+				<#if reportDataExpense??>
 				<#list reportDataExpense as row>
 					<tr>
 						<th>${row.actName}</th>
@@ -70,6 +73,7 @@
 						<td class="barVal1">${(row.actBalance / expenseTotalRaw)*100}</td>
 					</tr>		
 				</#list>
+				</#if>
 			</table>
 		
 			 <input id="chart1Title" type="hidden" value="${wordIncome}">
@@ -85,8 +89,13 @@
 						<th>${wordYear}</th>
 						<th>${wordAccountType}</th>
 						<th>${wordAccountName}</th>
-						<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
+						<th>${wordAccountBalance} 
+							<#if reportData[0]??>
+								(${reportData[0].isoCode})
+							</#if>
+						</th>
 					</tr>
+					<#if reportData??>
 					<#list reportData as row>
 						<tr class="rowColored${row.actTypeName}">
 							<td>${row.yrString}</td>
@@ -95,7 +104,7 @@
 							<td>${row.actBalanceFmt}</td>
 						</tr>		
 					</#list>
-					
+					</#if>>
 				</table>
 		</div>
 		</main>

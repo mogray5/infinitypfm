@@ -3,7 +3,7 @@
         var values = [],
             labels = [];
         $("#chart1 tr").each(function () {
-            values.push(parseInt($("td", this).text(), 10));
+            values.push(parseInt($("td", this).text().replace(/,/g, ''), 10));
             labels.push($("th", this).text());
         });
         $("#chart1").hide();

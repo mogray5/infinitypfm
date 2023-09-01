@@ -23,13 +23,13 @@
             values2 = [],
             labels2 = [];
         $("#chart1 tr").each(function () {
-            values1.push(parseInt($("td", this).text(), 10));
+            values1.push(parseInt($("td", this).text().replace(/,/g, ''), 10));
             labels1.push($("th", this).text());
         });
         $("#chart1").hide();
        
         $("#chart2 tr").each(function () {
-        	values2.push(parseInt($("td", this).text(), 10));
+        	values2.push(parseInt($("td", this).text().replace(/,/g, ''), 10));
         	labels2.push($("th", this).text());
         });
         $("#chart2").hide();

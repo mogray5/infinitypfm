@@ -32,12 +32,14 @@
 	</div>
 			
 <table id="chart1">
+	<#if reportData??>
 	<#list reportData as row>
 		<tr>
 			<th>${row.yrString}-${row.mth}</th>
 			<td class="barVal1">${row.actBalanceFmt}</td>
 		</tr>		
 	</#list>
+	</#if>
 </table>
 
 <span id="holder1"></span>
@@ -45,15 +47,16 @@
 		<table>
 			<tr>
 				<th>${wordYearMonth}</th>
-				<th>${wordAccountBalance} (${reportData[0].isoCode})</th>
+				<th>${wordAccountBalance} (<#if reportData[0]??> ${reportData[0].isoCode}</#if>)</th>
 			</tr>
+			<#if reportData??>
 			<#list reportData as row>
 				<tr>
 					<td>${row.yrString}-${row.mth}</td>
 					<td>${row.actBalanceFmt}</td>
 				</tr>		
 			</#list>
-			
+			</#if>
 		</table>
 </div>
 	</body>

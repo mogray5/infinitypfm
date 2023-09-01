@@ -28,6 +28,7 @@
 	<main>
 		<div class="chartArea">
 			<table id="chart1">
+				<#if reportData??>
 				<#list reportData as row>
 					<tr>
 						<th>${row.yrString}-${row.mth}</th>
@@ -41,6 +42,7 @@
 						</td>
 					</tr>		
 				</#list>
+				</#if>
 			</table>
 			
 			
@@ -54,6 +56,7 @@
 							<th>${wordLiabilityBalance}</th>
 							<th>${wordExpenseBalance}</th>
 						</tr>
+						<#if reportData??>
 						<#list reportData as row>
 							<tr>
 								<td>${row.yrString}-${row.mth}</td>
@@ -62,7 +65,7 @@
 								<td>${row.expenseBalanceFmt!0}</td>
 							</tr>		
 						</#list>
-						
+						</#if>
 					</table>
 		</div>
 		</main>

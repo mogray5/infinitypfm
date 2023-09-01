@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2013 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2022 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -17,8 +17,6 @@
  * along with Infinity PFM.  If not, see <http://www.gnu.org/licenses/>.
 */
 package org.infinitypfm.ui.view.dialogs;
-
-import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -86,37 +84,34 @@ public class BudgetSelector extends BaseDialog {
 	@Override
 	protected void LoadLayout() {
 		FormData lblaccountdata = new FormData();
-		lblaccountdata.top = new FormAttachment(0, 40);
-		lblaccountdata.left = new FormAttachment(20, 0);
+		lblaccountdata.top = new FormAttachment(0, 30);
+		lblaccountdata.left = new FormAttachment(10, 0);
 		lblBudget.setLayoutData(lblaccountdata);
 		
 		FormData cmbaccountdata = new FormData();
-		cmbaccountdata.top = new FormAttachment(0, 40);
+		cmbaccountdata.top = new FormAttachment(0, 20);
 		cmbaccountdata.left = new FormAttachment(lblBudget, 10);
 		cmbaccountdata.right = new FormAttachment(100, -30);
 		cmbBudget.setLayoutData(cmbaccountdata);
 		
-		FormData cmdcanceldata = new FormData();
-		cmdcanceldata.top = new FormAttachment(lblBudget, 40);
-		//cmdcanceldata.left = new FormAttachment(cmdOne, 10);
-		cmdcanceldata.right = new FormAttachment(40,10);
-		cmdCancel.setLayoutData(cmdcanceldata);
-
 		FormData cmdadddata = new FormData();
-		cmdadddata.top = new FormAttachment(lblBudget, 40);
-		cmdadddata.left = new FormAttachment(cmdCancel, 10);
-		cmdadddata.right = new FormAttachment(60,10);
+		cmdadddata.top = new FormAttachment(lblBudget, 20);
+		cmdadddata.left = new FormAttachment(25, 0);
+		cmdadddata.right = new FormAttachment(25,60);
 		cmdSelect.setLayoutData(cmdadddata);
 
+		FormData cmdcanceldata = new FormData();
+		cmdcanceldata.top = new FormAttachment(lblBudget, 20);
+		cmdcanceldata.left = new FormAttachment(cmdSelect, 10);
+		//cmdcanceldata.right = new FormAttachment(65,10);
+		cmdCancel.setLayoutData(cmdcanceldata);
 	}
-	
-	
 	
 	@Override
 	public int Open() {
 		super.Open();
 		shell.setText(MM.PHRASES.getPhrase("165"));
-		shell.setSize(400, 200);
+		shell.setSize(350, 150);
 		this.CenterWindow();
 
 		shell.open();
@@ -129,8 +124,6 @@ public class BudgetSelector extends BaseDialog {
 		return 1;
 	}
 
-
-
 	public String getBudgetName() {
 		return budgetName;
 	}
@@ -138,8 +131,6 @@ public class BudgetSelector extends BaseDialog {
 	public void setBudgetName(String budgetName) {
 		this.budgetName = budgetName;
 	}
-
-
 
 	/*
 	 * Listeners
@@ -157,5 +148,4 @@ public class BudgetSelector extends BaseDialog {
 			shell.dispose();
 		}
 	};
-
 }

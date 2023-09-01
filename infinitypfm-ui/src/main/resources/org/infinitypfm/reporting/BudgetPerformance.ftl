@@ -24,12 +24,13 @@
 		<article>
 		<header>
 			<h1>${title}</h1>
-			<h3>Using Budget: ${reportData[0].budgetName}</h3>
+			<h3>Using Budget: <#if reportData[0]??> ${reportData[0].budgetName} </#if></h3>
 		</header>
 		<main>
 			<section>
 				<div class="chartArea">
 					<table id="chart1">
+						<#if reportData??>
 						<#list reportData as row>
 							<tr>
 								<th>${row.yrString}-${row.mth}</th>
@@ -37,6 +38,7 @@
 								<td class="guideVal">${row.budgetBalanceFmt!0}</td>
 							</tr>		
 						</#list>
+						</#if>
 					</table>
 					
 					
@@ -52,6 +54,7 @@
 									<th>${wordBudgetBalance}</th>
 									<th>${wordBudgetName}</th>
 								</tr>
+								<#if reportData??>
 								<#list reportData as row>
 									<tr>
 										<td>${row.yrString}-${row.mth}</td>
@@ -60,7 +63,7 @@
 										<td>${row.budgetName}</td>
 									</tr>		
 								</#list>
-								
+								</#if>
 							</table>
 				</div>
 			</section>

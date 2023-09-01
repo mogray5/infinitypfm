@@ -23,21 +23,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.infinitypfm.conf.MM;
 
-public class BudgetMenu extends PopupMenu {
+public class PlanMenu extends PopupMenu {
 
-	public BudgetMenu(Shell sh) {
+	public PlanMenu(Shell sh) {
 		super(sh);
 		
-		addSelection(SWT.PUSH, MM.MENU_TREE_ADD_ACT_BUDGET, MM.PHRASES
-				.getPhrase("120"), 'A');
-		addSelection(SWT.PUSH, MM.MENU_TREE_REM_ACT_BUDGET, MM.PHRASES
-				.getPhrase("140"), 'A');
+		addSelection(SWT.PUSH, MM.MENU_TREE_RUN_PLAN, MM.PHRASES
+				.getPhrase("336"), 'D');
 		
-		addSelection(SWT.PUSH, MM.MENU_TREE_REM_BUDGET, MM.PHRASES
-				.getPhrase("330"), 'R');
+		addSelection(SWT.PUSH, MM.MENU_TREE_RENAME_PLAN, MM.PHRASES
+				.getPhrase("369"), 'R');
 		
-		addSelection(SWT.PUSH, MM.MENU_TREE_CLOSEVIEW, MM.PHRASES
-				.getPhrase("54"), 'C');
+		addSelection(SWT.PUSH, MM.MENU_TREE_DELETE_PLAN, MM.PHRASES
+				.getPhrase("335"), 'D');
+		
 	}
 
 	@Override

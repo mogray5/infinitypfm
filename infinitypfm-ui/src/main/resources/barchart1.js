@@ -27,11 +27,11 @@
     	guideLineLbl = $("#chart1").attr("guideLineLbl");
     	
         $("#chart1 tr").each(function () {
-            values1.push(parseInt($("td.barVal", this).text(), 10));
+            values1.push(parseInt($("td.barVal", this).text(),replace(/,/g, ''), 10));
             labels1.push($("th", this).text());
             
             if ($("td.guideVal").length > 0) {
-            	guideLineVals.push(parseInt($("td.guideVal", this).text(), 10));
+            	guideLineVals.push(parseInt($("td.guideVal", this).text().replace(/,/g, ''), 10));
             }
             
         });

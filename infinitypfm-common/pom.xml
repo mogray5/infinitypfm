@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.infinitypfm</groupId>
     <artifactId>infinitypfm-client</artifactId>
-    <version>0.9.5</version>
+    <version>0.9.6</version>
   </parent>
   <groupId>org.infinitypfm.common</groupId>
   <artifactId>infinitypfm-common</artifactId>
@@ -39,7 +39,7 @@
 	<dependency>
 	    <groupId>org.easymock</groupId>
 	    <artifactId>easymock</artifactId>
-	    <version>4.3</version>
+	    <version>5.2.0</version>
 	    <scope>test</scope>
 	</dependency>
 	
@@ -53,7 +53,7 @@
 	        <configuration>
 <!-- 	            <source>1.8</source> -->
 <!-- 	            <target>1.8</target> -->
-				<release>11</release>
+				<release>17</release>
 	        </configuration>
 	    </plugin>
 	</plugins>

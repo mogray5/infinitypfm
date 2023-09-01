@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang3.StringUtils;
 import org.infinitypfm.core.conf.LangInstance;
 import org.infinitypfm.core.conf.PfmSettings;
 
@@ -48,6 +49,7 @@ public class DataFormatUtil implements Serializable {
 
 	private static final long serialVersionUID = 6215132601470795925L;
 	public static final String DefaultDateFormat = "M-dd-yyyy";
+	public static final String NUM_FORMAT_NO_CENTS = "#,##0;(#,##0)";
 
 	String[] monthName = { "January", "February", "March", "April", "May",
 			"June", "July", "August", "September", "October", "November",
@@ -414,4 +416,28 @@ public class DataFormatUtil implements Serializable {
 		return result;
 		
 	}
+	
+	public static boolean isInteger(String val) {
+		try{
+			if (StringUtils.isNumeric(val))
+				Integer.parseInt(val);
+			else 
+				return false;
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean isNumber(String val) {
+		if (StringUtils.isNoneEmpty(val)) {
+			try {
+				Float.parseFloat(val);
+				return true;
+			} catch (Exception e) {}
+		}
+		
+		return false;
+	}
+	
 }

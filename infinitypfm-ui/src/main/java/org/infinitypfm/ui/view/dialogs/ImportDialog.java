@@ -289,7 +289,7 @@ public class ImportDialog extends BaseDialog {
 
 						// Found a rule match. Add mapped offset to the
 						// transactions
-						offset = (Account) MM.sqlMap.selectList(
+						offset = (Account) MM.sqlMap.selectOne(
 								"getAccountByActId", offset);
 						if (offset != null) {
 							tran.setActOffset(offset.getActId());

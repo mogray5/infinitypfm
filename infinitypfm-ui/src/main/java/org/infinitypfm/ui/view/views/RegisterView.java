@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2022 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2023 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 

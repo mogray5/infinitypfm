@@ -34,7 +34,7 @@ public class Password implements Comparable<Password> {
 	private boolean _passwordChanged = false;
 	private final EncryptUtil _encryptUtil;
 	
-	public Password(String origPlainPwd, String origHashPwd, EncryptUtil util) {
+	public Password(String origPlainPwd, String origHashPwd, EncryptUtil util) throws IllegalArgumentException {
 		
 		_origHashedPassword = origHashPwd;
 		_hashedPassword = origHashPwd;

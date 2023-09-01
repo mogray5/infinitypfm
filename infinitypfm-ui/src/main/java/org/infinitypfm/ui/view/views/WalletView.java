@@ -1133,7 +1133,8 @@ public class WalletView extends BaseView implements WalletEvents {
 	@Override
 	public void walletMessage(String message, WalletException e) {
 		InfinityPfm.LogMessage(message, false);
-		e.printStackTrace();
+		if (e != null)
+			InfinityPfm.LogMessage(e.getMessage());
 	}
 
 	@Override

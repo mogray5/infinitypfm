@@ -30,6 +30,7 @@ import org.infinitypfm.client.InfinityPfm;
 import org.infinitypfm.conf.MM;
 import org.infinitypfm.core.data.Account;
 import org.infinitypfm.core.data.Currency;
+import org.infinitypfm.core.data.PlanEventType;
 
 public class Database {
 
@@ -57,7 +58,9 @@ public class Database {
 				"createFKImportRules",
 				"akTransactions",
 				"createTableConnectors",
-				"createTableImportDef"
+				"createTableImportDef",
+				"createTablePlans","createTablePlanEventTypes","createTablePlanEvents", "createFK1PlanEvents","createFK2PlanEvents",
+				"createTablePlanRuns","createFK1PlanRuns"
 				};
 
 		
@@ -76,6 +79,13 @@ public class Database {
 			MM.sqlMap.insert("addAccountType", MM.PHRASES.getPhrase("206"));
 			MM.sqlMap.insert("addAccountType", MM.PHRASES.getPhrase("118"));
 			MM.sqlMap.insert("addAccountType", MM.PHRASES.getPhrase("197"));
+			
+			//add plan event types
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("342"),1,0));
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("343"),1,1));
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("344"),1,0));
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("345"),0,1));
+			MM.sqlMap.insert("insertPlanEventType", new PlanEventType(MM.PHRASES.getPhrase("368"),1,1));
 			
 			Account acct = new Account();
 			acct.setActTypeName("Expense");

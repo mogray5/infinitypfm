@@ -33,6 +33,7 @@
 	<typeAlias alias="budgetDetail" type="org.infinitypfm.core.data.BudgetDetail"/>
 	<typeAlias alias="budget" type="org.infinitypfm.core.data.Budget"/>
 	<typeAlias alias="connector" type="org.infinitypfm.core.data.Connector"/>
+	<typeAlias alias="copyPlanParams" type="org.infinitypfm.core.data.CopyPlanParams"/>
 	<typeAlias alias="currencyMethod" type="org.infinitypfm.core.data.CurrencyMethod"/>
 	<typeAlias alias="currency" type="org.infinitypfm.core.data.Currency"/>
 	<typeAlias alias="dateParams" type="org.infinitypfm.core.data.ParamDateRange"/>
@@ -41,6 +42,11 @@
 	<typeAlias alias="importDef" type="org.infinitypfm.core.data.ImportDef"/>
 	<typeAlias alias="importRule" type="org.infinitypfm.core.data.ImportRule" />
 	<typeAlias alias="monthBalance" type="org.infinitypfm.core.data.MonthlyBalance"/>
+	<typeAlias alias="plan" type="org.infinitypfm.core.data.Plan"/>
+	<typeAlias alias="planEvent" type="org.infinitypfm.core.data.PlanEvent"/>
+	<typeAlias alias="planEventType" type="org.infinitypfm.core.data.PlanEventType"/>
+	<typeAlias alias="planRun" type="org.infinitypfm.core.data.PlanRun"/>
+	<typeAlias alias="planResult" type="org.infinitypfm.core.data.PlanResult"/>
 	<typeAlias alias="yearBalance" type="org.infinitypfm.core.data.YearlyBalance"/>
 	<typeAlias alias="opt" type="org.infinitypfm.core.data.Options" />
 	<typeAlias alias="register" type="org.infinitypfm.core.data.RegisterEntry" />
@@ -86,6 +92,7 @@
   <mapper resource="org/infinitypfm/core/data/ImportRules.xml" />
   <mapper resource="org/infinitypfm/core/data/Connectors.xml" />
   <mapper resource="org/infinitypfm/core/data/Trades.xml" />
+  <mapper resource="org/infinitypfm/core/data/Plans.xml" />
 </mappers>
 
 </configuration>

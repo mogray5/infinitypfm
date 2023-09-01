@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.infinitypfm</groupId>
     <artifactId>infinitypfm-client</artifactId>
-    <version>0.9.5</version>
+    <version>0.9.6</version>
   </parent>
   <groupId>org.infinitypfm.ui</groupId>
   <artifactId>infinitypfm-ui</artifactId>
@@ -49,12 +49,12 @@
 	<dependency>
 		<groupId>org.infinitypfm.common</groupId>
 		<artifactId>infinitypfm-common</artifactId>
-		<version>0.9.5</version>
+		<version>0.9.6</version>
 	</dependency>
 	<dependency>
 		<groupId>org.infinitypfm.btc</groupId>
 		<artifactId>infinitypfm-btc</artifactId>
-		<version>0.9.5</version>
+		<version>0.9.6</version>
 	</dependency>
 	<dependency>
 	    <groupId>net.sf.ezmorph</groupId>
@@ -77,7 +77,7 @@
 	        <configuration>
 <!-- 	            <source>1.8</source> -->
 <!-- 	            <target>1.8</target> -->
-				<release>11</release>
+				<release>17</release>
 	        </configuration>
 	    </plugin>
 	</plugins>

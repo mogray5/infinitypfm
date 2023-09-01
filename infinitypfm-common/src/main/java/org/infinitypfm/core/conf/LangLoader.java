@@ -374,7 +374,47 @@ public class LangLoader {
 		hmPhrases.put("327",  i18n.tr("Path"));
 		hmPhrases.put("328",  i18n.tr("Value"));
 		hmPhrases.put("329",  i18n.tr("UTXO Report"));
-
+		hmPhrases.put("330",  i18n.tr("Remove Budget"));
+		hmPhrases.put("331", i18n.tr("Are you sure you want to delete budget: %s?"));
+		hmPhrases.put("332", i18n.tr("Retirement Planner"));
+		hmPhrases.put("333", i18n.tr("Plan"));
+		hmPhrases.put("334", i18n.tr("Add Plan"));
+		hmPhrases.put("335", i18n.tr("Delete Plan"));
+		hmPhrases.put("336", i18n.tr("Run Plan"));
+		hmPhrases.put("337", i18n.tr("Plan Name"));
+		hmPhrases.put("338", i18n.tr("Starting Balance"));
+		hmPhrases.put("339", i18n.tr("Starting Age"));
+		hmPhrases.put("340", i18n.tr("Plan name can not be empty, starting age must be an integer, and starting balance must be a number."));
+		hmPhrases.put("341", i18n.tr("Plan name already in use.  Please choose a different plan name."));
+		hmPhrases.put("342", i18n.tr("Invest"));
+		hmPhrases.put("343", i18n.tr("Draw"));
+		hmPhrases.put("344", i18n.tr("Earn"));
+		hmPhrases.put("345", i18n.tr("Return"));
+		hmPhrases.put("346", i18n.tr("Add Event"));
+		hmPhrases.put("347", i18n.tr("Event Name"));
+		hmPhrases.put("348", i18n.tr("Event Type"));
+		hmPhrases.put("349", i18n.tr("Event Value"));
+		hmPhrases.put("350", i18n.tr("Event Value Type"));
+		hmPhrases.put("351", i18n.tr("Percent"));
+		hmPhrases.put("352", i18n.tr("Number"));
+		hmPhrases.put("353", i18n.tr("Delete Event"));
+		hmPhrases.put("354", i18n.tr("Ending Age"));
+		hmPhrases.put("355", i18n.tr("Are you sure you want to delete plan: %s?"));
+		hmPhrases.put("356", i18n.tr("Plan Results: %s"));
+		hmPhrases.put("357", i18n.tr("Age"));
+		hmPhrases.put("358", i18n.tr("Distribution"));
+		hmPhrases.put("359", i18n.tr("Investment Returns"));
+		hmPhrases.put("360", i18n.tr("Contributions"));
+		hmPhrases.put("361", i18n.tr("Net Earnings"));
+		hmPhrases.put("362", i18n.tr("Clone Plan"));
+		hmPhrases.put("363", i18n.tr("New Plan Name"));
+		hmPhrases.put("364", i18n.tr("New plan name cannot be empty"));
+		hmPhrases.put("365", i18n.tr("Plan name already exists"));
+		hmPhrases.put("366", i18n.tr("Plan not found"));
+		hmPhrases.put("367", i18n.tr("Edit Event"));
+		hmPhrases.put("368", i18n.tr("Fee"));
+		hmPhrases.put("369", i18n.tr("Rename Plan"));
+		hmPhrases.put("370", i18n.tr("Enter a new plan name"));
 	}
 	
 	public String getPhrase(String id){
