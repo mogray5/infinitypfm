@@ -266,7 +266,10 @@ Copyright (c) 2005-2021 Wayne Gray All rights reserved
    <update id="v0_9_5_g">
  	ALTER TABLE AppSettings ADD COLUMN ReportPath VARCHAR(500);
    </update>
-      <update id="v0_9_5_h">
+   <update id="v0_9_5_h">
  	UPDATE AppSettings SET ReportPath = '/tmp';
+   </update>
+   <update id="v0_9_7_a">
+ 	ALTER TABLE Accounts ADD COLUMN IsHidden INT DEFAULT 0;
    </update>
 </mapper>

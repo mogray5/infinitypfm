@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.infinitypfm</groupId>
     <artifactId>infinitypfm-client</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
   </parent>
   <groupId>org.infinitypfm.common</groupId>
   <artifactId>infinitypfm-common</artifactId>

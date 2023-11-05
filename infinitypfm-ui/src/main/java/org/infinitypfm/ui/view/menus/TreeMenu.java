@@ -31,6 +31,9 @@ public class TreeMenu extends PopupMenu {
 	public TreeMenu(Shell sh) {
 		super(sh);
 
+		addSelection(SWT.PUSH, MM.MENU_TREE_HIDE_ACT,
+				MM.PHRASES.getPhrase("371"), 'H');
+		
 		addSelection(SWT.PUSH, MM.MENU_TREE_EDIT_ACT,
 				MM.PHRASES.getPhrase("59") + " " + MM.PHRASES.getPhrase("93"), 'T');
 		

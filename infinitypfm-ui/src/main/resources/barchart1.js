@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2011 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2013 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -27,7 +27,7 @@
     	guideLineLbl = $("#chart1").attr("guideLineLbl");
     	
         $("#chart1 tr").each(function () {
-            values1.push(parseInt($("td.barVal", this).text(),replace(/,/g, ''), 10));
+            values1.push(parseInt($("td.barVal", this).text().replace(/,/g, ''), 10));
             labels1.push($("th", this).text());
             
             if ($("td.guideVal").length > 0) {

@@ -42,6 +42,7 @@
 		ActNumber VARCHAR(50),
 		ActBalance BIGINT,
 		CurrencyID INT,
+		IsHidden INT DEFAULT 0,
 		UNIQUE (ActName),
 		UNIQUE (ActID)
 		)

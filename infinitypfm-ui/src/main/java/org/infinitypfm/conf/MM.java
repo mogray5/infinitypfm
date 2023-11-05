@@ -36,7 +36,7 @@ public class MM {
 	 * Program Constants
 	 */
 	public static final String APPTITLE = "Infinity PFM";
-	public static final String APPVERSION = "0.9.6"; // <-- Used during database creation only
+	public static final String APPVERSION = "0.9.7"; // <-- Used during database creation only
 	public static final String APPLINK = "https://www.infinitypfm.org";
 	public static final String APPLICENCE = "GNU General Public License v3";
 	public static final String APPCOPYRIGHT = "(c) 2005-2023 by Wayne Gray";
@@ -150,15 +150,16 @@ public class MM {
 	public static final int MENU_TREE_ADD_ACT_FROM_TEMP = 26;
 	public static final int MENU_TREE_REM_ACT_BUDGET = 27;
 	public static final int MENU_TREE_REM_BUDGET = 28;
-	public static final int MENU_TREE_EDIT_ACT = 29;
-	public static final int MENU_TREE_ADD_PLAN = 30;
-	public static final int MENU_TREE_CLONE_PLAN = 31;
-	public static final int MENU_TREE_RENAME_PLAN = 32;
-	public static final int MENU_TREE_DELETE_PLAN = 33;
-	public static final int MENU_TREE_RUN_PLAN = 34;
-	public static final int MENU_TREE_ADD_PLAN_EVENT = 35;
-	public static final int MENU_TREE_DELETE_PLAN_EVENT = 36;
-	public static final int MENU_TREE_EDIT_PLAN_EVENT = 37;
+	public static final int MENU_TREE_HIDE_ACT = 29;
+	public static final int MENU_TREE_EDIT_ACT = 30;
+	public static final int MENU_TREE_ADD_PLAN = 31;
+	public static final int MENU_TREE_CLONE_PLAN = 32;
+	public static final int MENU_TREE_RENAME_PLAN = 33;
+	public static final int MENU_TREE_DELETE_PLAN = 34;
+	public static final int MENU_TREE_RUN_PLAN = 35;
+	public static final int MENU_TREE_ADD_PLAN_EVENT = 36;
+	public static final int MENU_TREE_DELETE_PLAN_EVENT = 37;
+	public static final int MENU_TREE_EDIT_PLAN_EVENT = 38;
 	
 	
 	public static final int MENU_FILE_EXIT = 40;

@@ -217,6 +217,8 @@ public class InfinityUpdates {
 			ApplyVersion096();
 		} else if (sVersion.equalsIgnoreCase("0.9.5")) {
 			ApplyVersion096();
+		} else if (sVersion.equalsIgnoreCase("0.9.6")) {
+			ApplyVersion097();
 		}
 
 	}
@@ -417,6 +419,11 @@ public class InfinityUpdates {
 		
 		MM.sqlMap.update("bumpVersion", "0.9.6");
 		
+	}
+	
+	private void ApplyVersion097() throws SQLException {
+		MM.sqlMap.update("v0_9_7_a");
+		MM.sqlMap.update("bumpVersion", "0.9.7");	
 	}
 	
 }

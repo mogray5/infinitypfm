@@ -141,6 +141,9 @@ public class MainAction {
 		case MM.MENU_TREE_EDIT_ACT:
 			LoadEditAccountDialog();
 			break;
+		case MM.MENU_TREE_HIDE_ACT:
+			HideAccount();
+			break;
 		case MM.MENU_TREE_ADD_ACT_FROM_TEMP:
 			this.LoadNewAccountSelectorDialog();
 			break;
@@ -516,6 +519,15 @@ public class MainAction {
 		}
 		
 	}
+	
+	public void HideAccount() {
+	
+		Account account = InfinityPfm.qzMain.getTrMain().getSelectedAccount();
+		account.setIsHidden(1);
+		MM.sqlMap.update("updateAccountHidden", account);
+		InfinityPfm.qzMain.getTrMain().Reload();
+	}
+	
 	public void LoadNewAccountSelectorDialog() {
 		BaseDialog act = new DefaultAccountSelectorDialog();
 		act.Open();

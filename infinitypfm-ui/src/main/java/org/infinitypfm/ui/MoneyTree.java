@@ -118,15 +118,15 @@ public class MoneyTree {
 
 				for (int i = 0; i < bankList.size(); i++) {
 					act = (Account) bankList.get(i);
-					ti = new TreeItem(bankNode, i);
-					ti.setText(act.getActName());
-					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_SPREADSHEET));
-					System.out.println(act.getActName() + ":"
-							+ Integer.toString(act.getActId()));
-
+					if (act.getIsHidden() == 0) {
+						ti = new TreeItem(bankNode, i);
+						ti.setText(act.getActName());
+						ti.setData(act);
+						ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_SPREADSHEET));
+						System.out.println(act.getActName() + ":"
+								+ Integer.toString(act.getActId()));
+					}
 				}
-
 			}
 
 			// add liability accounts
@@ -138,15 +138,15 @@ public class MoneyTree {
 
 				for (int i = 0; i < liabilityList.size(); i++) {
 					act = (Account) liabilityList.get(i);
-					ti = new TreeItem(liabilityNode, i);
-					ti.setText(act.getActName());
-					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
-					System.out.println(act.getActName() + ":"
-							+ Integer.toString(act.getActId()));
-
+					if (act.getIsHidden() == 0) {
+						ti = new TreeItem(liabilityNode, i);
+						ti.setText(act.getActName());
+						ti.setData(act);
+						ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
+						System.out.println(act.getActName() + ":"
+								+ Integer.toString(act.getActId()));
+					}
 				}
-
 			}
 
 			// add expense accounts
@@ -158,12 +158,13 @@ public class MoneyTree {
 
 				for (int i = 0; i < expenseList.size(); i++) {
 					act = (Account) expenseList.get(i);
-					ti = new TreeItem(expenseNode, i);
-					ti.setText(act.getActName());
-					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
+					if (act.getIsHidden() == 0) {
+						ti = new TreeItem(expenseNode, i);
+						ti.setText(act.getActName());
+						ti.setData(act);
+						ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_EMPTY));
+					}
 				}
-
 			}
 
 			// add income accounts
@@ -175,12 +176,13 @@ public class MoneyTree {
 
 				for (int i = 0; i < incomeList.size(); i++) {
 					act = (Account) incomeList.get(i);
-					ti = new TreeItem(incomeNode, i);
-					ti.setText(act.getActName());
-					ti.setData(act);
-					ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_FULL));
+					if (act.getIsHidden() == 0) {
+						ti = new TreeItem(incomeNode, i);
+						ti.setText(act.getActName());
+						ti.setData(act);
+						ti.setImage(InfinityPfm.imMain.getImage(MM.IMG_STAR_FULL));
+					}
 				}
-
 			}
 
 			// add budgets

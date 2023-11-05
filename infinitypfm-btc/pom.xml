@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.infinitypfm</groupId>
     <artifactId>infinitypfm-client</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
   </parent>
   <groupId>org.infinitypfm.btc</groupId>
   <artifactId>infinitypfm-btc</artifactId>
@@ -30,12 +30,12 @@
 	<dependency>
 	    <groupId>org.infinitypfm.common</groupId>
 	    <artifactId>infinitypfm-common</artifactId>
-	    <version>0.9.6</version>
+	    <version>0.9.7</version>
 	</dependency>
 	<dependency>
 	    <groupId>com.fasterxml.jackson.core</groupId>
 	    <artifactId>jackson-databind</artifactId>
-	    <version>2.9.8</version>
+	    <version>2.9.10.4</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.easymock</groupId>
