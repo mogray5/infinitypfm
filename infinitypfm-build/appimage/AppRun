@@ -2,7 +2,8 @@
 
 set -x
 HERE="$(dirname "$(readlink -f "${0}")")"
-export JAVA_HOME="${HERE}"/usr/lib/java-1.11.0-openjdk-amd64;
+#export JAVA_HOME="${HERE}"/usr/lib/java-1.11.0-openjdk-amd64;
+export JAVA_HOME="${HERE}"/usr/lib/jre;
 export PATH="${HERE}"/usr/bin/:"${HERE}"/usr/sbin/:"${HERE}"/usr/games/:"${HERE}"/bin/:"${HERE}"/sbin/:"${JAVA_HOME}"/bin/:${PATH}
 export LD_LIBRARY_PATH="${HERE}"/usr/lib/:"${HERE}"/usr/lib/i386-linux-gnu/:"${HERE}"/usr/lib/x86_64-linux-gnu/:"${HERE}"/usr/lib32/:"${HERE}"/usr/lib64/:"${HERE}"/lib/:"${HERE}"/lib/i386-linux-gnu/:"${HERE}"/lib/x86_64-linux-gnu/:"${HERE}"/lib32/:"${HERE}"/lib64/:"${LD_LIBRARY_PATH}"
 export PYTHONPATH="${HERE}"/usr/share/pyshared/:"${PYTHONPATH}"
