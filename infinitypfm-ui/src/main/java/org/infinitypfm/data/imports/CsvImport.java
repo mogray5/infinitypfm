@@ -90,7 +90,10 @@ public class CsvImport extends BaseImport {
 				    Date dt = dataUtils.getDate();
 				    
 				    Transaction t = new Transaction();
-				    t.setTranAmount(amount);
+				    if (def.isAmountInverted())
+				    	t.setTranAmount(-amount);
+				    else
+				    	t.setTranAmount(amount);
 				    t.setTranMemo(memo);
 				    t.setTranDate(dt);
 				    

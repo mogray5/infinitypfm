@@ -416,6 +416,7 @@ public class LangLoader {
 		hmPhrases.put("369", i18n.tr("Rename Plan"));
 		hmPhrases.put("370", i18n.tr("Enter a new plan name"));
 		hmPhrases.put("371", i18n.tr("Hide account"));
+		hmPhrases.put("372", i18n.tr("Invert Amount"));
 	}
 	
 	public String getPhrase(String id){

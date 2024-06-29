@@ -22,9 +22,9 @@
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
-			<version>4.29</version>
+			<version>4.32</version>
 			<scope>system</scope>
-			<systemPath>/home/wayne/Downloads/swt-4.29-gtk-linux-x86_64/swt.jar</systemPath>
+			<systemPath>/home/wayne/Downloads/swt-4.32-gtk-linux-x86_64/swt.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>

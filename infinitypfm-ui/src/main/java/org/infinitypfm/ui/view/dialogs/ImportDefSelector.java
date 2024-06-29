@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2024 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -49,6 +49,7 @@ public class ImportDefSelector extends BaseDialog {
 	private Button cmdClose = null;
 	private Button cmdAdd = null;
 	private Button cmdDelete = null;
+	private Button chkInvertAmount = null;
 	
 	private Label lblImportName = null;
 	private Label lblImportType = null;
@@ -208,6 +209,9 @@ public class ImportDefSelector extends BaseDialog {
 		txtMemoField = new Text(cmpAddEditDef, SWT.BORDER);
 		txtAmountField = new Text(cmpAddEditDef, SWT.BORDER);
 		
+		chkInvertAmount = new Button(cmpAddEditDef, SWT.CHECK);
+		chkInvertAmount.setText(MM.PHRASES.getPhrase("372"));
+		
 		cmdAdd = new Button(cmpAddEditDef, SWT.PUSH);
 		cmdAdd.setText(MM.PHRASES.getPhrase("45"));
 		cmdAdd.addSelectionListener(cmdAdd_OnClick);
@@ -292,6 +296,12 @@ public class ImportDefSelector extends BaseDialog {
 		txtamountfielddata.right = new FormAttachment(lblAmountField, 250);
 		txtAmountField.setLayoutData(txtamountfielddata);
 		
+		FormData chkinvertamountdata = new FormData();
+		chkinvertamountdata.top = new FormAttachment(lblAmountField, 10);
+		chkinvertamountdata.left = new FormAttachment(lblAmountField, 10);
+		chkinvertamountdata.right = new FormAttachment(lblAmountField, 250);
+		chkInvertAmount.setLayoutData(chkinvertamountdata);
+		
 		FormData cmdadddata = new FormData();
 		cmdadddata.top = new FormAttachment(lblAmountField, 15);
 		cmdadddata.left = new FormAttachment(35, 0);
@@ -314,6 +324,7 @@ public class ImportDefSelector extends BaseDialog {
 		TableColumn tc4 = new TableColumn(tblImportDefs, SWT.CENTER);
 		TableColumn tc5 = new TableColumn(tblImportDefs, SWT.CENTER);
 		TableColumn tc6 = new TableColumn(tblImportDefs, SWT.CENTER);
+		TableColumn tc7 = new TableColumn(tblImportDefs, SWT.CENTER);
 
 		tc1.setText(MM.PHRASES.getPhrase("254"));
 		tc2.setText(MM.PHRASES.getPhrase("255"));
@@ -321,13 +332,15 @@ public class ImportDefSelector extends BaseDialog {
 		tc4.setText(MM.PHRASES.getPhrase("260"));
 		tc5.setText(MM.PHRASES.getPhrase("257"));
 		tc6.setText(MM.PHRASES.getPhrase("258"));
-
+		tc7.setText(MM.PHRASES.getPhrase("372"));
+		
 		tc1.setWidth(150);
 		tc2.setWidth(150);
 		tc3.setWidth(150);
 		tc4.setWidth(150);
 		tc5.setWidth(150);
 		tc6.setWidth(90);
+		tc7.setWidth(90);
 
 		tblImportDefs.setHeaderVisible(true);
 
@@ -353,6 +366,7 @@ public class ImportDefSelector extends BaseDialog {
 				ti.setText(3, def.getDateFormat());
 				ti.setText(4, def.getMemoField());
 				ti.setText(5, def.getAmountField());
+				ti.setText(6, def.isAmountInverted() ? "true": "false");
 				ti.setData(def);
 			}
 			
@@ -388,6 +402,7 @@ public class ImportDefSelector extends BaseDialog {
 				def.setDateFormat(txtDateFormat.getText());
 				def.setMemoField(txtMemoField.getText());
 				def.setAmountField(txtAmountField.getText());
+				def.setAmountInverted(chkInvertAmount.getSelection());
 				
 				// Check if name not already in use
 				try {

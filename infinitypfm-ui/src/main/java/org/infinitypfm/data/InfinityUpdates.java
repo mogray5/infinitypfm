@@ -423,6 +423,7 @@ public class InfinityUpdates {
 	
 	private void ApplyVersion097() throws SQLException {
 		MM.sqlMap.update("v0_9_7_a");
+		MM.sqlMap.update("v0_9_7_b");
 		MM.sqlMap.update("bumpVersion", "0.9.7");	
 	}
 	

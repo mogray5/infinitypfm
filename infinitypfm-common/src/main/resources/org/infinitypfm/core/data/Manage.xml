@@ -258,6 +258,7 @@
 		DateFormat VARCHAR(50),
 		MemoField VARCHAR(100),
 		AmountField VARCHAR(100),
+		AmountInverted INT,
 		UNIQUE (ImportName)
 		)
 	</update>

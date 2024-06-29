@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2018 Wayne Gray All rights reserved
+ * Copyright (c) 2005-2024 Wayne Gray All rights reserved
  * 
  * This file is part of Infinity PFM.
  * 
@@ -27,6 +27,7 @@ public class ImportDef {
 	private String dateFormat;
 	private String memoField;
 	private String amountField;
+	private boolean amountInverted;
 	
 	public long getImportID() {
 		return importID;
@@ -69,6 +70,12 @@ public class ImportDef {
 	}
 	public void setAmountField(String amountField) {
 		this.amountField = amountField;
+	}
+	public boolean isAmountInverted() {
+		return amountInverted;
+	}
+	public void setAmountInverted(boolean amountInverted) {
+		this.amountInverted = amountInverted;
 	}
 	
 }
