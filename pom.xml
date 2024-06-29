@@ -12,9 +12,9 @@
 
 	<!-- sub modules -->
 	<modules>
+		<module>infinitypfm-common</module>
 		<module>infinitypfm-btc</module>
 		<module>infinitypfm-ui</module>
-		<module>infinitypfm-common</module>
 		<module>infinitypfm-build</module>
 	</modules>
 
