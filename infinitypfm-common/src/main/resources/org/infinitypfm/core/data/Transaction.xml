@@ -359,7 +359,7 @@ Copyright (c) 2005-2021 Wayne Gray All rights reserved
    </delete>
    
    <update id="setNextRunDate" parameterType="org.infinitypfm.core.data.RecurHeader">
-     UPDATE RecurHeader SET NextRunDate = #nextRunDate# WHERE RecurId = #{recurId};
+     UPDATE RecurHeader SET NextRunDate = #{nextRunDate} WHERE RecurId = #{recurId};
    </update>
    
 </mapper>
